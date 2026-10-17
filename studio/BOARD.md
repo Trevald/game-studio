@@ -16,7 +16,7 @@ set to the `version` you last read for that document.
 |---|---|---|
 | `title` | string | Benji's one-liner |
 | `pitch` | string | optional details |
-| `priority` | bool | starred: build next |
+| `order` | number | queue position set by Benji (lowest first); may be missing on old ideas |
 | `origin` | `"studio"` or absent | `"studio"` when the studio pitched the idea itself; absent means Benji's |
 | `status` | `"queued"` \| `"building"` \| `"ready"` \| `"parked"` | the studio sets building/ready; Benji sets parked |
 | `nights` | number | how many nights the studio has worked on it |
@@ -53,7 +53,7 @@ Add the studio's own pitch (new doc, so no `if_version`; pick a short unique `do
 
 ```
 ArtifactData set collection: "ideas" doc_id: "studio-<slug>"
-  data: {title, pitch, origin: "studio", priority: false, status: "building", slug: "<slug>",
+  data: {title, pitch, origin: "studio", status: "building", slug: "<slug>",
          nights: 0, createdAt: "<now>", updatedAt: "<now>"}
 ```
 

@@ -28,8 +28,8 @@ Read the board (`ideas`, `feedback`, `studio/state`) as described in `studio/BOA
 
 1. **Iterate** — if any `feedback` doc has `status: "pending"` and its idea is not `parked`:
    take the idea whose oldest pending note is oldest. Tonight's input is *all* pending notes for that idea.
-2. **New game** — otherwise, the `queued` idea with `priority: true` that was created first;
-   if none is starred, the oldest `queued` idea.
+2. **New game** — otherwise, the first `queued` idea in Benji's queue order: lowest `order` first;
+   ideas without an `order` come after those, oldest `createdAt` first.
 3. **Studio's own game** — if neither exists, the studio works on its own idea:
    - **Continue** the newest idea with `origin: "studio"` if it has had fewer than 3 nights and
      isn't `parked`. Tonight's input is the reviewer's "must fix" and "nice to have" items from the
