@@ -1,4 +1,4 @@
-# Night Studio
+# Game Studio
 
 An overnight game studio. Drop an idea on the board before bed; by morning there's a playable build.
 

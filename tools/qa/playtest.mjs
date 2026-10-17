@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Night Studio automated playtest.
+// Game Studio automated playtest.
 // Usage: node tools/qa/playtest.mjs games/<slug>/index.html [--out games/<slug>/qa] [--steps 400]
 //
 // Checks a single-file HTML game against the studio's build contract:

@@ -1,4 +1,4 @@
-# Night Studio
+# Game Studio
 
 This repo is a small game studio run by Claude overnight for Benji.
 
