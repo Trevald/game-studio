@@ -12,6 +12,9 @@ artifact: <artifact URL, filled in after the first publish>
 
 <one-sentence restatement>
 
+## References
+- <link> — <what it shows that matters for this game | "couldn't open: reason">
+
 ## Tonight (night N)
 1. <goal>
 

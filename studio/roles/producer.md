@@ -38,6 +38,11 @@ You come up with the idea yourself. Aim for something Benji would have wanted to
 Ask in the morning report whether Benji wants the studio to keep going with it. If he leaves
 notes, it becomes a normal game on the bench; if he parks it, the studio drops it.
 
+## Links
+
+Benji often points at a game, video or article instead of describing it. Read the links before
+scoping (see NIGHT_SHIFT.md step 2) and scope against what they show, not only the words around them.
+
 ## Always
 
 - RULES.md beats your instincts.
