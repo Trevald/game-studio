@@ -1,0 +1,16 @@
+{
+  "name": "night-studio-tools",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "playtest": "node qa/playtest.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  },
+  "private": true,
+  "type": "module"
+}
