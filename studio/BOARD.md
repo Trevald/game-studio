@@ -17,6 +17,7 @@ set to the `version` you last read for that document.
 | `title` | string | Benji's one-liner |
 | `pitch` | string | optional details |
 | `priority` | bool | starred: build next |
+| `origin` | `"studio"` or absent | `"studio"` when the studio pitched the idea itself; absent means Benji's |
 | `status` | `"queued"` \| `"building"` \| `"ready"` \| `"parked"` | the studio sets building/ready; Benji sets parked |
 | `nights` | number | how many nights the studio has worked on it |
 | `createdAt`, `updatedAt` | ISO string | |
@@ -46,6 +47,14 @@ Read everything at the start of the night:
 ArtifactData list   collection: "ideas"     query: {limit: 1000}
 ArtifactData list   collection: "feedback"  query: {limit: 1000}
 ArtifactData get    collection: "studio"    doc_id: "state"
+```
+
+Add the studio's own pitch (new doc, so no `if_version`; pick a short unique `doc_id` like `studio-<slug>`):
+
+```
+ArtifactData set collection: "ideas" doc_id: "studio-<slug>"
+  data: {title, pitch, origin: "studio", priority: false, status: "building", slug: "<slug>",
+         nights: 0, createdAt: "<now>", updatedAt: "<now>"}
 ```
 
 Mark the job started (use the version from the list):

@@ -30,8 +30,14 @@ Read the board (`ideas`, `feedback`, `studio/state`) as described in `studio/BOA
    take the idea whose oldest pending note is oldest. Tonight's input is *all* pending notes for that idea.
 2. **New game** — otherwise, the `queued` idea with `priority: true` that was created first;
    if none is starred, the oldest `queued` idea.
-3. **Nothing to do** — if neither exists: update `studio/state` (`lastRun`, `lastNote: "Nothing queued"`)
-   and end the run with a one-line final message. Don't build anything unasked.
+3. **Studio's own game** — if neither exists, the studio works on its own idea:
+   - **Continue** the newest idea with `origin: "studio"` if it has had fewer than 3 nights and
+     isn't `parked`. Tonight's input is the reviewer's "must fix" and "nice to have" items from the
+     last entry in its NIGHTS.md, plus anything left in its brief's "Later" list.
+   - **Otherwise pitch a new one** following "Studio pitch" in `studio/roles/producer.md`, and add it
+     to the board as a new idea with `origin: "studio"` (see `studio/BOARD.md`).
+
+   Benji's work always comes first: his notes and queued ideas are checked before this step every night.
 
 Set the chosen idea to `status: "building"` on the board right away so Benji can see the shift started.
 
@@ -39,7 +45,7 @@ Set the chosen idea to `status: "building"` on the board right away so Benji can
 
 Follow `studio/roles/producer.md`. New game: create `games/<slug>/` (slug = short kebab-case name),
 copy `studio/templates/BRIEF.md` and fill it in. Iteration: update the existing brief with tonight's
-goals, derived from Benji's notes, and nothing else.
+goals, derived from Benji's notes (or, for the studio's own game, the last review), and nothing else.
 
 Commit: `git add -A && git commit -m "<slug>: brief for night N"`.
 
