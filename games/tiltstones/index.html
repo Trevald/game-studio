@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tiltstones</title>
+<!--
+  Tiltstones — a Diamonds-style colour-brick puzzle. The ball bounces up and down on its own;
+  you steer it sideways by tilting the phone (or arrows / on-screen buttons).
+  Sections: constants · levels · core (pure) · solver · audio · rendering · input · QA hook.
+-->
+<style>
+  :root {
+    --bg: #eef0f8; --panel: #ffffff; --ink: #1b1d33; --muted: #62678c; --accent: #3b6cf0; --accent-ink: #ffffff; --line: #d6d9ea;
+    --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #0f1022; --panel: #1a1c36; --ink: #eceefa; --muted: #a0a4c8; --accent: #7ea2ff; --accent-ink: #0f1022; --line: #2c2f52; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #0f1022; --panel: #1a1c36; --ink: #eceefa; --muted: #a0a4c8; --accent: #7ea2ff; --accent-ink: #0f1022; --line: #2c2f52; color-scheme: dark; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.4 var(--font); display: grid; place-items: center; overflow-x: hidden;
+    padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(16px, env(safe-area-inset-left, 0px));
+    user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+  main { width: min(100%, 440px); display: grid; gap: 10px; padding: 10px 0; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  h1 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+  .tools { display: flex; gap: 6px; }
+  .icon { width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: 600 17px var(--font); cursor: pointer; display: grid; place-items: center; padding: 0; }
+  .hud { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 14px; gap: 8px; }
+  .hud b { color: var(--ink); font-weight: 600; }
+  .stage { position: relative; }
+  canvas { display: block; width: 100%; height: auto; border-radius: 14px; touch-action: none; background: #15172e; }
+  .overlay { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 20px; border-radius: 14px;
+    background: rgba(12, 13, 30, 0.78); color: #f1f2ff; }
+  .overlay[hidden] { display: none; }
+  .overlay h2 { margin: 0 0 6px; font-size: 26px; }
+  .overlay p { margin: 0 0 14px; color: #c5c8ec; }
+  .overlay ul { text-align: left; margin: 0 auto 16px; padding-left: 18px; color: #d6d8f4; max-width: 300px; font-size: 14px; }
+  .overlay li { margin: 3px 0; }
+  .btn { font: 600 16px var(--font); padding: 12px 22px; border-radius: 999px; border: 0; background: #ffd34d; color: #1b1d33; cursor: pointer; }
+  .btn:focus-visible, .icon:focus-visible, .hold:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .pad { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hold { height: 64px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: 700 26px var(--font); cursor: pointer; touch-action: none; }
+  .hold.on { background: var(--accent); color: var(--accent-ink); }
+  .help { color: var(--muted); font-size: 13px; text-align: center; margin: 0; min-height: 1.4em; }
+  @media (min-width: 700px) and (hover: hover) { .pad { display: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Tiltstones</h1>
+    <div class="tools">
+      <button class="icon" id="restartBtn" aria-label="Restart level" title="Restart (R)">↻</button>
+      <button class="icon" id="muteBtn" aria-label="Mute sound" title="Mute (M)">♪</button>
+    </div>
+  </header>
+  <div class="hud">
+    <span id="lvl">Level 1</span>
+    <span id="lives">♥♥♥</span>
+    <span id="keys"></span>
+    <span>Ball <b id="ballc">●</b></span>
+  </div>
+  <div class="stage">
+    <canvas id="cv" width="400" height="560" aria-label="Game board"></canvas>
+    <div class="overlay" id="ov">
+      <div>
+        <h2 id="ovTitle">Tiltstones</h2>
+        <p id="ovText">The ball bounces by itself. Tilt your phone to steer it.</p>
+        <ul id="ovRules">
+          <li>A block breaks only when the ball has its colour.</li>
+          <li>Paint pots repaint the ball. Nothing paints it back to blue.</li>
+          <li>Diamonds break once every coloured block is gone.</li>
+          <li>Skulls cost a life and reset the ball to blue.</li>
+        </ul>
+        <button class="btn" id="ovBtn">Play</button>
+      </div>
+    </div>
+  </div>
+  <div class="pad">
+    <button class="hold" id="holdL" aria-label="Steer left">◀</button>
+    <button class="hold" id="holdR" aria-label="Steer right">▶</button>
+  </div>
+  <p class="help" id="help">Tilt to steer · or hold ◀ ▶ · ←/→ on a keyboard · R restarts</p>
+</main>
+<script>
+// ======================= constants =======================
+const W = 10, H = 14;              // grid in cells
+const R = 0.3;                     // ball half-size (cells)
+const VY = 7.5;                    // vertical speed, cells/s
+const VXMAX = 5.5;                 // max horizontal speed, cells/s
+const ACC = 45;                    // horizontal acceleration, cells/s^2
+const DT = 1 / 60;                 // fixed sim step
+const STEPS_PER_ACTION = 6;        // one QA action = 0.1 s of play
+const LIVES = 3;
+// colours: 0 = base (blue), 1 red, 2 green, 3 gold
+const COLORS = ["#6cc8ff", "#ff6b6b", "#5fd38a", "#ffc94d"];
+const NAMES = ["blue", "red", "green", "gold"];
+const BLOCK = { a: 0, b: 1, c: 2, d: 3 };
+const BRUSH = { B: 1, C: 2, D: 3 };
+
+// ======================= levels =======================
+// . empty  a/b/c/d coloured block  B/C/D paint pot  * diamond  x skull  # wall  k key  L lock  o ball start
+const LEVELS = [
+  { name: "First bounce", hint: "Steer under the blue blocks. Diamonds come last.", map: [
+    "..........",
+    ".aaaaaaaa.",
+    "..........",
+    "..........",
+    "...*..*...",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "....o.....",
+  ]},
+  { name: "Wet paint", hint: "Bump a red pot to paint the ball red.", map: [
+    "..........",
+    ".bbbbbbbb.",
+    "..........",
+    "..........",
+    "..........",
+    ".....*....",
+    "..........",
+    "..........",
+    "..........",
+    ".B......B.",
+    "..........",
+    "..........",
+    "..........",
+    "....o.....",
+  ]},
+  { name: "Blue first", hint: "Nothing paints the ball blue again. Clear blue before you paint.", map: [
+    "..........",
+    ".cccccccc.",
+    "..........",
+    ".aaaaaaaa.",
+    "..........",
+    "..........",
+    "..........",
+    "..*....*..",
+    "..........",
+    "..........",
+    "C........C",
+    "..........",
+    "..........",
+    "....o....x",
+  ]},
+  { name: "The gap", hint: "Thread the gap in the wall.", map: [
+    "..........",
+    ".bbb..ccc.",
+    "..........",
+    "####..####",
+    "..........",
+    "..........",
+    ".B......C.",
+    "..........",
+    "..........",
+    "..........",
+    "..*....*..",
+    "..........",
+    "..........",
+    "....o.....",
+  ]},
+  { name: "Skull alley", hint: "Skulls cost a life — but a lost life makes the ball blue again.", map: [
+    "..........",
+    ".aaaaaaaa.",
+    "..........",
+    "..x....x..",
+    "..........",
+    "...bbbb...",
+    "..........",
+    ".B..x...B.",
+    "..........",
+    "..........",
+    "...*..*...",
+    "..........",
+    "..........",
+    "....o.....",
+  ]},
+  { name: "The vault", hint: "Grab the key, then hit the lock.", map: [
+    ".#*#......",
+    ".#L#......",
+    "..........",
+    "..cccccc..",
+    "..........",
+    ".....k....",
+    "..........",
+    "C.........",
+    "..........",
+    "..........",
+    ".aaaaaaaa.",
+    "..........",
+    "x.........",
+    ".........o",
+  ]},
+  { name: "Crossroads", hint: "Three colours. Pick your order.", map: [
+    "..........",
+    ".dd....cc.",
+    "..........",
+    "x...aa...x",
+    "..........",
+    ".C......D.",
+    "..........",
+    "..##..##..",
+    "..........",
+    "...b..b...",
+    "..........",
+    "B........*",
+    "..........",
+    "....o.....",
+  ]},
+  { name: "Treasury", hint: "Everything at once.", map: [
+    "*#......#*",
+    "L#.dddd.#L",
+    "..........",
+    "..aa..aa..",
+    "..........",
+    "x...k....x",
+    "..........",
+    ".bb....bb.",
+    "..........",
+    "D...k....B",
+    "..........",
+    "...####...",
+    "..........",
+    "....o.....",
+  ]},
+];
+
+// ======================= core (pure, no DOM) =======================
+function newGame(level) {
+  const rows = LEVELS[level].map;
+  const grid = [];
+  let sx = 4.5, sy = 13.5;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const ch = rows[y][x];
+    if (ch === "o") { sx = x + 0.5; sy = y + 0.5; grid.push("."); }
+    else grid.push(ch);
+  }
+  return { level, grid, start: [sx, sy], ball: { x: sx, y: sy, vx: 0, vy: -VY, color: 0 },
+    lives: LIVES, keys: 0, screen: "playing", steps: 0, score: 0, combo: 0, ev: [] };
+}
+const cellAt = (g, x, y) => (x < 0 || x >= W || y < 0 || y >= H) ? "#" : g.grid[y * W + x];
+const solid = (ch) => ch !== ".";
+function counts(g) {
+  const c = { colors: [0, 0, 0, 0], diamonds: 0, keys: 0, locks: 0, skulls: 0 };
+  for (const ch of g.grid) {
+    if (ch in BLOCK) c.colors[BLOCK[ch]]++;
+    else if (ch === "*") c.diamonds++;
+    else if (ch === "k") c.keys++;
+    else if (ch === "L") c.locks++;
+    else if (ch === "x") c.skulls++;
+  }
+  c.colorTotal = c.colors[0] + c.colors[1] + c.colors[2] + c.colors[3];
+  return c;
+}
+function respawn(g) {
+  g.ball = { x: g.start[0], y: g.start[1], vx: 0, vy: -VY, color: 0 };
+  g.combo = 0;
+}
+// returns true if the ball must stop (life lost)
+function hit(g, cx, cy) {
+  const i = cy * W + cx, ch = g.grid[i], b = g.ball;
+  const at = { x: cx + 0.5, y: cy + 0.5 };
+  if (ch in BLOCK) {
+    if (BLOCK[ch] === b.color) { g.grid[i] = "."; g.combo++; g.score += 10 * g.combo; g.ev.push({ t: "break", ...at, color: b.color, combo: g.combo }); }
+    else g.ev.push({ t: "thud", ...at });
+  } else if (ch in BRUSH) {
+    if (b.color !== BRUSH[ch]) { b.color = BRUSH[ch]; g.combo = 0; g.ev.push({ t: "paint", ...at, color: b.color }); }
+  } else if (ch === "*") {
+    if (counts(g).colorTotal === 0) { g.grid[i] = "."; g.score += 50; g.ev.push({ t: "diamond", ...at }); }
+    else g.ev.push({ t: "thud", ...at });
+  } else if (ch === "k") {
+    g.grid[i] = "."; g.keys++; g.ev.push({ t: "key", ...at });
+  } else if (ch === "L") {
+    if (g.keys > 0) { g.keys--; g.grid[i] = "."; g.ev.push({ t: "unlock", ...at }); }
+    else g.ev.push({ t: "thud", ...at });
+  } else if (ch === "x") {
+    g.lives--; g.ev.push({ t: "die", x: b.x, y: b.y });
+    if (g.lives <= 0) { g.screen = "lost"; }
+    else respawn(g);
+    return true;
+  } else if (ch === "#") {
+    g.ev.push({ t: "tick", ...at });
+  }
+  return false;
+}
+function overlapCells(x, y) {
+  const x0 = Math.floor(x - R), x1 = Math.floor(x + R - 1e-9), y0 = Math.floor(y - R), y1 = Math.floor(y + R - 1e-9);
+  const out = [];
+  for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) out.push([cx, cy]);
+  return out;
+}
+// one fixed step; steer in [-1, 1]
+function step(g, steer) {
+  if (g.screen !== "playing") return g;
+  const b = g.ball;
+  g.steps++;
+  // horizontal
+  const target = Math.max(-1, Math.min(1, steer)) * VXMAX;
+  const dv = target - b.vx, maxd = ACC * DT;
+  b.vx += Math.max(-maxd, Math.min(maxd, dv));
+  if (b.vx !== 0) {
+    const nx = b.x + b.vx * DT;
+    const hits = overlapCells(nx, b.y).filter(([cx, cy]) => solid(cellAt(g, cx, cy)));
+    if (hits.length) {
+      const col = hits[0][0];
+      b.x = b.vx > 0 ? col - R - 1e-6 : col + 1 + R + 1e-6;
+      b.vx = 0;
+      // hit the cell(s) in that column the ball centre is beside (prefer the centre row)
+      const cy = Math.floor(b.y);
+      const pick = hits.find(([, y]) => y === cy) || hits[0];
+      if (pick[0] >= 0 && pick[0] < W && pick[1] >= 0 && pick[1] < H) { if (hit(g, pick[0], pick[1])) return g; }
+    } else b.x = nx;
+  }
+  // vertical
+  const ny = b.y + b.vy * DT;
+  const vh = overlapCells(b.x, ny).filter(([cx, cy]) => solid(cellAt(g, cx, cy)));
+  if (vh.length) {
+    const row = vh[0][1];
+    b.y = b.vy > 0 ? row - R - 1e-6 : row + 1 + R + 1e-6;
+    b.vy = -b.vy;
+    const cx = Math.floor(b.x);
+    const pick = vh.find(([x]) => x === cx) || vh[0];
+    if (pick[0] >= 0 && pick[0] < W && pick[1] >= 0 && pick[1] < H) { if (hit(g, pick[0], pick[1])) return g; }
+    else g.ev.push({ t: "tick", x: b.x, y: b.y });
+  } else b.y = ny;
+  // win check
+  const c = counts(g);
+  if (c.colorTotal === 0 && c.diamonds === 0) { g.screen = "won"; g.ev.push({ t: "win", x: b.x, y: b.y }); }
+  return g;
+}
+const STEER = { left: -1, stay: 0, right: 1 };
+function applyAction(g, a) {
+  for (let i = 0; i < STEPS_PER_ACTION && g.screen === "playing"; i++) step(g, STEER[a] ?? 0);
+  return g;
+}
+const cloneGame = (g) => ({ ...g, grid: g.grid.slice(), start: g.start.slice(), ball: { ...g.ball }, ev: [] });
+
+// ======================= solver (search autopilot) =======================
+function wantedTargets(g) {
+  const c = counts(g), col = g.ball.color, t = new Set();
+  const add = (pred) => g.grid.forEach((ch, i) => { if (pred(ch)) t.add(i); });
+  if (c.colorTotal > 0) {
+    if (col !== 0 && c.colors[0] > 0) add((ch) => ch === "x");   // stuck: only a lost life repaints blue
+    else if (c.colors[col] > 0) add((ch) => BLOCK[ch] === col);
+    else add((ch) => ch in BRUSH && c.colors[BRUSH[ch]] > 0);
+  } else add((ch) => ch === "*");
+  if (g.keys > 0) add((ch) => ch === "L");
+  else if (c.locks > 0) add((ch) => ch === "k");
+  return t;
+}
+function distField(g, targets) {
+  const d = new Array(W * H).fill(99), q = [];
+  targets.forEach((i) => { d[i] = 0; q.push(i); });
+  while (q.length) {
+    const i = q.shift(), x = i % W, y = (i / W) | 0;
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nx = x + dx, ny = y + dy;
+      if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+      const j = ny * W + nx;
+      if (d[j] <= d[i] + 1 || g.grid[j] !== ".") continue;
+      d[j] = d[i] + 1; q.push(j);
+    }
+  }
+  return d;
+}
+function evalGame(g, base) {
+  if (g.screen === "won") return 1e6;
+  const c = counts(g);
+  let s = 0;
+  s += (base.colorTotal - c.colorTotal) * 100 + (base.diamonds - c.diamonds) * 100 + (base.keys - c.keys) * 60 + (base.locks - c.locks) * 100;
+  const stuck = g.ball.color !== 0 && c.colors[0] > 0;
+  s -= (base.lives - g.lives) * (base.stuck ? -40 : 400);
+  if (g.screen === "lost") s -= 5000;
+  if (stuck && !base.stuck) s -= 20000;
+  if (!stuck && c.colorTotal && c.colors[g.ball.color] > 0 && g.ball.color !== base.color) s += 50;
+  const d = distField(g, wantedTargets(g));
+  const bx = Math.min(W - 1, Math.max(0, Math.floor(g.ball.x))), by = Math.min(H - 1, Math.max(0, Math.floor(g.ball.y)));
+  s -= d[by * W + bx] * 3;
+  return s;
+}
+function solveFrom(g0, maxActions = 4000) {
+  const g = cloneGame(g0), out = [];
+  let seed = 12345;
+  const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  const opts = ["left", "stay", "right"];
+  let lastProgress = 0, lastCount = -1;
+  while (g.screen === "playing" && out.length < maxActions) {
+    const c = counts(g);
+    const cnt = c.colorTotal + c.diamonds + c.keys + c.locks;
+    if (cnt !== lastCount) { lastCount = cnt; lastProgress = out.length; }
+    const base = { ...c, lives: g.lives, color: g.ball.color, stuck: g.ball.color !== 0 && c.colors[0] > 0 };
+    const explore = out.length - lastProgress > 150;
+    let best = null, bestS = -Infinity;
+    const plans = [];
+    for (const a of opts) for (const b of opts) for (const n of [2, 5, 9]) plans.push([a, n, b]);
+    if (explore) for (let k = 0; k < 12; k++) plans.push([opts[(rnd() * 3) | 0], 1 + ((rnd() * 12) | 0), opts[(rnd() * 3) | 0]]);
+    for (const p of plans) {
+      const t = cloneGame(g);
+      let s = -Infinity, bestMid = -Infinity, worst = Infinity;
+      for (let i = 0; i < 24 && t.screen === "playing"; i++) {
+        applyAction(t, i < p[1] ? p[0] : p[2]);
+        if (i % 2 === 1) { const e = evalGame(t, base); worst = Math.min(worst, e); bestMid = Math.max(bestMid, e - i * 0.5); }
+      }
+      const fin = evalGame(t, base);
+      worst = Math.min(worst, fin);
+      // a plan that passes through a disaster (stuck colour, lost life) is judged by that disaster
+      s = worst < -1000 ? worst : Math.max(fin - 12, bestMid);
+      if (explore) s += rnd() * 40;
+      if (s > bestS) { bestS = s; best = p; }
+    }
+    applyAction(g, best[0]);
+    out.push(best[0]);
+  }
+  return out;
+}
+
+// ======================= audio =======================
+let actx = null, muted = false;
+try { muted = localStorage.getItem("tiltstones-muted") === "1"; } catch (e) {}
+function ensureAudio() {
+  if (actx) return;
+  try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; }
+}
+function tone(freq, dur = 0.08, type = "sine", vol = 0.12, when = 0) {
+  if (!actx || muted) return;
+  const t0 = actx.currentTime + when, o = actx.createOscillator(), gn = actx.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t0);
+  gn.gain.setValueAtTime(vol, t0); gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(gn).connect(actx.destination); o.start(t0); o.stop(t0 + dur + 0.02);
+}
+const SFX = {
+  break: (e) => tone(440 * Math.pow(2, Math.min(e.combo, 12) / 12), 0.09, "triangle", 0.13),
+  thud: () => tone(110, 0.06, "square", 0.05),
+  tick: () => tone(220, 0.03, "sine", 0.03),
+  paint: () => { tone(392, 0.15, "sine", 0.1); tone(494, 0.15, "sine", 0.08, 0.04); tone(587, 0.2, "sine", 0.07, 0.08); },
+  diamond: () => { tone(1046, 0.12, "triangle", 0.12); tone(1568, 0.16, "sine", 0.06, 0.05); },
+  key: () => { tone(784, 0.08, "square", 0.06); tone(1175, 0.12, "square", 0.05, 0.06); },
+  unlock: () => { tone(330, 0.1, "sawtooth", 0.06); tone(660, 0.15, "triangle", 0.08, 0.07); },
+  die: () => { tone(300, 0.15, "sawtooth", 0.08); tone(150, 0.3, "sawtooth", 0.08, 0.1); },
+  win: () => [523, 659, 784, 1046].forEach((f, i) => tone(f, 0.18, "triangle", 0.12, i * 0.08)),
+};
+
+// ======================= rendering =======================
+const $ = (id) => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d");
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let game = null, screen = "title", particles = [], flash = 0, pulse = 0;
+let progress = 0;
+try { progress = Math.min(LEVELS.length - 1, Number(localStorage.getItem("tiltstones-level")) || 0); } catch (e) {}
+let CELL = 40;
+function resize() {
+  const wCss = cv.parentElement.clientWidth;
+  const maxH = Math.max(320, window.innerHeight - 230);
+  const cell = Math.max(24, Math.min(wCss / W, maxH / H, 46));
+  const cssW = Math.floor(cell * W), cssH = Math.floor(cell * H);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.style.width = cssW + "px"; cv.style.height = cssH + "px";
+  cv.style.margin = "0 auto";
+  cv.width = Math.round(cssW * dpr); cv.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  CELL = cell;
+}
+function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+function glyph(kind, cx, cy, s, color) {
+  ctx.fillStyle = color; ctx.strokeStyle = color; ctx.lineWidth = Math.max(1.5, s * 0.12);
+  ctx.beginPath();
+  if (kind === 0) { ctx.arc(cx, cy, s * 0.22, 0, Math.PI * 2); ctx.fill(); }
+  else if (kind === 1) { ctx.moveTo(cx, cy - s * 0.26); ctx.lineTo(cx + s * 0.26, cy + s * 0.2); ctx.lineTo(cx - s * 0.26, cy + s * 0.2); ctx.closePath(); ctx.fill(); }
+  else if (kind === 2) { ctx.rect(cx - s * 0.2, cy - s * 0.2, s * 0.4, s * 0.4); ctx.fill(); }
+  else if (kind === 3) { ctx.moveTo(cx - s * 0.24, cy); ctx.lineTo(cx + s * 0.24, cy); ctx.moveTo(cx, cy - s * 0.24); ctx.lineTo(cx, cy + s * 0.24); ctx.lineWidth = s * 0.14; ctx.stroke(); }
+}
+function drawCell(ch, x, y, t) {
+  const s = CELL, px = x * s, py = y * s, p = Math.max(1.5, s * 0.06), cx = px + s / 2, cy = py + s / 2;
+  if (ch in BLOCK) {
+    const col = COLORS[BLOCK[ch]];
+    rr(px + p, py + p, s - 2 * p, s - 2 * p, s * 0.16); ctx.fillStyle = col; ctx.fill();
+    ctx.fillStyle = "rgba(255,255,255,0.25)"; rr(px + p, py + p, s - 2 * p, (s - 2 * p) * 0.35, s * 0.16); ctx.fill();
+    glyph(BLOCK[ch], cx, cy + s * 0.03, s, "rgba(20,22,45,0.55)");
+  } else if (ch in BRUSH) {
+    const col = COLORS[BRUSH[ch]];
+    rr(px + p, py + p, s - 2 * p, s - 2 * p, s * 0.16); ctx.fillStyle = "#262948"; ctx.fill();
+    ctx.lineWidth = Math.max(2, s * 0.08); ctx.strokeStyle = col; ctx.stroke();
+    // paint pot: a blob with a drip
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx, cy - s * 0.04, s * 0.24, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + s * 0.1, cy + s * 0.24, s * 0.07, 0, Math.PI * 2); ctx.fill();
+    glyph(BRUSH[ch], cx, cy - s * 0.04, s * 0.7, "#262948");
+  } else if (ch === "*") {
+    const unlocked = game && counts(game).colorTotal === 0;
+    const tw = unlocked && !reduceMotion ? 0.12 * Math.sin(t / 150 + x + y) : 0;
+    ctx.fillStyle = unlocked ? "#e9fbff" : "#9fb3c8";
+    ctx.beginPath();
+    ctx.moveTo(cx, py + s * (0.15 - tw)); ctx.lineTo(px + s * 0.85, cy - s * 0.05); ctx.lineTo(cx, py + s * 0.88); ctx.lineTo(px + s * 0.15, cy - s * 0.05); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = unlocked ? "#9fe8ff" : "#71849b";
+    ctx.beginPath(); ctx.moveTo(px + s * 0.15, cy - s * 0.05); ctx.lineTo(px + s * 0.85, cy - s * 0.05); ctx.lineTo(cx, py + s * 0.88); ctx.closePath(); ctx.fill();
+  } else if (ch === "x") {
+    rr(px + p, py + p, s - 2 * p, s - 2 * p, s * 0.16); ctx.fillStyle = "#3a1630"; ctx.fill();
+    ctx.fillStyle = "#f0e6ea"; ctx.beginPath(); ctx.arc(cx, cy - s * 0.04, s * 0.26, 0, Math.PI * 2); ctx.fill();
+    ctx.fillRect(cx - s * 0.14, cy + s * 0.12, s * 0.28, s * 0.14);
+    ctx.fillStyle = "#3a1630";
+    ctx.beginPath(); ctx.arc(cx - s * 0.1, cy - s * 0.06, s * 0.07, 0, Math.PI * 2); ctx.arc(cx + s * 0.1, cy - s * 0.06, s * 0.07, 0, Math.PI * 2); ctx.fill();
+  } else if (ch === "#") {
+    rr(px + 1, py + 1, s - 2, s - 2, s * 0.08); ctx.fillStyle = "#3d4370"; ctx.fill();
+    ctx.fillStyle = "#4b528a"; ctx.fillRect(px + 1, py + 1, s - 2, s * 0.18);
+  } else if (ch === "k") {
+    ctx.strokeStyle = "#ffd34d"; ctx.fillStyle = "#ffd34d"; ctx.lineWidth = Math.max(2, s * 0.09);
+    ctx.beginPath(); ctx.arc(cx - s * 0.14, cy, s * 0.13, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - s * 0.01, cy); ctx.lineTo(cx + s * 0.3, cy); ctx.moveTo(cx + s * 0.22, cy); ctx.lineTo(cx + s * 0.22, cy + s * 0.12); ctx.moveTo(cx + s * 0.12, cy); ctx.lineTo(cx + s * 0.12, cy + s * 0.1); ctx.stroke();
+  } else if (ch === "L") {
+    rr(px + p, py + p, s - 2 * p, s - 2 * p, s * 0.16); ctx.fillStyle = "#5b4a1e"; ctx.fill();
+    ctx.strokeStyle = "#ffd34d"; ctx.lineWidth = Math.max(2, s * 0.08);
+    ctx.beginPath(); ctx.arc(cx, cy - s * 0.08, s * 0.14, Math.PI, 0); ctx.stroke();
+    ctx.fillStyle = "#ffd34d"; ctx.fillRect(cx - s * 0.22, cy - s * 0.08, s * 0.44, s * 0.32);
+    ctx.fillStyle = "#5b4a1e"; ctx.fillRect(cx - s * 0.03, cy + s * 0.02, s * 0.06, s * 0.12);
+  }
+}
+function draw(t) {
+  const s = CELL;
+  ctx.fillStyle = "#15172e"; ctx.fillRect(0, 0, W * s, H * s);
+  ctx.fillStyle = "rgba(255,255,255,0.035)";
+  for (let y = 0; y < H; y++) for (let x = (y % 2); x < W; x += 2) ctx.fillRect(x * s, y * s, s, s);
+  if (!game) return;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const ch = game.grid[y * W + x]; if (ch !== ".") drawCell(ch, x, y, t); }
+  // particles
+  for (const p of particles) {
+    ctx.globalAlpha = Math.max(0, p.life / p.max);
+    ctx.fillStyle = p.color; ctx.fillRect(p.x * s - 3, p.y * s - 3, 6, 6);
+  }
+  ctx.globalAlpha = 1;
+  // ball
+  const b = game.ball, bx = b.x * s, by = b.y * s, br = R * s;
+  if (pulse > 0) { ctx.strokeStyle = COLORS[b.color]; ctx.globalAlpha = pulse; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(bx, by, br + (1 - pulse) * s * 0.9, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1; }
+  ctx.fillStyle = COLORS[b.color]; ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.55)"; ctx.beginPath(); ctx.arc(bx - br * 0.35, by - br * 0.35, br * 0.3, 0, Math.PI * 2); ctx.fill();
+  glyph(b.color, bx, by + br * 0.1, br * 1.6, "rgba(20,22,45,0.6)");
+  if (flash > 0) { ctx.fillStyle = `rgba(255,255,255,${flash * 0.5})`; ctx.fillRect(0, 0, W * s, H * s); }
+}
+function burst(e, color, n) {
+  if (reduceMotion) return;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, v = 1 + Math.random() * 3;
+    particles.push({ x: e.x, y: e.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.5, max: 0.5, color });
+  }
+}
+function handleEvents() {
+  for (const e of game.ev) {
+    (SFX[e.t] || (() => {}))(e);
+    if (e.t === "break") burst(e, COLORS[e.color], 10);
+    if (e.t === "diamond") burst(e, "#e9fbff", 16);
+    if (e.t === "unlock" || e.t === "key") burst(e, "#ffd34d", 10);
+    if (e.t === "paint") pulse = 1;
+    if (e.t === "die") { burst(e, "#ff6b6b", 18); if (!reduceMotion) flash = 0.6; }
+    if (e.t === "win" && !reduceMotion) flash = 1;
+  }
+  game.ev.length = 0;
+}
+function updateHud() {
+  $("lvl").textContent = `Level ${game.level + 1}/${LEVELS.length}`;
+  $("lives").textContent = "♥".repeat(Math.max(0, game.lives)) + "♡".repeat(Math.max(0, LIVES - game.lives));
+  $("lives").setAttribute("aria-label", `${game.lives} lives`);
+  $("keys").textContent = game.keys ? `🔑×${game.keys}` : "";
+  $("ballc").textContent = "●"; $("ballc").style.color = COLORS[game.ball.color];
+  $("ballc").title = NAMES[game.ball.color];
+}
+function showOverlay() {
+  const ov = $("ov");
+  if (screen === "playing") { ov.hidden = true; return; }
+  ov.hidden = false;
+  $("ovRules").hidden = screen !== "title";
+  if (screen === "title") {
+    $("ovTitle").textContent = "Tiltstones";
+    $("ovText").textContent = "The ball bounces by itself. Tilt your phone (or use ◀ ▶ / arrow keys) to steer it.";
+    $("ovBtn").textContent = progress > 0 ? `Play level ${progress + 1}` : "Play";
+  } else if (game.screen === "won") {
+    const last = game.level === LEVELS.length - 1;
+    $("ovTitle").textContent = last ? "All levels cleared!" : "Level clear";
+    $("ovText").textContent = last ? `Final score ${game.score}. That's every level for tonight.` : `Score ${game.score}. Next: “${LEVELS[game.level + 1].name}”`;
+    $("ovBtn").textContent = last ? "Play again from level 1" : "Next level";
+  } else if (game.screen === "lost") {
+    $("ovTitle").textContent = "Out of lives";
+    $("ovText").textContent = LEVELS[game.level].hint;
+    $("ovBtn").textContent = "Try again";
+  }
+  $("ovBtn").focus({ preventScroll: true });
+}
+function startLevel(lv) {
+  game = newGame(lv); screen = "playing"; particles = []; flash = 0; pulse = 0;
+  $("help").textContent = `${LEVELS[lv].name} — ${LEVELS[lv].hint}`;
+  updateHud(); showOverlay();
+}
+function sync() {
+  handleEvents(); updateHud();
+  if (game.screen !== "playing" && screen === "playing") {
+    screen = game.screen;
+    if (game.screen === "won") { progress = Math.max(progress, Math.min(LEVELS.length - 1, game.level + 1)); try { localStorage.setItem("tiltstones-level", String(progress)); } catch (e) {} }
+    showOverlay();
+  }
+}
+function overlayAction() {
+  ensureAudio(); if (actx && actx.state === "suspended") actx.resume();
+  requestTilt();
+  if (screen === "title") startLevel(progress);
+  else if (game.screen === "won") startLevel(game.level === LEVELS.length - 1 ? 0 : game.level + 1);
+  else startLevel(game.level);
+}
+
+// ======================= input =======================
+const held = { left: false, right: false };
+let tilt = null, tiltSeen = false, tiltAsked = false;
+function requestTilt() {
+  if (tiltAsked) return; tiltAsked = true;
+  const DOE = window.DeviceOrientationEvent;
+  if (DOE && typeof DOE.requestPermission === "function") {
+    DOE.requestPermission().then((r) => { if (r === "granted") listenTilt(); else noTilt("Tilt permission was declined — use ◀ ▶."); }).catch(() => noTilt());
+  } else listenTilt();
+}
+function listenTilt() {
+  window.addEventListener("deviceorientation", (e) => {
+    if (e.gamma == null && e.beta == null) return;
+    let a = e.gamma || 0;
+    const ang = (window.screen.orientation && window.screen.orientation.angle) || window.orientation || 0;
+    if (ang === 90) a = e.beta || 0; else if (ang === -90 || ang === 270) a = -(e.beta || 0);
+    tilt = a; tiltSeen = true;
+  });
+  setTimeout(() => { if (!tiltSeen && matchMedia("(pointer: coarse)").matches) noTilt(); }, 1500);
+}
+function noTilt(msg) { if (matchMedia("(pointer: coarse)").matches) $("help").textContent = msg || "No tilt sensor here — hold ◀ ▶ to steer."; }
+function currentSteer() {
+  if (held.left !== held.right) return held.left ? -1 : 1;
+  if (held.left && held.right) return 0;
+  if (tilt == null) return 0;
+  const dz = 3, full = 22, m = Math.abs(tilt);
+  if (m < dz) return 0;
+  return Math.sign(tilt) * Math.min(1, (m - dz) / (full - dz));
+}
+const KEYMAP = { ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d: "right", D: "right" };
+document.addEventListener("keydown", (e) => {
+  if (KEYMAP[e.key]) { e.preventDefault(); held[KEYMAP[e.key]] = true; return; }
+  if (e.key === "r" || e.key === "R") { if (game) startLevel(game.level); return; }
+  if (e.key === "m" || e.key === "M") { toggleMute(); return; }
+  if ((e.key === "Enter" || e.key === " ") && screen !== "playing") { e.preventDefault(); overlayAction(); }
+});
+document.addEventListener("keyup", (e) => { if (KEYMAP[e.key]) held[KEYMAP[e.key]] = false; });
+window.addEventListener("blur", () => { held.left = held.right = false; });
+function bindHold(id, dir) {
+  const el = $(id);
+  const on = (e) => { e.preventDefault(); held[dir] = true; el.classList.add("on"); ensureAudio(); if (el.setPointerCapture && e.pointerId != null) try { el.setPointerCapture(e.pointerId); } catch (_) {} };
+  const off = () => { held[dir] = false; el.classList.remove("on"); };
+  el.addEventListener("pointerdown", on);
+  el.addEventListener("pointerup", off); el.addEventListener("pointercancel", off); el.addEventListener("lostpointercapture", off);
+  el.addEventListener("contextmenu", (e) => e.preventDefault());
+}
+bindHold("holdL", "left"); bindHold("holdR", "right");
+// touching the board itself: left half steers left, right half steers right
+cv.addEventListener("pointerdown", (e) => {
+  if (screen !== "playing") return;
+  const r = cv.getBoundingClientRect(), dir = (e.clientX - r.left) < r.width / 2 ? "left" : "right";
+  held[dir] = true; try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+  const off = () => { held[dir] = false; cv.removeEventListener("pointerup", off); cv.removeEventListener("pointercancel", off); };
+  cv.addEventListener("pointerup", off); cv.addEventListener("pointercancel", off);
+});
+$("ovBtn").addEventListener("click", overlayAction);
+$("restartBtn").addEventListener("click", () => { ensureAudio(); if (game) startLevel(game.level); else overlayAction(); });
+function toggleMute() { muted = !muted; try { localStorage.setItem("tiltstones-muted", muted ? "1" : "0"); } catch (e) {} $("muteBtn").textContent = muted ? "✕" : "♪"; $("muteBtn").setAttribute("aria-label", muted ? "Unmute sound" : "Mute sound"); }
+$("muteBtn").addEventListener("click", () => { ensureAudio(); toggleMute(); });
+$("muteBtn").textContent = muted ? "✕" : "♪";
+
+// ======================= main loop =======================
+let qaDriven = false, last = performance.now(), acc = 0;
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (game && screen === "playing" && !qaDriven) {
+    acc += dt;
+    const st = currentSteer();
+    while (acc >= DT) { step(game, st); acc -= DT; if (game.screen !== "playing") break; }
+    sync();
+  } else acc = 0;
+  for (const p of particles) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 6 * dt; p.life -= dt; }
+  particles = particles.filter((p) => p.life > 0);
+  flash = Math.max(0, flash - dt * 2.5); pulse = Math.max(0, pulse - dt * 2);
+  draw(now);
+  requestAnimationFrame(frame);
+}
+window.addEventListener("resize", resize);
+resize();
+game = newGame(progress); // preview behind the title
+updateHud(); showOverlay();
+requestAnimationFrame(frame);
+
+// ======================= QA hook =======================
+window.__qa = {
+  state: () => {
+    const c = counts(game);
+    return { screen: screen === "title" ? "title" : game.screen, level: game.level, lives: game.lives, color: game.ball.color, keys: game.keys,
+      ball: { x: +game.ball.x.toFixed(3), y: +game.ball.y.toFixed(3) }, left: { colors: c.colorTotal, diamonds: c.diamonds, locks: c.locks }, steps: game.steps, score: game.score };
+  },
+  actions: () => screen === "title" ? ["start"] : (game.screen === "playing" ? ["left", "stay", "right"] : []),
+  act: (a) => {
+    qaDriven = true;
+    if (a === "start") { if (screen === "title") startLevel(progress); return; }
+    if (screen !== "playing") return;
+    applyAction(game, a); sync();
+  },
+  reset: (level) => { qaDriven = true; startLevel(level ?? (game ? game.level : 0)); },
+  levels: () => LEVELS.length,
+  solve: () => solveFrom(game),
+};
+</script>
+</body>
+</html>

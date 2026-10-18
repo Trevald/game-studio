@@ -1,0 +1,185 @@
+{
+  "game": "games/tiltstones/index.html",
+  "at": "2026-10-17T23:50:50.108Z",
+  "checks": [
+    {
+      "name": "file under 2 MB",
+      "ok": true,
+      "detail": "33 KB"
+    },
+    {
+      "name": "external resources only from allowed CDNs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "library versions pinned",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no alert/confirm/prompt/print/iframe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "has a <title>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "declares window.__qa",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[desktop] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"title\",\"level\":0,\"lives\":3,\"color\":0,\"keys\":0,\"ball\":{\"x\":4.5,\"y\":13.5},\"left\":{\"colors\":8,\"diamonds\":2,\"locks\":0},\"steps\":0,\"score\":0}"
+    },
+    {
+      "name": "[desktop] survives 400 random actions",
+      "ok": true,
+      "detail": "screens seen: playing; resets: 0"
+    },
+    {
+      "name": "every level completable via solve() (8 levels)",
+      "ok": false,
+      "detail": "[{\"lv\":2,\"ok\":false,\"moves\":4000,\"screen\":\"playing\"},{\"lv\":5,\"ok\":false,\"moves\":4000,\"screen\":\"playing\"}]"
+    },
+    {
+      "name": "[desktop] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[phone] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"title\",\"level\":0,\"lives\":3,\"color\":0,\"keys\":0,\"ball\":{\"x\":4.5,\"y\":13.5},\"left\":{\"colors\":8,\"diamonds\":2,\"locks\":0},\"steps\":0,\"score\":0}"
+    },
+    {
+      "name": "[phone] survives 60 random actions",
+      "ok": true,
+      "detail": "screens seen: playing; resets: 0"
+    },
+    {
+      "name": "[phone] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "games/tiltstones/qa/desktop-01-load.png",
+    "games/tiltstones/qa/desktop-02-after-play.png",
+    "games/tiltstones/qa/desktop-03-solved.png",
+    "games/tiltstones/qa/phone-01-load.png",
+    "games/tiltstones/qa/phone-02-after-play.png"
+  ],
+  "desktop_initialState": {
+    "screen": "title",
+    "level": 0,
+    "lives": 3,
+    "color": 0,
+    "keys": 0,
+    "ball": {
+      "x": 4.5,
+      "y": 13.5
+    },
+    "left": {
+      "colors": 8,
+      "diamonds": 2,
+      "locks": 0
+    },
+    "steps": 0,
+    "score": 0
+  },
+  "solveResults": [
+    {
+      "lv": 0,
+      "ok": true,
+      "moves": 56,
+      "screen": "won"
+    },
+    {
+      "lv": 1,
+      "ok": true,
+      "moves": 65,
+      "screen": "won"
+    },
+    {
+      "lv": 2,
+      "ok": false,
+      "moves": 4000,
+      "screen": "playing"
+    },
+    {
+      "lv": 3,
+      "ok": true,
+      "moves": 261,
+      "screen": "won"
+    },
+    {
+      "lv": 4,
+      "ok": true,
+      "moves": 260,
+      "screen": "won"
+    },
+    {
+      "lv": 5,
+      "ok": false,
+      "moves": 4000,
+      "screen": "playing"
+    },
+    {
+      "lv": 6,
+      "ok": true,
+      "moves": 466,
+      "screen": "won"
+    },
+    {
+      "lv": 7,
+      "ok": true,
+      "moves": 243,
+      "screen": "won"
+    }
+  ],
+  "phone_initialState": {
+    "screen": "title",
+    "level": 0,
+    "lives": 3,
+    "color": 0,
+    "keys": 0,
+    "ball": {
+      "x": 4.5,
+      "y": 13.5
+    },
+    "left": {
+      "colors": 8,
+      "diamonds": 2,
+      "locks": 0
+    },
+    "steps": 0,
+    "score": 0
+  },
+  "passed": false
+}
