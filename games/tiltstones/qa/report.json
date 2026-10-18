@@ -1,11 +1,11 @@
 {
   "game": "games/tiltstones/index.html",
-  "at": "2026-10-18T00:04:01.170Z",
+  "at": "2026-10-18T00:11:13.700Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "33 KB"
+      "detail": "35 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -55,7 +55,7 @@
     {
       "name": "every level completable via solve() (8 levels)",
       "ok": true,
-      "detail": "L1:55 L2:63 L3:442 L4:99 L5:132 L6:134 L7:422 L8:194"
+      "detail": "L1:211 L2:71 L3:155 L4:247 L5:315 L6:141 L7:96 L8:450"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -117,49 +117,49 @@
     {
       "lv": 0,
       "ok": true,
-      "moves": 55,
+      "moves": 211,
       "screen": "won"
     },
     {
       "lv": 1,
       "ok": true,
-      "moves": 63,
+      "moves": 71,
       "screen": "won"
     },
     {
       "lv": 2,
       "ok": true,
-      "moves": 442,
+      "moves": 155,
       "screen": "won"
     },
     {
       "lv": 3,
       "ok": true,
-      "moves": 99,
+      "moves": 247,
       "screen": "won"
     },
     {
       "lv": 4,
       "ok": true,
-      "moves": 132,
+      "moves": 315,
       "screen": "won"
     },
     {
       "lv": 5,
       "ok": true,
-      "moves": 134,
+      "moves": 141,
       "screen": "won"
     },
     {
       "lv": 6,
       "ok": true,
-      "moves": 422,
+      "moves": 96,
       "screen": "won"
     },
     {
       "lv": 7,
       "ok": true,
-      "moves": 194,
+      "moves": 450,
       "screen": "won"
     }
   ],

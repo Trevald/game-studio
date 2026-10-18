@@ -30,6 +30,11 @@
   .icon { width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: 600 17px var(--font); cursor: pointer; display: grid; place-items: center; padding: 0; }
   .hud { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 14px; gap: 8px; }
   .hud b { color: var(--ink); font-weight: 600; }
+  #tiltm { position: relative; width: 56px; height: 8px; border-radius: 4px; background: var(--line); }
+  #tiltm[hidden] { display: none; }
+  #tiltm::after { content: ""; position: absolute; left: 50%; top: -2px; width: 1px; height: 12px; background: var(--muted); }
+  #tiltDot { position: absolute; top: -2px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--accent); }
+  .help.warn { color: #d9534f; font-weight: 600; }
   .stage { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; }
   canvas { display: block; width: 100%; height: auto; border-radius: 14px; touch-action: none; background: #15172e; }
   .overlay { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 20px; border-radius: 14px;
@@ -61,6 +66,7 @@
     <span id="lvl">Level 1</span>
     <span id="lives">♥♥♥</span>
     <span id="keys"></span>
+    <span id="tiltm" hidden aria-label="Tilt"><i id="tiltDot"></i></span>
     <span>Ball <b id="ballc">●</b></span>
   </div>
   <div class="stage">
@@ -89,7 +95,9 @@
 // ======================= constants =======================
 const W = 10, H = 14;              // grid in cells
 const R = 0.3;                     // ball half-size (cells)
-const VY = 7.5;                    // vertical speed, cells/s
+const VY = 9;                      // vertical speed, cells/s
+const SNAP = 1.6;                  // drift toward the column centre when not steering, cells/s
+const GRACE = 30;                  // steps the ball waits after a respawn
 const VXMAX = 5.5;                 // max horizontal speed, cells/s
 const ACC = 45;                    // horizontal acceleration, cells/s^2
 const DT = 1 / 60;                 // fixed sim step
@@ -182,7 +190,7 @@ const LEVELS = [
     "...*..*...",
     "..........",
     "..........",
-    "....o.....",
+    "o.........",
   ]},
   { name: "The vault", hint: "Grab the key, then hit the lock.", map: [
     ".#*#......",
@@ -212,7 +220,7 @@ const LEVELS = [
     "..........",
     "...b..b...",
     "..........",
-    "B........*",
+    "B....*....",
     "..........",
     "....o.....",
   ]},
@@ -245,7 +253,7 @@ function newGame(level) {
     else grid.push(ch);
   }
   return { level, grid, start: [sx, sy], ball: { x: sx, y: sy, vx: 0, vy: -VY, color: 0 },
-    lives: LIVES, keys: 0, screen: "playing", steps: 0, score: 0, combo: 0, ev: [] };
+    lives: LIVES, keys: 0, screen: "playing", steps: 0, score: 0, combo: 0, grace: 0, ev: [] };
 }
 const cellAt = (g, x, y) => (x < 0 || x >= W || y < 0 || y >= H) ? "#" : g.grid[y * W + x];
 const solid = (ch) => ch !== ".";
@@ -263,7 +271,7 @@ function counts(g) {
 }
 function respawn(g) {
   g.ball = { x: g.start[0], y: g.start[1], vx: 0, vy: -VY, color: 0 };
-  g.combo = 0;
+  g.combo = 0; g.grace = GRACE;
 }
 // returns true if the ball must stop (life lost)
 function hit(g, cx, cy) {
@@ -307,6 +315,10 @@ function step(g, steer) {
   const target = Math.max(-1, Math.min(1, steer)) * VXMAX;
   const dv = target - b.vx, maxd = ACC * DT;
   b.vx += Math.max(-maxd, Math.min(maxd, dv));
+  if (steer === 0 && Math.abs(b.vx) < 0.05) {   // gentle snap to the column centre
+    const cxm = Math.floor(b.x) + 0.5, d = cxm - b.x, m = SNAP * DT;
+    if (Math.abs(d) > 1e-4 && !solid(cellAt(g, Math.floor(b.x), Math.floor(b.y - R))) && !solid(cellAt(g, Math.floor(b.x), Math.floor(b.y + R - 1e-9)))) b.x += Math.max(-m, Math.min(m, d));
+  }
   if (b.vx !== 0) {
     const nx = b.x + b.vx * DT;
     const hits = overlapCells(nx, b.y).filter(([cx, cy]) => solid(cellAt(g, cx, cy)));
@@ -320,7 +332,8 @@ function step(g, steer) {
       if (pick[0] >= 0 && pick[0] < W && pick[1] >= 0 && pick[1] < H) { if (hit(g, pick[0], pick[1])) return g; }
     } else b.x = nx;
   }
-  // vertical
+  // vertical (the ball hovers for a moment after a respawn so you can steer away)
+  if (g.grace > 0) { g.grace--; return g; }
   const ny = b.y + b.vy * DT;
   const vh = overlapCells(b.x, ny).filter(([cx, cy]) => solid(cellAt(g, cx, cy)));
   if (vh.length) {
@@ -592,11 +605,21 @@ function showOverlay() {
 }
 function startLevel(lv) {
   game = newGame(lv); screen = "playing"; particles = []; flash = 0; pulse = 0;
-  $("help").textContent = `${LEVELS[lv].name} — ${LEVELS[lv].hint}`;
+  if (tilt != null) tiltZero = tilt;   // however you hold the phone when a level starts is "level"
+  stuckShown = false;
+  $("help").classList.remove("warn"); $("help").textContent = levelHelp();
   updateHud(); showOverlay();
 }
+let stuckShown = false;
+const levelHelp = () => `${LEVELS[game.level].name} — ${LEVELS[game.level].hint}` + (tiltSeen ? " · tilt zeroed to how you hold the phone" : "");
 function sync() {
   handleEvents(); updateHud();
+  const stuck = game.screen === "playing" && game.ball.color !== 0 && counts(game).colors[0] > 0;
+  if (stuck !== stuckShown) {
+    stuckShown = stuck;
+    $("help").classList.toggle("warn", stuck);
+    $("help").textContent = stuck ? (counts(game).skulls ? "The ball can't turn blue again — hit a skull or press ↻." : "The ball can't turn blue again — press ↻ to restart.") : levelHelp();
+  }
   if (game.screen !== "playing" && screen === "playing") {
     screen = game.screen;
     if (game.screen === "won") { progress = Math.max(progress, Math.min(LEVELS.length - 1, game.level + 1)); try { localStorage.setItem("tiltstones-level", String(progress)); } catch (e) {} }
@@ -613,7 +636,7 @@ function overlayAction() {
 
 // ======================= input =======================
 const held = { left: false, right: false };
-let tilt = null, tiltSeen = false, tiltAsked = false;
+let tilt = null, tiltSeen = false, tiltAsked = false, tiltZero = 0;
 function requestTilt() {
   if (tiltAsked) return; tiltAsked = true;
   const DOE = window.DeviceOrientationEvent;
@@ -627,23 +650,24 @@ function listenTilt() {
     let a = e.gamma || 0;
     const ang = (window.screen.orientation && window.screen.orientation.angle) || window.orientation || 0;
     if (ang === 90) a = e.beta || 0; else if (ang === -90 || ang === 270) a = -(e.beta || 0);
-    tilt = a; tiltSeen = true;
+    tilt = a;
+    if (!tiltSeen) { tiltSeen = true; tiltZero = a; $("tiltm").hidden = false; if (game) $("help").textContent = levelHelp(); }
   });
   setTimeout(() => { if (!tiltSeen && matchMedia("(pointer: coarse)").matches) noTilt(); }, 1500);
 }
-function noTilt(msg) { if (matchMedia("(pointer: coarse)").matches) $("help").textContent = msg || "No tilt sensor here — hold ◀ ▶ to steer."; }
+function noTilt(msg) { if (!tiltSeen && matchMedia("(pointer: coarse)").matches) $("help").textContent = msg || "No tilt sensor here — hold ◀ ▶ to steer."; }
 function currentSteer() {
   if (held.left !== held.right) return held.left ? -1 : 1;
   if (held.left && held.right) return 0;
   if (tilt == null) return 0;
-  const dz = 3, full = 22, m = Math.abs(tilt);
+  const a = tilt - tiltZero, dz = 3, full = 22, m = Math.abs(a);
   if (m < dz) return 0;
-  return Math.sign(tilt) * Math.min(1, (m - dz) / (full - dz));
+  return Math.sign(a) * Math.min(1, (m - dz) / (full - dz));
 }
 const KEYMAP = { ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d: "right", D: "right" };
 document.addEventListener("keydown", (e) => {
   if (KEYMAP[e.key]) { e.preventDefault(); held[KEYMAP[e.key]] = true; return; }
-  if (e.key === "r" || e.key === "R") { if (game) startLevel(game.level); return; }
+  if (e.key === "r" || e.key === "R") { if (screen === "title") overlayAction(); else { ensureAudio(); startLevel(game.level); } return; }
   if (e.key === "m" || e.key === "M") { toggleMute(); return; }
   if ((e.key === "Enter" || e.key === " ") && screen !== "playing") { e.preventDefault(); overlayAction(); }
 });
@@ -667,7 +691,7 @@ cv.addEventListener("pointerdown", (e) => {
   cv.addEventListener("pointerup", off); cv.addEventListener("pointercancel", off);
 });
 $("ovBtn").addEventListener("click", overlayAction);
-$("restartBtn").addEventListener("click", () => { ensureAudio(); if (game) startLevel(game.level); else overlayAction(); });
+$("restartBtn").addEventListener("click", () => { if (screen === "title") overlayAction(); else { ensureAudio(); requestTilt(); startLevel(game.level); } });
 function toggleMute() { muted = !muted; try { localStorage.setItem("tiltstones-muted", muted ? "1" : "0"); } catch (e) {} $("muteBtn").textContent = muted ? "✕" : "♪"; $("muteBtn").setAttribute("aria-label", muted ? "Unmute sound" : "Mute sound"); }
 $("muteBtn").addEventListener("click", () => { ensureAudio(); toggleMute(); });
 $("muteBtn").textContent = muted ? "✕" : "♪";
@@ -685,6 +709,7 @@ function frame(now) {
   for (const p of particles) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 6 * dt; p.life -= dt; }
   particles = particles.filter((p) => p.life > 0);
   flash = Math.max(0, flash - dt * 2.5); pulse = Math.max(0, pulse - dt * 2);
+  if (tiltSeen) $("tiltDot").style.left = (50 + 50 * currentSteer()) + "%";
   draw(now);
   requestAnimationFrame(frame);
 }
