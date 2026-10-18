@@ -1,0 +1,187 @@
+{
+  "game": "games/sweepvault/index.html",
+  "at": "2026-10-18T23:51:42.939Z",
+  "checks": [
+    {
+      "name": "file under 2 MB",
+      "ok": true,
+      "detail": "39 KB"
+    },
+    {
+      "name": "external resources only from allowed CDNs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "library versions pinned",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no alert/confirm/prompt/print/iframe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "has a <title>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "declares window.__qa",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[desktop] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"playing\",\"level\":0,\"w\":6,\"h\":6,\"hearts\":3,\"keys\":0,\"keysNeeded\":1,\"gems\":0,\"gemsTotal\":0,\"lanterns\":0,\"lampArmed\":false,\"flagMode\":false,\"revealed\":27,\"hidden\":9,\"moves\":0,\"undos\":0,\"seed\":105}"
+    },
+    {
+      "name": "[desktop] survives 400 random actions",
+      "ok": true,
+      "detail": "screens seen: playing, won, lost; resets: 24"
+    },
+    {
+      "name": "every level completable via solve() (8 levels)",
+      "ok": true,
+      "detail": "L1:6 L2:5 L3:8 L4:11 L5:10 L6:20 L7:19 L8:43"
+    },
+    {
+      "name": "[desktop] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[phone] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"playing\",\"level\":0,\"w\":6,\"h\":6,\"hearts\":3,\"keys\":0,\"keysNeeded\":1,\"gems\":0,\"gemsTotal\":0,\"lanterns\":0,\"lampArmed\":false,\"flagMode\":false,\"revealed\":27,\"hidden\":9,\"moves\":0,\"undos\":0,\"seed\":105}"
+    },
+    {
+      "name": "[phone] survives 60 random actions",
+      "ok": true,
+      "detail": "screens seen: playing, lost, won; resets: 3"
+    },
+    {
+      "name": "[phone] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "games/sweepvault/qa/desktop-01-load.png",
+    "games/sweepvault/qa/desktop-02-after-play.png",
+    "games/sweepvault/qa/desktop-03-solved.png",
+    "games/sweepvault/qa/phone-01-load.png",
+    "games/sweepvault/qa/phone-02-after-play.png"
+  ],
+  "desktop_initialState": {
+    "screen": "playing",
+    "level": 0,
+    "w": 6,
+    "h": 6,
+    "hearts": 3,
+    "keys": 0,
+    "keysNeeded": 1,
+    "gems": 0,
+    "gemsTotal": 0,
+    "lanterns": 0,
+    "lampArmed": false,
+    "flagMode": false,
+    "revealed": 27,
+    "hidden": 9,
+    "moves": 0,
+    "undos": 0,
+    "seed": 105
+  },
+  "solveResults": [
+    {
+      "lv": 0,
+      "ok": true,
+      "moves": 6,
+      "screen": "won"
+    },
+    {
+      "lv": 1,
+      "ok": true,
+      "moves": 5,
+      "screen": "won"
+    },
+    {
+      "lv": 2,
+      "ok": true,
+      "moves": 8,
+      "screen": "won"
+    },
+    {
+      "lv": 3,
+      "ok": true,
+      "moves": 11,
+      "screen": "won"
+    },
+    {
+      "lv": 4,
+      "ok": true,
+      "moves": 10,
+      "screen": "won"
+    },
+    {
+      "lv": 5,
+      "ok": true,
+      "moves": 20,
+      "screen": "won"
+    },
+    {
+      "lv": 6,
+      "ok": true,
+      "moves": 19,
+      "screen": "won"
+    },
+    {
+      "lv": 7,
+      "ok": true,
+      "moves": 43,
+      "screen": "won"
+    }
+  ],
+  "phone_initialState": {
+    "screen": "playing",
+    "level": 0,
+    "w": 6,
+    "h": 6,
+    "hearts": 3,
+    "keys": 0,
+    "keysNeeded": 1,
+    "gems": 0,
+    "gemsTotal": 0,
+    "lanterns": 0,
+    "lampArmed": false,
+    "flagMode": false,
+    "revealed": 27,
+    "hidden": 9,
+    "moves": 0,
+    "undos": 0,
+    "seed": 105
+  },
+  "passed": true
+}
