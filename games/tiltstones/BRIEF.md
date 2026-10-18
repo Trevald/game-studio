@@ -2,7 +2,7 @@
 title: Tiltstones
 slug: tiltstones
 idea_id: szh7gjlgrh5ebj6oudix
-artifact: (filled in after first publish)
+artifact: https://claude.ai/artifact/VAXzjHmZLmMTJS5zQsRJH4
 ---
 
 # Tiltstones
