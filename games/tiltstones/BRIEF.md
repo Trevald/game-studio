@@ -18,6 +18,32 @@ A Diamonds-style brick puzzle where the ball bounces up and down by itself and y
 - 1990 Mac game *Diamonds* (named, not linked; looked up via Wikipedia "Diamonds (video game)") — the ball bounces vertically on its own, the player only controls horizontal motion. Coloured blocks only break when the ball has the same colour; brush blocks repaint the ball; diamonds can only be broken once every coloured block is gone; skulls cost a life. The ball starts each level/life in its base colour and nothing paints it back, so base-colour blocks must be cleared first (or you lose a life on purpose). Keys/locks and solid blocks also exist in the original; the page didn't detail them.
 - *Diamonds PD* (Playdate remake, itch.io page) — confirms the control scheme (left/right only, crank as analog input) and that a 1-axis analog input fits the game. Page has no rules detail.
 
+## Tonight (night 2) — Ricochet phase 1 (from Benji's note "ricochet-design-v2" + DESIGN.md)
+1. Rename to **Ricochet** everywhere (title, screens). Folder/slug stay `tiltstones`.
+2. New look: designer logo + start background on the title screen, Meadow Ruins background behind the
+   board (with the designer's scrim), code-drawn jewel tiles with suit symbols (blue ◆, red ♥, green ♣,
+   gold ♠) on blocks and ball, glass paint pots, gold primary / outlined secondary buttons. Single dark look.
+3. Grey blocks (`g`): break with any colour, never count toward clearing.
+4. Paint pot dip-and-rebound: the ball dips into the pot (short, deterministic 0.13 s dip), takes its
+   colour and bounces back out. Pots stay and are reusable.
+5. World 1's 8 designer levels from `design/levels/levels.json`, loaded exactly, replacing the old 8.
+6. HUD: level id + world name, hearts, running clock (mm:ss.hh) with PB, pause, score + combo.
+   Win screen (stars via placeholder `starsFor`, time / score / max combo with New Best badges,
+   Next / Replay / World Map) and Out-of-lives screen (Try Again / Back to World). Tutorial callouts on 1-1.
+
+Not tonight (phases 2-4): world map beyond a simple World 1 level list, gear, slots, records screen.
+
+### Assumptions (night 2)
+- Clock runs in game time (fixed sim steps), across lost lives, from level start to the last diamond;
+  restart resets it. PB = best clear time per level.
+- Combo (provisional, phase 4 is Benji's call): breaking a block of the same colour within 1.5 s of the
+  previous break raises the multiplier up to x5; a different colour, a paint pot or 1.5 s without a break
+  resets it. Coloured block 100 × multiplier, grey 50, diamond 500, key/lock 200.
+- `starsFor(time, score)` placeholder: 3 stars at or under par, 2 within 1.5 × par, otherwise 1.
+- Pause opens a small panel (Resume / Restart / World Map / sound) styled like the mockup.
+- Title "Worlds" opens a World 1 level list (PB vs par); Worlds 2-4 show as "coming later";
+  Gear and Records buttons show as locked "Soon".
+
 ## Tonight (night 1)
 1. Playable core: auto-bouncing ball, horizontal steering, colour blocks, brushes, diamonds, skulls, walls, key + lock.
 2. Tilt steering via the phone's gyro (DeviceOrientation, gamma axis), with permission prompt on iOS from the Play tap; on-screen hold buttons and keyboard as fallback.
