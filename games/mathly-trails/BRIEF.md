@@ -2,7 +2,7 @@
 title: Mathly Trails
 slug: mathly-trails
 idea_id: 26uyl3583vvy9lnypy1r
-artifact: <filled in after the first publish>
+artifact: https://claude.ai/artifact/3ouYeSyBQsbEQ46theZZck
 ---
 
 # Mathly Trails
@@ -29,7 +29,9 @@ A math puzzle with a daily challenge plus a trail of worlds you travel through, 
 - I couldn't see Mathly, so its exact rules may differ. This is the make-the-target puzzle (see References), and this is the first thing to confirm.
 - Results must be positive whole numbers. ÷ only works when it divides exactly, and − only from the larger tile. This keeps the game tidy, as in Countdown.
 - Stars: reach the target = ★, with one tile left over = ★★, using every tile = ★★★. Reaching the target with tiles to spare shows a Finish button, so you can stop there or keep going for ★★★.
-- The next level unlocks with ★. The next world unlocks when the previous world's last level is cleared. No timer.
+- The next level unlocks with ★. Travelling to the next world needs its last level cleared **and 14★ of 24** in the world (added after review, so ★★★ matters). No timer.
+- Hint button (H) shows the next merge of an all-numbers route; using it caps that board at ★★.
+- Difficulty: each board allows at most a set number of all-tile routes (40 for 4 tiles, 150 for 5, 300 for 6), has no one-merge shortcut, and boards within a world are ordered easiest first. Trail boards are precomputed into the file; the daily and random boards use the same generator live.
 
 ## Later
 - Hints, a share-your-daily result string, streaks.
