@@ -1,0 +1,11 @@
+id   name             col/grey/wall/empty  won  time  deaths  maxGap  dead(s) dead%  >1s-gaps  maxTravel  contacts/hit  cpu
+L1   Rattle Rows       34/ 9/ 5/49+2        yes   42.2  0        2.8      9.4   22%    17       12.4        2.3       606ms
+L2   Switchback        32/ 3/11/53+1        yes   20.7  0        2.8      3.7   18%     5       10.4        4.3       1050ms
+L3   Pockets           54/12/ 9/24+2        yes   44.4  0        3.1     10.3   23%    11       12.4        2.6       2216ms
+L4   Shafts            46/ 9/23/21+1        yes   33.5  0        2.6      5.6   17%    10        7.4        4.6       1429ms
+L5   Grey Scaffold     30/44/10/14+2        yes   47.5  0        2.5     12.1   25%    16       12.4        2.1       2130ms
+L6   Colour Onion      60/ 0/15/21+4        yes   79.8  0       18.7     34.0   43%    28       12.4        6.8       36831ms
+L7   Stone Heavy       34/ 0/39/26+1        NO    20.4  0        0.2      0.0    0%     0        3.4       74.3       42957ms
+L8   Brick Wall        76/ 7/ 0/14+2        yes  152.8  0        2.8     64.5   42%    69       12.4        1.8       1054ms
+L9   Narrow Eight      31/10/ 7/49+3        yes   37.0  0        2.8     10.0   27%    16       12.4        3.7       312ms
+L10  Open Field         7/ 1/ 0/90+1        yes   18.0  0        2.5      7.3   41%     8       11.4        1.7       96ms

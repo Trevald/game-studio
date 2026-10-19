@@ -1,0 +1,212 @@
+[
+  {
+    "id": "L1", "name": "Rattle Rows", "family": "dense corridor",
+    "idea": "Full-width 1-row channels between block bands; the ball rattles along each band.",
+    "hint": "Clear the blue bands from below. Break the blue guard under the red pot last.",
+    "map": [
+      "b*bbgbb*bb",
+      "..........",
+      "bbgbbbgbbb",
+      "..........",
+      "bgbB#bbgbb",
+      "...a......",
+      "aaga#aagaa",
+      "..........",
+      "#aagaagaa#",
+      "..........",
+      "aaga#aagaa",
+      "..........",
+      "....o.....",
+      "ag#aaaa#ga"
+    ]
+  },
+  {
+    "id": "L2", "name": "Switchback", "family": "dense corridor",
+    "idea": "A snake corridor: shelves with a gap at alternate ends. Breaking shelf blocks cuts shortcuts.",
+    "hint": "Wind up through the shelves. The red pot waits at the top gap: finish blue first.",
+    "map": [
+      "bbbb*bbbbb",
+      "..........",
+      "B#bb#bb#bb",
+      "..........",
+      "bb#aa#ab#.",
+      "..........",
+      ".#aa#aa#ag",
+      "..........",
+      "aa#ag#aa#.",
+      "..........",
+      ".#aa#ga#aa",
+      "..........",
+      "...o......",
+      "aaaagaaaaa"
+    ]
+  },
+  {
+    "id": "L3", "name": "Pockets", "family": "dense corridor",
+    "idea": "Two-cell pockets walled by blocks; the ball rattles inside and breaks into the next pocket.",
+    "hint": "Blue only. Every pocket wall you break opens the next room.",
+    "map": [
+      "aa*aagaa*a",
+      "a..ga..ga.",
+      "agaa*agaaa",
+      "a..aa..aa.",
+      "#gaa#aag##",
+      "a..aa..ga.",
+      "aagaa#aaga",
+      "a..ga..aa.",
+      "#aaga#gaa#",
+      "a..aa..ga.",
+      "aagaagaa#a",
+      "a..#a..aa.",
+      "aaa.o.aaga",
+      "a#aaaaa#aa"
+    ]
+  },
+  {
+    "id": "L4", "name": "Shafts", "family": "dense corridor",
+    "idea": "Short vertical shafts between stone columns, linked by grey windows you carve sideways.",
+    "hint": "Blue only. Bounce up a shaft, then break a grey window to cross over.",
+    "map": [
+      "a*a#aa#a*a",
+      "a.a#a.#a.a",
+      "a.agaag..a",
+      "a.a#.a#a.a",
+      "#g###g##g#",
+      "a.a#a.#a.a",
+      "a.aga.ga.a",
+      "a.a#aa#a.a",
+      "#g##g###g#",
+      "a.a#a.#a.a",
+      "a.aga.ga.a",
+      "a.a#.a#a.a",
+      "a.a#o.#a.a",
+      "aaa#aa#aaa"
+    ]
+  },
+  {
+    "id": "L5", "name": "Grey Scaffold", "family": "dense corridor",
+    "idea": "A grey lattice you carve through with coloured nuggets inside; you build your own corridors.",
+    "hint": "Grey breaks in any colour. Blue first, then dig to the red pot in the middle.",
+    "map": [
+      "g*bbgbbg*g",
+      "gbbgbbgbbg",
+      "#gg#gg#gg#",
+      "gaagaagaag",
+      "g..g..g..g",
+      "gagg#Bggag",
+      "gaagaagaag",
+      "#gg#gg#gg#",
+      "gaagaagaag",
+      "g..g..g..g",
+      "gaagaagaag",
+      "#g#gg#g#g#",
+      "g...o....g",
+      "gaagaagaag"
+    ]
+  },
+  {
+    "id": "L6", "name": "Colour Onion", "family": "dense corridor",
+    "idea": "Four colour layers stacked bottom to top; each layer's pot sits at the next layer's door.",
+    "hint": "Blue, red, green, gold, from the bottom up. Each pot opens the layer above it.",
+    "map": [
+      "dd*dd#dd*d",
+      "d.dd.dd.dd",
+      "dd#dd.dd#d",
+      "#c#c#cDc##",
+      "cc.cc.cc.c",
+      "c.cc#c.cc.",
+      "#b#bb#bC##",
+      "bb.bb.bb.b",
+      "b.bb#b.bb.",
+      "#a#aa#aB##",
+      "aa.aa.aa.a",
+      "a.aa#a.aa.",
+      "..a.o.a...",
+      "aaaaaaaaaa"
+    ]
+  },
+  {
+    "id": "L7", "name": "Stone Heavy", "family": "dense corridor",
+    "idea": "Close to the density reference: about a third of the field is stone, corridors are fixed.",
+    "hint": "The stone never breaks. Find the route that touches the most blue.",
+    "map": [
+      "a*#a#a##*a",
+      "#a.#.a#a.#",
+      "a.##a.##.a",
+      "#aa#.##aa#",
+      "..#a.#a..#",
+      "#a.#a.#.a#",
+      "a##.#a#a.a",
+      "#.a#a.#a##",
+      "a.##.a#.a#",
+      "#a.a#.a##a",
+      "a.##a#..a#",
+      "#a.#..#a.a",
+      "a.#.o.#.a#",
+      "#a#aa#a#aa"
+    ]
+  },
+  {
+    "id": "L8", "name": "Brick Wall", "family": "dense corridor",
+    "idea": "Almost no stone: a solid wall of coloured bricks with a few grey ribs. You carve every corridor.",
+    "hint": "Blue, then red from the pot at the right edge, then the diamonds.",
+    "map": [
+      "bb*bbbb*bb",
+      "bbbbgbbbbb",
+      "bbgbbbbgbb",
+      "bbbbbgbbbb",
+      "aaaaaaaaaB",
+      "aagaaaagaa",
+      "aaaaagaaaa",
+      "aaaaaaaaaa",
+      "agaaaaaaga",
+      "aaaagaaaaa",
+      "aaaaaaaaaa",
+      "..........",
+      "....o.....",
+      "aaaaaaaaaa"
+    ]
+  },
+  {
+    "id": "L9", "name": "Narrow Eight", "family": "dense corridor (8 columns)",
+    "idea": "The rattle-row idea on an 8-column grid: bigger tiles on the phone, shorter channels.",
+    "hint": "Clear the blue bands, then the red ones. The red pot hides behind the blue guard.",
+    "map": [
+      "b*bgbb*b",
+      "........",
+      "bgbb#bgb",
+      "........",
+      "bbB#bbgb",
+      "..a.....",
+      "aga#agaa",
+      "........",
+      "#aagaa#a",
+      "........",
+      "aaga#aga",
+      "........",
+      "...o....",
+      "ag#aa#ga"
+    ]
+  },
+  {
+    "id": "L10", "name": "Open Field", "family": "contrast",
+    "idea": "Contrast: sparse blocks and long flights, built for speed routes rather than corridors.",
+    "hint": "Few blocks, lots of air. Find the fastest line through them.",
+    "map": [
+      "..........",
+      ".*......*.",
+      "...a..a...",
+      "..........",
+      "a........a",
+      "....aa....",
+      "..........",
+      ".a......a.",
+      "...g..g...",
+      "..........",
+      "..a....a..",
+      "..........",
+      "....o.....",
+      ".........."
+    ]
+  }
+]
