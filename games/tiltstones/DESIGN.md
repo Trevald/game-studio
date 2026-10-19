@@ -2,10 +2,19 @@
 
 Working title **Ricochet** (was Tiltstones). The folder and slug stay `tiltstones` so links and history keep working.
 
-This document is Benji's. It overrides BRIEF.md wherever they disagree. The visual reference is
-[`design/mockup-v2.png`](design/mockup-v2.png), an AI-generated mockup: use it for look, layout and
-screen inventory, not as a spec. Its text has typos, and its tile art is raster. Recreate the look in
-code (canvas/CSS/SVG); don't try to embed or trace the image.
+This document is Benji's. It overrides BRIEF.md wherever they disagree. The designer's own notes are
+in `design/HANDOFF-README.md` (start there) and `design/levels/LEVEL-DESIGNS.md`.
+
+Visual references (AI-generated, illustrative — never a spec for rules or tile coordinates):
+- **Gameplay look:** [`design/concept/approved-gameplay-direction.png`](design/concept/approved-gameplay-direction.png)
+  is Benji's preferred direction for the playing screen: luminous ball, sculpted jewel blocks, glass
+  paint pots, mossy ruin frame, polished blue HUD. This wins over the older mockup for gameplay.
+- **Other screens:** [`design/concept/original-visual-concept.png`](design/concept/original-visual-concept.png)
+  for start, gear, win and lose screens. Its text has typos.
+Recreate the look in code (canvas/CSS/SVG); don't embed or trace these images.
+
+**Rule precedence:** levels.json and the rules in this file beat anything an image seems to show.
+Block symbols are identifiers only: blocks match on **colour**, not shape.
 
 ## Decided
 
@@ -14,8 +23,16 @@ code (canvas/CSS/SVG); don't try to embed or trace the image.
 - The core movement stays exactly as now: the ball bounces vertically by itself and the player only
   steers left/right. The curved dotted lines in the mockup only illustrate movement; they are not a
   new physics model and not an aiming line.
-- Colour rules stay: a block breaks only when the ball has its colour; paint pots recolour the ball;
-  diamonds break once all colour is gone; skulls cost a life; keys open locks.
+- Colour rules stay: a block breaks only when the ball has its colour; diamonds break once all colour
+  is gone; skulls cost a life and reset the ball to blue; keys open locks.
+- **Paint pots (confirmed):** the ball dips in, takes the pot's colour and **bounces back out — never
+  passes through**. Pots stay and can be reused. No pot restores blue; only losing a life does.
+  Show the dip and the rebound in the animation. (The current engine already treats pots as solid and
+  reusable — keep that.)
+- **Grey blocks (new tile `g`):** break with any ball colour and do **not** count toward clearing:
+  diamonds unlock and the level is won with grey blocks still standing.
+- Keys and diamonds also bounce the ball when collected. The bottom edge bounces; there are no pits.
+- The ball starts blue, moving upward.
 
 **Look (from the mockup)**
 - Dark, deep-blue/indigo world with bevelled, glossy tiles and soft glows. A single dark look is fine
@@ -27,10 +44,20 @@ code (canvas/CSS/SVG); don't try to embed or trace the image.
 - Gold primary buttons, outlined secondary buttons, rounded panels (see panels 1, 4, 5, 6).
 
 **Levels**
-- Diamonds-style layouts, not Breakout: blocks spread through the whole field so the ball bounces off
-  blocks mid-air most of the time; pockets, corridors and shelves; little dead travel time.
-  Panels 2–4 show the density to aim for.
-- Levels are grouped into the four named worlds below, with level ids like `2-4` and the world name in the HUD.
+- **World 1 (Meadow Ruins) is designed:** `design/levels/levels.json` is authoritative — 8 levels, 10×14
+  grids, with name, hint, teaching goal, solution, safe/fast route and provisional par for each. Load the
+  grids exactly as given (same legend as the engine plus `g`). Replace the old 8 levels with these.
+  `design/levels/screenshots/` are schematic renders of the grids, not the final art.
+- Pre-check (19 Oct, scratch copy of the current engine with `g` added): the solver cleared all 8 in
+  6.0–29.2 s of game time. Re-run after the rebuild; if any level stops being solvable, report it with
+  the level id and where the solver got stuck. **Don't redesign a designer level** — small fixes (move one
+  tile) only if unavoidable, and list them in the report.
+- Pars: designer estimates (25–65 s). Show them as the level's target; flag in the report any par that
+  looks far off once you can measure.
+- Worlds 2–4 aren't designed yet. Don't invent them; the world map shows them as coming later.
+- Level ids like `1-4` and the world name show in the HUD.
+- Restart, life count and what persists after a death aren't in the designer's notes: keep the current
+  behaviour (3 lives, instant restart).
 
 **Timing**
 - Every level is timed with a running clock (mm:ss.hh) and the personal best (PB) under it.
@@ -84,7 +111,7 @@ Colour Sight, Time Warp, Shield, Extra Life, Chain Extender, Prism, Blue Return,
   Never dim the blocks, ball or gear along with the background.
 - Icons: show at 32–64 px (never under 24), always next to a visible name; hit areas at least 44×44 px.
   Locked/disabled state is styled on the button, never by editing the SVG.
-- Tiles, ball, effects and UI chrome stay code-drawn, matched to this art and to `design/mockup-v2.png`.
+- Tiles, ball, effects and UI chrome stay code-drawn, matched to this art and to the two concept images.
 
 **How to load them (studio rule, overrides the designer's base64 advice)**
 - Reference assets as **separate files with relative URLs** (`<img src="assets/icons/magnet.svg">`,
@@ -110,11 +137,12 @@ Colour Sight, Time Warp, Shield, Extra Life, Chain Extender, Prism, Blue Return,
 
 ## Constraints that still apply
 - Every level must be solvable with no gear equipped; `solve()` must clear every level with an empty loadout.
-- Instant restart, phone-first portrait, single self-contained HTML file.
+- Instant restart, phone-first portrait. One HTML file for code; art loads from `assets/` (see above).
 
 ## Suggested phasing
-1. Rename + new look on the existing levels: logo + start background, world background behind the board,
-   tiles with suit symbols, HUD with clock/PB, win and lose screens.
-2. Worlds + new Diamonds-style levels (first world of 8).
+1. Rename + new look: logo + start background, Meadow Ruins background behind the board, jewel tiles
+   with suit symbols, grey blocks, pot dip-and-rebound, HUD with clock/PB, win and lose screens —
+   **with World 1's 8 designer levels** replacing the old ones.
+2. World structure: world map, level select, PBs per level, pars shown.
 3. Gear: Magnet + 2 provisional items, gear screen, 1 slot unlocking to 3.
 4. Score/combo/stars once Benji has decided how they matter.

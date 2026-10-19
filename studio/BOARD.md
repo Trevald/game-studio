@@ -67,7 +67,8 @@ ArtifactData update collection: "ideas" doc_id: <id> if_version: <v>
 Finish the night with one `batch` (each entry pinned with its own `if_version`):
 
 - update `ideas/<id>`: `status: "ready"`, `buildUrl`, `nights`, `lastReport`, `updatedAt`
-- update each used `feedback/<id>`: `status: "used"`, `usedOn`
+- update each feedback note you **fully** handled: `status: "used"`, `usedOn`. A note you only partly
+  did stays `pending` (add a `progress` field saying what's left) so the next shift continues it.
 - update `studio/state`: `lastRun`, `lastNote`
 
 If a pinned write fails because Benji changed the doc during the night (e.g. he parked the idea),

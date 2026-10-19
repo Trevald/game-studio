@@ -56,3 +56,7 @@ Decorative backgrounds need no accessible label. Give gear buttons visible item 
 
 ## Verification
 All five WebPs decoded at the required dimensions. All eleven SVGs parsed and rasterized successfully. Runtime SVGs contain no text nodes or scripts. All sixteen assets were visually reviewed in the contact sheet. Manifest SHA-256 hashes allow build-time integrity checks. Original generation prompts are included in generation-prompts.json for future art iterations.
+
+## Confirmed paint-bucket behaviour — 19 October 2026
+
+The ball dips inside the bucket, changes to the bucket colour, and bounces back out. It never passes through. Buckets persist and can be used repeatedly. The visual should show entry into the paint and exit on the rebound; static mockups do not establish collision boundaries or animation timing. Plan level routes around that rebound. No bucket restores blue; losing a life resets the ball to blue.
