@@ -68,7 +68,7 @@ for (const vp of viewports) {
   page.on("dialog", (d) => { errors.push("dialog opened: " + d.type()); d.dismiss().catch(() => {}); });
   page.on("requestfailed", (r) => {
     const u = r.url();
-    if (!u.startsWith("file:") && !u.startsWith("data:")) errors.push("request failed: " + u);
+    if (!u.startsWith("data:")) errors.push("request failed: " + u); // includes missing local asset files
   });
 
   await page.goto(pathToFileURL(gamePath).href, { waitUntil: "load" });
