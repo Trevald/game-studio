@@ -1,11 +1,11 @@
 {
   "game": "games/tiltstones/index.html",
-  "at": "2026-10-19T15:24:53.511Z",
+  "at": "2026-10-19T21:45:28.369Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "64 KB"
+      "detail": "81 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -45,7 +45,7 @@
     {
       "name": "[desktop] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"title\",\"level\":0,\"id\":\"1-1\",\"lives\":3,\"color\":0,\"keys\":0,\"dip\":0,\"ball\":{\"x\":4.5,\"y\":12.5},\"left\":{\"colors\":8,\"grey\":0,\"diamonds\":2,\"locks\":0},\"steps\":0,\"time\":0,\"score\":0,\"combo\":0,\"maxCombo\":0}"
+      "detail": "{\"screen\":\"title\",\"level\":0,\"id\":\"1-1\",\"set\":\"w1\",\"lives\":3,\"color\":0,\"keys\":0,\"dip\":0,\"ball\":{\"x\":4.5,\"y\":12.5},\"left\":{\"colors\":8,\"grey\":0,\"diamonds\":2,\"locks\":0},\"steps\":0,\"time\":0,\"score\":0,\"combo\":0,\"maxCombo\":0}"
     },
     {
       "name": "[desktop] survives 400 random actions",
@@ -53,9 +53,9 @@
       "detail": "screens seen: playing, won; resets: 1"
     },
     {
-      "name": "every level completable via solve() (8 levels)",
+      "name": "every level completable via solve() (18 levels)",
       "ok": true,
-      "detail": "L1:68 L2:77 L3:54 L4:154 L5:272 L6:77 L7:95 L8:302"
+      "detail": "L1:135 L2:50 L3:205 L4:138 L5:207 L6:117 L7:112 L8:242 L9:273 L10:249 L11:268 L12:287 L13:357 L14:302 L15:293 L16:361 L17:210 L18:123"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -75,7 +75,7 @@
     {
       "name": "[phone] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"title\",\"level\":0,\"id\":\"1-1\",\"lives\":3,\"color\":0,\"keys\":0,\"dip\":0,\"ball\":{\"x\":4.5,\"y\":12.5},\"left\":{\"colors\":8,\"grey\":0,\"diamonds\":2,\"locks\":0},\"steps\":0,\"time\":0,\"score\":0,\"combo\":0,\"maxCombo\":0}"
+      "detail": "{\"screen\":\"title\",\"level\":0,\"id\":\"1-1\",\"set\":\"w1\",\"lives\":3,\"color\":0,\"keys\":0,\"dip\":0,\"ball\":{\"x\":4.5,\"y\":12.5},\"left\":{\"colors\":8,\"grey\":0,\"diamonds\":2,\"locks\":0},\"steps\":0,\"time\":0,\"score\":0,\"combo\":0,\"maxCombo\":0}"
     },
     {
       "name": "[phone] survives 60 random actions",
@@ -99,6 +99,7 @@
     "screen": "title",
     "level": 0,
     "id": "1-1",
+    "set": "w1",
     "lives": 3,
     "color": 0,
     "keys": 0,
@@ -123,49 +124,109 @@
     {
       "lv": 0,
       "ok": true,
-      "moves": 68,
+      "moves": 135,
       "screen": "won"
     },
     {
       "lv": 1,
       "ok": true,
-      "moves": 77,
+      "moves": 50,
       "screen": "won"
     },
     {
       "lv": 2,
       "ok": true,
-      "moves": 54,
+      "moves": 205,
       "screen": "won"
     },
     {
       "lv": 3,
       "ok": true,
-      "moves": 154,
+      "moves": 138,
       "screen": "won"
     },
     {
       "lv": 4,
       "ok": true,
-      "moves": 272,
+      "moves": 207,
       "screen": "won"
     },
     {
       "lv": 5,
       "ok": true,
-      "moves": 77,
+      "moves": 117,
       "screen": "won"
     },
     {
       "lv": 6,
       "ok": true,
-      "moves": 95,
+      "moves": 112,
       "screen": "won"
     },
     {
       "lv": 7,
       "ok": true,
+      "moves": 242,
+      "screen": "won"
+    },
+    {
+      "lv": 8,
+      "ok": true,
+      "moves": 273,
+      "screen": "won"
+    },
+    {
+      "lv": 9,
+      "ok": true,
+      "moves": 249,
+      "screen": "won"
+    },
+    {
+      "lv": 10,
+      "ok": true,
+      "moves": 268,
+      "screen": "won"
+    },
+    {
+      "lv": 11,
+      "ok": true,
+      "moves": 287,
+      "screen": "won"
+    },
+    {
+      "lv": 12,
+      "ok": true,
+      "moves": 357,
+      "screen": "won"
+    },
+    {
+      "lv": 13,
+      "ok": true,
       "moves": 302,
+      "screen": "won"
+    },
+    {
+      "lv": 14,
+      "ok": true,
+      "moves": 293,
+      "screen": "won"
+    },
+    {
+      "lv": 15,
+      "ok": true,
+      "moves": 361,
+      "screen": "won"
+    },
+    {
+      "lv": 16,
+      "ok": true,
+      "moves": 210,
+      "screen": "won"
+    },
+    {
+      "lv": 17,
+      "ok": true,
+      "moves": 123,
       "screen": "won"
     }
   ],
@@ -173,6 +234,7 @@
     "screen": "title",
     "level": 0,
     "id": "1-1",
+    "set": "w1",
     "lives": 3,
     "color": 0,
     "keys": 0,

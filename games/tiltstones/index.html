@@ -73,6 +73,33 @@
   .lv.done small { color: #ffe27a; }
   .lv[disabled] { opacity: .45; cursor: default; }
 
+  /* ---------- level lab ---------- */
+  #lab { gap: 12px; }
+  .lab-intro { width: min(100%, 460px); margin: 0; color: #cfdcff; font-size: 13px; text-shadow: 0 1px 4px #000; }
+  .lab-list { width: min(100%, 460px); display: grid; gap: 10px; padding-bottom: 20px; }
+  .lcard { text-align: left; border-radius: 16px; border: 2px solid rgba(110,160,255,.5); background: rgba(10,20,50,.88); color: var(--ink);
+    padding: 12px 14px; cursor: pointer; display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: center; font-family: var(--font); }
+  .lcard:active { background: rgba(30,56,120,.9); }
+  .lcard:focus-visible { outline: 3px solid #9cc4ff; outline-offset: 2px; }
+  .lcard .lid { grid-row: span 2; font: 900 18px var(--font); color: var(--gold); min-width: 36px; }
+  .lcard h3 { margin: 0; font-size: 16px; }
+  .lcard h3 small { font-size: 10px; color: var(--muted); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-left: 6px; }
+  .lcard .lpb { grid-row: span 2; font: 700 12px var(--font); color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  .lcard .lpb b { display: block; color: #ffe27a; font-size: 14px; }
+  .lcard p { margin: 0; color: #b9c8ec; font-size: 12.5px; grid-column: 2; }
+  .lcard .ratio { grid-column: 1 / -1; }
+  .ratio { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #0a1430; }
+  .ratio i { display: block; height: 100%; }
+  .ratio .r-col { background: linear-gradient(90deg, #3d8bff, #ff4d6a, #3cd070, #ffcc33); }
+  .ratio .r-grey { background: #8790aa; } .ratio .r-wall { background: #3a4058; } .ratio .r-other { background: #bff3ff; }
+  .rlegend { font: 700 11px var(--font); color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .labbtn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .labbtn svg { width: 22px; height: 22px; }
+  #pCard .fam { display: inline-block; font: 800 10px var(--font); letter-spacing: .1em; text-transform: uppercase; color: #062b12; background: #7fe0a8; border-radius: 6px; padding: 2px 7px; margin-bottom: 6px; }
+  #pCard .idea { font-size: 15px; color: #eaf2ff; margin: 6px 0 10px; }
+  #pCard .ratio { margin: 0 4px; }
+  #pCard .rlegend { margin: 4px 0 12px; }
+
   /* ---------- game ---------- */
   #game { gap: 8px; }
   .hud { width: 100%; max-width: 460px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 6px;
@@ -158,6 +185,7 @@
     <symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z M9 4v14 M15 6v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z" fill="currentColor"/></symbol>
     <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 3h10v5a5 5 0 0 1-10 0z M7 5H3a4 4 0 0 0 4 5 M17 5h4a4 4 0 0 1-4 5 M12 13v4 M8 21h8 M9 17h6v4H9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 15h10l2 4.5H5z" fill="currentColor"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2" fill="currentColor"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></symbol>
   </defs>
 </svg>
@@ -174,6 +202,7 @@
       <button class="tile" disabled aria-label="Gear, coming soon"><svg><use href="#i-bolt"/></svg>Gear<small>Soon</small></button>
       <button class="tile" disabled aria-label="Records, coming soon"><svg><use href="#i-trophy"/></svg>Records<small>Soon</small></button>
     </div>
+    <button class="btn2 labbtn" id="labBtn"><svg><use href="#i-flask"/></svg>Level Lab</button>
   </div>
 </section>
 
@@ -185,6 +214,17 @@
     <button class="icon" data-mute aria-label="Mute sound"><svg><use href="#i-sound"/></svg></button>
   </div>
   <div class="wlist" id="wlist"></div>
+</section>
+
+<!-- ============ level lab ============ -->
+<section class="screen" id="lab" hidden>
+  <div class="bar">
+    <button class="icon" id="labBack" aria-label="Back"><svg><use href="#i-back"/></svg></button>
+    <h2>Level Lab</h2>
+    <button class="icon" data-mute aria-label="Mute sound"><svg><use href="#i-sound"/></svg></button>
+  </div>
+  <p class="lab-intro">Ten level-design directions to compare, not a campaign. Each one is open. Bar: <b style="color:#9fc4ff">coloured</b> · <b style="color:#c9d0e2">grey</b> · <b style="color:#8a90a8">stone</b> · empty.</p>
+  <div class="lab-list" id="labList"></div>
 </section>
 
 <!-- ============ game ============ -->
@@ -220,6 +260,16 @@
           <button class="btn" id="nextBtn">Next Level</button>
           <div class="row2"><button class="btn2" id="replayBtn">Replay</button><button class="btn2" data-map>World Map</button></div>
         </div>
+      </div>
+      <div class="panel" id="pCard" hidden>
+        <span class="fam" id="cFam">dense corridor</span>
+        <h2 id="cName">Rattle Rows</h2>
+        <div class="sub" id="cSub">Level Lab · L1</div>
+        <p class="idea" id="cIdea"></p>
+        <div class="ratio" id="cRatio"></div>
+        <div class="rlegend" id="cLegend"></div>
+        <p class="par" id="cPb"></p>
+        <div class="acts"><button class="btn" id="cPlay">Play</button><button class="btn2" data-map>Level Lab</button></div>
       </div>
       <div class="panel" id="pLost" hidden>
         <h2>Out of lives!</h2>
@@ -425,14 +475,14 @@ const W1_COUNT = LEVELS.length;
 // Exploratory level-design directions (DESIGN.md "Level Lab"). Not a progression: every lab level is open.
 // LAB:BEGIN — generated from lab/levels.json by lab/build.mjs; edit the JSON, not this block
 const LAB = [
-  { id: "L1", name: "Rattle Rows", family: "dense corridor", idea: "1-row channels between block bands, with stone ribs every 4 rows so a cleared band never becomes a hall.", hint: "Clear each band from the channel under it. The red pot is top right, behind the last blue block in that corner.", map: [
+  { id: "L1", name: "Rattle Rows", family: "dense corridor", idea: "1-row channels between block bands, with stone ribs every 4 rows so a cleared band never becomes a hall.", hint: "Clear each band from the channel under it. The red pot is at the right end of a channel: slide into it only when blue is done.", map: [
     "b*bbgbbb*b",
     "..........",
     "bbgbbbbgbb",
-    "#.##.#.##B",
-    "aaaaagaaaa",
-    "..........",
-    "aagaaaagaa",
+    "#.##.#.###",
+    "aaaaagaaa#",
+    "........aB",
+    "aagaaaaga#",
     ".##.##g#.#",
     "aaaagaaaaa",
     "..........",
@@ -441,12 +491,12 @@ const LAB = [
     "....o.....",
     "aagaaaagaa",
   ]},
-  { id: "L2", name: "Switchback", family: "dense corridor", idea: "A snake corridor: stone shelves with one gap at alternate ends. Grey bricks in the shelves are shortcuts.", hint: "Wind up through the gaps. The red pot is at the far left of the top shelf: finish blue first.", map: [
+  { id: "L2", name: "Switchback", family: "dense corridor", idea: "A snake corridor: stone shelves with one gap at alternate ends. Grey bricks in the shelves are shortcuts.", hint: "Wind up through the gaps. The red pot is at the right end of the fourth channel: slide into it when blue is done.", map: [
     "b*bbbbbb*b",
     "..........",
-    "B#g####.##",
-    "aaaaaaagaa",
-    "..........",
+    "##g####.##",
+    "aaaaaaaga#",
+    "........aB",
     "#.###g####",
     "aagaaaaaaa",
     "..........",
@@ -489,13 +539,13 @@ const LAB = [
     "a.a#o.#a.a",
     "aaa#aa#aaa",
   ]},
-  { id: "L5", name: "Grey Scaffold", family: "dense corridor", idea: "A grey lattice you carve through, held up by stone ribs so the carving never opens a hall.", hint: "Grey breaks in any colour. Blue first; the red pot sits in the rib on the right.", map: [
+  { id: "L5", name: "Grey Scaffold", family: "dense corridor", idea: "A grey lattice you carve through, held up by stone ribs so the carving never opens a hall.", hint: "Grey breaks in any colour. Blue first, then slide sideways into the red pot on the right.", map: [
     "g*bbgbbg*g",
     "gbbgbbgbbg",
     "#g.##g.#g#",
-    "gaagaagaag",
-    "g..g..g..g",
-    "#a##g#a#B#",
+    "gaagaag##g",
+    "g..g..gaB#",
+    "#a##g#a###",
     "gaagaagaag",
     "g..g..g..g",
     "#g.##g.#g#",
@@ -505,18 +555,18 @@ const LAB = [
     "g...o....g",
     "gaagaagaag",
   ]},
-  { id: "L6", name: "Colour Onion", family: "dense corridor", idea: "Four colour layers from the bottom up, each sealed by a stone rib. The next colour's pot sits in the rib, behind the layer's last block.", hint: "Blue, red, green, gold, from the bottom up. Leave the block under each pot for last.", map: [
+  { id: "L6", name: "Colour Onion", family: "dense corridor", idea: "Four colour layers from the bottom up, each sealed by a stone rib. The next colour's pot sits in the rib, behind the layer's last block.", hint: "Blue, red, green, gold, from the bottom up. Each pot sits in a rib: steer sideways into it when its layer is done.", map: [
     "d*ddddd*dd",
     "..........",
-    "ddgddddgdd",
-    "#.##.##.#D",
-    "ccccgccccc",
-    "..........",
-    "C#.##.##.#",
-    "bbbbbgbbbb",
-    "..........",
-    "#.##.##.#B",
-    "aaaagaaaaa",
+    "ddgddddgd#",
+    "#.##.##.cD",
+    "ccccgcccc#",
+    "#.........",
+    "Cb.##.#.##",
+    "#bbbbgbbb#",
+    ".........#",
+    "#.##.##.aB",
+    "aaaagaaaa#",
     "..........",
     "....o.....",
     "aagaaaagaa",
@@ -542,7 +592,7 @@ const LAB = [
     "bbbbgbbbbb",
     "##.#####.#",
     "aaaaaaaaaB",
-    "aagaaaagaa",
+    "aagaaaaga#",
     "#.####.###",
     "aaaaagaaaa",
     "agaaaaaaga",
@@ -553,12 +603,12 @@ const LAB = [
     "....o.....",
     "aaaaaaaaaa",
   ]},
-  { id: "L9", name: "Narrow Eight", family: "dense corridor (8 columns)", idea: "The rattle-row idea on an 8-column grid: bigger tiles on the phone, shorter channels.", hint: "Clear the blue bands, then the red ones. The red pot is behind the blue block at the right end of the rib.", map: [
+  { id: "L9", name: "Narrow Eight", family: "dense corridor (8 columns)", idea: "The rattle-row idea on an 8-column grid: bigger tiles on the phone, shorter channels.", hint: "Clear the blue bands, then the red ones. The red pot is at the right end of the rib: slide into it when blue is done.", map: [
     "b*bgbb*b",
     "........",
-    "bbgbbgbb",
-    "#.##.#.B",
-    "aaaagaaa",
+    "bbgbbgb#",
+    "#.##.#aB",
+    "aaaagaa#",
     "........",
     "aagaaaga",
     ".##.#g.#",
@@ -847,7 +897,7 @@ function solveFrom(g0, maxActions = 4000) {
   let misses = 0;
   while (g.screen === "playing" && out.length < maxActions && misses < 40) {
     const p = planStep(g);
-    misses = p ? 0 : misses + 1;   // 40 wiggles in a row with no useful macro: give up (broken level)
+    misses = p && p.t < 999 ? 0 : misses + 1;   // 40 plans in a row with nothing useful in reach: give up (broken level)
     const acts = p ? p.acts : Array.from({ length: 5 }, () => ["left", "stay", "right"][(rnd() * 3) | 0]);   // nothing found: wiggle
     for (const a of acts) { applyAction(g, a); out.push(a); if (g.screen !== "playing") break; }
   }
@@ -1130,7 +1180,7 @@ function updateHud(force) {
   const L = LEVELS[game.level];
   const h = { id: L.id, lives: game.lives, score: game.score, combo: game.combo };
   if (force || h.id !== lastHud.id) {
-    $("lvlId").innerHTML = `${L.id} <span>${WORLDS[0].name}</span>`;
+    $("lvlId").innerHTML = L.set === "lab" ? `${L.id} <span>Level Lab</span>` : `${L.id} <span>${WORLDS[0].name}</span>`;
     const b = save.best[L.id];
     $("pb").textContent = "PB " + fmt(b && b.time);
   }
@@ -1154,18 +1204,21 @@ function levelHelp() {
 }
 function setHelp(html, warn) { $("help").innerHTML = html; $("help").classList.toggle("warn", !!warn); }
 function show(id) {
-  for (const s of ["title", "worlds", "game"]) $(s).hidden = s !== id;
+  for (const s of ["title", "worlds", "lab", "game"]) $(s).hidden = s !== id;
   const bg = $("bg");
   bg.className = id === "title" ? "start" : "";
-  bg.style.backgroundImage = `url("${id === "title" ? "assets/backgrounds/start@2x.webp" : WORLDS[0].bg}")`;
+  const labish = id === "lab" || (id === "game" && game && LEVELS[game.level].set === "lab");   // the lab sits in the Crystal Caverns art
+  bg.style.backgroundImage = `url("${id === "title" ? "assets/backgrounds/start@2x.webp" : labish ? WORLDS[1].bg : WORLDS[0].bg}")`;
   if (id === "game") resize();
 }
 function showPanel(which) {
   $("ov").hidden = !which;
-  for (const p of ["pWon", "pLost", "pPause", "pStuck"]) $(p).hidden = p !== which;
+  for (const p of ["pWon", "pLost", "pPause", "pStuck", "pCard"]) $(p).hidden = p !== which;
   if (which) { const btn = $(which).querySelector(".btn"); if (btn) btn.focus({ preventScroll: true }); }
 }
-function startLevel(lv) {
+const ratioBar = (q) => `<i class="r-col" style="width:${q.col}%"></i><i class="r-grey" style="width:${q.grey}%"></i><i class="r-wall" style="width:${q.wall}%"></i><i class="r-other" style="width:${q.other}%"></i>`;
+const ratioText = (q) => `${q.col}% coloured · ${q.grey}% grey · ${q.wall}% stone · ${q.empty}% empty`;
+function startLevel(lv, withCard) {
   lv = Math.max(0, Math.min(LEVELS.length - 1, lv | 0));
   game = newGame(lv); screen = "playing"; particles = []; floaters = []; trail = []; flash = 0; pulse = 0;
   if (tilt != null) tiltZero = tilt;   // however you hold the phone when a level starts is "level"
@@ -1174,7 +1227,18 @@ function startLevel(lv) {
   setHelp(levelHelp());
   updateHud(true);
   tutorial(lv === 0);
+  const lab = LEVELS[lv].set === "lab";
+  document.querySelectorAll("[data-map]").forEach((b) => { b.textContent = lab ? "Level Lab" : b.dataset.label; });
+  if (lab && withCard) {   // direction card before play; the board is already drawn behind it
+    const L = LEVELS[lv], q = ratio(L.map), b = save.best[L.id];
+    $("cFam").textContent = L.family; $("cName").textContent = L.name; $("cSub").textContent = `Level Lab · ${L.id} · ${L.map[0].length}×${L.map.length}`;
+    $("cIdea").textContent = L.idea; $("cRatio").innerHTML = ratioBar(q); $("cLegend").textContent = ratioText(q);
+    $("cPb").textContent = b ? `PB ${fmt(b.time)} · best score ${b.score.toLocaleString("en-US")}` : "Not played yet";
+    screen = "card"; showPanel("pCard");
+  }
 }
+document.querySelectorAll("[data-map]").forEach((b) => { b.dataset.label = b.textContent; });
+function beginFromCard() { if (screen !== "card") return; screen = "playing"; showPanel(null); }
 let tipTimer = 0;
 function tutorial(on) {
   clearTimeout(tipTimer);
@@ -1227,17 +1291,19 @@ function finishLevel() {
   const L = LEVELS[game.level], time = gameTime(game);
   const prev = save.best[L.id] || {};
   const nb = { time: prev.time == null || time < prev.time, score: prev.score == null || game.score > prev.score, combo: prev.combo == null || game.maxCombo > prev.combo };
-  const st = starsFor(time, game.score, L.par);
+  const lab = L.set === "lab";
+  const st = lab ? 0 : starsFor(time, game.score, L.par);   // lab levels have no par, so no stars
   save.best[L.id] = { time: nb.time ? time : prev.time, score: nb.score ? game.score : prev.score, combo: nb.combo ? game.maxCombo : prev.combo, stars: Math.max(st, prev.stars || 0) };
-  save.unlocked = Math.max(save.unlocked, Math.min(LEVELS.length - 1, game.level + 1));
+  if (!lab) save.unlocked = Math.max(save.unlocked, Math.min(W1_COUNT - 1, game.level + 1));
   persist();
   $("wonSub").textContent = `${L.id} · ${L.name}`;
-  $("stars").innerHTML = [1, 2, 3].map((i) => starSvg(i <= st)).join("");
+  $("stars").innerHTML = lab ? "" : [1, 2, 3].map((i) => starSvg(i <= st)).join("");
+  $("stars").hidden = lab;
   $("wTime").textContent = fmt(time); $("wScore").textContent = game.score.toLocaleString("en-US"); $("wCombo").textContent = "x" + Math.max(1, game.maxCombo);
   $("nbTime").hidden = !nb.time; $("nbScore").hidden = !nb.score; $("nbCombo").hidden = !nb.combo;
-  $("wPar").textContent = `Par ${fmt(L.par)} · PB ${fmt(save.best[L.id].time)}`;
-  const last = game.level === LEVELS.length - 1;
-  $("nextBtn").textContent = last ? "World Map" : "Next Level";
+  $("wPar").textContent = lab ? `Level Lab · ${L.name} · PB ${fmt(save.best[L.id].time)}` : `Par ${fmt(L.par)} · PB ${fmt(save.best[L.id].time)}`;
+  const last = lab ? game.level === LEVELS.length - 1 : game.level === W1_COUNT - 1;
+  $("nextBtn").textContent = last ? (lab ? "Level Lab" : "World Map") : lab ? "Next Direction" : "Next Level";
   $("pWon").querySelector("[data-map]").hidden = last;
   $("pWon").querySelector(".row2").style.gridTemplateColumns = last ? "1fr" : "";
   $("pb").textContent = "PB " + fmt(save.best[L.id].time);
@@ -1260,7 +1326,7 @@ function openWorlds() {
   screen = "worlds"; game = game || newGame(0);
   const list = $("wlist");
   let html = `<div class="wcard"><h3>1 · ${WORLDS[0].name}</h3><p>8 levels · par times are the designer's targets</p><div class="lgrid">`;
-  LEVELS.forEach((L, i) => {
+  LEVELS.slice(0, W1_COUNT).forEach((L, i) => {
     const b = save.best[L.id], open = i <= save.unlocked;
     html += `<button class="lv${b ? " done" : ""}" data-lv="${i}"${open ? "" : " disabled"} aria-label="Level ${L.id} ${L.name}${open ? "" : ", locked"}">${L.id}<small>${b ? fmt(b.time).slice(0, 5) + " ★" + (b.stars || 1) : open ? "par " + fmt(L.par).slice(0, 5) : "locked"}</small></button>`;
   });
@@ -1270,8 +1336,22 @@ function openWorlds() {
   show("worlds");
   const first = list.querySelector(".lv:not([disabled])"); if (first) first.focus({ preventScroll: true });
 }
+function openLab() {
+  screen = "lab"; game = game || newGame(0);
+  $("labList").innerHTML = LEVELS.map((L, i) => {
+    if (L.set !== "lab") return "";
+    const b = save.best[L.id], q = ratio(L.map);
+    return `<button class="lcard" data-lab="${i}" aria-label="${L.id} ${L.name}: ${L.idea}"><span class="lid">${L.id}</span><h3>${L.name}<small>${L.family}</small></h3>` +
+      `<span class="lpb">${b ? `PB<b>${fmt(b.time).slice(0, 8)}</b>` : "new"}</span><p>${L.idea}</p><div class="ratio" title="${ratioText(q)}">${ratioBar(q)}</div></button>`;
+  }).join("");
+  show("lab");
+  const back = game && LEVELS[game.level].set === "lab" ? $("labList").querySelector(`[data-lab="${game.level}"]`) : null;
+  (back || $("labList").querySelector(".lcard")).focus({ preventScroll: !back });
+}
+function openList() { if (game && LEVELS[game.level].set === "lab") openLab(); else openWorlds(); }
+function playLab(lv) { ensureAudio(); requestTilt(); startLevel(lv, true); }
 function goTitle() { screen = "title"; show("title"); $("playBtn").textContent = save.unlocked > 0 || Object.keys(save.best).length ? `Play ${LEVELS[firstUnbeaten()].id}` : "Play"; }
-function firstUnbeaten() { for (let i = 0; i <= save.unlocked; i++) if (!save.best[LEVELS[i].id]) return i; return save.unlocked; }
+function firstUnbeaten() { const u = Math.min(save.unlocked, W1_COUNT - 1); for (let i = 0; i <= u; i++) if (!save.best[LEVELS[i].id]) return i; return u; }
 function play(lv) { ensureAudio(); requestTilt(); startLevel(lv); }
 
 // ======================= input =======================
@@ -1306,6 +1386,7 @@ const KEYMAP = { ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d
 document.addEventListener("keydown", (e) => {
   if (KEYMAP[e.key]) { if (screen === "playing") { e.preventDefault(); held[KEYMAP[e.key]] = true; } return; }
   if (e.key === "r" || e.key === "R") { if (game && ["playing", "paused", "won", "lost", "stuck"].includes(screen)) play(game.level); return; }
+  if ((e.key === " " || e.key === "Enter") && screen === "card" && document.activeElement && !document.activeElement.matches("button")) { e.preventDefault(); beginFromCard(); return; }
   if (e.key === "m" || e.key === "M") { toggleMute(); return; }
   if (e.key === "p" || e.key === "P" || e.key === "Escape") { if (screen === "playing") pause(); else if (screen === "paused") resume(); return; }
 });
@@ -1333,7 +1414,15 @@ $("playBtn").addEventListener("click", () => play(firstUnbeaten()));
 $("worldsBtn").addEventListener("click", () => { ensureAudio(); openWorlds(); });
 $("worldsBack").addEventListener("click", goTitle);
 $("wlist").addEventListener("click", (e) => { const b = e.target.closest("[data-lv]"); if (b && !b.disabled) play(+b.dataset.lv); });
-$("nextBtn").addEventListener("click", () => { if (game.level === LEVELS.length - 1) openWorlds(); else play(game.level + 1); });
+$("nextBtn").addEventListener("click", () => {
+  const lab = LEVELS[game.level].set === "lab";
+  if (lab) { if (game.level === LEVELS.length - 1) openLab(); else playLab(game.level + 1); }
+  else if (game.level === W1_COUNT - 1) openWorlds(); else play(game.level + 1);
+});
+$("labBtn").addEventListener("click", () => { ensureAudio(); openLab(); });
+$("labBack").addEventListener("click", goTitle);
+$("labList").addEventListener("click", (e) => { const b = e.target.closest("[data-lab]"); if (b) playLab(+b.dataset.lab); });
+$("cPlay").addEventListener("click", () => { ensureAudio(); beginFromCard(); });
 $("replayBtn").addEventListener("click", () => play(game.level));
 $("retryBtn").addEventListener("click", () => play(game.level));
 $("restartBtn").addEventListener("click", () => play(game.level));
@@ -1342,7 +1431,7 @@ $("pauseBtn").addEventListener("click", () => { if (screen === "playing") pause(
 $("resumeBtn").addEventListener("click", resume);
 $("stuckBtn").addEventListener("click", () => play(game.level));
 $("stuckKeep").addEventListener("click", () => { screen = "playing"; showPanel(null); });
-document.querySelectorAll("[data-map]").forEach((b) => b.addEventListener("click", openWorlds));
+document.querySelectorAll("[data-map]").forEach((b) => b.addEventListener("click", openList));
 document.querySelectorAll("[data-mute]").forEach((b) => b.addEventListener("click", () => { ensureAudio(); toggleMute(); }));
 function paintMute() {
   document.querySelectorAll("[data-mute]").forEach((b) => {
@@ -1371,10 +1460,10 @@ function frame(now) {
   floaters = floaters.filter((f) => f.life > 0);
   flash = Math.max(0, flash - dt * 2.5); pulse = Math.max(0, pulse - dt * 2);
   if (tiltSeen && $("tiltDot")) $("tiltDot").style.left = (50 + 50 * currentSteer()) + "%";
-  if (screen !== "title" && screen !== "worlds") draw(now);
+  if (screen !== "title" && screen !== "worlds" && screen !== "lab") draw(now);
   requestAnimationFrame(frame);
 }
-window.addEventListener("resize", () => { if (screen !== "title" && screen !== "worlds") resize(); });
+window.addEventListener("resize", () => { if (screen !== "title" && screen !== "worlds" && screen !== "lab") resize(); });
 game = newGame(firstUnbeaten());
 goTitle();
 requestAnimationFrame(frame);
@@ -1383,15 +1472,15 @@ requestAnimationFrame(frame);
 window.__qa = {
   state: () => {
     const c = counts(game);
-    return { screen: ["title", "worlds"].includes(screen) ? screen : screen === "paused" ? "paused" : game.screen, level: game.level, id: LEVELS[game.level].id,
+    return { screen: ["title", "worlds", "lab", "card", "paused"].includes(screen) ? screen : game.screen, level: game.level, id: LEVELS[game.level].id, set: LEVELS[game.level].set,
       lives: game.lives, color: game.ball.color, keys: game.keys, dip: game.dip,
       ball: { x: +game.ball.x.toFixed(3), y: +game.ball.y.toFixed(3) }, left: { colors: c.colorTotal, grey: c.grey, diamonds: c.diamonds, locks: c.locks },
       steps: game.steps, time: +gameTime(game).toFixed(2), score: game.score, combo: game.combo, maxCombo: game.maxCombo };
   },
-  actions: () => ["title", "worlds"].includes(screen) ? ["start"] : screen === "paused" ? ["resume"] : (game.screen === "playing" ? ["left", "stay", "right"] : []),
+  actions: () => ["title", "worlds", "lab", "card"].includes(screen) ? ["start"] : screen === "paused" ? ["resume"] : (game.screen === "playing" ? ["left", "stay", "right"] : []),
   act: (a) => {
     qaDriven = true;
-    if (a === "start") { if (["title", "worlds"].includes(screen)) startLevel(firstUnbeaten()); return; }
+    if (a === "start") { if (screen === "card") beginFromCard(); else if (screen === "lab") startLevel(W1_COUNT); else if (["title", "worlds"].includes(screen)) startLevel(firstUnbeaten()); return; }
     if (a === "resume") { resume(); return; }
     if (screen !== "playing") return;
     applyAction(game, a); sync();
