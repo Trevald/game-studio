@@ -33,6 +33,10 @@ A Diamonds-style brick puzzle where the ball bounces up and down by itself and y
 
 Not tonight (phases 2-4): world map beyond a simple World 1 level list, gear, slots, records screen.
 
+### QA plan (night 2 additions)
+- `state()` adds `id`, `dip`, `time`, `combo`, `maxCombo`, `left.grey`; screens: `title | worlds | playing | paused | won | lost`.
+- Actions unchanged (`left | stay | right`, 0.1 s each); `start` from title/worlds, `resume` from pause. The dip is part of the fixed-step sim, so `solve()` replays exactly.
+
 ### Assumptions (night 2)
 - Clock runs in game time (fixed sim steps), across lost lives, from level start to the last diamond;
   restart resets it. PB = best clear time per level.

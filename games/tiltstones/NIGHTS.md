@@ -1,4 +1,26 @@
-# Tiltstones — night log
+# Ricochet (tiltstones) — night log
+
+## Night 2 — 2026-10-19
+
+**Job:** iteration on notes: "Design hand-off is complete … Tonight: phase 1 — rename to Ricochet, the new look, grey blocks and the pot dip-and-rebound, and World 1's 8 designer levels" (ricochet-design-v2)
+
+**Shipped:**
+- Renamed to **Ricochet** everywhere. New title screen with the designer's logo and start background, Play, Worlds (World 1 level list with PB/par; worlds 2-4 shown as "coming later"), Gear and Records shown as locked "Soon".
+- New look: Meadow Ruins background behind a stone-and-moss board frame, code-drawn glossy jewel blocks with suit symbols (blue ◆, red ♥, green ♣, gold ♠) on blocks and ball, glowing ball with trail, glass paint pots, crystal diamonds, mossy walls, gold key/lock, skulls. Single dark look, gold primary and outlined secondary buttons.
+- Grey blocks (`g`): break with any colour, never count toward clearing (1-2 and 1-7 can be won with grey still standing).
+- Paint pots: the ball dips into the jar (0.13 s, deterministic), takes its colour with a splash, and bounces back out. Pots stay and are reusable.
+- World 1's 8 designer levels loaded exactly from levels.json (no tile changed). HUD: level id + world, hearts, running clock mm:ss.hh + PB, score + combo (x2…x5), restart, pause. Win screen (stars, time/score/max combo with New Best badges, Next/Replay/World Map), Out of lives (Try Again/Back to World), Pause panel, tutorial callouts on 1-1.
+- When the ball can't turn blue again and the level has no skull, a board panel offers "Restart level".
+
+**QA:** 17/17 checks passed · 3 rounds · all 8 levels completable by `solve()` with no gear · autopilot clear times: 1-1 6.8 s, 1-2 7.7 s, 1-3 5.4 s, 1-4 15.4 s, 1-5 27.2 s, 1-6 7.7 s, 1-7 9.5 s, 1-8 30.2 s (all well under the designer pars of 25–65 s). Known issues: tilt still blocked inside the claude.ai viewer (◀ ▶ work); combo/score/star rules are placeholders.
+
+**Reviewer:** ship with fixes — the steer-only core and colour ordering work, 1-8 is the best level; 1-1/1-2 nearly play themselves and 1-3 is easy to soft-lock. Fixed: on-board stuck panel with Restart, combo text overlap (newest only), callouts moved off the 1-1 diamond/ball path, HUD spacing + score label, stone/moss board frame, duplicate "World Map" on the last win panel, New Best on first clear, dip splash. Not fixed (designer's call, filed in design/REQUESTS.md): pars far too generous (R2); key in 1-7/1-8 sits straight above the start and the lock is optional (R1). Not done: clock starting on first input (DESIGN.md asks for a running clock).
+
+**Assumptions:** clock runs in game time from level start, across lost lives; combo = same colour within 1.5 s, x2–x5, reset by paint (provisional); scores 100 × combo per block, grey 50, diamond 500, key/lock 200; `starsFor`: 3 at/under par, 2 within 1.5× par, else 1; restart and 3 lives kept as before.
+
+**Questions for Benji:** 1) How should time, score and stars relate? With the current pars every clear is 3 stars (R2 has measured times). 2) Should the key/lock in 1-7/1-8 be required (R1 asks the designer)? 3) Next shift: phase 2 (world map, per-level records) or straight to gear?
+
+**Play:** https://claude.ai/artifact/VAXzjHmZLmMTJS5zQsRJH4
 
 ## Night 1 — 2026-10-18
 
