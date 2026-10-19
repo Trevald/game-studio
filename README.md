@@ -4,9 +4,9 @@ An overnight game studio. Drop an idea on the board before bed; by morning there
 
 ## How it works
 
-1. **Ideas board** — a private Claude artifact where you add ideas, star the one you want next,
+1. **Ideas board** — a private Claude artifact where you add ideas, order the queue,
    leave notes on builds, and park games you're done with.
-2. **Night shift** — a scheduled task starts a fresh Claude session at 01:45 Stockholm time and follows
+2. **Night shift** — two scheduled tasks start a fresh Claude session at 22:30 and 03:35 Stockholm time (one per usage window) and follows
    [`studio/NIGHT_SHIFT.md`](studio/NIGHT_SHIFT.md). Each night is one job:
    iterate the game you left notes on, or start the next idea in the queue.
 3. **The roles** — Producer (scope), Designer (mechanics), Developer (build), QA (automated

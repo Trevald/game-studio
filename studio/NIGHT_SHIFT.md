@@ -4,7 +4,8 @@ This is the procedure for one overnight run of the studio. Follow it top to bott
 Benji is asleep: never stop to ask him anything. When something is ambiguous, take the most
 reasonable reading, write down the assumption in the night log, and keep going.
 
-**One job per night.** Either iterate one game that has feedback, or start one new game. Never both.
+**One job per shift.** There are two shifts a night (about 22:30 and 03:35), each its own session.
+Each shift either finishes interrupted work, iterates one game that has feedback, or starts one game. Never two.
 
 ---
 
@@ -26,6 +27,9 @@ Read, in this order: `studio/RULES.md` (Benji's taste; it overrides everything e
 
 Read the board (`ideas`, `feedback`, `studio/state`) as described in `studio/BOARD.md`. Then pick:
 
+0. **Finish interrupted work** — if an idea is still `status: "building"`, an earlier shift was cut off
+   (usage limit or error). Resume it: pull the repo, read its BRIEF.md, NIGHTS.md and git log to see how
+   far it got, and complete the remaining steps for that same job. Don't start over.
 1. **Iterate** — if any `feedback` doc has `status: "pending"` and its idea is not `parked`:
    take the idea whose oldest pending note is oldest. Tonight's input is *all* pending notes for that idea.
 2. **New game** — otherwise, the first `queued` idea in Benji's queue order: lowest `order` first;
