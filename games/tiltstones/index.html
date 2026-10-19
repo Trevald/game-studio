@@ -47,7 +47,7 @@
   #title .mute { position: absolute; top: max(12px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); }
   .logo { width: min(80%, 360px); height: auto; filter: drop-shadow(0 0 18px rgba(80,180,255,.45)); }
   .tag { margin: 0; color: #d7e4ff; font-weight: 700; letter-spacing: .14em; font-size: 13px; text-transform: uppercase; line-height: 1.7; text-shadow: 0 2px 6px #000; }
-  .title-box { width: min(100%, 340px); display: grid; gap: 14px; margin-top: 18vh; }
+  .title-box { width: min(100%, 340px); display: grid; gap: 14px; }
   .menu3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .tile { min-height: 72px; border-radius: 14px; border: 2px solid rgba(110,160,255,.55); background: rgba(14,28,70,.82); color: var(--ink);
     display: grid; place-items: center; gap: 2px; padding: 8px 4px; cursor: pointer; font: 700 13px var(--font); }
@@ -79,8 +79,8 @@
     padding: 8px 10px; border-radius: 16px; background: linear-gradient(rgba(22,40,92,.92), rgba(10,20,52,.92)); border: 2px solid rgba(110,160,255,.4);
     box-shadow: 0 6px 20px rgba(0,0,0,.35); font-variant-numeric: tabular-nums; }
   .hud-l { min-width: 0; }
-  .lvlid { font-weight: 800; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .lvlid span { color: var(--muted); font-weight: 700; }
+  .lvlid { font-weight: 800; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1; }
+  .lvlid span { display: block; color: var(--muted); font-weight: 700; font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
   .hearts { display: flex; gap: 2px; margin-top: 3px; }
   .hearts svg { width: 18px; height: 18px; }
   .hud-c { text-align: center; }
@@ -882,7 +882,7 @@ function burst(e, color, n, size = 0.12) {
     particles.push({ x: e.x, y: e.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.55, max: 0.55, color, size: size * (0.6 + Math.random() * 0.8), r: Math.random() * 3 });
   }
 }
-function floater(x, y, text, color, size = 0.5) { floaters.push({ x, y, text, color, size, life: 0.9 }); }
+function floater(x, y, text, color, size = 0.5) { floaters.push({ x, y, text, color, size, life: 0.8 }); if (floaters.length > 4) floaters.shift(); }
 
 // ======================= UI =======================
 const fmt = (sec) => { if (sec == null || !isFinite(sec)) return "--:--.--"; const cs = Math.round(sec * 100); const m = Math.floor(cs / 6000), s2 = Math.floor(cs / 100) % 60, h = cs % 100; return `${String(m).padStart(2, "0")}:${String(s2).padStart(2, "0")}.${String(h).padStart(2, "0")}`; };
@@ -956,7 +956,7 @@ function handleEvents() {
     (SFX[e.t] || (() => {}))(e);
     if (e.t === "break") {
       burst(e, PAL[e.color].mid, 10 + e.combo * 4, 0.1 + e.combo * 0.02);
-      floater(e.x, e.y - 0.2, e.combo >= 2 ? "x" + e.combo : "+" + 100 * e.combo, e.combo >= 2 ? "#ffd34d" : "#ffffff", e.combo >= 2 ? 0.55 + e.combo * 0.12 : 0.38);
+      if (e.combo >= 2) floater(e.x, e.y - 0.2, "x" + e.combo, "#ffd34d", 0.45 + e.combo * 0.1);
       hideTips();
     }
     if (e.t === "grey") burst(e, "#c9d0e2", 8);
