@@ -1,11 +1,11 @@
 {
   "game": "games/tiltstones/index.html",
-  "at": "2026-10-19T15:17:22.336Z",
+  "at": "2026-10-19T15:24:53.511Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "62 KB"
+      "detail": "64 KB"
     },
     {
       "name": "external resources only from allowed CDNs",

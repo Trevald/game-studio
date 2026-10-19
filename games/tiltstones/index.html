@@ -87,12 +87,21 @@
   #clock { font: 800 22px var(--font); letter-spacing: .02em; line-height: 1.1; }
   #pb { font-size: 11px; color: var(--muted); font-weight: 700; }
   .hud-r { display: flex; justify-content: flex-end; align-items: center; gap: 6px; }
-  .score { text-align: right; line-height: 1.05; min-width: 0; }
+  .score { text-align: right; line-height: 1.05; min-width: 0; margin-right: 4px; }
+  .slabel { font-size: 9px; font-weight: 800; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
   #combo { display: block; font: 900 20px var(--font); color: var(--gold); text-shadow: 0 0 10px rgba(255,190,40,.7); min-height: 1px; }
   #combo.pop { animation: pop .35s ease-out; }
   @keyframes pop { 0% { transform: scale(1.8); } 100% { transform: scale(1); } }
   #score { font-weight: 800; font-size: 14px; }
   .hud .icon { width: 40px; height: 40px; }
+  .frame { padding: 7px; border-radius: 22px; margin: 0 auto; max-width: 100%;
+    background:
+      radial-gradient(circle at 6% 4%, #4fa85a 0 9px, transparent 10px), radial-gradient(circle at 12% 2%, #3f9a52 0 6px, transparent 7px),
+      radial-gradient(circle at 94% 97%, #4fa85a 0 9px, transparent 10px), radial-gradient(circle at 87% 99%, #3f9a52 0 6px, transparent 7px),
+      radial-gradient(circle at 98% 30%, #3f9a52 0 5px, transparent 6px), radial-gradient(circle at 2% 70%, #4fa85a 0 6px, transparent 7px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 2px, transparent 2px 38px),
+      linear-gradient(#5a6386, #343b58 60%, #262c44);
+    box-shadow: 0 0 0 2px rgba(10,14,30,.8), 0 10px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.25); }
   .stage { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; }
   canvas { display: block; border-radius: 16px; touch-action: none; border: 2px solid rgba(110,160,255,.45);
     box-shadow: 0 0 0 4px rgba(20,40,90,.35), 0 0 28px rgba(60,120,255,.25); background: #0a1430; }
@@ -187,12 +196,12 @@
     </div>
     <div class="hud-c"><div id="clock">00:00.00</div><div id="pb">PB --:--.--</div></div>
     <div class="hud-r">
-      <div class="score"><span id="combo"></span><span id="score">0</span></div>
+      <div class="score"><span id="combo"></span><small class="slabel">Score</small> <span id="score">0</span></div>
       <button class="icon" id="restartBtn" aria-label="Restart level" title="Restart (R)"><svg><use href="#i-restart"/></svg></button>
       <button class="icon" id="pauseBtn" aria-label="Pause" title="Pause (P / Esc)"><svg><use href="#i-pause"/></svg></button>
     </div>
   </div>
-  <div class="stage" id="stage">
+  <div class="frame"><div class="stage" id="stage">
     <canvas id="cv" width="400" height="560" aria-label="Game board"></canvas>
     <div class="callout" id="tip1" hidden>Hit blocks with the ball's colour and symbol to break them.</div>
     <div class="callout" id="tip2" hidden>Move left and right to steer. The ball bounces by itself.</div>
@@ -218,6 +227,11 @@
         <p id="lostHint"></p>
         <div class="acts"><button class="btn" id="retryBtn">Try Again</button><button class="btn2" data-map>Back to World</button></div>
       </div>
+      <div class="panel" id="pStuck" hidden>
+        <h2>No way back to blue</h2>
+        <p id="stuckText">Blue blocks are left, but nothing paints the ball blue again on this level.</p>
+        <div class="acts"><button class="btn" id="stuckBtn">Restart level</button><button class="btn2" id="stuckKeep">Keep playing</button></div>
+      </div>
       <div class="panel" id="pPause" hidden>
         <h2>Paused</h2>
         <div class="sub" id="pauseSub">1-1 · First Bounce</div>
@@ -229,6 +243,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
   <div class="pad">
     <button class="hold" id="holdL" aria-label="Steer left"><svg><use href="#i-left"/></svg></button>
@@ -802,9 +817,9 @@ let game = null, screen = "title", particles = [], floaters = [], flash = 0, pul
 let CELL = 40, DPR = 1;
 function resize() {
   const wrap = $("game");
-  const wCss = Math.min(460, wrap.clientWidth - 32 || window.innerWidth - 32);
+  const wCss = Math.min(446, (wrap.clientWidth || window.innerWidth) - 46);
   const padH = matchMedia("(min-width: 700px) and (hover: hover)").matches ? 0 : 74;
-  const maxH = Math.max(300, window.innerHeight - 92 - padH - 54);
+  const maxH = Math.max(300, window.innerHeight - 92 - padH - 68);
   const cell = Math.max(22, Math.min(wCss / W, maxH / H, 46));
   const cssW = Math.floor(cell * W), cssH = Math.floor(cell * H);
   DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -882,7 +897,7 @@ function burst(e, color, n, size = 0.12) {
     particles.push({ x: e.x, y: e.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.55, max: 0.55, color, size: size * (0.6 + Math.random() * 0.8), r: Math.random() * 3 });
   }
 }
-function floater(x, y, text, color, size = 0.5) { floaters.push({ x, y, text, color, size, life: 0.8 }); if (floaters.length > 4) floaters.shift(); }
+function floater(x, y, text, color, size = 0.5) { floaters.push({ x, y, text, color, size, life: 0.8 }); if (floaters.length > 1) floaters.shift(); }
 
 // ======================= UI =======================
 const fmt = (sec) => { if (sec == null || !isFinite(sec)) return "--:--.--"; const cs = Math.round(sec * 100); const m = Math.floor(cs / 6000), s2 = Math.floor(cs / 100) % 60, h = cs % 100; return `${String(m).padStart(2, "0")}:${String(s2).padStart(2, "0")}.${String(h).padStart(2, "0")}`; };
@@ -924,7 +939,7 @@ function show(id) {
 }
 function showPanel(which) {
   $("ov").hidden = !which;
-  for (const p of ["pWon", "pLost", "pPause"]) $(p).hidden = p !== which;
+  for (const p of ["pWon", "pLost", "pPause", "pStuck"]) $(p).hidden = p !== which;
   if (which) { const btn = $(which).querySelector(".btn"); if (btn) btn.focus({ preventScroll: true }); }
 }
 function startLevel(lv) {
@@ -944,8 +959,8 @@ function tutorial(on) {
   t1.classList.remove("fade"); t2.classList.remove("fade");
   t1.hidden = t2.hidden = !on;
   if (!on) return;
-  t1.style.left = "8%"; t1.style.top = "34%";
-  t2.style.right = "6%"; t2.style.bottom = "6%";
+  t1.style.left = "2%"; t1.style.top = "1%";
+  t2.style.right = "2%"; t2.style.bottom = "1%"; t2.style.maxWidth = "46%"; t1.style.maxWidth = "56%";
   const coarse = matchMedia("(pointer: coarse)").matches;
   t2.textContent = coarse ? "Hold ◀ ▶ (or tilt) to steer. The ball bounces by itself." : "Use ← → to steer. The ball bounces by itself.";
   tipTimer = setTimeout(() => { t1.classList.add("fade"); t2.classList.add("fade"); }, 7000);
@@ -962,7 +977,8 @@ function handleEvents() {
     if (e.t === "grey") burst(e, "#c9d0e2", 8);
     if (e.t === "diamond") { burst(e, "#bff3ff", 16); floater(e.x, e.y - 0.2, "+500", "#bff3ff", 0.45); }
     if (e.t === "unlock" || e.t === "key") burst(e, "#ffd34d", 10);
-    if (e.t === "paint") { pulse = 1; burst(e, PAL[e.color].mid, 8, 0.08); }
+    if (e.t === "paint") { pulse = 1; burst(e, PAL[e.color].mid, 10, 0.08); }
+    if (e.t === "dip") { pulse = 0.7; burst(e, PAL[game.ball.color].mid, 6, 0.07); }
     if (e.t === "die") { burst(e, "#ff6b6b", 18); if (!reduceMotion) flash = 0.6; trail = []; }
     if (e.t === "win" && !reduceMotion) flash = 1;
   }
@@ -975,6 +991,8 @@ function sync() {
   if (stuck !== stuckShown) {
     stuckShown = stuck;
     setHelp(stuck ? (c.skulls ? "The ball can't turn blue again — hit a skull or press ↻." : "The ball can't turn blue again — press ↻ to restart.") : levelHelp(), stuck);
+    // no skull on the board: the level can't be finished, so say so on the board and offer a restart
+    if (stuck && !c.skulls && !qaDriven) { screen = "stuck"; held.left = held.right = false; showPanel("pStuck"); }
   }
   if (game.screen !== "playing" && screen === "playing") {
     screen = game.screen;
@@ -993,10 +1011,12 @@ function finishLevel() {
   $("wonSub").textContent = `${L.id} · ${L.name}`;
   $("stars").innerHTML = [1, 2, 3].map((i) => starSvg(i <= st)).join("");
   $("wTime").textContent = fmt(time); $("wScore").textContent = game.score.toLocaleString("en-US"); $("wCombo").textContent = "x" + Math.max(1, game.maxCombo);
-  $("nbTime").hidden = !nb.time || prev.time == null; $("nbScore").hidden = !nb.score || prev.score == null; $("nbCombo").hidden = !nb.combo || prev.combo == null;
+  $("nbTime").hidden = !nb.time; $("nbScore").hidden = !nb.score; $("nbCombo").hidden = !nb.combo;
   $("wPar").textContent = `Par ${fmt(L.par)} · PB ${fmt(save.best[L.id].time)}`;
   const last = game.level === LEVELS.length - 1;
   $("nextBtn").textContent = last ? "World Map" : "Next Level";
+  $("pWon").querySelector("[data-map]").hidden = last;
+  $("pWon").querySelector(".row2").style.gridTemplateColumns = last ? "1fr" : "";
   $("pb").textContent = "PB " + fmt(save.best[L.id].time);
   showPanel("pWon");
 }
@@ -1062,7 +1082,7 @@ function currentSteer() {
 const KEYMAP = { ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d: "right", D: "right" };
 document.addEventListener("keydown", (e) => {
   if (KEYMAP[e.key]) { if (screen === "playing") { e.preventDefault(); held[KEYMAP[e.key]] = true; } return; }
-  if (e.key === "r" || e.key === "R") { if (game && ["playing", "paused", "won", "lost"].includes(screen)) play(game.level); return; }
+  if (e.key === "r" || e.key === "R") { if (game && ["playing", "paused", "won", "lost", "stuck"].includes(screen)) play(game.level); return; }
   if (e.key === "m" || e.key === "M") { toggleMute(); return; }
   if (e.key === "p" || e.key === "P" || e.key === "Escape") { if (screen === "playing") pause(); else if (screen === "paused") resume(); return; }
 });
@@ -1097,6 +1117,8 @@ $("restartBtn").addEventListener("click", () => play(game.level));
 $("pRestart").addEventListener("click", () => play(game.level));
 $("pauseBtn").addEventListener("click", () => { if (screen === "playing") pause(); else if (screen === "paused") resume(); });
 $("resumeBtn").addEventListener("click", resume);
+$("stuckBtn").addEventListener("click", () => play(game.level));
+$("stuckKeep").addEventListener("click", () => { screen = "playing"; showPanel(null); });
 document.querySelectorAll("[data-map]").forEach((b) => b.addEventListener("click", openWorlds));
 document.querySelectorAll("[data-mute]").forEach((b) => b.addEventListener("click", () => { ensureAudio(); toggleMute(); }));
 function paintMute() {
