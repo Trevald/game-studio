@@ -1,5 +1,85 @@
 # Ricochet (tiltstones) — night log
 
+## Night 3 — 2026-10-19 (22:30 shift)
+
+**Job:** iteration on note "ricochet-level-lab": "I'm not happy with the World 1 level designs. Tonight: build a Level Lab — 8 or more levels, each a different level-design direction … dense … corridors … little open space … better balance between breakable and unbreakable … Keep World 1 playable for comparison."
+
+**Shipped:**
+- **Level Lab** on the start screen: 10 directions with name, family, one-line idea and a block-ratio bar showing the real colour split. Each opens on a direction card (idea, ratio, PB, Play) and has its own clock and PB. The lab uses the Crystal Caverns background. Lab levels have no par or stars.
+- **The directions:**
+  - 9 dense-corridor variations: Rattle Rows, Switchback, Pockets, Shafts, Grey Scaffold, Colour Onion, Stone Heavy, Brick Wall, Narrow Eight (a real 8-column grid).
+  - 1 contrast: Open Field.
+  - Only existing tiles are used. World 1 is unchanged.
+- **Engine:** grid size is now set per level.
+- **Solver:** rewritten as a macro planner ("steer to column c and hold until something useful happens"). The old search stalled for about 15 s at a time in dense levels. The new one is about 50× faster, and it now clears all 18 levels.
+- **Lab tools in `lab/`:**
+  - `levels.json` + `build.mjs`: levels are edited as JSON and injected into the game.
+  - `measure.mjs`: headless metrics.
+  - `play1x.mjs`: Playwright with real key presses at 1×, using a careful bot that decides every 0.2 s.
+  - `gaps.mjs` / `travel.mjs`: debugging.
+  - `CHANGELOG.md`: the v1→v4 changelog per level and the full metrics table.
+
+**Results (final):**
+
+| Direction | Ratio col/grey/stone/empty | Solver | Solver dead | 1× time | 1× dead | 1× max flight |
+|---|---|---|---|---|---|---|
+| L1 Rattle Rows | 40/9/17/32 | 27.9 s | 9% | 39.9 s | 41% | 6.4 rows |
+| L2 Switchback | 32/5/24/37 | 24.8 s | 18% | 36.5 s | 34% | 3.4 |
+| L3 Pockets | 41/3/20/34 | 29.3 s | 20% | 44.2 s | 42% | 3.9 |
+| L4 Shafts | 34/19/23/23 | 25.6 s | 12% | 24.7 s | 6% | 3.6 |
+| L5 Grey Scaffold | 25/32/21/20 | 27.1 s | 9% | 31.6 s | 30% | 5.6 |
+| L6 Colour Onion | 34/6/21/36 | 32.1 s | 20% | 47.3 s | 38% | 5.1 |
+| L7 Stone Heavy | 29/0/36/34 | 29.3 s | 30% | 53.5 s | 60% | 8.8 |
+| L8 Brick Wall | 56/5/18/19 | 36.0 s | 9% | 40.9 s | 27% | 4.5 |
+| L9 Narrow Eight | 35/9/14/39 | 18.4 s | 3% | 28.5 s | 41% | 5.4 |
+| L10 Open Field | 7/1/0/89 | 12.3 s | 20% | soft-lock | 30% | 7.4 |
+
+World 1 for comparison: 82–93% empty, 0–42% dead time on the solver route, flights of 7–13 rows.
+
+**Studio top 3:**
+1. **Shafts:** best real-time run (6% dead, worst gap 1.8 s, short flights). Stone columns keep the corridors after clearing.
+2. **Switchback:** the only layout whose corridors fully survive clearing (open run 5 rows). Steady, but stone-heavy.
+3. **Brick Wall:** densest (56% coloured), every bounce breaks something, with nothing left to hunt at the end.
+
+The reviewer ranked them Switchback, Brick Wall, Shafts, and the worst two Stone Heavy and Open Field. That confirms Benji's read that the reference has too much stone: Stone Heavy has 60% dead time at 1×.
+
+**What we learned:**
+1. **Corridors made only of breakable blocks don't last.** Every v1 level turned into a hall once its bands were cleared, with 10–12-row flights. Permanent stone or grey ribs every 3–4 rows, with 1–2 staggered gaps, fixed that.
+2. **Pots and density don't mix.** In a dense channel, breaking the blue block in front of a pot puts the ball in the pot within 0.1 s, so 4 of 7 pot levels soft-locked at human pace. Pots that can only be entered from the side, at the end of a channel, fixed most of it.
+3. **The solver route understates waiting** by 2–4×. Most of the 1× dead time is the straggler hunt in the last 20% of the level.
+
+**Next to try:**
+- A "skeleton" direction: Shafts/Switchback stone structure filled with Brick Wall density, using 3–4 interleaved colours (most lab levels are only blue → red).
+- Proposals (new mechanics, not built):
+  - A cracked stone that takes 2 hits.
+  - Blue Return gear, or a "blue pot", as the answer to painting too early.
+  - A last-5-blocks pulse, to cut the straggler hunt.
+
+**QA:** 17/17 checks · 4 rounds · all 18 levels (8 World 1 + 10 lab) completable by `solve()`. All 10 lab levels were also played at 1× with real key presses: 9 cleared. Open Field soft-locked by painting early, which is part of the contrast.
+
+**Reviewer:** ship with fixes.
+- **Fixed:**
+  - Cleared levels turning into halls: ribs closed or staggered in L1, L3, L5, L9.
+  - Stragglers: L9's top-right red removed; L4's side-only outer blues are now grey.
+  - L6 pots that could only be reached through a 1-cell slot: moved to channel ends.
+  - Solver-only metrics: added a 1× table, plus "open run after clear" and "last-fifth dead time" columns.
+  - The rainbow ratio bar: it now shows the real colour split.
+- **Not done:**
+  - More colour interleaving (noted as the next direction).
+  - Dead-time readout on the win screen.
+
+**Assumptions:**
+- Lab levels are ungated, have no par or stars, and use the Crystal Caverns background.
+- "Dead time" = the sum of each gap between useful hits minus 1 s.
+- The human-style run is a bot with 0.2 s decisions on real key events. That is a proxy, not a person.
+
+**Questions for Benji:**
+1. Which 1–2 directions should we take forward? (Studio pick: Shafts' stone skeleton filled with Brick Wall density.)
+2. How should painting too early be handled in dense levels: side-entry pots only, a skull reset nook, or a Blue Return item?
+3. Is the 8-column grid worth keeping? Tiles are 43 px instead of 34 px on the phone.
+
+**Play:** https://claude.ai/artifact/VAXzjHmZLmMTJS5zQsRJH4
+
 ## Night 2 — 2026-10-19
 
 **Job:** iteration on notes: "Design hand-off is complete … Tonight: phase 1 — rename to Ricochet, the new look, grey blocks and the pot dip-and-rebound, and World 1's 8 designer levels" (ricochet-design-v2)
