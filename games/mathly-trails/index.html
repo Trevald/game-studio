@@ -99,6 +99,11 @@
   .log { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 30px; }
   .log span { font: 700 14px var(--font); font-variant-numeric: tabular-nums; padding: 4px 10px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); }
   #finishBtn[hidden] { display: none; }
+  .tile .pos { position: absolute; top: 6px; left: 9px; font: 800 11px var(--font); color: var(--muted); opacity: .8; }
+  .tile { position: relative; }
+  .tile.hint { outline: 3px dashed var(--good); outline-offset: 3px; }
+  .op.hint { outline: 3px dashed var(--good); outline-offset: 3px; }
+  .bar h2 small { font-size: 13px; color: var(--muted); font-weight: 700; }
   .overlay { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; background: rgba(8,20,17,.55); padding: 16px; }
   .overlay[hidden] { display: none; }
   .panel { width: min(100%, 360px); background: var(--panel); border-radius: 22px; padding: 20px 18px 18px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,.3); display: grid; gap: 12px; }
@@ -144,9 +149,9 @@
     <div class="tiles" id="tiles"></div>
     <div class="opsrow" id="opsrow"></div>
     <p id="msg" aria-live="polite"></p>
-    <button class="btn" id="finishBtn" hidden>Finish ★</button>
+    <div class="row2"><button class="btn2" id="hintBtn">Hint (max ★★)</button><button class="btn2" id="finishBtn" hidden>Finish ★</button></div>
     <div class="log" id="log"></div>
-    <p class="help" id="keysHelp">Tap a number, an operator, then another number. Keys: 1–6, + − * /, U undo, R restart.</p>
+    <p class="help" id="keysHelp">Tap a number, an operator, then another number. Keys: 1–6 pick by the small number in each tile, + − * /, U undo, H hint, R restart.</p>
   </section>
 
   <div class="overlay" id="ov" hidden>
@@ -185,11 +190,13 @@ const pick = (r, arr) => arr[Math.floor(r() * arr.length)];
 // build a hand of numbers and a target that has a route using every number
 function generate(spec, seed) {
   const r = rng(seed);
-  for (let attempt = 0; attempt < 5000; attempt++) {
+  for (let attempt = 0; attempt < 6000; attempt++) {
+    const cap = spec.cap ? spec.cap * (attempt < 2000 ? 1 : attempt < 4000 ? 3 : 1e9) : 0;
     const nums = [];
     for (let i = 0; i < spec.n; i++) {
       let v = pick(r, spec.pool);
-      if (v >= 25 && nums.includes(v)) v = pick(r, range(1, 9));
+      if ((v >= 25 || v === 1) && nums.includes(v)) v = pick(r, range(2, 9));
+      if (nums.filter((q) => q === v).length >= 2) v = pick(r, range(2, 9));
       nums.push(v);
     }
     let list = nums.slice(), route = [], used = new Set(), ok = true;
@@ -217,7 +224,11 @@ function generate(spec, seed) {
     if (nums.includes(target)) continue;
     const sum = nums.reduce((a, b) => a + b, 0);
     if (spec.ops.length > 1 && target === sum) continue;
-    return { tiles: nums, target, ops: spec.ops, route };
+    if (spec.avoid && spec.avoid.has(target)) continue;
+    if (nums.length > 3 && oneMerge(nums, target, spec.ops)) continue;   // no single-merge shortcuts
+    const routes = cap ? countRoutes(nums, target, spec.ops, cap) : 0;
+    if (cap && routes > cap) continue;
+    return { tiles: nums, target, ops: spec.ops, route, routes };
   }
   throw new Error("generator failed");
 }
@@ -225,25 +236,76 @@ function levelSpec(i) {
   const w = WORLDS[Math.floor(i / PER_WORLD)], l = i % PER_WORLD;
   return { n: w.n[l], ops: w.ops[l], pool: w.pool, t: w.t, must: w.must[l] };
 }
-const levelCache = {};
+// all-tile routes allowed per board (fewer routes = harder), see capFor(); each world's boards are sorted easiest first
+const worldCache = {};
+// Precomputed from the generator below (same seeds and rules) so the map opens instantly.
+const TRAIL_DATA = [
+  [{"tiles":[8,8,7],"target":23,"routes":0},
+   {"tiles":[9,6,9],"target":24,"routes":3},
+   {"tiles":[8,2,9],"target":15,"routes":3},
+   {"tiles":[8,3,5,6],"target":16,"routes":18},
+   {"tiles":[5,7,8,5],"target":11,"routes":18},
+   {"tiles":[8,3,1,6],"target":12,"routes":18},
+   {"tiles":[5,4,9,5,6],"target":17,"routes":180},
+   {"tiles":[9,5,4,6,8],"target":20,"routes":180}],
+  [{"tiles":[2,2,9,4],"target":144,"routes":22},
+   {"tiles":[4,1,2,6],"target":20,"routes":12},
+   {"tiles":[11,6,1,8],"target":59,"routes":10},
+   {"tiles":[8,1,11,5],"target":82,"routes":5},
+   {"tiles":[9,7,11,3,9],"target":100,"routes":78},
+   {"tiles":[8,4,8,5,9],"target":105,"routes":76},
+   {"tiles":[7,12,1,6,3],"target":62,"routes":68},
+   {"tiles":[2,4,9,9,10],"target":25,"routes":62}],
+  [{"tiles":[5,50,4,1],"target":30,"routes":15},
+   {"tiles":[50,8,1,8],"target":48,"routes":8},
+   {"tiles":[8,1,50,9,3],"target":168,"routes":41},
+   {"tiles":[25,7,10,5,1],"target":44,"routes":30},
+   {"tiles":[3,10,50,8,25],"target":32,"routes":26},
+   {"tiles":[50,4,2,1,6],"target":255,"routes":5},
+   {"tiles":[6,8,50,7,8,10],"target":239,"routes":244},
+   {"tiles":[5,8,3,10,5,10],"target":261,"routes":146}],
+  [{"tiles":[25,50,1,6,3],"target":225,"routes":142},
+   {"tiles":[50,7,5,2,7],"target":126,"routes":26},
+   {"tiles":[5,50,9,4,100],"target":891,"routes":25},
+   {"tiles":[9,7,100,50,9,7],"target":738,"routes":240},
+   {"tiles":[100,25,3,9,75,4],"target":746,"routes":183},
+   {"tiles":[75,1,7,7,4,10],"target":529,"routes":98},
+   {"tiles":[6,5,6,100,5,4],"target":342,"routes":90},
+   {"tiles":[4,2,3,3,4,5],"target":242,"routes":28}]
+];
+function worldLevels(w) {
+  if (worldCache[w]) return worldCache[w];
+  if (TRAIL_DATA[w]) return (worldCache[w] = TRAIL_DATA[w].map((g, l) => ({ ...g, ops: levelSpec(w * PER_WORLD + l).ops, kind: "trail", index: w * PER_WORLD + l, id: `${w + 1}-${l + 1}`, world: w })));
+  const avoid = new Set(), out = [];
+  for (let l = 0; l < PER_WORLD; l++) {
+    const i = w * PER_WORLD + l;
+    const sp = levelSpec(i);
+    const g = generate({ ...sp, cap: l === 0 && w === 0 ? 0 : capFor(sp.n), avoid }, 1000 + i * 7919);
+    avoid.add(g.target); out.push(g);
+  }
+  const first = w === 0 ? out.shift() : null;   // 1-1 stays the tutorial
+  // keep each slot's tile count/ops (they grow through the world); within equal specs, more routes first
+  const slots = out.map((g, k) => ({ g, k: k + (first ? 1 : 0) }));
+  slots.sort((x, y) => x.g.tiles.length - y.g.tiles.length || x.g.ops.length - y.g.ops.length || y.g.routes - x.g.routes);
+  const list = first ? [first, ...slots.map((x) => x.g)] : slots.map((x) => x.g);
+  return (worldCache[w] = list.map((g, l) => ({ ...g, kind: "trail", index: w * PER_WORLD + l, id: `${w + 1}-${l + 1}`, world: w })));
+}
 function trailLevel(i) {
-  if (!levelCache[i]) levelCache[i] = { ...generate(levelSpec(i), 1000 + i * 7919), kind: "trail", index: i,
-    id: `${Math.floor(i / PER_WORLD) + 1}-${(i % PER_WORLD) + 1}`, world: Math.floor(i / PER_WORLD) };
-  return levelCache[i];
+  return worldLevels(Math.floor(i / PER_WORLD))[i % PER_WORLD];
 }
 function todayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
 function dailyLevel() {
   const key = todayKey(), seed = Number(key.replace(/-/g, ""));
-  return { ...generate({ n: 6, ops: ["+", "-", "×", "÷"], pool: WORLDS[3].pool, t: [100, 999], must: "×" }, seed), kind: "daily", id: key, world: 3 };
+  return { ...generate({ n: 6, ops: ["+", "-", "×", "÷"], pool: WORLDS[3].pool, t: [100, 999], must: "×", cap: capFor(6) }, seed), kind: "daily", id: key, world: 3 };
 }
 function randomLevel(world) {
   const w = WORLDS[world];
-  const spec = { n: w.n[PER_WORLD - 1], ops: w.ops[PER_WORLD - 1], pool: w.pool, t: w.t, must: w.must[PER_WORLD - 1] };
+  const spec = { n: w.n[PER_WORLD - 1], ops: w.ops[PER_WORLD - 1], pool: w.pool, t: w.t, must: w.must[PER_WORLD - 1], cap: capFor(w.n[PER_WORLD - 1]) };
   return { ...generate(spec, (Math.random() * 2 ** 31) | 0), kind: "random", id: "Random", world };
 }
 
 // ======================= core (pure, no DOM) =======================
-function newGame(level) { return { level, tiles: level.tiles.slice(), target: level.target, ops: level.ops, history: [], log: [], done: false }; }
+function newGame(level) { return { level, tiles: level.tiles.slice(), target: level.target, ops: level.ops, history: [], log: [], done: false, hinted: false }; }
 // a and b index into g.tiles; result "a op b" takes b's place. Returns {ok, reason}.
 function merge(g, a, op, b) {
   if (g.done || a === b || a < 0 || b < 0 || a >= g.tiles.length || b >= g.tiles.length || !g.ops.includes(op)) return { ok: false, reason: "That move isn't available." };
@@ -258,7 +320,7 @@ function merge(g, a, op, b) {
 }
 function undo(g) { if (!g.history.length || g.done) return false; const h = g.history.pop(); g.tiles = h.tiles; g.log = h.log; return true; }
 const made = (g) => g.tiles.includes(g.target);
-const starsNow = (g) => !made(g) ? 0 : g.tiles.length === 1 ? 3 : g.tiles.length === 2 ? 2 : 1;
+const starsNow = (g) => { const s = !made(g) ? 0 : g.tiles.length === 1 ? 3 : g.tiles.length === 2 ? 2 : 1; return g.hinted ? Math.min(2, s) : s; };
 function validMerges(g) {
   const out = [];
   for (let a = 0; a < g.tiles.length; a++) for (let b = 0; b < g.tiles.length; b++) {
@@ -267,6 +329,36 @@ function validMerges(g) {
   }
   return out;
 }
+
+function oneMerge(nums, target, ops) {
+  for (let a = 0; a < nums.length; a++) for (let b = 0; b < nums.length; b++) if (a !== b) for (const op of ops) if (OPS[op](nums[a], nums[b]) === target) return true;
+  return false;
+}
+// number of distinct all-tile routes (commutative merges counted once), stops early past cap
+function countRoutes(tiles, target, ops, cap, budget = 150000) {
+  const memo = new Map();
+  let visits = 0;
+  function rec(t) {
+    if (++visits > budget) return Infinity;
+    if (t.length === 1) return t[0] === target ? 1 : 0;
+    const key = t.slice().sort((p, q) => p - q).join(",");
+    if (memo.has(key)) return memo.get(key);
+    let n = 0;
+    for (let a = 0; a < t.length && n <= cap; a++) for (let b = 0; b < t.length; b++) {
+      if (a === b) continue;
+      for (const op of ops) {
+        if ((op === "+" || op === "×") && a > b) continue;
+        const v = OPS[op](t[a], t[b]);
+        if (!Number.isInteger(v) || v <= 0 || v > MAXV) continue;
+        const nt = t.slice(); nt[b] = v; nt.splice(a, 1);
+        n += rec(nt);
+      }
+    }
+    memo.set(key, n); return n;
+  }
+  return rec(tiles);
+}
+const capFor = (n) => ({ 3: Infinity, 4: 40, 5: 150, 6: 300 })[n] || Infinity;
 
 // ======================= solver =======================
 // depth-first search for a route that uses every tile; returns merge actions (indexes as they are at each step)
@@ -297,9 +389,12 @@ let save = { stars: {}, daily: {}, muted: false };
 try { const s = JSON.parse(localStorage.getItem("mathly-trails-v1") || "null"); if (s && typeof s === "object") save = { stars: s.stars || {}, daily: s.daily || {}, muted: !!s.muted }; } catch (e) {}
 function persist() { try { localStorage.setItem("mathly-trails-v1", JSON.stringify(save)); } catch (e) {} }
 const starsOf = (i) => save.stars[trailLevel(i).id] || 0;
+const WORLD_GATE = 14;   // stars needed in a world to travel to the next one
+const worldStars = (w) => { let n = 0; for (let l = 0; l < PER_WORLD; l++) n += starsOf(w * PER_WORLD + l); return n; };
 function unlocked(i) {
   if (i === 0) return true;
-  return starsOf(i - 1) > 0;   // the previous level (also the previous world's last level) must be cleared
+  if (i % PER_WORLD === 0) return starsOf(i - 1) > 0 && worldStars(i / PER_WORLD - 1) >= WORLD_GATE;
+  return starsOf(i - 1) > 0;
 }
 function firstOpen() { for (let i = 0; i < TRAIL; i++) if (!starsOf(i)) return unlocked(i) ? i : Math.max(0, i - 1); return TRAIL - 1; }
 
@@ -322,7 +417,7 @@ const SFX = {
 
 // ======================= UI =======================
 const $ = (id) => document.getElementById(id);
-let screen = "title", game = null, sel = { a: null, op: null }, lastMerged = -1, finished = false;
+let screen = "title", game = null, sel = { a: null, op: null }, lastMerged = -1, finished = false, hint = null;
 function show(id) { screen = id; for (const s of ["title", "map", "play"]) $(s).hidden = s !== id; $("ov").hidden = true; }
 function goTitle() { show("title"); const f = firstOpen(); $("contBtn").textContent = Object.keys(save.stars).length ? `Continue ${trailLevel(f).id}` : "Play"; paintMute(); }
 function paintMute() { $("muteBtn").textContent = save.muted ? "Sound: off" : "Sound: on"; $("muteBtn").setAttribute("aria-label", save.muted ? "Unmute sound" : "Mute sound"); }
@@ -337,8 +432,8 @@ function goMap() {
   let html = "";
   WORLDS.forEach((w, wi) => {
     const open = unlocked(wi * PER_WORLD);
-    html += `<div class="card world${open ? "" : " locked"}" style="--wc:${w.color}"><h3>${wi + 1} · ${w.name} <small class="ops">${[...new Set(w.ops.flat())].map((o) => OP_LABEL[o]).join(" ")}</small></h3>`;
-    html += `<p>${open ? w.blurb : `Clear ${wi}-8 to travel here.`}</p><div class="trail" data-w="${wi}">`;
+    html += `<div class="card world${open ? "" : " locked"}" style="--wc:${w.color}"><h3>${wi + 1} · ${w.name} <small class="ops">${open ? worldStars(wi) + "/24★ · " : ""}${[...new Set(w.ops.flat())].map((o) => OP_LABEL[o]).join(" ")}</small></h3>`;
+    html += `<p>${open ? w.blurb : `Clear ${wi}-8 and earn ${WORLD_GATE}★ in ${WORLDS[wi - 1].name} (${worldStars(wi - 1)}/${WORLD_GATE}) to travel here.`}</p><div class="trail" data-w="${wi}">`;
     // serpentine: row 1 left→right, row 2 right→left
     const order = [0, 1, 2, 3, 7, 6, 5, 4];
     for (const slot of order) {
@@ -365,9 +460,9 @@ function drawTrails() {
   });
 }
 function startLevel(level) {
-  game = newGame(level); sel = { a: null, op: null }; lastMerged = -1; finished = false;
+  game = newGame(level); sel = { a: null, op: null }; lastMerged = -1; finished = false; hint = null;
   show("play");
-  $("lvlName").textContent = level.kind === "trail" ? `${level.id} · ${WORLDS[level.world].name}` : level.kind === "daily" ? `Daily · ${level.id}` : `Random · ${WORLDS[level.world].name}`;
+  $("lvlName").innerHTML = level.kind === "trail" ? `${level.id} <small>${WORLDS[level.world].name}</small>` : level.kind === "daily" ? `Daily <small>${level.id}</small>` : `Random <small>${WORLDS[level.world].name}</small>`;
   renderOps(); render();
   setMsg(level.kind === "trail" && level.index === 0 ? "Tap a number, then +, then another number." : "");
 }
@@ -379,8 +474,10 @@ function render() {
   const m = made(game), st = starsNow(game);
   $("targetCard").classList.toggle("made", m);
   $("goalLine").textContent = m ? (st === 3 ? "Every number used ★★★" : `Made with ${game.tiles.length - 1} left · use them all for ★★★`) : `${game.tiles.length} numbers · use every one for ★★★`;
-  $("tiles").innerHTML = game.tiles.map((v, i) => `<button class="tile${sel.a === i ? " sel" : ""}${v === game.target ? " hit" : ""}${i === lastMerged ? " pop" : ""}" data-i="${i}" aria-label="${v}${sel.a === i ? ", selected" : ""}">${v}</button>`).join("");
-  document.querySelectorAll(".op").forEach((b) => b.classList.toggle("sel", b.dataset.op === sel.op));
+  $("tiles").innerHTML = game.tiles.map((v, i) => `<button class="tile${sel.a === i ? " sel" : ""}${v === game.target ? " hit" : ""}${i === lastMerged ? " pop" : ""}" data-i="${i}" aria-label="${v}${sel.a === i ? ", selected" : ""}"><span class="pos" aria-hidden="true">${i + 1}</span>${v}</button>`).join("");
+  if (hint) { const t = $("tiles").children; if (t[hint.a]) t[hint.a].classList.add("hint"); if (t[hint.b]) t[hint.b].classList.add("hint"); }
+  document.querySelectorAll(".op").forEach((b) => { b.classList.toggle("sel", b.dataset.op === sel.op); b.classList.toggle("hint", !!hint && b.dataset.op === hint.op); });
+  $("hintBtn").disabled = game.done;
   $("log").innerHTML = game.log.map((s) => `<span>${s}</span>`).join("");
   $("undoBtn").disabled = !game.history.length;
   $("finishBtn").hidden = !m || game.tiles.length === 1;
@@ -412,7 +509,7 @@ function doMerge(a, op, b) {
     const el = $("tiles").children[b]; if (el) el.classList.add("shake");
     return false;
   }
-  sel = { a: null, op: null }; lastMerged = r.at;
+  sel = { a: null, op: null }; lastMerged = r.at; hint = null;
   SFX.merge(Math.min(12, game.log.length * 2));
   render();
   afterMove(wasMade);
@@ -440,7 +537,7 @@ function finish() {
   const isLast = L.kind === "trail" && L.index === TRAIL - 1;
   $("nextBtn").textContent = L.kind === "trail" ? (isLast ? "Trail map" : (L.index + 1) % PER_WORLD === 0 ? `Travel to ${WORLDS[L.world + 1].name}` : "Next level") : L.kind === "daily" ? "Trail map" : "New random board";
   $("ov").hidden = false; screen = "won";
-  $("nextBtn").focus({ preventScroll: true });
+  requestAnimationFrame(() => $("nextBtn").focus({ preventScroll: true }));
 }
 function next() {
   const L = game.level;
@@ -455,6 +552,16 @@ $("opsrow").addEventListener("click", (e) => { const t = e.target.closest("[data
 $("undoBtn").addEventListener("click", () => { if (undo(game)) { sel = { a: null, op: null }; SFX.undo(); render(); afterMove(false); } });
 $("restartBtn").addEventListener("click", () => startLevel(game.level));
 $("finishBtn").addEventListener("click", finish);
+$("hintBtn").addEventListener("click", giveHint);
+function giveHint() {
+  if (screen !== "play" || game.done) return;
+  const r = solveTiles(game.tiles, game.target, game.ops);
+  if (!r) { setMsg("No route uses every number from here. Undo ↶ a step or two.", "bad"); return; }
+  if (!r.length) return;
+  game.hinted = true; hint = r[0]; sel = { a: null, op: null };
+  render();
+  setMsg(`Try ${game.tiles[hint.a]} ${OP_LABEL[hint.op]} ${game.tiles[hint.b]}. Hints cap this board at ★★.`, "good");
+}
 $("playBack").addEventListener("click", goMap);
 $("mapBack").addEventListener("click", goTitle);
 $("contBtn").addEventListener("click", () => { ensureAudio(); startLevel(trailLevel(firstOpen())); });
@@ -483,7 +590,8 @@ document.addEventListener("keydown", (e) => {
   if (KEYOP[e.key] && game.ops.includes(KEYOP[e.key])) { e.preventDefault(); tapOp(KEYOP[e.key]); return; }
   if (e.key === "u" || e.key === "U" || e.key === "Backspace") { e.preventDefault(); $("undoBtn").click(); return; }
   if (e.key === "r" || e.key === "R") { startLevel(game.level); return; }
-  if (e.key === "Enter" && made(game)) { finish(); return; }
+  if (e.key === "Enter" && made(game)) { e.preventDefault(); finish(); return; }
+  if (e.key === "h" || e.key === "H") { giveHint(); return; }
   if (e.key === "Escape") { if (sel.a !== null) { sel = { a: null, op: null }; render(); } else goMap(); }
 });
 
