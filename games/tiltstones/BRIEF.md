@@ -1,11 +1,13 @@
 ---
-title: Tiltstones
+title: Ricochet (was Tiltstones)
 slug: tiltstones
 idea_id: szh7gjlgrh5ebj6oudix
 artifact: https://claude.ai/artifact/VAXzjHmZLmMTJS5zQsRJH4
 ---
 
-# Tiltstones
+# Ricochet (was Tiltstones)
+
+> Design v2 hand-over: see DESIGN.md, which overrides this brief.
 
 ## The idea
 > A mobile version of the 1990 Mac game Diamonds — Instead of using arrow keys to control the ball we can use the gyro of a mobile phone.
