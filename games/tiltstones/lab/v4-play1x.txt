@@ -1,0 +1,10 @@
+L1   won  1x-time  39.9s deaths 0 dead 16.2s (41%) maxGap 5.4s maxFlight 6.4 rows
+L2   won  1x-time  36.5s deaths 0 dead 12.6s (34%) maxGap 4.4s maxFlight 3.4 rows
+L3   won  1x-time  44.2s deaths 0 dead 18.4s (42%) maxGap 5.7s maxFlight 3.9 rows
+L4   won  1x-time  24.7s deaths 0 dead  1.6s (6%) maxGap 1.8s maxFlight 3.6 rows
+L5   won  1x-time  31.6s deaths 0 dead  9.5s (30%) maxGap 5.7s maxFlight 5.6 rows
+L6   won  1x-time  47.3s deaths 0 dead 18.2s (38%) maxGap 8.0s maxFlight 5.1 rows
+L7   won  1x-time  53.5s deaths 0 dead 32.3s (60%) maxGap 7.6s maxFlight 8.8 rows
+L8   won  1x-time  40.9s deaths 0 dead 11.2s (27%) maxGap 7.0s maxFlight 4.5 rows
+L9   won  1x-time  28.5s deaths 0 dead 11.5s (41%) maxGap 5.8s maxFlight 5.4 rows
+L10  playing 1x-time   6.8s deaths 0 dead  2.1s (30%) maxGap 1.8s maxFlight 7.4 rows

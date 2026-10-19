@@ -223,7 +223,7 @@
     <h2>Level Lab</h2>
     <button class="icon" data-mute aria-label="Mute sound"><svg><use href="#i-sound"/></svg></button>
   </div>
-  <p class="lab-intro">Ten level-design directions to compare, not a campaign. Each one is open. Bar: <b style="color:#9fc4ff">coloured</b> · <b style="color:#c9d0e2">grey</b> · <b style="color:#8a90a8">stone</b> · empty.</p>
+  <p class="lab-intro">Ten level-design directions to compare, not a campaign. Each one is open. Bar: coloured blocks (in their colours) · <b style="color:#c9d0e2">grey</b> · <b style="color:#8a90a8">stone</b> · empty.</p>
   <div class="lab-list" id="labList"></div>
 </section>
 
@@ -483,11 +483,11 @@ const LAB = [
     "aaaaagaaa#",
     "........aB",
     "aagaaaaga#",
-    ".##.##g#.#",
+    "###.#g##.#",
     "aaaagaaaaa",
     "..........",
     "aagaaaagaa",
-    "#.##.##.##",
+    "#.####.###",
     "....o.....",
     "aagaaaagaa",
   ]},
@@ -514,7 +514,7 @@ const LAB = [
     "#a##a##a##",
     "a..a..a..a",
     "a..g..a..g",
-    "##a#g#a#a#",
+    "##a###a#a#",
     "a..a..a..a",
     "a..a..g..a",
     "#g##a##a##",
@@ -525,18 +525,18 @@ const LAB = [
   ]},
   { id: "L4", name: "Shafts", family: "dense corridor", idea: "Short vertical shafts between stone columns. Windows in the columns are grey, plugs in the floors are blue.", hint: "Blue only. Bounce up a shaft, then break a grey window or a blue plug to move on.", map: [
     "a*a#aa#a*a",
-    "a.a#a.g..a",
-    "a.aga.#a.a",
-    "a.a#aa#a.a",
+    "g.a#a.g..g",
+    "g.aga.#a.g",
+    "g.a#aa#a.g",
     "##a##a##a#",
-    "a..g.a#.aa",
-    "aa.#a.g.aa",
-    "a.a#.a#a.a",
+    "g..g.a#.ag",
+    "ga.#a.g.ag",
+    "g.a#.a#a.g",
     "#a##a##a##",
-    "a.a#a.ga.a",
-    "a.ag.a#a.a",
-    "a.a#a.#a.a",
-    "a.a#o.#a.a",
+    "g.a#a.ga.g",
+    "g.ag.a#a.g",
+    "g.a#a.#a.g",
+    "g.a#o.#a.g",
     "aaa#aa#aaa",
   ]},
   { id: "L5", name: "Grey Scaffold", family: "dense corridor", idea: "A grey lattice you carve through, held up by stone ribs so the carving never opens a hall.", hint: "Grey breaks in any colour. Blue first, then slide sideways into the red pot on the right.", map: [
@@ -545,31 +545,31 @@ const LAB = [
     "#g.##g.#g#",
     "gaagaag##g",
     "g..g..gaB#",
-    "#a##g#a###",
+    "####g#a###",
     "gaagaagaag",
     "g..g..g..g",
     "#g.##g.#g#",
     "gaagaagaag",
     "g..g..g..g",
-    "#a##g##a##",
+    "####g##a##",
     "g...o....g",
     "gaagaagaag",
   ]},
-  { id: "L6", name: "Colour Onion", family: "dense corridor", idea: "Four colour layers from the bottom up, each sealed by a stone rib. The next colour's pot sits in the rib, behind the layer's last block.", hint: "Blue, red, green, gold, from the bottom up. Each pot sits in a rib: steer sideways into it when its layer is done.", map: [
+  { id: "L6", name: "Colour Onion", family: "dense corridor", idea: "Four colour layers from the bottom up, each sealed by a stone rib. The next colour's pot waits at the end of the layer's channel.", hint: "Blue, red, green, gold, from the bottom up. Each pot waits at the end of a channel, behind that layer's last block.", map: [
     "d*ddddd*dd",
     "..........",
     "ddgddddgd#",
-    "#.##.##.cD",
+    "#.##.##.##",
     "ccccgcccc#",
-    "#.........",
-    "Cb.##.#.##",
+    "#.......cD",
+    "##.##.##.#",
     "#bbbbgbbb#",
-    ".........#",
-    "#.##.##.aB",
+    "Cb.......#",
+    "#.##.##.##",
     "aaaagaaaa#",
-    "..........",
-    "....o.....",
-    "aagaaaagaa",
+    "........aB",
+    "....o....#",
+    "aagaaaagg#",
   ]},
   { id: "L7", name: "Stone Heavy", family: "dense corridor", idea: "Close to the density reference: about a third of the field is stone and the corridors are fixed.", hint: "Stone never breaks. Follow the corridors and touch every blue block.", map: [
     "a*.a#a.*a.",
@@ -604,17 +604,17 @@ const LAB = [
     "aaaaaaaaaa",
   ]},
   { id: "L9", name: "Narrow Eight", family: "dense corridor (8 columns)", idea: "The rattle-row idea on an 8-column grid: bigger tiles on the phone, shorter channels.", hint: "Clear the blue bands, then the red ones. The red pot is at the right end of the rib: slide into it when blue is done.", map: [
-    "b*bgbb*b",
+    "b*bgbb*.",
     "........",
     "bbgbbgb#",
     "#.##.#aB",
     "aaaagaa#",
     "........",
     "aagaaaga",
-    ".##.#g.#",
+    ".##.#g##",
     "aaagaaaa",
     "........",
-    "#.##.#.#",
+    "#.##.##.",
     "..aaaa..",
     "...o....",
     "agaaaaga",
@@ -639,12 +639,12 @@ const LAB = [
 // LAB:END
 LAB.forEach((L) => { L.set = "lab"; LEVELS.push(L); });
 function ratio(map) {   // coloured : grey : wall : empty, in % of cells (pots, diamonds, skulls, keys, locks are "other")
-  const n = { col: 0, grey: 0, wall: 0, empty: 0, other: 0 };
+  const n = { col: 0, grey: 0, wall: 0, empty: 0, other: 0 }, per = [0, 0, 0, 0];
   for (const row of map) for (const ch of row) {
-    if (ch in BLOCK) n.col++; else if (ch === "g") n.grey++; else if (ch === "#") n.wall++; else if (ch === "." || ch === "o") n.empty++; else n.other++;
+    if (ch in BLOCK) { n.col++; per[BLOCK[ch]]++; } else if (ch === "g") n.grey++; else if (ch === "#") n.wall++; else if (ch === "." || ch === "o") n.empty++; else n.other++;
   }
   const t = map.length * map[0].length, pc = (v) => Math.round(100 * v / t);
-  return { col: pc(n.col), grey: pc(n.grey), wall: pc(n.wall), empty: pc(n.empty), other: pc(n.other) };
+  return { col: pc(n.col), grey: pc(n.grey), wall: pc(n.wall), empty: pc(n.empty), other: pc(n.other), per: per.map((v) => 100 * v / t) };
 }
 
 // ======================= core (pure, no DOM) =======================
@@ -1216,7 +1216,8 @@ function showPanel(which) {
   for (const p of ["pWon", "pLost", "pPause", "pStuck", "pCard"]) $(p).hidden = p !== which;
   if (which) { const btn = $(which).querySelector(".btn"); if (btn) btn.focus({ preventScroll: true }); }
 }
-const ratioBar = (q) => `<i class="r-col" style="width:${q.col}%"></i><i class="r-grey" style="width:${q.grey}%"></i><i class="r-wall" style="width:${q.wall}%"></i><i class="r-other" style="width:${q.other}%"></i>`;
+const SEG = ["#3d8bff", "#ff4d6a", "#3cd070", "#ffcc33"];
+const ratioBar = (q) => q.per.map((v, i) => v ? `<i style="width:${v.toFixed(1)}%;background:${SEG[i]}"></i>` : "").join("") + `<i class="r-grey" style="width:${q.grey}%"></i><i class="r-wall" style="width:${q.wall}%"></i><i class="r-other" style="width:${q.other}%"></i>`;
 const ratioText = (q) => `${q.col}% coloured · ${q.grey}% grey · ${q.wall}% stone · ${q.empty}% empty`;
 function startLevel(lv, withCard) {
   lv = Math.max(0, Math.min(LEVELS.length - 1, lv | 0));
