@@ -2,7 +2,7 @@
 title: Sweepvault
 slug: sweepvault
 idea_id: t04rsyxc53uvmu1k02do
-artifact: <filled in after the first publish>
+artifact: https://claude.ai/artifact/4UtwbypmnfbQBmTpWb1N66
 ---
 
 # Sweepvault
@@ -27,9 +27,11 @@ A phone-first Minesweeper where the goal isn't clearing the board: you dig throu
 - Undo is in (RULES.md: undo in any puzzle game). Since every board is guess-free, undo is a mistake-forgiver, not a way to scout mines; the level-clear screen shows how many undos and hearts you used.
 - The door is visible from the start (so the goal is clear) and its tile shows a number like any other; keys are hidden.
 - Gems are optional and only count toward a per-level "all gems" badge. No currency, no shop.
+- After review: undo brings tiles back but not a heart lost to a mine (the mine stays revealed), so hearts matter while undo still forgives misclicks. Undo is off on the "Out of hearts" screen; Retry restarts the same board.
 
 ## Later
 - Endless/daily random board, more item types (compass pointing to the key, x-ray, chests that need a key, monsters à la Mamono Sweeper).
+- Give lanterns real stakes (e.g. one deliberate 50/50 per level a lantern can resolve).
 - Bigger boards with pinch-zoom, level select grid, best-score tracking.
 
 ## Design
