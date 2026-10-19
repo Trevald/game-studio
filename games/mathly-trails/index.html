@@ -32,7 +32,7 @@
   body { background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); touch-action: manipulation; user-select: none; -webkit-user-select: none;
     padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   main { width: min(100%, 440px); margin: 0 auto; }
-  .screen { display: grid; gap: 14px; }
+  .screen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .screen[hidden] { display: none; }
   button { font-family: var(--font); color: inherit; }
   .btn { font: 800 18px var(--font); min-height: 52px; padding: 10px 22px; border-radius: 14px; border: 0; background: var(--sel); color: var(--sel-ink); cursor: pointer; width: 100%; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
@@ -42,7 +42,7 @@
   button:focus-visible { outline: 3px solid var(--sel); outline-offset: 2px; }
 
   /* title */
-  #title { min-height: calc(100% - 20px); align-content: center; text-align: center; padding: 24px 0; }
+  #title { min-height: calc(100dvh - 20px); align-content: center; text-align: center; padding: 24px 0; }
   .mark { font: 900 clamp(44px, 14vw, 64px)/0.95 var(--font); letter-spacing: -0.03em; margin: 0; }
   .mark span { display: block; font-size: .42em; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
   .eqart { font: 800 22px var(--font); color: var(--muted); font-variant-numeric: tabular-nums; margin: 6px 0 10px; }
