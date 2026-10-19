@@ -4,7 +4,7 @@ This is the procedure for one overnight run of the studio. Follow it top to bott
 Benji is asleep: never stop to ask him anything. When something is ambiguous, take the most
 reasonable reading, write down the assumption in the night log, and keep going.
 
-**One job per shift.** There are two shifts a night (about 22:30 and 03:35), each its own session.
+**One job per shift.** There are two shifts a night (about 22:30 and 03:50), each its own session.
 Each shift either finishes interrupted work, iterates one game that has feedback, or starts one game. Never two.
 
 ---
