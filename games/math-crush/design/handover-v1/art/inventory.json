@@ -1,0 +1,53 @@
+[
+  {
+    "file": "clear-atlas.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ]
+  },
+  {
+    "file": "clear-bg.png",
+    "width": 1024,
+    "height": 1536,
+    "mode": "RGB",
+    "alphaRange": null
+  },
+  {
+    "file": "equation-atlas.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ]
+  },
+  {
+    "file": "equation-bg.png",
+    "width": 1024,
+    "height": 1536,
+    "mode": "RGB",
+    "alphaRange": null
+  },
+  {
+    "file": "match-atlas.png",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ]
+  },
+  {
+    "file": "match-bg.png",
+    "width": 1024,
+    "height": 1536,
+    "mode": "RGB",
+    "alphaRange": null
+  }
+]

@@ -66,7 +66,9 @@ them, never copy their code or assets wholesale, and don't download files from t
 be read (login wall, blocked site, video), say so under References and in the morning report rather
 than guessing at its content.
 
-Follow `studio/roles/producer.md`. New game: create `games/<slug>/` (slug = short kebab-case name),
+Follow `studio/roles/producer.md`. New game: if the idea already has a `slug` on the board and
+`games/<slug>/DESIGN.md` exists, Benji has prepared it: use that folder and follow its DESIGN.md.
+Otherwise create `games/<slug>/` (slug = short kebab-case name),
 copy `studio/templates/BRIEF.md` and fill it in. Iteration: update the existing brief with tonight's
 goals, derived from Benji's notes (or, for the studio's own game, the last review), and nothing else.
 
