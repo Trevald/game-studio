@@ -121,6 +121,37 @@ Colour Sight, Time Warp, Shield, Extra Life, Chain Extender, Prism, Blue Return,
   relative path (see NIGHT_SHIFT.md step 7). QA loads them from disk the same way.
 - Preload the current world's background before the level starts so it never pops in.
 
+## Level Lab (night of 19–20 Oct) — explore level-design directions
+
+Benji isn't happy with the World 1 levels and wants to try **different level-design directions** before
+any more levels are built. For this job only, the "don't redesign a designer level" rule is lifted:
+the studio designs its own levels.
+
+**What to build**
+- A **Level Lab**: 8–12 levels, each one a *different direction*, not a progression. Reach it from the
+  start screen ("Level Lab"). Keep the designer's World 1 playable as it is, so Benji can compare.
+- Each lab level shows its **direction name and a one-line idea** on a card before play
+  (e.g. "Rattle pockets: tight 2-row pockets the ball bounces inside"), and has its own clock/PB.
+- Use **only existing mechanics** (colour blocks, grey, paint pots, diamonds, skulls, walls, key/lock).
+  New tile ideas go in the report as proposals, not in the build.
+- Directions to choose from (pick 8+, swap in better ones): dense rattle pockets · vertical corridors/
+  shafts · maze of walls with few targets · open field built for speed routes · grey scaffolding you
+  carve through · colour "onion" (layers that force order) · key-and-gate chambers · skull gauntlet
+  with safe detours · mirror/symmetric · one-screen puzzle where the order is the whole challenge ·
+  closer homage to the original *Diamonds* layouts.
+
+**Play it, measure it, improve it**
+- Play every lab level for real, not just with `solve()`: drive Playwright with keyboard/pointer input
+  at 1×, both a careful run and a fast run, and look at the screenshots.
+- Measure per level: solver time, your human-style clear time, deaths, **dead time** (seconds with
+  no block hit), bounces between hits, and how much faster the fast route is than the safe one.
+- Iterate: change each level at least once based on what you measured and saw; keep a short
+  changelog per level (v1 → v2: what changed and why).
+- The reviewer agent plays the lab cold and ranks the directions.
+
+**Report** (in NIGHTS.md and the board summary): a table of directions with the metrics, the studio's
+top 3 and why, and what to try next. Ask Benji which 1–2 directions to take forward.
+
 ## Open (don't decide these; build so they're easy to change)
 
 - **How time and score relate, and what stars mean.** Benji will decide. Until then: track and show
