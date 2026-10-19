@@ -18,6 +18,38 @@ A Diamonds-style brick puzzle where the ball bounces up and down by itself and y
 - 1990 Mac game *Diamonds* (named, not linked; looked up via Wikipedia "Diamonds (video game)") — the ball bounces vertically on its own, the player only controls horizontal motion. Coloured blocks only break when the ball has the same colour; brush blocks repaint the ball; diamonds can only be broken once every coloured block is gone; skulls cost a life. The ball starts each level/life in its base colour and nothing paints it back, so base-colour blocks must be cleared first (or you lose a life on purpose). Keys/locks and solid blocks also exist in the original; the page didn't detail them.
 - *Diamonds PD* (Playdate remake, itch.io page) — confirms the control scheme (left/right only, crank as analog input) and that a 1-axis analog input fits the game. Page has no rules detail.
 
+## Tonight (night 3) — Level Lab (from Benji's note "ricochet-level-lab" + DESIGN.md "Level Lab")
+1. A **Level Lab** reachable from the start screen: 10 lab levels, each a different level-design
+   direction (not a progression), every one open from the start. World 1 stays exactly as it is.
+2. Most directions are variations of Benji's direction: **dense, corridor-based, little open space,
+   a better balance of breakable vs unbreakable than the density reference**. One contrasting direction
+   (open field / speed routes) for comparison. One lab level tests a **narrow 8-column grid**.
+3. Each lab level opens on a **direction card** (name, one-line idea, block ratio, PB) before play,
+   and has its own clock/PB. Only existing tiles (colour, grey, pots, diamonds, skulls, walls, key/lock).
+4. **Play, measure, improve:** per level — solver time, a 1× keyboard run by a human-paced bot,
+   deaths, dead time (s with no block hit), longest travel without contact, ratio
+   (coloured : grey : wall : empty), contacts per hit, safe vs fast. Change every level at least once
+   from the measurements; keep a v1 → v2 changelog (`lab/CHANGELOG.md`).
+5. Report: direction table with metrics, the studio's top 3, what to try next; ask Benji which 1–2 to take forward.
+
+### Lab design (night 3)
+- **Corridor idiom:** bands of blocks alternating with 1–2-row channels. The ball bounces vertically
+  by itself, so in a 1-row channel it rattles against the band above and below on every bounce (0.05–0.15 s
+  between contacts); steering slides it along the channel. Walls and grey shape the corridors so they
+  survive after the coloured blocks are gone (otherwise a cleared band turns into open space).
+- **Guarded pots:** a paint pot sits in a nook behind one blue "guard" block, so the order puzzle is
+  "break the guard last". Blue-only directions skip paint entirely to isolate the spatial feel.
+- **Engine change:** grid size is now per level (`W`/`H` read from the map) so the 8-column test is
+  real; World 1 is untouched (10×14).
+- **Measurement tool:** `lab/measure.mjs` runs the engine headless (solver = fast route) and
+  `lab/play1x.mjs` drives Playwright with real key presses at 1× (careful route, 0.2 s decisions).
+- `__qa`: `levels()` now covers World 1 + Lab (ids `L1`…); `reset(n)` skips the direction card; on the
+  card `actions()` is `["start"]`. `state()` adds `set` (`"w1"` | `"lab"`) and screen `"card"`.
+
+### Assumptions (night 3)
+- The lab uses the Crystal Caverns background so it never looks like World 1 (no world 2 content is invented).
+- Lab levels have no par and no stars (Benji hasn't decided what stars mean); they show time, score and PB.
+
 ## Tonight (night 2) — Ricochet phase 1 (from Benji's note "ricochet-design-v2" + DESIGN.md)
 1. Rename to **Ricochet** everywhere (title, screens). Folder/slug stay `tiltstones`.
 2. New look: designer logo + start background on the title screen, Meadow Ruins background behind the
