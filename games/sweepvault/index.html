@@ -71,7 +71,13 @@
   @keyframes glow { from { box-shadow: 0 0 0 0 var(--key); } to { box-shadow: 0 0 0 4px var(--key); } }
   .c .badge { position: absolute; right: 2px; bottom: 1px; font: 800 calc(var(--cell) * 0.28)/1 var(--font); color: #fff; }
   .c .glints { position: absolute; left: 3px; top: 3px; display: flex; gap: 2px; }
-  .c .glints i { width: calc(var(--cell) * 0.16); height: calc(var(--cell) * 0.16); border-radius: 50%; display: block; }
+  .c .glints { left: 2px; top: 2px; gap: 1px; }
+  .c .glints svg { width: calc(var(--cell) * 0.3); height: calc(var(--cell) * 0.3); display: block; filter: drop-shadow(0 0 1px var(--open)); }
+  .c .fly { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; animation: fly .8s ease-out forwards; z-index: 2; }
+  .c .fly svg { width: 80%; height: 80%; }
+  @keyframes fly { 0% { transform: scale(.4); opacity: 0; } 25% { transform: scale(1.35); opacity: 1; } 100% { transform: translateY(-120%) scale(.9); opacity: 0; } }
+  .chip.bump { animation: bump .4s; }
+  @keyframes bump { 40% { transform: scale(1.18); } }
   .n1{color:var(--n1)}.n2{color:var(--n2)}.n3{color:var(--n3)}.n4{color:var(--n4)}.n5{color:var(--n5)}.n6{color:var(--n6)}.n7{color:var(--n7)}.n8{color:var(--n8)}
   .tools { width: 100%; display: flex; gap: 8px; justify-content: center; }
   .tool { flex: 1; max-width: 140px; border: 0; background: var(--panel); color: var(--ink); border-radius: 12px; min-height: 44px; font: 600 15px var(--font); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
@@ -88,7 +94,7 @@
   .big { border: 0; border-radius: 999px; padding: 11px 18px; font: 700 15px var(--font); cursor: pointer; background: var(--accent); color: var(--accent-ink); }
   .big.alt { background: var(--panel); color: var(--ink); }
   .help { color: var(--muted); font-size: 12.5px; text-align: center; margin: 0; }
-  @media (prefers-reduced-motion: reduce) { .c.open.anim, #board.shake, .c.door.unlocked { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .c.open.anim, #board.shake, .c.door.unlocked, .chip.bump { animation: none; } .c .fly { display: none; } }
 </style>
 </head>
 <body>
@@ -118,7 +124,7 @@
     <button class="tool" id="undoBtn"></button>
     <button class="tool" id="restartBtn"></button>
   </div>
-  <p class="help" id="help">Tap to dig · long-press or ⚑ mode to flag · numbers count mines in the 8 tiles around · glints show a hidden item next to that number</p>
+  <p class="help" id="help">Tap to dig · long-press or ⚑ mode to flag · tap a number with all its mines flagged to dig around it · a small icon on a number means that item is hidden next to it</p>
 </main>
 <script>
 // =====================================================================
@@ -170,13 +176,8 @@ function buildLayout(spec, seed) {
   for (let i = 0; i < spec.gems; i++) items.push("gem");
   for (let i = 0; i < spec.lamps; i++) items.push("lamp");
   for (let i = 0; i < spec.hearts; i++) items.push("heart");
-  // keys go far from the start: pick from the remaining pool, preferring the upper 2/3 of the board for keys
-  const rest = pool.slice(k);
-  for (const it of items) {
-    let idx = rest.findIndex((c) => it !== "key" || ((c / w) | 0) < Math.ceil(h * 0.66));
-    if (idx < 0) idx = 0;
-    item[rest[idx]] = it; rest.splice(idx, 1);
-  }
+  const rest = pool.slice(k); // already shuffled
+  items.forEach((it, j) => { item[rest[j]] = it; });
   const num = new Array(n).fill(0);
   for (let i = 0; i < n; i++) num[i] = neighbors(w, h, i).filter((j) => mine[j]).length;
   return { w, h, mine, item, num, start, door, keysNeeded: spec.keys, gemsTotal: spec.gems };
@@ -215,17 +216,17 @@ function collect(g, i) {
   else if (it === "lamp") g.lanterns++;
   else if (it === "heart") g.hearts++;
   (g.picked = g.picked || []).push(it);
+  (g.pickedAt = g.pickedAt || []).push(i);
 }
 function isHidden(g, i) { return !g.rev[i] && !g.boom[i] && !g.marked[i]; }
 function legalActions(g) {
-  if (g.screen === "lost") return g.hist && g.hist.length ? ["undo"] : [];
   if (g.screen !== "playing") return [];
   const out = [], L = g.L;
   for (let i = 0; i < L.w * L.h; i++) {
     if (isHidden(g, i)) {
       if (!g.flag[i]) out.push({ t: "dig", x: i % L.w, y: (i / L.w) | 0 });
       out.push({ t: "flag", x: i % L.w, y: (i / L.w) | 0 });
-    }
+    } else if (g.rev[i] && L.num[i] && i !== L.door) out.push({ t: "chord", x: i % L.w, y: (i / L.w) | 0 });
   }
   out.push({ t: "dig", x: L.door % L.w, y: (L.door / L.w) | 0 });
   if (g.lanterns > 0) out.push({ t: "lamp" });
@@ -255,13 +256,32 @@ function step(g, a) {
     return { ...g, event: { type: "locked", need: L.keysNeeded - g.keys } };
   }
   if (g.lampArmed) {
-    const ng = clone(g); ng.lampArmed = false; ng.lanterns--; ng.moves++; ng.picked = [];
+    const ng = clone(g); ng.lampArmed = false; ng.lanterns--; ng.moves++; ng.picked = []; ng.pickedAt = [];
     const area = [i, ...neighbors(L.w, L.h, i)], opened = [];
     for (const j of area) {
       if (L.mine[j]) { if (!ng.boom[j]) { ng.marked[j] = 1; ng.flag[j] = 0; } }
       else opened.push(...revealFlood(ng, j));
     }
-    ng.event = { type: "lamp", i, opened, picked: ng.picked }; delete ng.picked;
+    ng.event = { type: "lamp", i, opened, picked: ng.picked, pickedAt: ng.pickedAt }; delete ng.picked; delete ng.pickedAt;
+    return ng;
+  }
+  if (a.t === "chord") {
+    // tap a satisfied number: dig every hidden, unflagged neighbour at once
+    if (!g.rev[i] || !L.num[i]) return g;
+    const nb = neighbors(L.w, L.h, i);
+    const marks = nb.filter((j) => g.flag[j] || g.boom[j] || g.marked[j]).length;
+    const todo = nb.filter((j) => isHidden(g, j) && !g.flag[j]);
+    if (marks !== L.num[i] || !todo.length) return g;
+    const ng = clone(g); ng.moves++; ng.picked = []; ng.pickedAt = [];
+    const opened = [], booms = [];
+    for (const j of todo) {
+      if (L.mine[j]) { if (!ng.boom[j]) { ng.boom[j] = 1; ng.hearts--; booms.push(j); } }
+      else opened.push(...revealFlood(ng, j));
+    }
+    if (ng.hearts <= 0) ng.screen = "lost";
+    ng.event = booms.length ? { type: "boom", i: booms[0], opened, picked: ng.picked, pickedAt: ng.pickedAt }
+                            : { type: "dig", i, opened, picked: ng.picked, pickedAt: ng.pickedAt };
+    delete ng.picked; delete ng.pickedAt;
     return ng;
   }
   if (!isHidden(g, i) || g.flag[i]) return g;
@@ -271,9 +291,9 @@ function step(g, a) {
     if (ng.hearts <= 0) ng.screen = "lost";
     return ng;
   }
-  ng.picked = [];
+  ng.picked = []; ng.pickedAt = [];
   const opened = revealFlood(ng, i);
-  ng.event = { type: "dig", i, opened, picked: ng.picked }; delete ng.picked;
+  ng.event = { type: "dig", i, opened, picked: ng.picked, pickedAt: ng.pickedAt }; delete ng.picked; delete ng.pickedAt;
   return ng;
 }
 // Logic solver: from what the player can see (revealed numbers + known mines), deduce safe and mine cells.
@@ -344,10 +364,22 @@ function layoutFor(levelIdx) {
   const spec = LEVELS[levelIdx];
   for (let s = spec.seed; s < spec.seed + 5000; s++) {
     const L = buildLayout(spec, s);
+    if (L.num[L.door] === 0) continue;                  // the door must not be a free second opening
     const g = newGame(levelIdx, L);
     if (g.got.some(Boolean)) continue;                  // nothing handed out by the opening flood
+    // no key may fall out of a single dig next to the door (or anywhere: one dig = at most one key)
+    let giveaway = false;
+    for (let i = 0; i < L.w * L.h && !giveaway; i++) {
+      if (L.mine[i] || g.rev[i]) continue;
+      const t = clone(g); revealFlood(t, i);
+      if (t.keys >= 1 && (neighbors(L.w, L.h, L.door).includes(i) || t.keys >= 2)) giveaway = true;
+    }
+    if (giveaway) continue;
     const quick = planSolution(g, false);
-    if (!quick || quick.length < (spec.minDigs || 4)) continue; // the search must take a few real digs
+    if (!quick) continue;
+    let t = g, digs = 0;                                 // digs needed before the last key is in hand
+    for (const a of quick) { if (t.keys >= L.keysNeeded) break; t = step(t, a); if (a.t === "dig") digs++; }
+    if (digs < (spec.minDigs || 4)) continue;           // the search must take a few real digs
     if (planSolution(g, true)) { L.seed = s; return (layoutCache[levelIdx] = L); }
   }
   throw new Error("no solvable layout for level " + (levelIdx + 1));
@@ -363,7 +395,13 @@ function doAction(a) {
   if (a === "undo") {
     if (!hist.length) return false;
     const undos = game.undos + 1;
-    game = hist.pop(); game.undos = undos; game.hist = hist; game.event = { type: "undo" };
+    // undo brings tiles back, but a mine you stepped on stays found and its heart stays lost
+    const cur = game, orig = hist.pop(), prev = clone(orig);
+    let lostSince = 0;
+    for (let i = 0; i < cur.boom.length; i++) if (cur.boom[i] && !prev.boom[i]) { prev.boom[i] = 1; prev.flag[i] = 0; lostSince++; }
+    prev.hearts -= lostSince;
+    if (prev.hearts <= 0) { hist.push(orig); return false; }
+    game = prev; game.undos = undos; game.hist = hist; game.event = { type: "undo", kept: lostSince };
     return true;
   }
   const ng = step(game, a);
@@ -490,9 +528,8 @@ function render(anim) {
       const it = L.item[i];
       if (it && L.num[i] === 0) { html = `<span style="color:${ITEM_COLOR[it]};opacity:.45;display:contents">${ICON[it]}</span>`; }
       else if (L.num[i]) { cls += " n" + L.num[i]; html = String(L.num[i]); }
-      if (it && L.num[i]) html += `<span class="glints" style="left:auto;right:3px"><i style="background:${ITEM_COLOR[it]};opacity:.5"></i></span>`;
       const gl = glints.get(i);
-      if (gl) html += `<span class="glints">${[...gl].map((k) => `<i style="background:${ITEM_COLOR[k]}"></i>`).join("")}</span>`;
+      if (gl) html += `<span class="glints">${[...gl].slice(0, 2).map((k) => `<span style="color:${ITEM_COLOR[k]};display:contents">${ICON[k]}</span>`).join("")}</span>`;
       label = L.num[i] ? `${L.num[i]}` : "empty";
       if (gl) label += ", next to hidden " + [...gl].join(" and ");
       if (animSet && animSet.has(i) && !reduceMotion) { cls += " anim"; c.style.animationDelay = Math.min(animSet.get(i) * 35, 400) + "ms"; }
@@ -527,7 +564,7 @@ function render(anim) {
   const fb = $("flagBtn");
   fb.innerHTML = ICON.flag + (g.flagMode ? "Flagging" : "Flag");
   fb.classList.toggle("on", g.flagMode); fb.setAttribute("aria-pressed", g.flagMode ? "true" : "false");
-  $("undoBtn").innerHTML = ICON.undo + "Undo"; $("undoBtn").disabled = !hist.length;
+  $("undoBtn").innerHTML = ICON.undo + "Undo"; $("undoBtn").disabled = !hist.length || g.screen !== "playing";
   $("restartBtn").innerHTML = ICON.restart + "Restart";
   $("muteBtn").innerHTML = muted ? ICON.muted : ICON.sound; $("muteBtn").setAttribute("aria-label", muted ? "Unmute" : "Mute");
   // overlay card
@@ -540,26 +577,40 @@ function render(anim) {
     bits.push(g.undos ? `${g.undos} ${g.undos === 1 ? "undo" : "undos"}` : "no undos");
     $("cardText").textContent = bits.join(" · ") + (last ? ". That was the last level." : "");
     row.replaceChildren(btn(last ? "Play again" : "Next level", "big", () => { goLevel(last ? 0 : g.level + 1); }), btn("Retry", "big alt", () => { restart(); }));
+    if (card.hidden) cardShownAt = performance.now();
     card.hidden = false;
   } else if (g.screen === "lost") {
     $("cardTitle").textContent = "Out of hearts";
-    $("cardText").textContent = "Undo the last dig, or start the level over.";
-    row.replaceChildren(btn("Undo", "big", () => { act("undo"); }), btn("Retry", "big alt", () => { restart(); }));
+    $("cardText").textContent = "Hearts lost to mines don't come back with undo. Start the level over — same board.";
+    row.replaceChildren(btn("Retry", "big", () => { restart(); }));
+    if (card.hidden) cardShownAt = performance.now();
     card.hidden = false;
   } else card.hidden = true;
 }
-function btn(text, cls, fn) { const b = document.createElement("button"); b.className = cls; b.textContent = text; b.onclick = () => { audioOn(); fn(); }; return b; }
+let cardShownAt = 0;
+// ignore taps that land on the card in the same gesture that made it appear (ghost taps)
+function btn(text, cls, fn) { const b = document.createElement("button"); b.className = cls; b.textContent = text; b.onclick = () => { if (performance.now() - cardShownAt < 450) return; audioOn(); fn(); }; return b; }
 function say(t) { $("msg").textContent = t; }
 
 // =====================================================================
 // ACTIONS -> feedback
 // =====================================================================
 function act(a) {
+  game.event = null;
   const ok = doAction(a);
-  const ev = game.event;
-  if (!ok && !ev) { render(); return; }
-  if (ev) feedback(ev);
-  render(ev && ev.opened ? ev : null);
+  const ev = ok ? game.event : null;
+  if (!ev) { render(); return; }
+  feedback(ev);
+  render(ev.opened ? ev : null);
+  if (ev.pickedAt && ev.pickedAt.length && !reduceMotion) {
+    ev.pickedAt.forEach((i, k) => {
+      const it = game.L.item[i], f = document.createElement("span");
+      f.className = "fly"; f.style.color = ITEM_COLOR[it]; f.innerHTML = ICON[it];
+      cells[i].appendChild(f); setTimeout(() => f.remove(), 900);
+      const chip = { key: "keys", gem: "gems", heart: "hearts", lamp: "lampBtn" }[it];
+      const el = $(chip); el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
+    });
+  }
 }
 function feedback(ev) {
   const g = game, L = g.L;
@@ -567,7 +618,7 @@ function feedback(ev) {
     case "dig": SFX.dig(ev.opened.length); say(""); break;
     case "lamp": SFX.lamp(); say("The lantern lights up a safe 3×3."); break;
     case "boom":
-      SFX.boom(); say(g.hearts > 0 ? `Mine! ${g.hearts} ${g.hearts === 1 ? "heart" : "hearts"} left. Undo if you like.` : "");
+      SFX.boom(); say(g.hearts > 0 ? `Mine! ${g.hearts} ${g.hearts === 1 ? "heart" : "hearts"} left. Undo brings back the tiles, not the heart.` : "");
       if (!reduceMotion) { const b = $("board"); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); }
       break;
     case "flag": SFX.flag(); break;
@@ -575,7 +626,7 @@ function feedback(ev) {
     case "disarmed": say(""); break;
     case "locked": SFX.locked(); say(`The door is locked. Find ${ev.need} more ${ev.need === 1 ? "key" : "keys"}.`); flashDoor(); break;
     case "won": SFX.won(); say(""); if (g.level >= unlocked && g.level < LEVELS.length - 1) { unlocked = g.level + 1; store.set("unlocked", unlocked); } break;
-    case "undo": SFX.undo(); say("Undone."); break;
+    case "undo": SFX.undo(); say(ev.kept ? "Undone. The mine stays found and the heart stays lost." : "Undone."); break;
   }
   if (ev.picked && ev.picked.length) {
     const names = { key: "a key", gem: "a gem", lamp: "a lantern", heart: "a heart" };
@@ -604,6 +655,7 @@ board.addEventListener("pointerdown", (e) => {
   if (e.pointerType === "mouse" && e.button !== 0) return;
   const i = +c.dataset.i;
   press = { i, id: e.pointerId, x: e.clientX, y: e.clientY, long: false, type: e.pointerType };
+  if (e.pointerType === "mouse") return;
   press.timer = setTimeout(() => { if (press && press.i === i) { press.long = true; tapCell(i, true); if (navigator.vibrate) try { navigator.vibrate(15); } catch (er) {} } }, 350);
 });
 board.addEventListener("pointermove", (e) => { if (press && press.id === e.pointerId && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 14) { clearTimeout(press.timer); press = null; } });
@@ -613,7 +665,8 @@ function endPress(e, fire) {
   const p = press; press = null;
   if (fire && !p.long) tapCell(p.i, false);
 }
-board.addEventListener("pointerup", (e) => endPress(e, true));
+board.addEventListener("pointerup", (e) => { if (press && e.pointerType !== "mouse") e.preventDefault(); endPress(e, true); });
+board.addEventListener("click", (e) => e.preventDefault());
 board.addEventListener("pointercancel", (e) => endPress(e, false));
 board.addEventListener("contextmenu", (e) => {
   e.preventDefault();
@@ -628,7 +681,11 @@ function tapCell(i, alt) {
   cursor = cursor >= 0 ? i : cursor;
   if (i === L.door) return act({ t: "dig", x, y });
   const wantFlag = g.lampArmed ? false : (alt !== g.flagMode);
-  if (g.rev[i] || g.boom[i] || g.marked[i]) { if (g.lampArmed) act({ t: "dig", x, y }); return; }
+  if (g.rev[i] || g.boom[i] || g.marked[i]) {
+    if (g.lampArmed) act({ t: "dig", x, y });
+    else if (g.rev[i] && L.num[i]) act({ t: "chord", x, y });
+    return;
+  }
   act({ t: wantFlag ? "flag" : "dig", x, y });
 }
 $("flagBtn").onclick = () => { audioOn(); game.flagMode = !game.flagMode; say(game.flagMode ? "Flag mode: taps place flags. Long-press digs." : ""); render(); };

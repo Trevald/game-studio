@@ -1,11 +1,11 @@
 {
   "game": "games/sweepvault/index.html",
-  "at": "2026-10-18T23:52:34.583Z",
+  "at": "2026-10-19T00:01:32.623Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "39 KB"
+      "detail": "43 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -45,17 +45,17 @@
     {
       "name": "[desktop] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"playing\",\"level\":0,\"w\":6,\"h\":6,\"hearts\":3,\"keys\":0,\"keysNeeded\":1,\"gems\":0,\"gemsTotal\":0,\"lanterns\":0,\"lampArmed\":false,\"flagMode\":false,\"revealed\":27,\"hidden\":9,\"moves\":0,\"undos\":0,\"seed\":105}"
+      "detail": "{\"screen\":\"playing\",\"level\":0,\"w\":6,\"h\":6,\"hearts\":3,\"keys\":0,\"keysNeeded\":1,\"gems\":0,\"gemsTotal\":0,\"lanterns\":0,\"lampArmed\":false,\"flagMode\":false,\"revealed\":13,\"hidden\":23,\"moves\":0,\"undos\":0,\"seed\":121}"
     },
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, lost, won; resets: 22"
+      "detail": "screens seen: playing, won, lost; resets: 6"
     },
     {
       "name": "every level completable via solve() (8 levels)",
       "ok": true,
-      "detail": "L1:6 L2:5 L3:8 L4:11 L5:10 L6:20 L7:19 L8:43"
+      "detail": "L1:16 L2:10 L3:15 L4:11 L5:13 L6:20 L7:19 L8:41"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -75,12 +75,12 @@
     {
       "name": "[phone] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"playing\",\"level\":0,\"w\":6,\"h\":6,\"hearts\":3,\"keys\":0,\"keysNeeded\":1,\"gems\":0,\"gemsTotal\":0,\"lanterns\":0,\"lampArmed\":false,\"flagMode\":false,\"revealed\":27,\"hidden\":9,\"moves\":0,\"undos\":0,\"seed\":105}"
+      "detail": "{\"screen\":\"playing\",\"level\":0,\"w\":6,\"h\":6,\"hearts\":3,\"keys\":0,\"keysNeeded\":1,\"gems\":0,\"gemsTotal\":0,\"lanterns\":0,\"lampArmed\":false,\"flagMode\":false,\"revealed\":13,\"hidden\":23,\"moves\":0,\"undos\":0,\"seed\":121}"
     },
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing, lost; resets: 3"
+      "detail": "screens seen: playing; resets: 0"
     },
     {
       "name": "[phone] no console errors or exceptions",
@@ -108,29 +108,29 @@
     "lanterns": 0,
     "lampArmed": false,
     "flagMode": false,
-    "revealed": 27,
-    "hidden": 9,
+    "revealed": 13,
+    "hidden": 23,
     "moves": 0,
     "undos": 0,
-    "seed": 105
+    "seed": 121
   },
   "solveResults": [
     {
       "lv": 0,
       "ok": true,
-      "moves": 6,
+      "moves": 16,
       "screen": "won"
     },
     {
       "lv": 1,
       "ok": true,
-      "moves": 5,
+      "moves": 10,
       "screen": "won"
     },
     {
       "lv": 2,
       "ok": true,
-      "moves": 8,
+      "moves": 15,
       "screen": "won"
     },
     {
@@ -142,7 +142,7 @@
     {
       "lv": 4,
       "ok": true,
-      "moves": 10,
+      "moves": 13,
       "screen": "won"
     },
     {
@@ -160,7 +160,7 @@
     {
       "lv": 7,
       "ok": true,
-      "moves": 43,
+      "moves": 41,
       "screen": "won"
     }
   ],
@@ -177,11 +177,11 @@
     "lanterns": 0,
     "lampArmed": false,
     "flagMode": false,
-    "revealed": 27,
-    "hidden": 9,
+    "revealed": 13,
+    "hidden": 23,
     "moves": 0,
     "undos": 0,
-    "seed": 105
+    "seed": 121
   },
   "passed": true
 }
