@@ -51,6 +51,13 @@ Set the chosen idea to `status: "building"` on the board right away so Benji can
 the brief and your own design ideas. Look at any images in `games/<slug>/design/` with Read. Never decide
 anything DESIGN.md lists as open; follow its instructions for open items.
 
+**Design questions go to Benji's designer, not to you.** When a game has a DESIGN.md and you hit a
+design gap you shouldn't fill yourself (a missing screen, an unclear rule, a level that doesn't work,
+new art), add a request to `games/<slug>/design/REQUESTS.md` (copy `studio/templates/REQUESTS.md` if
+it doesn't exist), build a clearly marked placeholder, and keep going. Mention open requests in the
+morning report ("2 design requests waiting: R3 world map, R4 gear rules"). Don't open a request for
+things DESIGN.md tells you to propose yourself.
+
 **Open the links first.** Before briefing, open every URL in the idea's title and pitch and in
 tonight's notes with WebFetch (use WebSearch for a game or mechanic that is named but not linked).
 Summarize what you took from each in the brief's "References" section: the mechanic, feel or
