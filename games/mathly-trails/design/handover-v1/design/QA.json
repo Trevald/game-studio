@@ -1,0 +1,65 @@
+{
+  "sampleLevelsPassed": 12,
+  "arithmeticRegressionsPassed": 5,
+  "runtimeArtUnder1MB": true,
+  "contrastSolidSurfaces": [
+    {
+      "foreground": "#FFF4DB",
+      "background": "#09382B",
+      "ratio": 11.92
+    },
+    {
+      "foreground": "#163A2D",
+      "background": "#FFF4DB",
+      "ratio": 11.46
+    },
+    {
+      "foreground": "#C5DDCC",
+      "background": "#12513D",
+      "ratio": 6.43
+    },
+    {
+      "foreground": "#F1CC76",
+      "background": "#09382B",
+      "ratio": 8.46
+    }
+  ],
+  "visualReview": "Contact sheet plus gameplay and compact screens inspected; static mockups only",
+  "notVerified": [
+    "native screen readers",
+    "live drag behavior",
+    "200%/400% OS scaling",
+    "production generator",
+    "store integration",
+    "daily server",
+    "original website runtime"
+  ],
+  "staticScreensPassed": 36,
+  "renderDensity": 2,
+  "localLinksPassed": true,
+  "screenshotDimensionsPassed": true,
+  "schemaNote": "JSON parses and target regex checked; full external JSON Schema validator not executed",
+  "visualRevision": "1.1",
+  "newAccentContrast": [
+    {
+      "foreground": "#263B2C",
+      "background": "#E7BC65",
+      "ratio": 6.75
+    },
+    {
+      "foreground": "#163A2D",
+      "background": "#D8B76E",
+      "ratio": 6.51
+    },
+    {
+      "foreground": "#214C3D",
+      "background": "#CABC9C",
+      "ratio": 5.16
+    },
+    {
+      "foreground": "#163A2D",
+      "background": "#F4E6C6",
+      "ratio": 10.12
+    }
+  ]
+}

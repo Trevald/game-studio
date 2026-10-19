@@ -6,7 +6,7 @@ request, mark it `answered` and note where the result landed.
 
 ---
 
-## R1 — Full design hand-off for Mathly Trails · status: open
+## R1 — Full design hand-off for Mathly Trails · status: answered (2026-10-19, see DESIGN.md and design/handover-v1/)
 
 Paste everything below the line to the designer.
 

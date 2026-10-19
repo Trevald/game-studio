@@ -1,0 +1,25 @@
+{
+  "id": "daily-2026-10-19",
+  "dateUTC": "2026-10-19",
+  "rulesVersion": "proposed-v1",
+  "levelId": "2-1",
+  "numbers": [
+    2,
+    3,
+    3,
+    3,
+    4
+  ],
+  "target": "26",
+  "operators": [
+    "+",
+    "-",
+    "*",
+    "/",
+    "(",
+    ")"
+  ],
+  "requireAllNumbers": true,
+  "contentVersion": 1,
+  "status": "fixture only; not an actual published daily"
+}

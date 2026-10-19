@@ -1,0 +1,81 @@
+{
+  "runtimeBytes": 272366,
+  "budgetBytes": 1000000,
+  "assets": [
+    {
+      "path": "assets/felt.webp",
+      "bytes": 268982,
+      "sha256": "1b2ba83d480fb35514dc0cf6f337645ef721c198838c3f7c4d45dc4b6969896a"
+    },
+    {
+      "path": "assets/icons/back.svg",
+      "bytes": 194,
+      "sha256": "70c50ddfc165bbed844a6d592cd8c0be426b23b676ebb5c5b3060ed8802f3b25"
+    },
+    {
+      "path": "assets/icons/check.svg",
+      "bytes": 194,
+      "sha256": "dadd49104a2291310e88a09810cab19451fc120b5544e894d4f2327a31439c49"
+    },
+    {
+      "path": "assets/icons/chevron.svg",
+      "bytes": 194,
+      "sha256": "b6cdd8de30d6a94dd0f3fbfd3bbee40b39bfd048280f90d039048452b700eb19"
+    },
+    {
+      "path": "assets/icons/close.svg",
+      "bytes": 200,
+      "sha256": "77989ec88556fca86dae3138607bf9c8c226bd869565ff124dfede36e1d026f7"
+    },
+    {
+      "path": "assets/icons/delete.svg",
+      "bytes": 236,
+      "sha256": "4dbb569890bcee55a8abe3755acc33cd0d79ba25e014fc306120fa243c076cb6"
+    },
+    {
+      "path": "assets/icons/hint.svg",
+      "bytes": 234,
+      "sha256": "dbf8fbcf66b1e56570f62bedb409082e3755c662692a0c68502862cea03df363"
+    },
+    {
+      "path": "assets/icons/lock.svg",
+      "bytes": 220,
+      "sha256": "15513a886324066de6e8deff873e6db00fda6d66f6d2ca243fafd4dc27aa5e0d"
+    },
+    {
+      "path": "assets/icons/restart.svg",
+      "bytes": 211,
+      "sha256": "209ab700768f39e95d0761d5fa36622a70114b8b2438b70bfc7b8779a3b5d976"
+    },
+    {
+      "path": "assets/icons/settings.svg",
+      "bytes": 212,
+      "sha256": "2d12e092fde71cff61f8cc58301d5ba9546f138f1237ad153eea5097fa9fc82c"
+    },
+    {
+      "path": "assets/icons/share.svg",
+      "bytes": 218,
+      "sha256": "b6eb16b98913279fe96d70d066305ad83f0bf54dc05305cbcc7c054ce8aade91"
+    },
+    {
+      "path": "assets/icons/sound.svg",
+      "bytes": 221,
+      "sha256": "f44de30346b75a9761f41ceeeb5a30a9506e98fb0b43a133f9ea11334fd744c6"
+    },
+    {
+      "path": "assets/icons/undo.svg",
+      "bytes": 220,
+      "sha256": "f04d6cf71182b4eee18b7a9ae78c83daf1ebf5cb354e88779cb9129dd66345e7"
+    },
+    {
+      "path": "assets/logo.svg",
+      "bytes": 373,
+      "sha256": "de6a3e2f90f42c6b487c06ceefa235d5e5bbf1616844bafa3ae9a9d0b0849d7e"
+    },
+    {
+      "path": "assets/table-mark.svg",
+      "bytes": 457,
+      "sha256": "8d6281e56908383e05c7df5c63a73a791b2c4d1e5e45cb63ffa8c04584c8c165"
+    }
+  ]
+}

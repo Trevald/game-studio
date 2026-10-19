@@ -1,0 +1,218 @@
+[
+  {
+    "id": "01-home",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "02-collections",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "03-collection",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "04-how-to",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "05-empty",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "06-partial",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "07-drag",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "08-long",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "09-incomplete",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "10-invalid",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "11-early",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "12-solved",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "13-complete",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "14-daily-before",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "15-daily-after",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "16-hint",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "17-settings",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "18-unlock",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "19-pending",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "20-error",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "21-restore",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "22-offline",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "23-missed",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "24-paged",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "25-large-text",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "26-purchased",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "27-loading",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "28-compact",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "29-tall",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "30-landscape",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "31-how-to-rearrange",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "32-how-to-finish",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "33-high-contrast",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "34-value-details",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "35-large-cards",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  },
+  {
+    "id": "36-large-controls",
+    "screenScroll": false,
+    "overflow": [],
+    "wellOverflow": false
+  }
+]
