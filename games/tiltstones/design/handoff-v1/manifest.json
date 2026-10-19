@@ -1,0 +1,287 @@
+{
+  "version": "1.0.0",
+  "assetCount": 16,
+  "rawAssetBytes": 839345,
+  "base64DataUriBytes": 1119549,
+  "budgetBytes": 1500000,
+  "withinBudget": true,
+  "backgroundLogicalSize": [
+    512,
+    768
+  ],
+  "backgroundScale": 2,
+  "assets": [
+    {
+      "id": "brass-factory",
+      "name": "Brass Factory",
+      "file": "assets/backgrounds/brass-factory@2x.webp",
+      "mime": "image/webp",
+      "width": 1024,
+      "height": 1536,
+      "transparent": false,
+      "bytes": 148122,
+      "base64Bytes": 197496,
+      "sha256": "057f57d1f3bd3b94c0fee5e8ad89389089e70b14a00862ad4697d7cff16a1101",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        512,
+        768
+      ]
+    },
+    {
+      "id": "crystal-caverns",
+      "name": "Crystal Caverns",
+      "file": "assets/backgrounds/crystal-caverns@2x.webp",
+      "mime": "image/webp",
+      "width": 1024,
+      "height": 1536,
+      "transparent": false,
+      "bytes": 143642,
+      "base64Bytes": 191524,
+      "sha256": "35d044e842ace2bee62720e3481a59aa793b181200d4a8554e8d7f5a62c80021",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        512,
+        768
+      ]
+    },
+    {
+      "id": "meadow-ruins",
+      "name": "Meadow Ruins",
+      "file": "assets/backgrounds/meadow-ruins@2x.webp",
+      "mime": "image/webp",
+      "width": 1024,
+      "height": 1536,
+      "transparent": false,
+      "bytes": 169500,
+      "base64Bytes": 226000,
+      "sha256": "0296afef943f2b9a312f71a7e24f6a1d3f9c447895feecafb9f1fde2bfa0b9f4",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        512,
+        768
+      ]
+    },
+    {
+      "id": "sky-gardens",
+      "name": "Sky Gardens",
+      "file": "assets/backgrounds/sky-gardens@2x.webp",
+      "mime": "image/webp",
+      "width": 1024,
+      "height": 1536,
+      "transparent": false,
+      "bytes": 156342,
+      "base64Bytes": 208456,
+      "sha256": "8203d090574c118876e3bf928ddf9331a78ec38810617571f47fee403fb6bc93",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        512,
+        768
+      ]
+    },
+    {
+      "id": "start",
+      "name": "Start",
+      "file": "assets/backgrounds/start@2x.webp",
+      "mime": "image/webp",
+      "width": 1024,
+      "height": 1536,
+      "transparent": false,
+      "bytes": 217768,
+      "base64Bytes": 290360,
+      "sha256": "612d6f4881b465ffe3182a30f579075f2f5199e63fed7a1952b9bee72cd1c244",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        512,
+        768
+      ]
+    },
+    {
+      "id": "ricochet-logo",
+      "name": "Ricochet Logo",
+      "file": "assets/brand/ricochet-logo.svg",
+      "mime": "image/svg+xml",
+      "width": 400,
+      "height": 108,
+      "transparent": true,
+      "bytes": 1054,
+      "base64Bytes": 1408,
+      "sha256": "715a29ba98c91d9bda4507c753daa5e5191b17dfa08cc58a09d25e033569dc98",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        400,
+        108
+      ]
+    },
+    {
+      "id": "blue-return",
+      "name": "Blue Return",
+      "file": "assets/icons/blue-return.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 279,
+      "base64Bytes": 372,
+      "sha256": "ba3867198c6c650040e7e26a4e6973a7c643b6b991db7086bcbee94097511195",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "chain-extender",
+      "name": "Chain Extender",
+      "file": "assets/icons/chain-extender.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 319,
+      "base64Bytes": 428,
+      "sha256": "091bf7058a2ccb3ca790dd69af2aeca16df96b8d8fb3fdf4a87821e0246ccb08",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "colour-sight",
+      "name": "Colour Sight",
+      "file": "assets/icons/colour-sight.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 289,
+      "base64Bytes": 388,
+      "sha256": "6db32e1372b68681aae4514447620967ce16baf7c5818ee7d29a8575ee615258",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "extra-life",
+      "name": "Extra Life",
+      "file": "assets/icons/extra-life.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 276,
+      "base64Bytes": 368,
+      "sha256": "0c3028027237d031cd7e07f9b0ea3a41eecdc0dfa98f847b6735402a66a9bc86",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "feather-feet",
+      "name": "Feather Feet",
+      "file": "assets/icons/feather-feet.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 304,
+      "base64Bytes": 408,
+      "sha256": "b5f644a921f843c98bec5b9589cbd178dfd72b139de9e406697841120c2e3860",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "ghost-line",
+      "name": "Ghost Line",
+      "file": "assets/icons/ghost-line.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 299,
+      "base64Bytes": 400,
+      "sha256": "00e672a6e436f4080ab38d425fd49e1dc83be147443d2f8aab5fbe72e3c080ed",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "magnet",
+      "name": "Magnet",
+      "file": "assets/icons/magnet.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 280,
+      "base64Bytes": 376,
+      "sha256": "753ed6087677f44929f202fc89e83e5c09b78aaa75ceb65e6174831192162ccc",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "prism",
+      "name": "Prism",
+      "file": "assets/icons/prism.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 294,
+      "base64Bytes": 392,
+      "sha256": "98d698eeb21d773e9001f7e3ee1e454f1a0dd5eb43f1090b2e04cd3662b9c0dc",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "shield",
+      "name": "Shield",
+      "file": "assets/icons/shield.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 300,
+      "base64Bytes": 400,
+      "sha256": "dfc6645911744cf01b4f4c205eb01e77313be249abd3aea2c18896bdbbf3ff87",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "time-warp",
+      "name": "Time Warp",
+      "file": "assets/icons/time-warp.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "transparent": true,
+      "bytes": 277,
+      "base64Bytes": 372,
+      "sha256": "9beba1497b351cd86f9b13c6635a071f8beb5c0661c13c360e2bd47b808b1fd1",
+      "status": "final-delivery",
+      "recommendedCssSize": [
+        32,
+        32
+      ]
+    }
+  ]
+}

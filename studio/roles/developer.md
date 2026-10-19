@@ -9,6 +9,9 @@ implementation of the build contract and passes QA.
   cdnjs.cloudflare.com (preferred), cdn.jsdelivr.net/npm or unpkg.com, pinned to an exact version.
   Fonts only from Google Fonts. Images and sounds are drawn in code, made with WebAudio, or embedded
   as data URIs. No fetch/XHR to anything.
+  **Exception — designer art:** when a game has an `assets/` folder from Benji's designer, reference
+  those files with relative URLs instead of inlining them, and publish them alongside the page
+  (NIGHT_SHIFT.md step 7). Never inline large art as base64.
 - **Plain canvas/DOM is the default.** Use Phaser (cdnjs, pinned) only when physics, tilemaps or
   many sprites justify it.
 - **Pure game core.** State and rules live in plain functions/objects with no DOM access; rendering

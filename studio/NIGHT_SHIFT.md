@@ -102,6 +102,9 @@ a second round only if the first verdict was "not playable".
 
 1. **Publish the build as an artifact.** Load the `artifact-design` skill first (the game is the design;
    the skill's page contract still applies). Then call the Artifact tool:
+   - If the game has an `assets/` folder, also pass `files` mapping every file in it to the same
+     relative path, e.g. `{"assets/icons/magnet.svg": "games/<slug>/assets/icons/magnet.svg", ...}`
+     (list them with `find games/<slug>/assets -type f`). Skip it and the published game shows no art.
    - New game: publish `games/<slug>/index.html` with an `icon` of `game` and a one-sentence
      `description`. Record the returned URL as `artifact:` in BRIEF.md.
    - Iteration: the URL is in BRIEF.md. Call Artifact `action: "read"` on it first, then publish
