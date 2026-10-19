@@ -127,6 +127,21 @@ Benji isn't happy with the World 1 levels and wants to try **different level-des
 any more levels are built. For this job only, the "don't redesign a designer level" rule is lifted:
 the studio designs its own levels.
 
+**Benji's direction (19 Oct, 21:30) — this frames the whole lab**
+- Reference: [`design/concept/density-reference.png`](design/concept/density-reference.png). He likes how
+  **dense** it is: the field is mostly blocks, not empty space. Use it for density, not as a layout to copy.
+- **Corridors, not open space.** The ball should bounce through corridors and pockets. Open space means
+  long travel and waiting; minimise it.
+- **Balance breakable vs unbreakable.** The reference is too heavy on stone; find a mix where walls/grey
+  shape the corridors and enough coloured blocks keep every bounce meaningful.
+- So: most lab levels should be **variations inside this dense, corridor-based space** (different
+  corridor shapes, breakable/unbreakable ratios, densities), plus at most 2 contrasting directions
+  for comparison. Note the ratio (coloured : grey : wall : empty) for each level.
+- Targets to check against: dead time under ~1 s between hits on the intended route, and no stretch
+  where the ball travels more than ~4 rows without touching anything.
+- Optional: one lab level may test a narrower grid (8 columns, bigger tiles on the phone, like the
+  reference) if the engine allows it cheaply; otherwise just mention it in the report.
+
 **What to build**
 - A **Level Lab**: 8–12 levels, each one a *different direction*, not a progression. Reach it from the
   start screen ("Level Lab"). Keep the designer's World 1 playable as it is, so Benji can compare.
@@ -134,7 +149,7 @@ the studio designs its own levels.
   (e.g. "Rattle pockets: tight 2-row pockets the ball bounces inside"), and has its own clock/PB.
 - Use **only existing mechanics** (colour blocks, grey, paint pots, diamonds, skulls, walls, key/lock).
   New tile ideas go in the report as proposals, not in the build.
-- Directions to choose from (pick 8+, swap in better ones): dense rattle pockets · vertical corridors/
+- Other directions for contrast or inspiration (use at most 2 outside the dense-corridor space): dense rattle pockets · vertical corridors/
   shafts · maze of walls with few targets · open field built for speed routes · grey scaffolding you
   carve through · colour "onion" (layers that force order) · key-and-gate chambers · skull gauntlet
   with safe detours · mirror/symmetric · one-screen puzzle where the order is the whole challenge ·
@@ -144,7 +159,7 @@ the studio designs its own levels.
 - Play every lab level for real, not just with `solve()`: drive Playwright with keyboard/pointer input
   at 1×, both a careful run and a fast run, and look at the screenshots.
 - Measure per level: solver time, your human-style clear time, deaths, **dead time** (seconds with
-  no block hit), bounces between hits, and how much faster the fast route is than the safe one.
+  no block hit), longest travel without contact, block ratio, bounces between hits, and how much faster the fast route is than the safe one.
 - Iterate: change each level at least once based on what you measured and saw; keep a short
   changelog per level (v1 → v2: what changed and why).
 - The reviewer agent plays the lab cold and ranks the directions.
