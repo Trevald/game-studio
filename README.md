@@ -29,3 +29,10 @@ games/_template/   reference game that passes QA (the build contract in code)
 games/<slug>/      index.html, BRIEF.md, NIGHTS.md, qa/
 tools/qa/          playtest.mjs — automated playtest
 ```
+
+## Owner-led design and approved handovers
+
+The reusable design workspace is in [design-studio/](design-studio/README.md).
+For an owner-led design session, read `design-studio/AGENTS.md` and
+`design-studio/REPOSITORY-INTEGRATION.md`, then select a project there.
+The existing night-shift runbook and game folders remain in place.

@@ -12,3 +12,10 @@ Layout: one folder per game under `games/<slug>/` with `index.html` (the whole g
 `NIGHTS.md` (night log, newest first) and `qa/` (latest playtest report and screenshots).
 
 Commit messages end with the session attribution lines the environment provides.
+
+## Owner-led design and approved handovers
+
+The reusable design workspace is in [design-studio/](design-studio/README.md).
+For an owner-led design session, read `design-studio/AGENTS.md` and
+`design-studio/REPOSITORY-INTEGRATION.md`, then select a project there.
+The existing night-shift runbook and game folders remain in place.
