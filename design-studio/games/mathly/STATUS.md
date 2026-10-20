@@ -4,7 +4,7 @@
 - Stage: visual exploration; direction selection pending
 - Current goal: explore a more exciting card-table presentation
 - Branch: `design/mathly/visual-directions`
-- PR: pending publication; baseline PR https://github.com/Trevald/game-studio/pull/2 is merged
+- PR: https://github.com/Trevald/game-studio/pull/4 (draft; published); baseline PR #2 is merged
 - Inspected baseline: `7b5e8306d66ebfc4dac02c8e357b05fcf58f5d2b`
 - Existing handover: `games/mathly-trails/design/handover-v1/`, spec v1.1, 2026-10-19. No exact approval commit/comment recovered; do not retroactively mark it approved under the new protocol.
 - New approved handover / delivery / implementation PR / owner acceptance: none
