@@ -1,0 +1,94 @@
+[
+  {
+    "id": "S1",
+    "name": "Paint Shuttle",
+    "family": "compact landscape · standard speed",
+    "idea": "A low shuttle lane with paint at both ends. Stone roofs turn you down into the wells quickly.",
+    "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+    "map": [
+      "..aa..##..bb..",
+      "..............",
+      ".##.aa..bb.##.",
+      "......**......",
+      "..bb..##..aa..",
+      "..##......##..",
+      "......gg......",
+      ".....o........",
+      ".#A#..##..#B#."
+    ]
+  },
+  {
+    "id": "S2",
+    "name": "Broken Staircase",
+    "family": "compact landscape · standard speed",
+    "idea": "Offset ledges and temporary grey steps. Break a step for a shortcut, or keep it for a quick rebound.",
+    "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+    "map": [
+      "aa....##...bb.",
+      "...##....g....",
+      "....bb......*.",
+      ".g......##....",
+      "...##.....aa..",
+      "..##..bb..g#..",
+      "......*.......",
+      "....o..aa.....",
+      ".#A#..##..#B#."
+    ]
+  },
+  {
+    "id": "S3",
+    "name": "Switchyard",
+    "family": "compact landscape · standard speed",
+    "idea": "Irregular stone islands split a compact field into bounce pockets, with red and blue targets on different approaches.",
+    "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+    "map": [
+      ".aa.#....bb...",
+      "....#..##...*.",
+      ".##...a...##..",
+      "....b...g.....",
+      "..##..##..aa..",
+      "..g#......##..",
+      "......bb......",
+      "....o....*....",
+      ".#A#..##..#B#."
+    ]
+  },
+  {
+    "id": "H1",
+    "name": "Twin Islands",
+    "family": "landscape · crossings",
+    "idea": "Blue island first, then red. Stone caps and floors preserve tight bounce lanes around both islands.",
+    "hint": "Clear every blue block, including the paint guard at far right. Slide into red paint, clear red, then collect diamonds.",
+    "map": [
+      "..................",
+      "..#####....#####..",
+      "..aaaaa....bbbbb..",
+      "..................",
+      "..a**aa....b**bb.#",
+      "................aB",
+      "..aaaaa....bbbbb.#",
+      "..#####....#####..",
+      "o......####.......",
+      ".................."
+    ]
+  },
+  {
+    "id": "H2",
+    "name": "Open the Heart",
+    "family": "landscape · central structure",
+    "idea": "Blue surrounds a red core. A permanent central spine and outer rails keep short rebounds as you carve.",
+    "hint": "Finish the blue shell before entering red paint at the right edge. Work both sides of the stone spine to clear red.",
+    "map": [
+      "..................",
+      ".....########.....",
+      ".....aaaaaaaa.....",
+      "...aa......aa.....",
+      "...abbb**bbba....#",
+      "...a########a...aB",
+      "...abbbbbbbba....#",
+      ".....aaaaaaaa.....",
+      ".o...########.....",
+      ".................."
+    ]
+  }
+]
