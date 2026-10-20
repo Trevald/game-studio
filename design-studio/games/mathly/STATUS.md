@@ -4,7 +4,7 @@
 - Stage: baseline loaded; next design scope undecided
 - Current goal: review existing Mathly before proposing changes
 - Branch: `design/mathly/intake-baseline`
-- PR: pending publication
+- PR: https://github.com/Trevald/game-studio/pull/2 (draft; published)
 - Inspected baseline: `7b5e8306d66ebfc4dac02c8e357b05fcf58f5d2b`
 - Existing handover: `games/mathly-trails/design/handover-v1/`, spec v1.1, 2026-10-19. No exact approval commit/comment recovered; do not retroactively mark it approved under the new protocol.
 - New approved handover / delivery / implementation PR / owner acceptance: none
