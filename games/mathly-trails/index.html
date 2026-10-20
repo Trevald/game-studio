@@ -14,6 +14,7 @@
   --cell:44px;--gap:4px;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{height:100%;margin:0}
 body{background:#12513D;color:var(--cream);font:16px/1.375 var(--ui);overflow:hidden;
   -webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
@@ -90,7 +91,7 @@ button:disabled{opacity:.45;cursor:default}
 .worktop{height:24px;display:flex;align-items:center;justify-content:space-between;flex:none}
 .well{position:relative;flex:1;min-height:150px;border:1px dashed #d6c28b91;border-radius:12px;padding:6px;display:flex;flex-direction:column;
   background:radial-gradient(ellipse at 50% 40%,#c7d3a708,transparent 75%),#072d2630;box-shadow:inset 0 0 0 4px #001a1a12;outline:none}
-.well:focus-visible{outline:3px solid var(--cream);outline-offset:2px}
+.well:focus-visible{outline:2px solid #f1cc76aa;outline-offset:2px;box-shadow:none}
 .well.drop{border-color:var(--gold);background:#0a3a3060}
 .well:before{content:"";width:110px;height:110px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:url('assets/table-mark.svg') center/contain no-repeat;opacity:.075;pointer-events:none}
 .hc .well{border:2px solid var(--cream);background:#09382B}.hc .well:before{display:none}
@@ -150,6 +151,7 @@ button:disabled{opacity:.45;cursor:default}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:359px){.app{padding-left:12px;padding-right:12px}.slots{gap:6px}.palette{gap:4px}.hero{font-size:32px}}
 @media (max-height:700px){.hand{height:84px}.hero{font-size:32px}.plaque{min-height:64px;padding:4px 10px}.value{font-size:28px;line-height:32px}.slots .card{height:58px}.body{padding-top:10px}}
+@media (max-height:620px){.seal{width:56px;height:56px;font-size:28px;margin:2px auto}.celebrate .hero{font-size:28px;margin:4px 0}.expr{font-size:20px;line-height:1.45}.celebrate .body{gap:8px;padding-top:6px}.celebrate .btn{min-height:44px}.home .logo{margin-top:6px;height:50px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
