@@ -1,3 +1,6 @@
+> **Moving:** the design record for this game is moving to `design-studio/games/mathly/` (owned by Benji's designer).
+> Until an approved hand-over exists there, this file stays in force. See studio/NIGHT_SHIFT.md, "Which design to build from".
+
 # Mathly — design hand-over (v1.1, Card Table)
 
 This document is Benji's. It overrides BRIEF.md and the night-1 "Mathly Trails" build wherever they
