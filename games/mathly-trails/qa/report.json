@@ -1,6 +1,6 @@
 {
   "game": "games/mathly-trails/index.html",
-  "at": "2026-10-20T02:11:25.051Z",
+  "at": "2026-10-20T02:12:18.923Z",
   "checks": [
     {
       "name": "file under 2 MB",
@@ -50,7 +50,7 @@
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing; resets: 0"
+      "detail": "screens seen: collections, collection, playing; resets: 0"
     },
     {
       "name": "every level completable via solve() (12 levels)",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: collections, collection, playing; resets: 0"
+      "detail": "screens seen: playing; resets: 0"
     },
     {
       "name": "[phone] no console errors or exceptions",
