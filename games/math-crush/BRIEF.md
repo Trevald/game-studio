@@ -2,7 +2,7 @@
 title: Math Crush (working title)
 slug: math-crush
 idea_id: 3u0kk09h3uemtxj8us8c
-artifact: (filled in after the first publish)
+artifact: https://claude.ai/artifact/D5kYHgsZbouMh73g1VMLTj
 ---
 
 # Math Crush (working title)

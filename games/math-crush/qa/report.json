@@ -1,11 +1,11 @@
 {
   "game": "games/math-crush/index.html",
-  "at": "2026-10-20T20:55:06.888Z",
+  "at": "2026-10-20T20:59:41.657Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "77 KB"
+      "detail": "78 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing, lost, won; resets: 13"
+      "detail": "screens seen: playing, won, lost; resets: 13"
     },
     {
       "name": "[phone] no console errors or exceptions",
