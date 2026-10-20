@@ -223,7 +223,7 @@
     <h2>Level Lab</h2>
     <button class="icon" data-mute aria-label="Mute sound"><svg><use href="#i-sound"/></svg></button>
   </div>
-  <p class="lab-intro">Ten level-design directions to compare, not a campaign. Each one is open. Bar: coloured blocks (in their colours) · <b style="color:#c9d0e2">grey</b> · <b style="color:#8a90a8">stone</b> · empty.</p>
+  <p class="lab-intro">Start with P1–P3 for planning puzzles: preserve a shortcut, prepare your return, then unlock a colour loop. S1–S3 compare compact rebound layouts. Compare S1F (fast) and S1A (accelerating) on the same shuttle board. Earlier experiments: landscape prototypes for desktop playtesting (← → or A/D). Compare crossings, approaches and late-level cleanup. The ten portrait experiments remain below. Bar: coloured blocks (in their colours) · <b style="color:#c9d0e2">grey</b> · <b style="color:#8a90a8">stone</b> · empty.</p>
   <div class="lab-list" id="labList"></div>
 </section>
 
@@ -309,14 +309,15 @@ const R = 0.3;                     // ball half-size (cells)
 const VY = 9;                      // vertical speed, cells/s
 const SNAP = 1.6;                  // drift toward the column centre when not steering, cells/s
 const GRACE = 30;                  // steps the ball waits after a respawn
-const DIP = 8;                     // steps the ball spends dipped in a paint pot (0.13 s)
+const DIP = 30;                     // 0.5 s to enter, repaint at depth, and rebound out
 const VXMAX = 5.5;                 // max horizontal speed, cells/s
 const ACC = 45;                    // horizontal acceleration, cells/s^2
 const DT = 1 / 60;                 // fixed sim step
 const STEPS_PER_ACTION = 6;        // one QA action = 0.1 s of play
 const LIVES = 3;
-const COMBO_WINDOW = 90;           // steps (1.5 s) to chain a same-colour break (provisional)
+const COMBO_WINDOW = 42;           // steps (0.7 s) between same-colour breaks
 const COMBO_MAX = 5;
+const COMBO_HITS_PER_TIER = 3; // x2 on fourth hit, x3 on seventh; x5 on thirteenth
 // colours: 0 blue ◆, 1 red ♥, 2 green ♣, 3 gold ♠ (blocks match on colour; the symbol is an identifier)
 const NAMES = ["blue", "red", "green", "gold"];
 const PAL = [
@@ -327,7 +328,7 @@ const PAL = [
 ];
 const GREY = { mid: "#8790aa", hi: "#c9d0e2", lo: "#454c66" };
 const BLOCK = { a: 0, b: 1, c: 2, d: 3 };
-const BRUSH = { B: 1, C: 2, D: 3 };
+const BRUSH = { A: 0, B: 1, C: 2, D: 3 };
 const WORLDS = [
   { name: "Meadow Ruins", bg: "assets/backgrounds/meadow-ruins@2x.webp" },
   { name: "Crystal Caverns", bg: "assets/backgrounds/crystal-caverns@2x.webp" },
@@ -337,7 +338,7 @@ const WORLDS = [
 
 // ======================= levels =======================
 // World 1 from design/levels/levels.json (v0.2-review), grids exactly as delivered.
-// . empty  a/b/c/d coloured block  g grey  B/C/D paint pot  * diamond  x skull  # wall  k key  L lock  o ball start
+// . empty  a/b/c/d coloured block  g grey  A/B/C/D paint pot  * diamond  x skull  # wall  k key  L lock  o ball start
 const LEVELS = [
   { id: "1-1", name: "First Bounce", hint: "Clear the blue blocks, then collect every diamond.", par: 25, map: [
     "..........",
@@ -475,6 +476,172 @@ const W1_COUNT = LEVELS.length;
 // Exploratory level-design directions (DESIGN.md "Level Lab"). Not a progression: every lab level is open.
 // LAB:BEGIN — generated from lab/levels.json by lab/build.mjs; edit the JSON, not this block
 const LAB = [
+  { id: "P1", name: "Keep the Return", family: "puzzle · preserve a shortcut", idea: "A disposable roof, two paints and a layered vault. Decide when the quick rebound will be most useful.", hint: "Grey gives just one rebound. When will it help most? Breaking it early is recoverable.", map: [
+    ".......bbbbb..",
+    ".......baaab..",
+    ".aa....ba*ab..",
+    ".......baaab..",
+    ".##....bbbbb..",
+    "..g..##.......",
+    "..........##..",
+    ".....o........",
+    ".#A#......#B#.",
+  ]},
+  { id: "P2", name: "Open Your Way Back", family: "puzzle · prepare before repainting", idea: "A sealed blue well and a red vault with blue inside. Prepare a route before committing to a new colour.", hint: "Which route will you need after turning red? R restarts if your plan fails.", blueReturnSeal: [2,7], map: [
+    ".......bbbbb..",
+    ".......baaab..",
+    ".aa....ba*ab..",
+    ".......baaab..",
+    ".##....bbbbb..",
+    "..#..##.......",
+    "..........##..",
+    ".#a#.o........",
+    ".#A#......#B#.",
+  ]},
+  { id: "P3", name: "Unlock the Loop", family: "puzzle · key and colour route", idea: "Red paint lies beyond a locked gate. The vault needs both colours, so plan more than the outward trip.", hint: "Find the key, then work out how to bring both colours to the vault.", map: [
+    ".bbb.......#..",
+    ".bab....*.....",
+    ".bbb......#B#.",
+    "..........###.",
+    "#######L######",
+    "..aa..........",
+    "..##...##.....",
+    ".....o..k.....",
+    ".#A#..........",
+  ]},
+  { id: "S1", name: "Paint Shuttle", family: "compact landscape · standard speed", idea: "A low shuttle lane with paint at both ends. Stone roofs turn you down into the wells quickly.", hint: "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.", map: [
+    "..aa..##..bb..",
+    "..............",
+    ".##.aa..bb.##.",
+    "......**......",
+    "..bb..##..aa..",
+    "..##......##..",
+    "......gg......",
+    ".....o........",
+    ".#A#..##..#B#.",
+  ]},
+  { id: "S2", name: "Broken Staircase", family: "compact landscape · standard speed", idea: "Offset ledges and temporary grey steps. Break a step for a shortcut, or keep it for a quick rebound.", hint: "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.", map: [
+    "aa....##...bb.",
+    "...##....g....",
+    "....bb......*.",
+    ".g......##....",
+    "...##.....aa..",
+    "..##..bb..g#..",
+    "......*.......",
+    "....o..aa.....",
+    ".#A#..##..#B#.",
+  ]},
+  { id: "S3", name: "Switchyard", family: "compact landscape · standard speed", idea: "Irregular stone islands split a compact field into bounce pockets, with red and blue targets on different approaches.", hint: "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.", map: [
+    ".aa.#....bb...",
+    "....#..##...*.",
+    ".##...a...##..",
+    "....b...g.....",
+    "..##..##..aa..",
+    "..g#......##..",
+    "......bb......",
+    "....o....*....",
+    ".#A#..##..#B#.",
+  ]},
+  { id: "S1F", name: "Paint Shuttle · fast", family: "same layout · fast", idea: "Same shuttle layout at 12 cells/s vertically and 7 sideways.", hint: "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.", motion: "fast", map: [
+    "..aa..##..bb..",
+    "..............",
+    ".##.aa..bb.##.",
+    "......**......",
+    "..bb..##..aa..",
+    "..##......##..",
+    "......gg......",
+    ".....o........",
+    ".#A#..##..#B#.",
+  ]},
+  { id: "S1A", name: "Paint Shuttle · accelerating", family: "same layout · accelerating", idea: "Same shuttle layout: start at 9 cells/s, accelerate to 16 in free flight, reset to 9 on impact.", hint: "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.", motion: "accelerating", map: [
+    "..aa..##..bb..",
+    "..............",
+    ".##.aa..bb.##.",
+    "......**......",
+    "..bb..##..aa..",
+    "..##......##..",
+    "......gg......",
+    ".....o........",
+    ".#A#..##..#B#.",
+  ]},
+  { id: "H4", name: "Layer Cake", family: "landscape · return colours", idea: "A blue shell hides red; red hides blue. Each broken layer opens the next approach.", hint: "Blue → red → blue. Drop into the blue or red wells at the bottom to repaint; clear both layers before diamonds.", map: [
+    "................####",
+    "......aaaaaaa.......",
+    "......abbbbba.......",
+    "......abaaaba.......",
+    "......aba*aba.......",
+    "......abaaaba.......",
+    "......abbbbba.......",
+    "......aaaaaaa.......",
+    "....................",
+    "....................",
+    ".....o..............",
+    ".#A#.....#B#........",
+  ]},
+  { id: "H5", name: "Opposite Vaults", family: "landscape · return colours", idea: "Two vaults reverse the colour order. Revisit the blue and red dipping wells to open their centres.", hint: "Blue → red → blue opens both vaults. Reuse the bottom wells; each shell hides the other colour.", map: [
+    "................####",
+    "....................",
+    "...aaaaa....bbbbb...",
+    "...abbba....baaab...",
+    "...ab*ba....ba*ab...",
+    "...abbba....baaab...",
+    "...aaaaa....bbbbb...",
+    "....................",
+    "....................",
+    "....................",
+    ".....o..............",
+    ".#A#.....#B#........",
+  ]},
+  { id: "H6", name: "Three-way Return", family: "landscape · return colours", idea: "Blue opens red, red opens green, and green reveals blue again. Three reusable wells serve one layered vault.", hint: "Blue → red → green → blue. Dip in the matching bottom well whenever you need to change colour.", map: [
+    "....................",
+    ".....aaaaaaaaa......",
+    ".....abbbbbbba......",
+    ".....abcccccba......",
+    ".....abca*acba......",
+    ".....abcccccba......",
+    ".....abbbbbbba......",
+    ".....aaaaaaaaa......",
+    "....................",
+    "....................",
+    ".....o..............",
+    ".#A#.....#B#...#C#..",
+  ]},
+  { id: "H1", name: "Twin Islands", family: "landscape · crossings", idea: "Blue island first, then red. Stone caps and floors preserve tight bounce lanes around both islands.", hint: "Clear every blue block, including the paint guard at far right. Slide into red paint, clear red, then collect diamonds.", map: [
+    "..................",
+    "..#####....#####..",
+    "..aaaaa....bbbbb..",
+    "..................",
+    "..a**aa....b**bb.#",
+    "................aB",
+    "..aaaaa....bbbbb.#",
+    "..#####....#####..",
+    "o......####.......",
+    "..................",
+  ]},
+  { id: "H2", name: "Open the Heart", family: "landscape · central structure", idea: "Blue surrounds a red core. A permanent central spine and outer rails keep short rebounds as you carve.", hint: "Finish the blue shell before entering red paint at the right edge. Work both sides of the stone spine to clear red.", map: [
+    "..................",
+    ".....########.....",
+    ".....aaaaaaaa.....",
+    "...aa......aa.....",
+    "...abbb**bbba....#",
+    "...a########a...aB",
+    "...abbbbbbbba....#",
+    ".....aaaaaaaa.....",
+    ".o...########.....",
+    "..................",
+  ]},
+  { id: "H3", name: "Across the Terraces", family: "landscape · staggered shelves", idea: "Blue terraces lead to a key-operated gate. Beyond it, red shelves form a final chamber.", hint: "Fetch the key on the left, clear blue, then open the gate in the lower dividing wall. Red paint waits inside the right chamber.", map: [
+    "............#.....",
+    ".aaaaaa.....#.bbbb",
+    ".######.....#.####",
+    ".k..........#.....",
+    "aaaa...aaaa.#.b**b",
+    "####...####.#.####",
+    "............#....#",
+    "...aaaaaa...L....B",
+    "...######...#.bbb#",
+    ".o..........#.####",
+  ]},
   { id: "L1", name: "Rattle Rows", family: "dense corridor", idea: "1-row channels between block bands, with stone ribs every 4 rows so a cleared band never becomes a hall.", hint: "Clear each band from the channel under it. The red pot is at the right end of a channel: slide into it only when blue is done.", map: [
     "b*bbgbbb*b",
     "..........",
@@ -648,6 +815,12 @@ function ratio(map) {   // coloured : grey : wall : empty, in % of cells (pots, 
 }
 
 // ======================= core (pure, no DOM) =======================
+function motionFor(level) {
+  const mode = LEVELS[level].motion;
+  return mode === "fast" ? { base: 12, max: 12, accel: 0, lateral: 7 }
+    : mode === "accelerating" ? { base: 9, max: 16, accel: 10, lateral: 5.5 }
+    : { base: VY, max: VY, accel: 0, lateral: VXMAX };
+}
 function newGame(level) {
   const rows = LEVELS[level].map;
   W = rows[0].length; H = rows.length;
@@ -658,9 +831,9 @@ function newGame(level) {
     if (ch === "o") { sx = x + 0.5; sy = y + 0.5; grid.push("."); }
     else grid.push(ch);
   }
-  return { level, grid, start: [sx, sy], ball: { x: sx, y: sy, vx: 0, vy: -VY, color: 0 },
-    lives: LIVES, keys: 0, screen: "playing", steps: 0, score: 0, combo: 0, comboColor: -1, lastBreak: -999, maxCombo: 0,
-    grace: 0, dip: 0, dipDir: [0, 0], ev: [] };
+  return { level, grid, start: [sx, sy], ball: { x: sx, y: sy, vx: 0, vy: -motionFor(level).base, color: 0 },
+    lives: LIVES, keys: 0, screen: "playing", steps: 0, score: 0, combo: 0, chainHits: 0, comboColor: -1, lastBreak: -999, maxCombo: 0,
+    grace: 0, dip: 0, dipState: null, dipDir: [0, 0], ev: [] };
 }
 const cellAt = (g, x, y) => (x < 0 || x >= W || y < 0 || y >= H) ? "#" : g.grid[y * W + x];
 const solid = (ch) => ch !== ".";
@@ -678,18 +851,20 @@ function counts(g) {
   return c;
 }
 function respawn(g) {
-  g.ball = { x: g.start[0], y: g.start[1], vx: 0, vy: -VY, color: 0 };
-  g.combo = 0; g.comboColor = -1; g.grace = GRACE; g.dip = 0;
+  g.ball = { x: g.start[0], y: g.start[1], vx: 0, vy: -motionFor(g.level).base, color: 0 };
+  g.combo = 0; g.chainHits = 0; g.comboColor = -1; g.grace = GRACE; g.dip = 0;
 }
 // dx/dy: direction the ball was travelling into the cell. Returns true if the ball must stop (life lost).
 function hit(g, cx, cy, dx, dy) {
   const i = cy * W + cx, ch = g.grid[i], b = g.ball;
   const at = { x: cx + 0.5, y: cy + 0.5 };
+  if (LEVELS[g.level].motion === "accelerating") b.vy = Math.sign(b.vy) * motionFor(g.level).base;
   if (ch in BLOCK) {
     if (BLOCK[ch] === b.color) {
       g.grid[i] = ".";
-      if (g.comboColor === b.color && g.steps - g.lastBreak <= COMBO_WINDOW) g.combo = Math.min(COMBO_MAX, g.combo + 1);
-      else g.combo = 1;
+      if (g.comboColor === b.color && g.steps - g.lastBreak <= COMBO_WINDOW) g.chainHits++;
+      else g.chainHits = 1;
+      g.combo = Math.min(COMBO_MAX, 1 + Math.floor((g.chainHits - 1) / COMBO_HITS_PER_TIER));
       g.comboColor = b.color; g.lastBreak = g.steps; g.maxCombo = Math.max(g.maxCombo, g.combo);
       g.score += 100 * g.combo;
       g.ev.push({ t: "break", ...at, color: b.color, combo: g.combo });
@@ -697,10 +872,9 @@ function hit(g, cx, cy, dx, dy) {
   } else if (ch === "g") {
     g.grid[i] = "."; g.score += 50; g.ev.push({ t: "grey", ...at });
   } else if (ch in BRUSH) {
-    // dip in, take the colour, bounce back out (the bounce itself is already applied by the caller)
+    // Store the collision boundary; enter the paint before changing colour.
     g.dip = DIP; g.dipDir = [dx, dy];
-    if (b.color !== BRUSH[ch]) { b.color = BRUSH[ch]; g.combo = 0; g.comboColor = -1; g.ev.push({ t: "paint", ...at, color: b.color }); }
-    else g.ev.push({ t: "dip", ...at });
+    g.dipState = { x: b.x, y: b.y, cx, cy, color: BRUSH[ch] };
   } else if (ch === "*") {
     if (counts(g).colorTotal === 0) { g.grid[i] = "."; g.score += 500; g.ev.push({ t: "diamond", ...at }); }
     else g.ev.push({ t: "thud", ...at });
@@ -730,10 +904,26 @@ function step(g, steer) {
   if (g.screen !== "playing") return g;
   const b = g.ball;
   g.steps++;
-  if (g.combo > 0 && g.steps - g.lastBreak > COMBO_WINDOW) { g.combo = 0; g.comboColor = -1; }
-  if (g.dip > 0) { g.dip--; return g; }   // inside the paint pot
+  if (g.combo > 0 && g.steps - g.lastBreak > COMBO_WINDOW) { g.combo = 0; g.chainHits = 0; g.comboColor = -1; }
+  if (g.dip > 0) {
+    const d = g.dipState;
+    g.dip--;
+    const depth = Math.sin(Math.PI * (1 - g.dip / DIP));
+    b.x = d.x + (d.cx + 0.5 - d.x) * depth;
+    b.y = d.y + (d.cy + 0.65 - d.y) * depth;
+    if (g.dip === DIP / 2) {
+      if (b.color !== d.color) {
+        b.color = d.color; g.combo = 0; g.chainHits = 0; g.comboColor = -1;
+        g.ev.push({ t: "paint", x: d.cx + 0.5, y: d.cy + 0.65, color: b.color });
+      } else g.ev.push({ t: "dip", x: d.cx + 0.5, y: d.cy + 0.65 });
+    }
+    if (!g.dip) { b.x = d.x; b.y = d.y; g.dipState = null; }
+    return g;
+  }
   // horizontal
-  const target = Math.max(-1, Math.min(1, steer)) * VXMAX;
+  const motion = motionFor(g.level);
+  b.vy = Math.sign(b.vy) * Math.min(motion.max, Math.abs(b.vy) + motion.accel * DT);
+  const target = Math.max(-1, Math.min(1, steer)) * motion.lateral;
   const dv = target - b.vx, maxd = ACC * DT;
   b.vx += Math.max(-maxd, Math.min(maxd, dv));
   if (steer === 0 && Math.abs(b.vx) < 0.05) {   // gentle snap to the column centre
@@ -747,6 +937,7 @@ function step(g, steer) {
       const col = hits[0][0], dir = b.vx > 0 ? 1 : -1;
       b.x = b.vx > 0 ? col - R - 1e-6 : col + 1 + R + 1e-6;
       b.vx = 0;
+      if (motion.accel) b.vy = Math.sign(b.vy) * motion.base;
       const cy = Math.floor(b.y);
       const pick = hits.find(([, y]) => y === cy) || hits[0];
       if (pick[0] >= 0 && pick[0] < W && pick[1] >= 0 && pick[1] < H) { if (hit(g, pick[0], pick[1], dir, 0)) return g; }
@@ -760,7 +951,7 @@ function step(g, steer) {
   if (vh.length) {
     const row = vh[0][1], dir = b.vy > 0 ? 1 : -1;
     b.y = b.vy > 0 ? row - R - 1e-6 : row + 1 + R + 1e-6;
-    b.vy = -b.vy;
+    b.vy = -Math.sign(b.vy) * (motion.accel ? motion.base : Math.abs(b.vy));
     const cx = Math.floor(b.x);
     const pick = vh.find(([x]) => x === cx) || vh[0];
     if (pick[0] >= 0 && pick[0] < W && pick[1] >= 0 && pick[1] < H) { if (hit(g, pick[0], pick[1], 0, dir)) return g; }
@@ -786,7 +977,7 @@ function wantedTargets(g) {
   const c = counts(g), col = g.ball.color, t = new Set();
   const add = (pred) => g.grid.forEach((ch, i) => { if (pred(ch)) t.add(i); });
   if (c.colorTotal > 0) {
-    if (col !== 0 && c.colors[0] > 0) add((ch) => ch === "x");   // stuck: only a lost life repaints blue
+    if (isStuck(g)) add((ch) => ch === "x");   // stuck: only a lost life repaints blue
     else if (c.colors[col] > 0) add((ch) => BLOCK[ch] === col);
     else add((ch) => ch in BRUSH && c.colors[BRUSH[ch]] > 0);
   } else add((ch) => ch === "*");
@@ -815,7 +1006,7 @@ function evalGame(g, base) {
   const c = counts(g);
   let s = 0;
   s += (base.colorTotal - c.colorTotal) * 100 + (base.diamonds - c.diamonds) * 100 + (base.keys - c.keys) * 60 + (base.locks - c.locks) * 100;
-  const stuck = g.ball.color !== 0 && c.colors[0] > 0;
+  const stuck = isStuck(g);
   s -= (base.lives - g.lives) * (base.stuck ? -40 : 400);
   if (g.screen === "lost") s -= 5000;
   if (stuck && !base.stuck) s -= 20000;
@@ -829,7 +1020,11 @@ function evalGame(g, base) {
 // It commits to the fastest safe macro, then replans. Used by solve() (QA) and the lab measurements.
 function progressKey(g) { const c = counts(g); return c.colorTotal * 1000 + c.diamonds * 100 + c.keys * 10 + c.locks; }
 function colAction(g, c) { const dx = c + 0.5 - g.ball.x; return dx > 0.3 ? "right" : dx < -0.3 ? "left" : "stay"; }
-function isStuck(g) { const c = counts(g); return g.ball.color !== 0 && c.colors[0] > 0; }
+function isStuck(g) {
+  const c = counts(g), seal = LEVELS[g.level].blueReturnSeal;
+  const sealed = !!seal && cellAt(g, seal[0], seal[1]) === "a";
+  return g.ball.color !== 0 && c.colors[0] > 0 && (!g.grid.includes("A") || sealed);
+}
 // roll a macro (column c1 for n1 actions, then column c2) until progress; returns {acts, ok, t} or null
 function rollMacro(g0, c1, n1, c2, limit, allowGrey) {
   const g = cloneGame(g0), acts = [], k0 = progressKey(g0), stuck0 = isStuck(g0), lives0 = g0.lives, col0 = g0.ball.color;
@@ -906,6 +1101,8 @@ function solveFrom(g0, maxActions = 4000) {
 
 // ======================= storage =======================
 const SAVE_KEY = "ricochet-v1";
+// Keep earlier records stored, but compare only this scoring/layout revision.
+const recordKey = (L) => L.id + ":chain-v2";
 let save = { unlocked: 0, best: {} };
 try { const s = JSON.parse(localStorage.getItem(SAVE_KEY) || "null"); if (s && typeof s === "object") save = { unlocked: Math.min(LEVELS.length - 1, s.unlocked | 0), best: s.best || {} }; } catch (e) {}
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
@@ -1004,11 +1201,11 @@ function drawPot(c, s, p) {
   // glass jar body
   c.save();
   c.beginPath();
-  c.moveTo(cx - s * 0.16, s * 0.24); c.lineTo(cx + s * 0.16, s * 0.24);
-  c.quadraticCurveTo(cx + s * 0.18, s * 0.34, cx + s * 0.3, s * 0.46);
+  c.moveTo(cx - s * 0.3, s * 0.24); c.lineTo(cx + s * 0.3, s * 0.24);
+  c.quadraticCurveTo(cx + s * 0.3, s * 0.34, cx + s * 0.3, s * 0.46);
   c.quadraticCurveTo(cx + s * 0.38, s * 0.86, cx, s * 0.88);
   c.quadraticCurveTo(cx - s * 0.38, s * 0.86, cx - s * 0.3, s * 0.46);
-  c.quadraticCurveTo(cx - s * 0.18, s * 0.34, cx - s * 0.16, s * 0.24); c.closePath();
+  c.quadraticCurveTo(cx - s * 0.3, s * 0.34, cx - s * 0.3, s * 0.24); c.closePath();
   c.fillStyle = "rgba(190,220,255,0.18)"; c.fill();
   c.clip();
   let g = c.createLinearGradient(0, s * 0.45, 0, s * 0.9); g.addColorStop(0, p.hi); g.addColorStop(0.4, p.mid); g.addColorStop(1, p.lo);
@@ -1017,11 +1214,11 @@ function drawPot(c, s, p) {
   c.restore();
   c.strokeStyle = "rgba(220,235,255,0.75)"; c.lineWidth = Math.max(1, s * 0.035);
   c.beginPath();
-  c.moveTo(cx - s * 0.16, s * 0.24); c.quadraticCurveTo(cx - s * 0.18, s * 0.34, cx - s * 0.3, s * 0.46);
+  c.moveTo(cx - s * 0.3, s * 0.24); c.quadraticCurveTo(cx - s * 0.3, s * 0.34, cx - s * 0.3, s * 0.46);
   c.quadraticCurveTo(cx - s * 0.38, s * 0.86, cx, s * 0.88); c.quadraticCurveTo(cx + s * 0.38, s * 0.86, cx + s * 0.3, s * 0.46);
-  c.quadraticCurveTo(cx + s * 0.18, s * 0.34, cx + s * 0.16, s * 0.24); c.stroke();
+  c.quadraticCurveTo(cx + s * 0.3, s * 0.34, cx + s * 0.3, s * 0.24); c.stroke();
   // rim
-  rr(c, cx - s * 0.2, s * 0.15, s * 0.4, s * 0.1, s * 0.04); c.fillStyle = "#c98b4a"; c.fill();
+  rr(c, cx - s * 0.34, s * 0.15, s * 0.68, s * 0.1, s * 0.04); c.fillStyle = p.lo; c.fill();
   c.fillStyle = "rgba(255,255,255,0.55)"; c.fillRect(cx - s * 0.2, s * 0.32, s * 0.05, s * 0.36);
   // small symbol on the label
   c.fillStyle = "rgba(255,255,255,0.9)"; suit(c, PAL.indexOf(p), cx, s * 0.66, s * 0.1);
@@ -1090,10 +1287,12 @@ let game = null, screen = "title", particles = [], floaters = [], flash = 0, pul
 let CELL = 40, DPR = 1;
 function resize() {
   const wrap = $("game");
-  const wCss = Math.min(446, (wrap.clientWidth || window.innerWidth) - 46);
+  const landscape = W > H;
+  const wCss = Math.min(landscape ? 1000 : 446, (wrap.clientWidth || window.innerWidth) - 46);
+  wrap.querySelector(".hud").style.maxWidth = landscape ? "1000px" : "460px";
   const padH = matchMedia("(min-width: 700px) and (hover: hover)").matches ? 0 : 74;
   const maxH = Math.max(300, window.innerHeight - 92 - padH - 68);
-  const cell = Math.max(22, Math.min(wCss / W, maxH / H, 46));
+  const cell = Math.max(1, Math.min(wCss / W, maxH / H, landscape ? 54 : 46));
   const cssW = Math.floor(cell * W), cssH = Math.floor(cell * H);
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   cv.style.width = cssW + "px"; cv.style.height = cssH + "px";
@@ -1132,8 +1331,8 @@ function draw(t) {
   let bx = b.x * s, by = b.y * s, br = R * s;
   if (game.dip > 0) {
     const k = Math.sin(Math.PI * (1 - game.dip / DIP));
-    bx += game.dipDir[0] * k * s * 0.42; by += game.dipDir[1] * k * s * 0.42; br *= 1 - 0.25 * k;
-    potCell = [Math.floor(b.x + game.dipDir[0] * 0.8), Math.floor(b.y + game.dipDir[1] * 0.8)];
+    br *= 1 - 0.3 * k;
+    potCell = [game.dipState.cx, game.dipState.cy];
   }
   for (let i = 0; i < trail.length; i++) {
     const q = trail[i]; ctx.globalAlpha = (i + 1) / trail.length * 0.5;
@@ -1181,7 +1380,7 @@ function updateHud(force) {
   const h = { id: L.id, lives: game.lives, score: game.score, combo: game.combo };
   if (force || h.id !== lastHud.id) {
     $("lvlId").innerHTML = L.set === "lab" ? `${L.id} <span>Level Lab</span>` : `${L.id} <span>${WORLDS[0].name}</span>`;
-    const b = save.best[L.id];
+    const b = save.best[recordKey(L)];
     $("pb").textContent = "PB " + fmt(b && b.time);
   }
   if (force || h.lives !== lastHud.lives) {
@@ -1231,7 +1430,7 @@ function startLevel(lv, withCard) {
   const lab = LEVELS[lv].set === "lab";
   document.querySelectorAll("[data-map]").forEach((b) => { b.textContent = lab ? "Level Lab" : b.dataset.label; });
   if (lab && withCard) {   // direction card before play; the board is already drawn behind it
-    const L = LEVELS[lv], q = ratio(L.map), b = save.best[L.id];
+    const L = LEVELS[lv], q = ratio(L.map), b = save.best[recordKey(L)];
     $("cFam").textContent = L.family; $("cName").textContent = L.name; $("cSub").textContent = `Level Lab · ${L.id} · ${L.map[0].length}×${L.map.length}`;
     $("cIdea").textContent = L.idea; $("cRatio").innerHTML = ratioBar(q); $("cLegend").textContent = ratioText(q);
     $("cPb").textContent = b ? `PB ${fmt(b.time)} · best score ${b.score.toLocaleString("en-US")}` : "Not played yet";
@@ -1275,12 +1474,16 @@ function handleEvents() {
 function sync() {
   handleEvents(); updateHud();
   const c = counts(game);
-  const stuck = game.screen === "playing" && game.ball.color !== 0 && c.colors[0] > 0;
+  const stuck = game.screen === "playing" && isStuck(game);
   if (stuck !== stuckShown) {
     stuckShown = stuck;
     setHelp(stuck ? (c.skulls ? "The ball can't turn blue again — hit a skull or press ↻." : "The ball can't turn blue again — press ↻ to restart.") : levelHelp(), stuck);
     // no skull on the board: the level can't be finished, so say so on the board and offer a restart
-    if (stuck && !c.skulls && !qaDriven) { screen = "stuck"; held.left = held.right = false; showPanel("pStuck"); }
+    if (stuck && !c.skulls && !qaDriven) { screen = "stuck"; held.left = held.right = false;
+      $("stuckText").textContent = LEVELS[game.level].blueReturnSeal
+        ? "The blue well is still sealed by a blue block. On your next attempt, open that return route before taking red paint."
+        : "Blue blocks are left, but nothing paints the ball blue again on this level.";
+      showPanel("pStuck"); }
   }
   if (game.screen !== "playing" && screen === "playing") {
     screen = game.screen;
@@ -1290,11 +1493,11 @@ function sync() {
 const starSvg = (on) => `<svg viewBox="0 0 24 24" fill="${on ? "#ffcc33" : "rgba(255,255,255,.15)"}" stroke="${on ? "#fff3b0" : "rgba(255,255,255,.2)"}" stroke-width="1"><use href="#i-star"/></svg>`;
 function finishLevel() {
   const L = LEVELS[game.level], time = gameTime(game);
-  const prev = save.best[L.id] || {};
+  const prev = save.best[recordKey(L)] || {};
   const nb = { time: prev.time == null || time < prev.time, score: prev.score == null || game.score > prev.score, combo: prev.combo == null || game.maxCombo > prev.combo };
   const lab = L.set === "lab";
   const st = lab ? 0 : starsFor(time, game.score, L.par);   // lab levels have no par, so no stars
-  save.best[L.id] = { time: nb.time ? time : prev.time, score: nb.score ? game.score : prev.score, combo: nb.combo ? game.maxCombo : prev.combo, stars: Math.max(st, prev.stars || 0) };
+  save.best[recordKey(L)] = { time: nb.time ? time : prev.time, score: nb.score ? game.score : prev.score, combo: nb.combo ? game.maxCombo : prev.combo, stars: Math.max(st, prev.stars || 0) };
   if (!lab) save.unlocked = Math.max(save.unlocked, Math.min(W1_COUNT - 1, game.level + 1));
   persist();
   $("wonSub").textContent = `${L.id} · ${L.name}`;
@@ -1302,12 +1505,12 @@ function finishLevel() {
   $("stars").hidden = lab;
   $("wTime").textContent = fmt(time); $("wScore").textContent = game.score.toLocaleString("en-US"); $("wCombo").textContent = "x" + Math.max(1, game.maxCombo);
   $("nbTime").hidden = !nb.time; $("nbScore").hidden = !nb.score; $("nbCombo").hidden = !nb.combo;
-  $("wPar").textContent = lab ? `Level Lab · ${L.name} · PB ${fmt(save.best[L.id].time)}` : `Par ${fmt(L.par)} · PB ${fmt(save.best[L.id].time)}`;
+  $("wPar").textContent = lab ? `Level Lab · ${L.name} · PB ${fmt(save.best[recordKey(L)].time)}` : `Par ${fmt(L.par)} · PB ${fmt(save.best[recordKey(L)].time)}`;
   const last = lab ? game.level === LEVELS.length - 1 : game.level === W1_COUNT - 1;
   $("nextBtn").textContent = last ? (lab ? "Level Lab" : "World Map") : lab ? "Next Direction" : "Next Level";
   $("pWon").querySelector("[data-map]").hidden = last;
   $("pWon").querySelector(".row2").style.gridTemplateColumns = last ? "1fr" : "";
-  $("pb").textContent = "PB " + fmt(save.best[L.id].time);
+  $("pb").textContent = "PB " + fmt(save.best[recordKey(L)].time);
   showPanel("pWon");
 }
 function showLost() {
@@ -1328,7 +1531,7 @@ function openWorlds() {
   const list = $("wlist");
   let html = `<div class="wcard"><h3>1 · ${WORLDS[0].name}</h3><p>8 levels · par times are the designer's targets</p><div class="lgrid">`;
   LEVELS.slice(0, W1_COUNT).forEach((L, i) => {
-    const b = save.best[L.id], open = i <= save.unlocked;
+    const b = save.best[recordKey(L)], open = i <= save.unlocked;
     html += `<button class="lv${b ? " done" : ""}" data-lv="${i}"${open ? "" : " disabled"} aria-label="Level ${L.id} ${L.name}${open ? "" : ", locked"}">${L.id}<small>${b ? fmt(b.time).slice(0, 5) + " ★" + (b.stars || 1) : open ? "par " + fmt(L.par).slice(0, 5) : "locked"}</small></button>`;
   });
   html += `</div></div>`;
@@ -1341,7 +1544,7 @@ function openLab() {
   screen = "lab"; game = game || newGame(0);
   $("labList").innerHTML = LEVELS.map((L, i) => {
     if (L.set !== "lab") return "";
-    const b = save.best[L.id], q = ratio(L.map);
+    const b = save.best[recordKey(L)], q = ratio(L.map);
     return `<button class="lcard" data-lab="${i}" aria-label="${L.id} ${L.name}: ${L.idea}"><span class="lid">${L.id}</span><h3>${L.name}<small>${L.family}</small></h3>` +
       `<span class="lpb">${b ? `PB<b>${fmt(b.time).slice(0, 8)}</b>` : "new"}</span><p>${L.idea}</p><div class="ratio" title="${ratioText(q)}">${ratioBar(q)}</div></button>`;
   }).join("");
@@ -1352,7 +1555,7 @@ function openLab() {
 function openList() { if (game && LEVELS[game.level].set === "lab") openLab(); else openWorlds(); }
 function playLab(lv) { ensureAudio(); requestTilt(); startLevel(lv, true); }
 function goTitle() { screen = "title"; show("title"); $("playBtn").textContent = save.unlocked > 0 || Object.keys(save.best).length ? `Play ${LEVELS[firstUnbeaten()].id}` : "Play"; }
-function firstUnbeaten() { const u = Math.min(save.unlocked, W1_COUNT - 1); for (let i = 0; i <= u; i++) if (!save.best[LEVELS[i].id]) return i; return u; }
+function firstUnbeaten() { const u = Math.min(save.unlocked, W1_COUNT - 1); for (let i = 0; i <= u; i++) if (!save.best[recordKey(LEVELS[i])] && !save.best[LEVELS[i].id]) return i; return u; }
 function play(lv) { ensureAudio(); requestTilt(); startLevel(lv); }
 
 // ======================= input =======================

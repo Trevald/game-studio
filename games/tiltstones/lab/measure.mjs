@@ -42,7 +42,7 @@ export function measureLevel(i) {
   const acts = E.solveFrom(E.newGame(i), 6000);
   const m = measureRun(i, acts);
   // longest straight vertical run of air once every breakable is gone (stone, pots, skulls stay)
-  const keep = (ch) => ch === "#" || "BCDx".includes(ch);
+  const keep = (ch) => ch === "#" || "ABCDx".includes(ch);
   let openRun = 0; const w = L.map[0].length;
   for (let x = 0; x < w; x++) { let run = 0; for (const row of L.map) { run = keep(row[x]) ? 0 : run + 1; openRun = Math.max(openRun, run); } }
   return { id: L.id, name: L.name, ratio: E.ratio(L.map), openRun, cpu: Date.now() - t0, actions: acts, ...m };

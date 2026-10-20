@@ -10,9 +10,9 @@ for (const L of levels) {
   L.map.forEach((r, i) => { if (r.length !== w) throw new Error(`${L.id} row ${i} has ${r.length} cols, expected ${w}`); });
   if (L.map.join("").split("o").length !== 2) throw new Error(`${L.id} needs exactly one start 'o'`);
 }
-const keep = ["id", "name", "family", "idea", "hint", "map"];
+const keep = ["id", "name", "family", "idea", "hint", "motion", "blueReturnSeal", "map"];
 const fmtL = (L) => {
-  const head = keep.filter((k) => k !== "map").map((k) => `${k}: ${JSON.stringify(L[k])}`).join(", ");
+  const head = keep.filter((k) => k !== "map" && L[k] !== undefined).map((k) => `${k}: ${JSON.stringify(L[k])}`).join(", ");
   return `  { ${head}, map: [\n${L.map.map((r) => "    " + JSON.stringify(r) + ",").join("\n")}\n  ]}`;
 };
 const body = "const LAB = [\n" + levels.map(fmtL).join(",\n") + ",\n];";
