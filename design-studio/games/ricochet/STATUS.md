@@ -1,13 +1,13 @@
 # Ricochet — status
 
 - Updated: 2026-10-20
-- Stage: overnight exploration handover ready for exact-revision approval
+- Stage: H-001-v1 approved for one overnight exploration shift
 - Owner: Benji
 - Implementation: `games/tiltstones/` in this repository
 - Playable exploration baseline: `11ce07d28015c1ee58357f231916e6b4c8b1e987`
 - Candidate: `handovers/H-001-v1/HANDOVER.md`, scope RIC-N-001 through RIC-N-007
-- Latest approved handover: none; this candidate is not yet marked approved
-- Branch: `codex/ricochet-night-handover`; local only, no PR/main delivery yet
+- Latest approved handover: `handovers/H-001-v1/` at commit `7c48fb63ce653c6061aac34b4c467df4938ccdb3` (on main via merge `6c6c9e5`), scope RIC-N-001 through RIC-N-007 only. Approval: Benji, 2026-10-20 21:26 CEST, in claude.ai Game Studio chat ("Yes" to approving H-001-v1 as it stands, RIC-N-001–007). Not a campaign, speed or orientation approval.
+- Delivery: baseline `11ce07d` and the packet are on main (PR #3, merged 2026-10-20)
 
 ## Owner direction
 
@@ -23,4 +23,4 @@ The latest `origin/main` integration instructions were read: `design-studio/inte
 
 ## Next action
 
-Owner approves the exact H-001-v1 candidate revision and RIC-N-001–007 scope; then record that approval here and deliver the baseline plus packet to main through the authorized repository workflow. Only after main delivery should tonight's shift rely on this packet. The next shift returns its findings in `feedback/FB-001-night-level-exploration.md` (or next free ID).
+Approved and on main. The next night shift that picks Ricochet builds from H-001-v1 in place. The next shift returns its findings in `feedback/FB-001-night-level-exploration.md` (or next free ID).
