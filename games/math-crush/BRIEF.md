@@ -1,0 +1,98 @@
+---
+title: Math Crush (working title)
+slug: math-crush
+idea_id: 3u0kk09h3uemtxj8us8c
+artifact: (filled in after the first publish)
+---
+
+# Math Crush (working title)
+
+## The idea
+> **Candy Crush but math based** — Instead of aligning three of the same you need to align numbers that
+> somehow make up another number. I've been exploring this multiple times but haven't find a good way to
+> implement operators. Maybe it doesn't need to be about aligning. Could also be a board full of numbers and
+> you need to match numbers and operators on that board to make another number. As tiles are being consumed
+> they disappear and either new ones come or you should empty the board.
+
+A candy-crush-feeling board where you make a target number instead of matching colours — built as three
+prototypes (Match, Equation, Clear) so Benji can feel which core loop he wants.
+
+## References
+- No links in the idea or notes. The design source is Benji's designer hand-over:
+  `DESIGN.md` → `design/handover-v1/docs/Studio-Handoff.md` (rules, scoring, layout coordinates),
+  `design/handover-v1/designs/` (21 screens), `reference/approved-art-direction.jpg`, runtime art in `assets/`.
+- Math Crush is **not registered** in `design-studio/PROJECTS.md` yet (no approved hand-over there), so
+  `games/math-crush/DESIGN.md` is in force. Design questions go to `design/REQUESTS.md`.
+
+## Tonight (night 1)
+DESIGN.md phase 1, slightly stretched because the level data is ready to load:
+1. Shared shell: mode picker → mode home → level grid → gameplay → pause (Resume / Restart / Levels with
+   confirmation, Sound, Haptics, Help) → success / failure (Clear: Stuck).
+2. All three core loops playable, exactly per the spec's rules and scoring, in their own themes using the
+   designer's backgrounds and atlas sprites with live text.
+3. Load all 12 authored levels per mode (36) as delivered; the game's own solver must agree with the witnesses.
+4. Hints for all three modes, Undo for Clear, progress (unlocks + best stars) in localStorage.
+5. Keyboard play for all three modes (studio contract), `window.__qa` covering all 36 levels.
+
+## Assumptions
+- One page, three modes; a small "Math Crush" mode picker sits in front of the spec's per-mode Home screens
+  (the spec has no shared hub; DESIGN.md asks for one).
+- Restart asks for confirmation only once the attempt has progress (spec: confirm; RULES/DESIGN.md: instant
+  restart). Retry on result screens is instant.
+- Tutorial is a coach line on level 1 of each mode plus "Help" in pause, not the full guided demo (phase 2).
+- Match keyboard play doubles as the spec's tap-to-select mode: arrows move, Space adds/backtracks, Enter submits.
+
+## Later
+- Guided tutorials (fixed demo board, Skip / Start level), Continue (saving an active attempt), corrupted-save
+  message, screen reader announcements beyond labels, 150 % text pass, short-screen scrolling.
+- Phase 3 polish and the spec's recovery and visual checks; playtest balancing of the starter data.
+
+## Design
+Rules, scoring and layout are the designer's (Studio-Handoff.md) and are implemented as written; this
+section only records how the studio maps them onto the build.
+
+### Core loop
+- **Match** (Candy Forest): drag an orthogonal chain of 2–8 tiles whose sum is the target; release to
+  clear; columns fall and refill. Make the quota of chains within the move limit.
+- **Equation** (Jungle Temple): tap number tiles and reusable + − × into `a op b (op c)`; submit; × binds
+  first. Three rounds per level, three wrong submissions allowed in total.
+- **Clear** (Crystal Cavern): pick 2 (or 3) tiles anywhere that sum to the target and Clear them; holes stay.
+  Empty the board. Wrong order can leave you Stuck — Undo is unlimited.
+
+### The twist
+The target number replaces colour-matching: every move is a small sum you have to see on the board.
+Three variants of where the operators live (none / in your hand / implicit pairs) are the experiment.
+
+### Controls
+- Match: drag (touch or mouse); backtrack by re-entering the previous tile. Keyboard: arrows move a cursor,
+  Space adds the tile (or backtracks), Enter submits, H hint.
+- Equation: tap tiles/operators; Back, Clear, Submit. Keyboard: 1–6 tiles, + − * (or x) operators,
+  Backspace back, Delete clear, Enter submit, H hint.
+- Clear: tap to toggle selection, Clear button. Keyboard: arrows + Space, Enter clears, U undo, H hint.
+- Everywhere: Esc pauses / goes back, Tab + Enter works on all buttons.
+
+### Progression
+Authored data from the designer: 12 levels per mode, unlock in order, replayable. Match 1–4 target 10,
+5–8 target 12, 9–12 target 15. Equation 1–4 + and −, 5–8 ×, 9–12 mixed. Clear 1–4 pairs on 4×4,
+5–8 pairs/triples on 4×3, 9–12 on 5×3 with target 12. Level 1 of each mode can't be failed by accident:
+Match wrong sums cost a move but quota 3 / moves 5 leaves room, Equation allows 3 misses, Clear never fails.
+
+### Win / lose / restart
+Match: quota reached → win (checked before out-of-moves); moves at 0 → "Out of moves". Equation: round 3
+solved → win; 0 attempts → "Out of attempts". Clear: empty board → win; no legal group → Stuck (Undo /
+Restart / Levels). Retry is instant.
+
+### Feel
+1. Match trace: gold ring + ordinal badge + connecting stroke and a live "2 + 3 + 5 = 10 · Ready" plaque,
+   rising tone per tile.
+2. Clears: candy pop + gravity drop (180 ms), ice shards, stone plaque flash; reduced motion = 80 ms fade.
+3. Success: atlas stars pop in with vector confetti.
+
+### QA plan
+- `levels()` = 36: 0–11 Match, 12–23 Equation, 24–35 Clear. `reset(n)` starts that level in play.
+- `state()`: `{screen, mode, level, …}`; screen is `hub|home|levels|paused|playing|won|lost|stuck`.
+- Actions: Match `{chain:[cellIdx…]}` or `"hint"`; Equation `"n0".."n5"`, `"+"`, `"-"`, `"*"`, `"back"`,
+  `"clear"`, `"submit"`, `"hint"`; Clear `"t<i>"`, `"clear"`, `"undo"`, `"hint"`.
+- `solve()`: Match simulates the seeded refills and plays the shortest legal chain each move; Equation
+  enumerates the shortest solution per round; Clear runs the exact-cover search. `__qa.validate()` checks the
+  game's evaluator against every designer witness.
