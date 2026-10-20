@@ -23,6 +23,7 @@ body{background:#12513D;color:var(--cream);font:16px/1.375 var(--ui);overflow:hi
 h1,h2,p{margin:0}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0;touch-action:manipulation}
 button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--cream);outline-offset:2px;box-shadow:0 0 0 5px #0b2a22}
+[tabindex="-1"]:focus{outline:none;box-shadow:none}
 button:disabled{opacity:.45;cursor:default}
 .app{position:relative;margin:0 auto;width:min(100%,440px);height:100%;display:flex;flex-direction:column;
   padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
@@ -74,8 +75,7 @@ button:disabled{opacity:.45;cursor:default}
 .collection .meta{flex:1}.collection strong{font-size:18px}.collection small{display:block;margin-top:2px;color:var(--muted);font-size:12px}
 .gridlevels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .level{height:64px;border-radius:10px;font:22px var(--num);color:var(--ink);position:relative;background:linear-gradient(135deg,#fff7e1,#eddfbf);box-shadow:0 3px 0 #b59b6c}
-.level.done{background:#bed1bd;box-shadow:0 3px 0 #7c9a80}
-.level.done:after{content:"✓";position:absolute;right:6px;bottom:4px;font:13px var(--ui)}
+.level.done:after{content:"✓";position:absolute;right:5px;bottom:5px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:bold 12px var(--ui);color:#264734;background:radial-gradient(circle,#f6dc96,#cfaa58);box-shadow:0 1px 0 #967239}
 .level.current{outline:3px solid var(--gold);outline-offset:3px}
 /* play */
 .resultbar{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:6px 0;flex:none}
@@ -102,6 +102,7 @@ button:disabled{opacity:.45;cursor:default}
 .cells .card.snap{animation:snap .14s ease-out}
 @keyframes snap{from{transform:scale(1.12)}to{transform:none}}
 .caret{position:absolute;width:3px;height:var(--cell);border-radius:2px;background:var(--gold);z-index:2;pointer-events:none;transition:left .08s,top .08s}
+.caret.preview{width:5px;margin-left:-1px;box-shadow:0 0 0 3px #f1cc7655,0 0 12px #f1cc76}
 .caret.blink{animation:blink 1.1s steps(1) infinite}
 @keyframes blink{50%{opacity:.25}}
 .emptyhint{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:15px;pointer-events:none;padding:0 20px}
@@ -152,6 +153,7 @@ button:disabled{opacity:.45;cursor:default}
 @media (max-width:359px){.app{padding-left:12px;padding-right:12px}.slots{gap:6px}.palette{gap:4px}.hero{font-size:32px}}
 @media (max-height:700px){.hand{height:84px}.hero{font-size:32px}.plaque{min-height:64px;padding:4px 10px}.value{font-size:28px;line-height:32px}.slots .card{height:58px}.body{padding-top:10px}}
 @media (max-height:620px){.seal{width:56px;height:56px;font-size:28px;margin:2px auto}.celebrate .hero{font-size:28px;margin:4px 0}.expr{font-size:20px;line-height:1.45}.celebrate .body{gap:8px;padding-top:6px}.celebrate .btn{min-height:44px}.home .logo{margin-top:6px;height:50px}}
+@media (max-height:520px){body{overflow-y:auto}.app{height:auto;min-height:100%}.screen{flex:none}.work{flex:none}.well{flex:none;min-height:150px}.body{overflow:visible}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1248,8 +1250,10 @@ const valueOfCard = (g) => (id) => g.board.cards.find((c) => c.id === id).value;
 const usedIds = (g) => new Set(g.tokens.filter((t) => t.k === "n").map((t) => t.id));
 function evaluate(g) {
   g.res = analyse(g.tokens, valueOfCard(g));
-  if (g.res.state === "valid") g.lastValid = g.res.value;
-  if (g.res.state === "empty") g.lastValid = null;
+  g.lastValid = null;
+  if (g.res.state === "incomplete") {
+    for (let k = g.tokens.length - 1; k > 0; k--) { const p = analyse(g.tokens.slice(0, k), valueOfCard(g)); if (p.state === "valid") { g.lastValid = p.value; break; } }
+  }
   const used = usedIds(g).size;
   g.used = used;
   g.matched = g.res.state === "valid" && rEq(g.res.value, g.board.target);
@@ -1514,18 +1518,19 @@ function renderPlay() {
 function placeCaret(boundary, preview) {
   const caret = $("caret"), cells = $("cells"), g = ui.game;
   if (boundary < 0 || boundary < ui.pageStart || boundary > ui.pageEnd) { caret.hidden = true; return; }
-  const kids = cells.children, wellR = $("well").getBoundingClientRect();
+  const kids = cells.children, ox = cells.offsetLeft, oy = cells.offsetTop; // offsets ignore the snap transform
   let x, y;
-  if (!kids.length) { const r = cells.getBoundingClientRect(); x = r.left - wellR.left - 2; y = r.top - wellR.top; }
+  if (!kids.length) { x = ox - 2; y = oy; }
   else {
     const k = boundary - ui.pageStart;
-    const el = kids[Math.min(k, kids.length - 1)], r = el.getBoundingClientRect();
-    if (k < kids.length) x = r.left - wellR.left - 3.5; else x = r.right - wellR.left + 0.5;
-    y = r.top - wellR.top + (el.classList.contains("sel") ? 4 : 0);
+    const el = kids[Math.min(k, kids.length - 1)];
+    if (k < kids.length) x = ox + el.offsetLeft - 3.5; else x = ox + el.offsetLeft + el.offsetWidth + 0.5;
+    y = oy + el.offsetTop;
   }
   caret.style.left = x + "px"; caret.style.top = y + "px";
   caret.hidden = false;
   caret.classList.toggle("blink", !preview && document.activeElement === $("well"));
+  caret.classList.toggle("preview", !!preview);
 }
 function renderDone() {
   const g = ui.game, b = g.board;
@@ -1627,7 +1632,7 @@ function dragMove(e) {
     document.body.appendChild(f); drag.float = f;
     drag.el.style.opacity = ".35";
   }
-  drag.float.style.left = e.clientX - 22 + "px"; drag.float.style.top = e.clientY - 22 - 12 + "px";
+  drag.float.style.left = e.clientX - 34 + "px"; drag.float.style.top = e.clientY - 44 - 40 + "px";
   const zone = dropZone(e.clientX, e.clientY);
   drag.zone = zone;
   $("well").classList.toggle("drop", zone.kind === "well");

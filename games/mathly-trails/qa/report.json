@@ -1,11 +1,11 @@
 {
   "game": "games/mathly-trails/index.html",
-  "at": "2026-10-20T02:05:21.342Z",
+  "at": "2026-10-20T02:11:25.051Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "75 KB"
+      "detail": "76 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
