@@ -1,27 +1,19 @@
 # Ricochet — project
 
-- Slug: ricochet
-- Category: mobile puzzle game (individual mechanics unconfirmed)
-- Owner / design approver: TBD
-- Studio repository: https://github.com/trevald/game-studio
-- Implementation repository / default branch: TBD — inspect before editing
-- Existing instructions and design references: TBD
-- Current engine, languages, platforms, minimum OS: unknown — inspect code
-- Delivery path: proposed `docs/design/studio/`; confirm no collision
+- Owner / design approver: Benji
+- Design folder: `design-studio/games/ricochet/`
+- Implementation: `games/tiltstones/` in `Trevald/game-studio`; default branch `main`
+- Runtime: browser game, vanilla JavaScript/canvas in one `index.html`; relative assets under `assets/`
+- Input: horizontal keyboard/touch/tilt steering; automatic vertical bounce
+- Existing design and evidence: `games/tiltstones/DESIGN.md`, `design/`, `NIGHTS.md`, `lab/`
+- Current milestone: compact level-design exploration; S preferred, H still interesting
+- Delivery: approved handovers read in place from main, per `design-studio/integration/NIGHT-STUDIO.md` on main; do not copy into a separate docs tree
+- Candidate: H-001-v1; exact-revision approval and main delivery pending
 
-## Product brief
-Player, problem/opportunity, core promise, session context: TBD.
+## Constraints and open decisions
 
-## Scope and constraints
-Current milestone, in-scope goals, non-goals, device/orientation targets, accessibility needs, business constraints, and release constraints: TBD.
+Follow `studio/RULES.md`: readable play on phone and desktop, instant restart, no dark patterns or mandatory loss timer. Desktop landscape exploration was authorized in this chat; final orientation/mobile feel is unsettled. Keep campaign content and existing prototypes available. Current 14 × 9 boards are preferred over larger layouts. Speed, acceleration, campaign progression and final scoring balance remain open.
 
-## Evidence and assumptions
-Confirmed: project name and mobile puzzle context supplied by owner.
-Unknown: mechanics, visual direction, level design, current implementation, assets, and roadmap.
-Record sources and confidence for future claims. Do not infer rules from the title.
+## Evidence
 
-## Intake questions
-1. What is the current playable concept and what already exists?
-2. Which repository and references should be treated as current?
-3. What is the next milestone and what should Claude deliver?
-4. Who approves design, repository merges, and final acceptance?
+Mapping is confirmed by the night studio's integration document on main and this session's implementation work. Complete exploratory runtime is pinned at `11ce07d28015c1ee58357f231916e6b4c8b1e987`. Owner observations are recorded in H-001-v1; automated bot results are explicitly distinguished from human feedback. There is no approved campaign redesign.
