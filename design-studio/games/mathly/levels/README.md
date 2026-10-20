@@ -1,12 +1,3 @@
-# Levels
+# Mathly levels
 
-No level schema or puzzles are defined yet. Select the representation for this game through design; do not assume a grid, arithmetic, physics, or any mechanic from the game's name.
-
-Before handover include:
-- A versioned schema with stable level ID, parameters, starting state, allowed actions, goal, limits, and any seed needed for reproducibility.
-- Validation rules for field ranges, illegal states, and solvability.
-- Representative tutorial/easy/intermediate/challenging examples appropriate to the milestone, with expected solutions or solver validation evidence.
-- At least one invalid example and boundary case with expected rejection/behavior.
-- Difficulty rationale, intended learning objective, and playtest status for each delivered level. Proposed difficulty is not playtest evidence.
-
-Place actual schema and data here once the mechanics are decided. Snapshot the required subset into each approved handover.
+Existing schema, twelve authored boards and verification are in [the original handover data](../../../../games/mathly-trails/design/handover-v1/data/). Preserve those files as the current source; no duplicate level library is created here. Starter variety is an open design question in the night log, not validated difficulty evidence. Future level changes require stable IDs, expected solutions, boundary cases and explicit playtest status in a new scoped packet.

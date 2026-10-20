@@ -10,10 +10,11 @@ const require = createRequire(join(here, "../../../tools/package.json"));
 const { chromium } = require("playwright");
 const url = "file://" + join(here, "..", "index.html");
 const shots = join(here, "shots"); mkdirSync(shots, { recursive: true });
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {});
 const ids = process.argv.slice(2);
 async function run(id) {
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, hasTouch: false });
+  const viewport = /^[HSP]/.test(id) ? { width: 1440, height: 900 } : { width: 390, height: 844 };
+  const ctx = await browser.newContext({ viewport, deviceScaleFactor: 2, hasTouch: false });
   const page = await ctx.newPage();
   await page.goto(url);
   await page.click("#labBtn");
@@ -37,12 +38,18 @@ async function run(id) {
     };
   });
   await page.click("#cPlay");
+  await page.screenshot({ path: join(shots, `start-${id}.png`) });
   const t0 = Date.now(); let held = null, shot = false;
   while (Date.now() - t0 < 150000) {
     const st = await page.evaluate(() => {
       if (screen === "stuck") return { screen: "stuck" };
       if (screen !== "playing") return { screen: game.screen === "playing" ? screen : game.screen };
-      const p = planStep(cloneGame(game));
+      const planning = cloneGame(game);
+      // P2's intended strategy: prepare the blue return before considering red.
+      // This constrains only the test planner; the live board and collisions stay intact.
+      if (LEVELS[game.level].id === "P2" && game.grid[7 * W + 2] === "a")
+        planning.grid = planning.grid.map(ch => ch === "B" ? "#" : ch);
+      const p = planStep(planning);
       return { screen: "playing", a: p ? p.acts[0] : "stay", t: game.steps * DT };
     });
     if (st.screen !== "playing") break;
@@ -59,6 +66,7 @@ async function run(id) {
   });
   await page.screenshot({ path: join(shots, `end-${id}.png`) });
   await ctx.close();
+  writeFileSync(join(here, `play1x-${id}.json`), JSON.stringify({ id, ...res }, null, 1));
   return { id, ...res };
 }
 const all = ids.length ? ids : ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10"];

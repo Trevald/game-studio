@@ -1,5 +1,275 @@
 [
  {
+  "id": "P1",
+  "name": "Keep the Return",
+  "family": "puzzle \u00b7 preserve a shortcut",
+  "idea": "A disposable roof, two paints and a layered vault. Decide when the quick rebound will be most useful.",
+  "hint": "Grey gives just one rebound. When will it help most? Breaking it early is recoverable.",
+  "map": [
+   ".......bbbbb..",
+   ".......baaab..",
+   ".aa....ba*ab..",
+   ".......baaab..",
+   ".##....bbbbb..",
+   "..g..##.......",
+   "..........##..",
+   ".....o........",
+   ".#A#......#B#."
+  ]
+ },
+ {
+  "id": "P2",
+  "name": "Open Your Way Back",
+  "family": "puzzle \u00b7 prepare before repainting",
+  "idea": "A sealed blue well and a red vault with blue inside. Prepare a route before committing to a new colour.",
+  "hint": "Which route will you need after turning red? R restarts if your plan fails.",
+  "map": [
+   ".......bbbbb..",
+   ".......baaab..",
+   ".aa....ba*ab..",
+   ".......baaab..",
+   ".##....bbbbb..",
+   "..#..##.......",
+   "..........##..",
+   ".#a#.o........",
+   ".#A#......#B#."
+  ],
+  "blueReturnSeal": [
+   2,
+   7
+  ]
+ },
+ {
+  "id": "P3",
+  "name": "Unlock the Loop",
+  "family": "puzzle \u00b7 key and colour route",
+  "idea": "Red paint lies beyond a locked gate. The vault needs both colours, so plan more than the outward trip.",
+  "hint": "Find the key, then work out how to bring both colours to the vault.",
+  "map": [
+   ".bbb.......#..",
+   ".bab....*.....",
+   ".bbb......#B#.",
+   "..........###.",
+   "#######L######",
+   "..aa..........",
+   "..##...##.....",
+   ".....o..k.....",
+   ".#A#.........."
+  ]
+ },
+ {
+  "id": "S1",
+  "name": "Paint Shuttle",
+  "family": "compact landscape \u00b7 standard speed",
+  "idea": "A low shuttle lane with paint at both ends. Stone roofs turn you down into the wells quickly.",
+  "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+  "map": [
+   "..aa..##..bb..",
+   "..............",
+   ".##.aa..bb.##.",
+   "......**......",
+   "..bb..##..aa..",
+   "..##......##..",
+   "......gg......",
+   ".....o........",
+   ".#A#..##..#B#."
+  ]
+ },
+ {
+  "id": "S2",
+  "name": "Broken Staircase",
+  "family": "compact landscape \u00b7 standard speed",
+  "idea": "Offset ledges and temporary grey steps. Break a step for a shortcut, or keep it for a quick rebound.",
+  "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+  "map": [
+   "aa....##...bb.",
+   "...##....g....",
+   "....bb......*.",
+   ".g......##....",
+   "...##.....aa..",
+   "..##..bb..g#..",
+   "......*.......",
+   "....o..aa.....",
+   ".#A#..##..#B#."
+  ]
+ },
+ {
+  "id": "S3",
+  "name": "Switchyard",
+  "family": "compact landscape \u00b7 standard speed",
+  "idea": "Irregular stone islands split a compact field into bounce pockets, with red and blue targets on different approaches.",
+  "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+  "map": [
+   ".aa.#....bb...",
+   "....#..##...*.",
+   ".##...a...##..",
+   "....b...g.....",
+   "..##..##..aa..",
+   "..g#......##..",
+   "......bb......",
+   "....o....*....",
+   ".#A#..##..#B#."
+  ]
+ },
+ {
+  "id": "S1F",
+  "name": "Paint Shuttle \u00b7 fast",
+  "family": "same layout \u00b7 fast",
+  "idea": "Same shuttle layout at 12 cells/s vertically and 7 sideways.",
+  "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+  "map": [
+   "..aa..##..bb..",
+   "..............",
+   ".##.aa..bb.##.",
+   "......**......",
+   "..bb..##..aa..",
+   "..##......##..",
+   "......gg......",
+   ".....o........",
+   ".#A#..##..#B#."
+  ],
+  "motion": "fast"
+ },
+ {
+  "id": "S1A",
+  "name": "Paint Shuttle \u00b7 accelerating",
+  "family": "same layout \u00b7 accelerating",
+  "idea": "Same shuttle layout: start at 9 cells/s, accelerate to 16 in free flight, reset to 9 on impact.",
+  "hint": "Blue and red wells are reusable. Use stone to shorten rebounds; grey bumpers give one bounce, then disappear.",
+  "map": [
+   "..aa..##..bb..",
+   "..............",
+   ".##.aa..bb.##.",
+   "......**......",
+   "..bb..##..aa..",
+   "..##......##..",
+   "......gg......",
+   ".....o........",
+   ".#A#..##..#B#."
+  ],
+  "motion": "accelerating"
+ },
+ {
+  "id": "H4",
+  "name": "Layer Cake",
+  "family": "landscape \u00b7 return colours",
+  "idea": "A blue shell hides red; red hides blue. Each broken layer opens the next approach.",
+  "hint": "Blue \u2192 red \u2192 blue. Drop into the blue or red wells at the bottom to repaint; clear both layers before diamonds.",
+  "map": [
+   "................####",
+   "......aaaaaaa.......",
+   "......abbbbba.......",
+   "......abaaaba.......",
+   "......aba*aba.......",
+   "......abaaaba.......",
+   "......abbbbba.......",
+   "......aaaaaaa.......",
+   "....................",
+   "....................",
+   ".....o..............",
+   ".#A#.....#B#........"
+  ]
+ },
+ {
+  "id": "H5",
+  "name": "Opposite Vaults",
+  "family": "landscape \u00b7 return colours",
+  "idea": "Two vaults reverse the colour order. Revisit the blue and red dipping wells to open their centres.",
+  "hint": "Blue \u2192 red \u2192 blue opens both vaults. Reuse the bottom wells; each shell hides the other colour.",
+  "map": [
+   "................####",
+   "....................",
+   "...aaaaa....bbbbb...",
+   "...abbba....baaab...",
+   "...ab*ba....ba*ab...",
+   "...abbba....baaab...",
+   "...aaaaa....bbbbb...",
+   "....................",
+   "....................",
+   "....................",
+   ".....o..............",
+   ".#A#.....#B#........"
+  ]
+ },
+ {
+  "id": "H6",
+  "name": "Three-way Return",
+  "family": "landscape \u00b7 return colours",
+  "idea": "Blue opens red, red opens green, and green reveals blue again. Three reusable wells serve one layered vault.",
+  "hint": "Blue \u2192 red \u2192 green \u2192 blue. Dip in the matching bottom well whenever you need to change colour.",
+  "map": [
+   "....................",
+   ".....aaaaaaaaa......",
+   ".....abbbbbbba......",
+   ".....abcccccba......",
+   ".....abca*acba......",
+   ".....abcccccba......",
+   ".....abbbbbbba......",
+   ".....aaaaaaaaa......",
+   "....................",
+   "....................",
+   ".....o..............",
+   ".#A#.....#B#...#C#.."
+  ]
+ },
+ {
+  "id": "H1",
+  "name": "Twin Islands",
+  "family": "landscape \u00b7 crossings",
+  "idea": "Blue island first, then red. Stone caps and floors preserve tight bounce lanes around both islands.",
+  "hint": "Clear every blue block, including the paint guard at far right. Slide into red paint, clear red, then collect diamonds.",
+  "map": [
+   "..................",
+   "..#####....#####..",
+   "..aaaaa....bbbbb..",
+   "..................",
+   "..a**aa....b**bb.#",
+   "................aB",
+   "..aaaaa....bbbbb.#",
+   "..#####....#####..",
+   "o......####.......",
+   ".................."
+  ]
+ },
+ {
+  "id": "H2",
+  "name": "Open the Heart",
+  "family": "landscape \u00b7 central structure",
+  "idea": "Blue surrounds a red core. A permanent central spine and outer rails keep short rebounds as you carve.",
+  "hint": "Finish the blue shell before entering red paint at the right edge. Work both sides of the stone spine to clear red.",
+  "map": [
+   "..................",
+   ".....########.....",
+   ".....aaaaaaaa.....",
+   "...aa......aa.....",
+   "...abbb**bbba....#",
+   "...a########a...aB",
+   "...abbbbbbbba....#",
+   ".....aaaaaaaa.....",
+   ".o...########.....",
+   ".................."
+  ]
+ },
+ {
+  "id": "H3",
+  "name": "Across the Terraces",
+  "family": "landscape \u00b7 staggered shelves",
+  "idea": "Blue terraces lead to a key-operated gate. Beyond it, red shelves form a final chamber.",
+  "hint": "Fetch the key on the left, clear blue, then open the gate in the lower dividing wall. Red paint waits inside the right chamber.",
+  "map": [
+   "............#.....",
+   ".aaaaaa.....#.bbbb",
+   ".######.....#.####",
+   ".k..........#.....",
+   "aaaa...aaaa.#.b**b",
+   "####...####.#.####",
+   "............#....#",
+   "...aaaaaa...L....B",
+   "...######...#.bbb#",
+   ".o..........#.####"
+  ]
+ },
+ {
   "id": "L1",
   "name": "Rattle Rows",
   "family": "dense corridor",

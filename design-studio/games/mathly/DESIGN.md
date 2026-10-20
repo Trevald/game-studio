@@ -1,37 +1,27 @@
-# Mathly — design specification
+# Mathly — design index and intake baseline
 
-State: DRAFT / INTAKE. No implementation authorization.
+State: baseline documented; future changes DRAFT. This is not an implementation handover.
 
-## 1. Intent and scope
-Player, core promise, milestone, non-goals, evidence, assumptions: TBD.
+## Authoritative existing design
 
-## 2. Core loop and rules
-Describe inputs → state changes → feedback → next challenge. Define board/entities, legal moves, invalid actions, win/loss, scoring, determinism/random seed, undo/reset, hints, and edge cases. TBD.
+Read [game integration DESIGN](../../../games/mathly-trails/DESIGN.md), then [handover v1.1](../../../games/mathly-trails/design/handover-v1/DESIGN.md). [Screen atlas](../../../games/mathly-trails/design/handover-v1/mockups/index.html), [key screens](../../../games/mathly-trails/design/handover-v1/key-screens.jpg), and [tokens](../../../games/mathly-trails/design/handover-v1/design/tokens.json) remain in place. Do not create a second design master here.
 
-## 3. Requirements
-Use stable game-prefixed IDs. Replace the placeholder row; do not treat it as a requirement.
+## Current baseline
 
-| ID | Behavior | Acceptance example / boundary case | Priority | State / decision |
-|---|---|---|---|---|
-| TBD | TBD | Given / When / Then | TBD | Draft |
+The handover records owner-selected Mathly naming, green felt and tactile cream cards, five starting cards, freely rearrangeable expressions, reusable operators/parentheses, live result, collections, keyboard/touch access and 44 px targets. These are historical statements in the handover, not newly collected approval evidence.
 
-## 4. Screens and mobile interaction
-Screen inventory, navigation/state diagram or description, touch gestures, input conflicts, safe areas, screen sizes, pause/resume, persistence, loading/error states: TBD.
+The current code uses all five cards to match a target, + − × ÷ and parentheses, exact BigInt fractions and automatic completion. The handover still labels all-five completion, numeric domain, no factorial, completion/hint policy and expression paging as proposed defaults. Existing implementation does not constitute owner approval.
 
-## 5. Visual and audio direction
-Reference links and provenance, alternatives, chosen direction and approval, typography/colors, component states, animation timing, sound/haptics, accessibility alternatives. Link assets by manifest ID. TBD.
+The web integration explicitly specifies no purchase flow, all collections open, localStorage, and a future deterministic UTC Daily without a server. The full handover describes native purchases and a canonical backend Daily. Use the web integration for this prototype; revisit those scope differences explicitly before any production/native handover. The integration's claim that RULES forbids shops is stronger than the current RULES text; the explicit game-specific no-purchase instruction is the basis here.
 
-## 6. Levels and progression
-Link the level schema and version, validation rules, solution examples, introductory sequence, difficulty dimensions, tuning evidence, and progression gates. TBD.
+## Existing content and status
 
-## 7. Accessibility and localization
-Readable layouts, non-color cues, reduced motion, audio alternatives, language/text expansion, device checks: TBD.
+Twelve authored boards: eight Starter, one Multiplication, two Division, one Mastery. [Level schema/data and verification](../../../games/mathly-trails/design/handover-v1/data/) stay authoritative. See STATUS for shipped behavior and limitations. No new requirement IDs are assigned to an unchanged baseline; future changes need stable MATHLY-R IDs and acceptance criteria.
 
-## 8. Technical and business constraints
-Record only confirmed constraints: platform, performance budgets, offline behavior, persistence, monetization, analytics and privacy-sensitive data if applicable. Separate proposed requirements from facts about existing code. TBD.
+## Proposal for the next design discussion
 
-## 9. Validation plan
-For each requirement: method, expected outcome, target device/environment, evidence location, and actual result (not run until verified). Include usability/playtest hypotheses separately. TBD.
+Recommend reviewing Starter variety and resolving core defaults before expanding the library. The night reviewer reports all eight Starter boards feel alike. First define the intended learning progression, then propose two or three contrasting boards and verify their solutions and difficulty hypotheses. Alternative: prioritize Daily/practice breadth, which adds generator, repeatability and rollover decisions before the introductory experience has been reviewed. Neither option is approved.
 
-## 10. Open questions and decision links
-List blocker, owner, affected requirements, and next action. Link accepted ADRs and superseded choices. TBD.
+## Open decisions
+
+Choose the next milestone. Resolve relevant O1–O9 in the existing handover before approving affected scope, especially all-five completion, factorial, rational domain, scoring/hints and paging. Native pricing/restore remain outside the current web prototype. Original-site Daily compatibility is unknown. No accepted ADRs or new approved packets exist in this studio folder.
