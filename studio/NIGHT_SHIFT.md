@@ -60,7 +60,9 @@ Set the chosen idea to `status: "building"` on the board right away so Benji can
    `FB-NNN-<short-title>.md` (next free number). Use kind `completion-report` for the night's report,
    listing each requirement ID with what you actually ran and the result (say "not run" when you didn't).
    For games not registered there, keep using `games/<slug>/design/REQUESTS.md`.
-4. Code still goes straight to main as usual: Benji's standing authorization for night shifts covers game
+4. If a board note from Benji conflicts with an approved hand-over, follow the hand-over and raise the
+   conflict as a `question` feedback record (and in the morning report).
+5. Code still goes straight to main as usual: Benji's standing authorization for night shifts covers game
    code. It does **not** cover anything in `design-studio/` beyond feedback records.
 
 **Read the game's DESIGN.md first, if it has one.** It is Benji's own design hand-over and overrides
