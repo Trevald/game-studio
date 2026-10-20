@@ -47,6 +47,24 @@ Set the chosen idea to `status: "building"` on the board right away so Benji can
 
 ## 2. Producer — the brief (games/<slug>/BRIEF.md)
 
+**Which design to build from** (Benji's designer works in `design-studio/`, see root CLAUDE.md):
+1. Find the game in `design-studio/PROJECTS.md` (studio folder column). If it has an **approved hand-over**
+   — STATUS.md in `design-studio/games/<game>/` names a hand-over as approved, with the approval record, and
+   that folder exists on main — build from that hand-over. It wins over `games/<slug>/DESIGN.md` and
+   everything else. Read it in place; don't copy it (the kit's "delivery PR" step doesn't apply when the
+   game lives in this repo). Implement only its approved scope.
+2. If there's no approved hand-over yet, `games/<slug>/DESIGN.md` stays in force as before. Ignore drafts
+   and open pull requests in `design-studio/`: only what's approved on main counts.
+3. **Questions, deviations and the end-of-night report** for a game registered in `design-studio/` go in
+   a feedback record: copy `design-studio/games/<game>/feedback/FEEDBACK-TEMPLATE.md` to
+   `FB-NNN-<short-title>.md` (next free number). Use kind `completion-report` for the night's report,
+   listing each requirement ID with what you actually ran and the result (say "not run" when you didn't).
+   For games not registered there, keep using `games/<slug>/design/REQUESTS.md`.
+4. If a board note from Benji conflicts with an approved hand-over, follow the hand-over and raise the
+   conflict as a `question` feedback record (and in the morning report).
+5. Code still goes straight to main as usual: Benji's standing authorization for night shifts covers game
+   code. It does **not** cover anything in `design-studio/` beyond feedback records.
+
 **Read the game's DESIGN.md first, if it has one.** It is Benji's own design hand-over and overrides
 the brief and your own design ideas. Look at any images in `games/<slug>/design/` with Read. Never decide
 anything DESIGN.md lists as open; follow its instructions for open items.

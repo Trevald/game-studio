@@ -8,6 +8,15 @@ This repo is a small game studio run by Claude overnight for Benji.
 - Build contract and reference game: `studio/roles/developer.md`, `games/_template/index.html`.
 - Automated playtest: `node tools/qa/playtest.mjs games/<slug>/index.html` (run `npm ci` in `tools/` first).
 
+## Design comes from Benji's designer (since 20 Oct)
+- The design record for each game lives in **`design-studio/games/<game>/`**, owned by the designer.
+  Benji approves designs there through pull requests; approved, frozen hand-overs sit in
+  `design-studio/games/<game>/handovers/<ID>/`. Mapping to studio folders: `design-studio/PROJECTS.md`.
+- **Ownership:** the designer owns `design-studio/` and `games/<slug>/design/`. The studio owns game code,
+  `BRIEF.md`, `NIGHTS.md` and `qa/`. The studio writes in `design-studio/` only to add feedback records
+  (`design-studio/games/<game>/feedback/FB-NNN-*.md`). Never edit a design, STATUS or a hand-over there.
+- How night shifts pick the design source: `studio/NIGHT_SHIFT.md`, "Which design to build from".
+
 Layout: one folder per game under `games/<slug>/` with `index.html` (the whole game), `BRIEF.md`,
 `NIGHTS.md` (night log, newest first) and `qa/` (latest playtest report and screenshots).
 

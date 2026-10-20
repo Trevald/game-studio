@@ -1,3 +1,6 @@
+> **Moving:** the design record for this game is moving to `design-studio/games/ricochet/` (owned by Benji's designer).
+> Until an approved hand-over exists there, this file stays in force. See studio/NIGHT_SHIFT.md, "Which design to build from".
+
 # Ricochet — design hand-over (v2)
 
 Working title **Ricochet** (was Tiltstones). The folder and slug stay `tiltstones` so links and history keep working.
