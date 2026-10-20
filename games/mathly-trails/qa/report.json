@@ -1,11 +1,11 @@
 {
   "game": "games/mathly-trails/index.html",
-  "at": "2026-10-19T15:40:07.490Z",
+  "at": "2026-10-20T02:02:22.257Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "38 KB"
+      "detail": "75 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -45,17 +45,17 @@
     {
       "name": "[desktop] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"title\",\"world\":0,\"level\":0,\"target\":null,\"tiles\":[],\"ops\":[],\"moves\":0,\"made\":false,\"stars\":0,\"selected\":{\"a\":null,\"op\":null}}"
+      "detail": "{\"screen\":\"home\",\"collection\":\"starter\",\"done\":[]}"
     },
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 129"
+      "detail": "screens seen: collections, collection, playing; resets: 0"
     },
     {
-      "name": "every level completable via solve() (33 levels)",
+      "name": "every level completable via solve() (12 levels)",
       "ok": true,
-      "detail": "L1:2 L2:2 L3:2 L4:3 L5:3 L6:3 L7:4 L8:4 L9:3 L10:3 L11:3 L12:3 L13:4 L14:4 L15:4 L16:4 L17:3 L18:3 L19:4 L20:4 L21:4 L22:4 L23:5 L24:5 L25:4 L26:4 L27:4 L28:5 L29:5 L30:5 L31:5 L32:5 L33:5"
+      "detail": "L1:9 L2:9 L3:9 L4:9 L5:9 L6:9 L7:9 L8:9 L9:11 L10:11 L11:9 L12:11"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -75,12 +75,12 @@
     {
       "name": "[phone] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"title\",\"world\":0,\"level\":0,\"target\":null,\"tiles\":[],\"ops\":[],\"moves\":0,\"made\":false,\"stars\":0,\"selected\":{\"a\":null,\"op\":null}}"
+      "detail": "{\"screen\":\"home\",\"collection\":\"starter\",\"done\":[]}"
     },
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 21"
+      "detail": "screens seen: playing; resets: 0"
     },
     {
       "name": "[phone] no console errors or exceptions",
@@ -96,234 +96,88 @@
     "games/mathly-trails/qa/phone-02-after-play.png"
   ],
   "desktop_initialState": {
-    "screen": "title",
-    "world": 0,
-    "level": 0,
-    "target": null,
-    "tiles": [],
-    "ops": [],
-    "moves": 0,
-    "made": false,
-    "stars": 0,
-    "selected": {
-      "a": null,
-      "op": null
-    }
+    "screen": "home",
+    "collection": "starter",
+    "done": []
   },
   "solveResults": [
     {
       "lv": 0,
       "ok": true,
-      "moves": 2,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 1,
       "ok": true,
-      "moves": 2,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 2,
       "ok": true,
-      "moves": 2,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 3,
       "ok": true,
-      "moves": 3,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 4,
       "ok": true,
-      "moves": 3,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 5,
       "ok": true,
-      "moves": 3,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 6,
       "ok": true,
-      "moves": 4,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 7,
       "ok": true,
-      "moves": 4,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 8,
       "ok": true,
-      "moves": 3,
+      "moves": 11,
       "screen": "won"
     },
     {
       "lv": 9,
       "ok": true,
-      "moves": 3,
+      "moves": 11,
       "screen": "won"
     },
     {
       "lv": 10,
       "ok": true,
-      "moves": 3,
+      "moves": 9,
       "screen": "won"
     },
     {
       "lv": 11,
       "ok": true,
-      "moves": 3,
-      "screen": "won"
-    },
-    {
-      "lv": 12,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 13,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 14,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 15,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 16,
-      "ok": true,
-      "moves": 3,
-      "screen": "won"
-    },
-    {
-      "lv": 17,
-      "ok": true,
-      "moves": 3,
-      "screen": "won"
-    },
-    {
-      "lv": 18,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 19,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 20,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 21,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 22,
-      "ok": true,
-      "moves": 5,
-      "screen": "won"
-    },
-    {
-      "lv": 23,
-      "ok": true,
-      "moves": 5,
-      "screen": "won"
-    },
-    {
-      "lv": 24,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 25,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 26,
-      "ok": true,
-      "moves": 4,
-      "screen": "won"
-    },
-    {
-      "lv": 27,
-      "ok": true,
-      "moves": 5,
-      "screen": "won"
-    },
-    {
-      "lv": 28,
-      "ok": true,
-      "moves": 5,
-      "screen": "won"
-    },
-    {
-      "lv": 29,
-      "ok": true,
-      "moves": 5,
-      "screen": "won"
-    },
-    {
-      "lv": 30,
-      "ok": true,
-      "moves": 5,
-      "screen": "won"
-    },
-    {
-      "lv": 31,
-      "ok": true,
-      "moves": 5,
-      "screen": "won"
-    },
-    {
-      "lv": 32,
-      "ok": true,
-      "moves": 5,
+      "moves": 11,
       "screen": "won"
     }
   ],
   "phone_initialState": {
-    "screen": "title",
-    "world": 0,
-    "level": 0,
-    "target": null,
-    "tiles": [],
-    "ops": [],
-    "moves": 0,
-    "made": false,
-    "stars": 0,
-    "selected": {
-      "a": null,
-      "op": null
-    }
+    "screen": "home",
+    "collection": "starter",
+    "done": []
   },
   "passed": true
 }

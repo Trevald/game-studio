@@ -3,624 +3,1838 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mathly Trails</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<!--
-  Mathly Trails — make the target number by merging number tiles with + − × ÷.
-  Use every tile for ★★★. Four worlds on a trail (8 levels each), a daily challenge and random boards.
-  Sections: constants · rng + generator · core (pure) · solver · storage · audio · UI · input · QA hook.
--->
+<title>Mathly</title>
+<meta name="color-scheme" content="dark">
 <style>
-  /* Layout: one centred column (max 440px): top bar, target card, tile grid, operator row, log. */
-  :root {
-    --bg: #eaf3ef; --panel: #ffffff; --ink: #14302a; --muted: #5d7770; --line: #c9ddd6;
-    --tile: #ffffff; --tile-ink: #14302a; --tile-edge: #9cc3b6; --op: #14302a; --op-ink: #ffffff;
-    --sel: #f2b70f; --sel-ink: #2b2100; --good: #1f9d63; --bad: #d64545; --trail: #9cc3b6;
-    --w0: #3fae6a; --w1: #e08a1e; --w2: #c2a14a; --w3: #6a6fd6;
-    --font: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --bg: #0e1c19; --panel: #152824; --ink: #e5f2ee; --muted: #93b0a8; --line: #24413a;
-      --tile: #1b332e; --tile-ink: #eaf6f2; --tile-edge: #2f5a50; --op: #d9efe7; --op-ink: #0e1c19; --sel: #f5c23a; --sel-ink: #241b00;
-      --good: #4cd08f; --bad: #ff7a7a; --trail: #2f5a50; color-scheme: dark; }
-  }
-  :root[data-theme="dark"] { --bg: #0e1c19; --panel: #152824; --ink: #e5f2ee; --muted: #93b0a8; --line: #24413a;
-      --tile: #1b332e; --tile-ink: #eaf6f2; --tile-edge: #2f5a50; --op: #d9efe7; --op-ink: #0e1c19; --sel: #f5c23a; --sel-ink: #241b00;
-      --good: #4cd08f; --bad: #ff7a7a; --trail: #2f5a50; color-scheme: dark; }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; margin: 0; }
-  body { background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); touch-action: manipulation; user-select: none; -webkit-user-select: none;
-    padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-  main { width: min(100%, 440px); margin: 0 auto; }
-  .screen { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  .screen[hidden] { display: none; }
-  button { font-family: var(--font); color: inherit; }
-  .btn { font: 800 18px var(--font); min-height: 52px; padding: 10px 22px; border-radius: 14px; border: 0; background: var(--sel); color: var(--sel-ink); cursor: pointer; width: 100%; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
-  .btn2 { font: 700 16px var(--font); min-height: 48px; padding: 10px 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; width: 100%; }
-  .icon { width: 44px; height: 44px; border-radius: 12px; border: 2px solid var(--line); background: var(--panel); color: var(--ink); font: 800 20px var(--font); cursor: pointer; display: grid; place-items: center; padding: 0; flex: none; }
-  .icon:disabled { opacity: .35; cursor: default; }
-  button:focus-visible { outline: 3px solid var(--sel); outline-offset: 2px; }
-
-  /* title */
-  #title { min-height: calc(100dvh - 20px); align-content: center; text-align: center; padding: 24px 0; }
-  .mark { font: 900 clamp(44px, 14vw, 64px)/0.95 var(--font); letter-spacing: -0.03em; margin: 0; }
-  .mark span { display: block; font-size: .42em; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
-  .eqart { font: 800 22px var(--font); color: var(--muted); font-variant-numeric: tabular-nums; margin: 6px 0 10px; }
-  .eqart b { color: var(--good); }
-  .stack { display: grid; gap: 10px; }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-  /* map */
-  .bar { display: flex; align-items: center; gap: 10px; }
-  .bar h2 { margin: 0; font-size: 20px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .card { background: var(--panel); border: 2px solid var(--line); border-radius: 18px; padding: 14px; }
-  .daily { display: flex; align-items: center; gap: 12px; }
-  .daily .txt { flex: 1; min-width: 0; }
-  .daily b { display: block; font-size: 17px; }
-  .daily small { color: var(--muted); }
-  .daily .btn { width: auto; min-height: 46px; font-size: 16px; }
-  .world { position: relative; }
-  .world h3 { margin: 0; font-size: 18px; display: flex; gap: 8px; align-items: baseline; }
-  .world h3 small { color: var(--muted); font-size: 13px; font-weight: 600; }
-  .world p { margin: 2px 0 10px; color: var(--muted); font-size: 13px; }
-  .trail { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 8px; padding: 4px 0; }
-  .trail svg.path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-  .node { position: relative; z-index: 1; justify-self: center; width: 58px; height: 58px; border-radius: 50%; border: 3px solid var(--wc, var(--good)); background: var(--panel);
-    font: 900 17px var(--font); cursor: pointer; display: grid; place-items: center; line-height: 1; padding: 0; color: var(--ink); }
-  .node small { display: block; font-size: 10px; letter-spacing: 1px; color: var(--sel); margin-top: 2px; }
-  .node.cur { background: var(--wc); color: #fff; }
-  .node:disabled { opacity: .4; cursor: default; border-style: dashed; }
-  .world.locked .trail { opacity: .45; }
-  .ops { font-variant-numeric: tabular-nums; }
-
-  /* play */
-  .target { text-align: center; padding: 14px 12px 12px; background: var(--panel); border: 2px solid var(--line); border-radius: 22px; position: relative; overflow: hidden; }
-  .target .lbl { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-  #tval { font: 900 clamp(52px, 17vw, 72px)/1 var(--font); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-  .target.made { border-color: var(--good); box-shadow: 0 0 0 4px color-mix(in srgb, var(--good) 25%, transparent); }
-  .target.made #tval { color: var(--good); }
-  #goalLine { font-size: 13px; color: var(--muted); font-weight: 600; }
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .tile { aspect-ratio: 1.25; border-radius: 18px; border: 3px solid var(--tile-edge); background: var(--tile); color: var(--tile-ink);
-    font: 900 clamp(28px, 9vw, 40px)/1 var(--font); font-variant-numeric: tabular-nums; cursor: pointer; box-shadow: 0 4px 0 var(--tile-edge); transition: transform .12s; padding: 0; }
-  .tile.sel { background: var(--sel); color: var(--sel-ink); border-color: var(--sel); box-shadow: 0 4px 0 color-mix(in srgb, var(--sel) 60%, #000); transform: translateY(-3px); }
-  .tile.hit { border-color: var(--good); box-shadow: 0 4px 0 var(--good); color: var(--good); }
-  .tile.sel.hit { color: var(--sel-ink); }
-  .tile.pop { animation: pop .28s ease-out; }
-  .tile.shake { animation: shake .3s; }
-  @keyframes pop { 0% { transform: scale(.6); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
-  @keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-  .opsrow { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; }
-  .op { min-height: 58px; border-radius: 16px; border: 0; background: var(--op); color: var(--op-ink); font: 900 30px var(--font); cursor: pointer; }
-  .op.sel { background: var(--sel); color: var(--sel-ink); }
-  #msg { min-height: 1.5em; text-align: center; font-weight: 700; color: var(--muted); margin: 0; }
-  #msg.bad { color: var(--bad); }
-  #msg.good { color: var(--good); }
-  .log { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 30px; }
-  .log span { font: 700 14px var(--font); font-variant-numeric: tabular-nums; padding: 4px 10px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); }
-  #finishBtn[hidden] { display: none; }
-  .tile .pos { position: absolute; top: 6px; left: 9px; font: 800 11px var(--font); color: var(--muted); opacity: .8; }
-  .tile { position: relative; }
-  .tile.hint { outline: 3px dashed var(--good); outline-offset: 3px; }
-  .op.hint { outline: 3px dashed var(--good); outline-offset: 3px; }
-  .bar h2 small { font-size: 13px; color: var(--muted); font-weight: 700; }
-  .overlay { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; background: rgba(8,20,17,.55); padding: 16px; }
-  .overlay[hidden] { display: none; }
-  .panel { width: min(100%, 360px); background: var(--panel); border-radius: 22px; padding: 20px 18px 18px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,.3); display: grid; gap: 12px; }
-  .panel h2 { margin: 0; font-size: 26px; }
-  .stars { font-size: 40px; letter-spacing: 6px; color: var(--sel); line-height: 1; }
-  .stars .off { color: var(--line); }
-  .route { font: 700 15px var(--font); color: var(--muted); font-variant-numeric: tabular-nums; display: grid; gap: 2px; }
-  .panel p { margin: 0; color: var(--muted); }
-  .help { text-align: center; color: var(--muted); font-size: 12px; margin: 0; }
-  @media (prefers-reduced-motion: reduce) { .tile.pop, .tile.shake { animation: none; } .tile { transition: none; } }
+/* Mathly · Card Table look (designer hand-over v1.1). One committed look: every colour is set explicitly. */
+:root{
+  --felt:#12513D;--felt-deep:#09382B;--panel:#0C3C2E;--cream:#FFF4DB;--ink:#163A2D;--muted:#C5DDCC;--gold:#F1CC76;
+  --error:#FFD2C5;--brass-l:#F7DC99;--brass:#E7BC65;--brass-edge:#AD8139;--op-l:#E7DCC3;--op-d:#CABC9C;
+  --ui:system-ui,-apple-system,"Segoe UI",sans-serif;--num:Georgia,"Times New Roman",serif;
+  --cell:44px;--gap:4px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:#12513D;color:var(--cream);font:16px/1.375 var(--ui);overflow:hidden;
+  -webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.table{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 22%,#326b4933,transparent 68%),linear-gradient(#12513daa,#062c25d9),url('assets/felt.webp') center/cover,#12513D;pointer-events:none}
+.hc .table{background:#09382B}
+h1,h2,p{margin:0}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0;touch-action:manipulation}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--cream);outline-offset:2px;box-shadow:0 0 0 5px #0b2a22}
+button:disabled{opacity:.45;cursor:default}
+.app{position:relative;margin:0 auto;width:min(100%,440px);height:100%;display:flex;flex-direction:column;
+  padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.app:before{content:"";position:absolute;inset:6px;border:1px solid #dfc38828;border-radius:20px;pointer-events:none;box-shadow:inset 0 0 0 3px #082f2522}
+.hc .app:before{display:none}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column}
+.screen[hidden]{display:none}
+/* nav */
+.nav{height:44px;display:flex;align-items:center;justify-content:space-between;flex:none;font-size:15px;font-weight:650}
+.nav .title{flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;flex:none}
+.iconbtn img,.action img{width:22px;height:22px;filter:brightness(0) saturate(100%) invert(95%) sepia(18%) saturate(473%);pointer-events:none}
+.iconbtn.spacer{visibility:hidden}
+/* common type */
+.eyebrow{font-size:11px;letter-spacing:1.7px;text-transform:uppercase;color:#dccb9f;font-weight:650}
+.hero{font:400 38px/1.12 var(--num);letter-spacing:-1.2px;margin:8px 0 10px}
+.hero em{color:var(--gold)}
+.copy{font-size:15px;line-height:1.5;color:var(--muted)}
+.small{font-size:13px;line-height:1.4;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px 0 8px;overflow-y:auto}
+.space{flex:1}
+.center{text-align:center}
+.btn{min-height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:650;padding:10px 16px;width:100%;flex:none;
+  background:linear-gradient(160deg,var(--brass-l),var(--brass));border:1px solid #ffe8b1;box-shadow:0 3px 0 var(--brass-edge),0 6px 12px #001c2440;color:#263b2c}
+.btn.secondary{background:linear-gradient(140deg,#174b3d,#0b392f);border-color:#c8b88780;box-shadow:none;color:var(--cream)}
+.btn.quiet{background:transparent;border-color:transparent;box-shadow:none;color:var(--cream)}
+.btn:active{transform:translateY(1px)}
+.panel{background:linear-gradient(135deg,#174a3ced,#0a352de8);border:1px solid #c8b88775;border-radius:16px;padding:16px;box-shadow:0 6px 14px #001b1a22}
+.hc .panel{background:#09382B;border:2px solid var(--cream)}
+/* cards */
+.card{position:relative;display:grid;place-items:center;border-radius:8px;color:var(--ink);font:600 28px/1 var(--num);font-variant-numeric:tabular-nums;
+  background:linear-gradient(140deg,#fff9e9,#f4e6c6);border:1px solid #e9dab7;box-shadow:inset 0 0 0 3px #fffdf04d,0 3px 0 #ba9f6f,0 5px 9px #00181155}
+.card.num:after{content:"◆";position:absolute;right:4px;bottom:3px;font:6px/1 var(--ui);color:#a2834e}
+.card.op{background:linear-gradient(140deg,var(--op-l),var(--op-d));color:#214c3d;border-color:#eaddbd;box-shadow:0 2px 0 #988464,0 4px 6px #001c2433}
+.hc .card{background:var(--cream);border:2px solid var(--ink)}
+.hc .card.op{background:#e9dfc8}
+/* home */
+.logo{width:220px;height:60px;margin:14px auto 0;display:block}
+.hand{position:relative;display:flex;gap:10px;justify-content:center;align-items:center;height:96px;flex:none}
+.hand:before{content:"";position:absolute;width:51px;height:68px;border-radius:8px;left:50%;margin-left:-26px;background:repeating-linear-gradient(45deg,#dfc38822 0 1px,transparent 1px 6px),#0b463a;border:3px double #bdac76;transform:translate(-80px,8px) rotate(-17deg);box-shadow:0 5px 8px #001c2444}
+.hand .card{width:52px;height:68px;z-index:1}
+.hand .card:nth-child(1){transform:rotate(-8deg)}.hand .card:nth-child(2){transform:rotate(-3deg) translateY(-8px)}
+.hand .card:nth-child(3){transform:rotate(5deg) translateY(-10px)}.hand .card:nth-child(4){transform:rotate(10deg)}
+/* collections */
+.collection{display:flex;align-items:center;gap:14px;min-height:76px;text-align:left;width:100%}
+.mark{width:42px;height:42px;display:grid;place-items:center;font:26px var(--num);border-radius:10px;flex:none;
+  background:linear-gradient(140deg,#ead092,#cfb170);color:#234838;border:1px solid #eadab7;box-shadow:0 2px 0 #8c7749;transform:rotate(-4deg)}
+.collection:nth-child(odd) .mark{transform:rotate(3deg)}
+.collection .meta{flex:1}.collection strong{font-size:18px}.collection small{display:block;margin-top:2px;color:var(--muted);font-size:12px}
+.gridlevels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.level{height:64px;border-radius:10px;font:22px var(--num);color:var(--ink);position:relative;background:linear-gradient(135deg,#fff7e1,#eddfbf);box-shadow:0 3px 0 #b59b6c}
+.level.done{background:#bed1bd;box-shadow:0 3px 0 #7c9a80}
+.level.done:after{content:"✓";position:absolute;right:6px;bottom:4px;font:13px var(--ui)}
+.level.current{outline:3px solid var(--gold);outline-offset:3px}
+/* play */
+.resultbar{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:6px 0;flex:none}
+.plaque{min-height:72px;padding:8px 12px;border-radius:12px;min-width:0}
+.plaque.target{background:linear-gradient(135deg,#f3d488,#d8b76e);border:1px solid #ffe7ad;color:var(--ink);box-shadow:0 3px 0 #9a7a42,0 4px 8px #001c2433}
+.plaque.target .eyebrow{color:#34503b}
+.plaque.result{background:#092f2be0;border:1px solid #e7cc8e}
+.plaque.result.ok{border:2px solid var(--gold);box-shadow:0 0 0 3px #f1cc7633}
+.hc .plaque.result,.hc .plaque.target{background:#09382B;color:var(--cream);border:2px solid var(--cream)}.hc .plaque.target .eyebrow{color:var(--cream)}
+.value{font:500 32px/38px var(--num);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.value.word{font:600 18px/38px var(--ui)}
+.work{flex:1;min-height:0;display:flex;flex-direction:column;padding:4px 0}
+.worktop{height:24px;display:flex;align-items:center;justify-content:space-between;flex:none}
+.well{position:relative;flex:1;min-height:150px;border:1px dashed #d6c28b91;border-radius:12px;padding:6px;display:flex;flex-direction:column;
+  background:radial-gradient(ellipse at 50% 40%,#c7d3a708,transparent 75%),#072d2630;box-shadow:inset 0 0 0 4px #001a1a12;outline:none}
+.well:focus-visible{outline:3px solid var(--cream);outline-offset:2px}
+.well.drop{border-color:var(--gold);background:#0a3a3060}
+.well:before{content:"";width:110px;height:110px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:url('assets/table-mark.svg') center/contain no-repeat;opacity:.075;pointer-events:none}
+.hc .well{border:2px solid var(--cream);background:#09382B}.hc .well:before{display:none}
+.cells{position:relative;display:flex;flex-wrap:wrap;align-content:flex-start;gap:var(--gap);min-height:var(--cell);z-index:1}
+.cells .card{width:var(--cell);height:var(--cell);font-size:22px;touch-action:none}
+.cells .card.sel{outline:3px solid var(--gold);outline-offset:-2px;transform:translateY(-4px)}
+.cells .card.ok{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 3px 0 #ba9f6f}
+.cells .card.snap{animation:snap .14s ease-out}
+@keyframes snap{from{transform:scale(1.12)}to{transform:none}}
+.caret{position:absolute;width:3px;height:var(--cell);border-radius:2px;background:var(--gold);z-index:2;pointer-events:none;transition:left .08s,top .08s}
+.caret.blink{animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:.25}}
+.emptyhint{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:15px;pointer-events:none;padding:0 20px}
+.notice{position:relative;z-index:1;margin-top:8px;padding:8px 10px;border-radius:8px;background:#09382B;font-size:13px;line-height:1.35;color:var(--error)}
+.notice.good{color:var(--gold)}.notice.info{color:var(--muted)}
+.notice[hidden]{display:none}
+.wellfoot{position:relative;z-index:1;margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:4px;min-height:44px;font-size:12px;color:var(--muted);flex:none}
+.wellfoot .pager{display:flex;align-items:center;gap:2px}
+.wellfoot .pager button{width:44px;height:44px;font-size:20px;color:var(--cream)}
+.editactions{display:flex;gap:4px;width:100%}
+.editactions button{flex:1;height:44px;font-size:13px;border:1px solid #c8b88780;border-radius:8px;background:#0b392fb3}
+.hintpanel{position:relative;z-index:1;margin-top:8px;padding:10px 12px;border-radius:10px;background:#0b3a30f2;border:1px solid #e7cc8e99;font-size:14px;line-height:1.4}
+.hintpanel .row{display:flex;gap:6px;margin-top:8px}
+.hintpanel .row button{flex:1;min-height:44px;border:1px solid #c8b88780;border-radius:8px;font-size:13px}
+.hintpanel b{color:var(--gold);font-weight:600}
+.tray{flex:none;padding-top:6px}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:2px 0 4px}
+.slots .card{height:64px;width:100%;max-width:58px;justify-self:center;touch-action:none}
+.slots .ghost{background:#092f272e;border:1px dashed #d5c09555;box-shadow:inset 0 2px 6px #00191122;color:var(--muted);font:400 11px var(--ui)}
+.slots .ghost:after{display:none}
+.hc .slots .ghost{background:transparent;color:var(--cream);border:1px dashed var(--cream)}
+.tray.drop .slots{outline:2px dashed var(--gold);outline-offset:2px;border-radius:10px}
+.palette{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:8px 0 6px;flex:none}
+.palette .card{height:44px;font-size:24px;touch-action:none}
+.palette .card.armed{outline:3px solid var(--gold);outline-offset:1px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:none}
+.action{min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;border-top:1px solid #c6ad6e66}
+.float{position:fixed;z-index:50;pointer-events:none;width:var(--cell);height:var(--cell);font-size:22px;transform:scale(1.04);box-shadow:0 6px 12px #0004!important}
+/* completion */
+.seal{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font:36px var(--num);margin:8px auto;flex:none;
+  background:radial-gradient(circle,#f6dc96,#cfaa58);color:#264734;border:3px double #ffe7ad;box-shadow:0 3px 0 #967239,0 5px 12px #001c2440;outline:1px solid #ddc28b66;outline-offset:5px}
+.seal.pop{animation:pop .24s ease-out}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.expr{font:24px/1.6 var(--num);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.success{color:var(--gold)}
+/* overlay sheets */
+.sheet{position:fixed;inset:0;z-index:40;background:#021a14b0;display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.sheet[hidden]{display:none}
+.sheet .panel{width:min(100%,408px);max-height:90%;overflow:auto}
+.sheet h2{font:400 26px/1.2 var(--num);margin:4px 0 10px}
+.toggle{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;gap:12px;text-align:left}
+.switch{width:44px;height:26px;border-radius:20px;background:#88ab97;position:relative;flex:none}
+.switch:after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--ink);transition:left .12s}
+[aria-checked="true"] .switch{background:var(--gold)}[aria-checked="true"] .switch:after{left:21px}
+.howto p{margin:0 0 10px;font-size:15px;line-height:1.5}
+.howto kbd{font:12px var(--ui);padding:1px 5px;border:1px solid #c8b88799;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:359px){.app{padding-left:12px;padding-right:12px}.slots{gap:6px}.palette{gap:4px}.hero{font-size:32px}}
+@media (max-height:700px){.hand{height:84px}.hero{font-size:32px}.plaque{min-height:64px;padding:4px 10px}.value{font-size:28px;line-height:32px}.slots .card{height:58px}.body{padding-top:10px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<main>
-  <!-- title -->
-  <section class="screen" id="title">
-    <h1 class="mark">Mathly<span>Trails</span></h1>
-    <div class="eqart">7 × 6 − 2 = <b>40</b></div>
-    <div class="stack">
-      <button class="btn" id="contBtn">Play</button>
-      <button class="btn2" id="dailyBtn">Daily challenge</button>
-      <div class="row2"><button class="btn2" id="mapBtn">Trail map</button><button class="btn2" id="muteBtn" aria-label="Mute sound">Sound: on</button></div>
-    </div>
-    <p class="help">Merge numbers with + − × ÷ to make the target. Use every number for ★★★.</p>
+<div class="table" aria-hidden="true"></div>
+<div class="app" id="app">
+
+  <!-- 01 Home -->
+  <section class="screen home" id="sHome" aria-labelledby="homeH">
+    <img class="logo" src="assets/logo.svg" alt="" aria-hidden="true">
+    <main class="body center">
+      <div><div class="eyebrow">A little time at the table</div><h1 class="hero" id="homeH"><span class="sr">Mathly. </span>Make numbers<br><em>come together.</em></h1></div>
+      <div class="hand" aria-hidden="true"><div class="card num">5</div><div class="card op">+</div><div class="card num">4</div><div class="card op">×</div></div>
+      <button class="btn" id="bContinue">Continue playing</button>
+      <button class="btn secondary" id="bCollections">Collections</button>
+      <div class="space"></div>
+      <button class="btn quiet" id="bHowto">How to play</button>
+    </main>
   </section>
 
-  <!-- map -->
-  <section class="screen" id="map" hidden>
-    <div class="bar"><button class="icon" id="mapBack" aria-label="Back">‹</button><h2>Trail map</h2><span id="starTotal" class="ops"></span></div>
-    <div class="card daily"><div class="txt"><b>Daily challenge</b><small id="dailyInfo">Same puzzle for everyone today</small></div><button class="btn" id="dailyBtn2">Play</button></div>
-    <div id="worlds" class="stack"></div>
+  <!-- 02 Collections -->
+  <section class="screen" id="sCollections" hidden>
+    <nav class="nav"><button class="iconbtn" data-back aria-label="Back"><img alt="" src="assets/icons/back.svg"></button><span class="title">Collections</span><button class="iconbtn" data-settings aria-label="Settings"><img alt="" src="assets/icons/settings.svg"></button></nav>
+    <main class="body">
+      <div><div class="eyebrow">Your table</div><h1 class="hero">Play at your pace</h1><p class="copy">Return to an easier collection anytime.</p></div>
+      <div id="collList" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div class="space"></div>
+    </main>
   </section>
 
-  <!-- play -->
-  <section class="screen" id="play" hidden>
-    <div class="bar">
-      <button class="icon" id="playBack" aria-label="Back to the map">‹</button>
-      <h2 id="lvlName">1-1</h2>
-      <button class="icon" id="undoBtn" aria-label="Undo (U)" title="Undo (U)">↶</button>
-      <button class="icon" id="restartBtn" aria-label="Restart (R)" title="Restart (R)">↻</button>
-    </div>
-    <div class="target" id="targetCard"><div class="lbl">Target</div><div id="tval">0</div><div id="goalLine">Use every number for ★★★</div></div>
-    <div class="tiles" id="tiles"></div>
-    <div class="opsrow" id="opsrow"></div>
-    <p id="msg" aria-live="polite"></p>
-    <div class="row2"><button class="btn2" id="hintBtn">Hint (max ★★)</button><button class="btn2" id="finishBtn" hidden>Finish ★</button></div>
-    <div class="log" id="log"></div>
-    <p class="help" id="keysHelp">Tap a number, an operator, then another number. Keys: 1–6 pick by the small number in each tile, + − * /, U undo, H hint, R restart.</p>
+  <!-- 03 Collection detail -->
+  <section class="screen" id="sCollection" hidden>
+    <nav class="nav"><button class="iconbtn" data-back aria-label="Back"><img alt="" src="assets/icons/back.svg"></button><span class="title" id="cTitle">Starter</span><button class="iconbtn" data-settings aria-label="Settings"><img alt="" src="assets/icons/settings.svg"></button></nav>
+    <main class="body">
+      <div><div class="eyebrow" id="cEyebrow">Collection 01</div><h1 class="hero" id="cHero">A good place to start</h1><p class="copy" id="cCopy"></p></div>
+      <div class="gridlevels" id="cGrid"></div>
+      <div class="panel"><strong id="cCount"></strong><p class="small" style="margin-top:6px">Pick any puzzle. Finished ones stay open.</p></div>
+      <div class="space"></div>
+      <button class="btn" id="cGo">Continue</button>
+    </main>
   </section>
 
-  <div class="overlay" id="ov" hidden>
-    <div class="panel">
-      <h2 id="wonTitle">Target made!</h2>
-      <div class="stars" id="wonStars"></div>
-      <p id="wonText"></p>
-      <div class="route" id="wonRoute"></div>
-      <button class="btn" id="nextBtn">Next level</button>
-      <div class="row2"><button class="btn2" id="replayBtn">Replay</button><button class="btn2" id="toMapBtn">Map</button></div>
-    </div>
+  <!-- 05–12 Play -->
+  <section class="screen" id="sPlay" hidden>
+    <nav class="nav"><button class="iconbtn" data-back aria-label="Back"><img alt="" src="assets/icons/back.svg"></button><span class="title" id="pTitle"></span><button class="iconbtn" data-settings aria-label="Settings"><img alt="" src="assets/icons/settings.svg"></button></nav>
+    <section class="resultbar">
+      <div class="plaque target"><div class="eyebrow">Target</div><div class="value" id="pTarget"></div></div>
+      <div class="plaque result" id="pResultBox"><div class="eyebrow">Your result</div><div class="value" id="pResult" aria-live="polite"></div></div>
+    </section>
+    <section class="work">
+      <div class="worktop"><span class="eyebrow">Your expression</span><span class="small" id="pUsed"></span></div>
+      <div class="well" id="well" tabindex="0" role="group" aria-label="Expression workspace. Arrow keys move the caret, + − * / ( ) insert, Backspace removes.">
+        <div class="cells" id="cells"></div>
+        <div class="caret blink" id="caret" hidden></div>
+        <div class="emptyhint" id="emptyHint">Tap a card to place it</div>
+        <div class="notice" id="notice" hidden></div>
+        <div class="hintpanel" id="hintPanel" hidden></div>
+        <div class="wellfoot" id="wellFoot"></div>
+      </div>
+    </section>
+    <section class="tray" id="tray" aria-label="Number cards"><div class="slots" id="slots"></div></section>
+    <section class="palette" id="palette" aria-label="Operators"></section>
+    <section class="actions">
+      <button class="action" id="bUndo"><img alt="" src="assets/icons/undo.svg">Undo</button>
+      <button class="action" id="bHint"><img alt="" src="assets/icons/hint.svg">Hint</button>
+      <button class="action" id="bRestart"><img alt="" src="assets/icons/restart.svg">Restart</button>
+    </section>
+  </section>
+
+  <!-- 13 Complete -->
+  <section class="screen celebrate" id="sDone" hidden>
+    <nav class="nav"><button class="iconbtn" data-back aria-label="Back"><img alt="" src="assets/icons/back.svg"></button><span class="title">Puzzle complete</span><button class="iconbtn" data-settings aria-label="Settings"><img alt="" src="assets/icons/settings.svg"></button></nav>
+    <main class="body">
+      <div class="seal" id="dSeal" aria-hidden="true">✓</div>
+      <div><div class="eyebrow" id="dEyebrow"></div><h1 class="hero" id="dHero" tabindex="-1">Nicely worked.</h1><p class="copy" id="dCopy"></p></div>
+      <div class="panel"><div class="eyebrow">Your expression</div><div class="expr" id="dExpr"></div></div>
+      <div class="space"></div>
+      <button class="btn" id="dNext">Next puzzle</button>
+      <button class="btn secondary" id="dColl">Back to collection</button>
+      <button class="btn quiet" id="dReview">Review expression</button>
+    </main>
+  </section>
+</div>
+
+<!-- settings / how to play sheets -->
+<div class="sheet" id="shSettings" hidden role="dialog" aria-modal="true" aria-labelledby="setH">
+  <div class="panel">
+    <h2 id="setH" tabindex="-1">Settings</h2>
+    <button class="toggle" role="switch" id="tSound" aria-checked="false"><span>Sound</span><span class="switch"></span></button>
+    <button class="toggle" role="switch" id="tContrast" aria-checked="false"><span>High contrast</span><span class="switch"></span></button>
+    <p class="small" style="margin:8px 0 12px">Motion follows your system's reduced-motion setting.</p>
+    <button class="btn secondary" data-close>Done</button>
   </div>
-</main>
+</div>
+<div class="sheet" id="shHowto" hidden role="dialog" aria-modal="true" aria-labelledby="howH">
+  <div class="panel howto">
+    <h2 id="howH" tabindex="-1">How to play</h2>
+    <p>Make the <b>target</b> with an expression that uses <b>all five cards</b> once each. + − × ÷ and parentheses are free to use as often as you like.</p>
+    <p>Tap a card or operator to place it at the gold caret, or drag it into a gap. Drag a placed card to move it, or back to the tray to take it out. Tap a placed card for Before, After and Remove.</p>
+    <p>Your result updates as you go. The puzzle finishes by itself when all five cards make the target.</p>
+    <p class="small">Keyboard: <kbd>←</kbd><kbd>→</kbd> caret · <kbd>+</kbd><kbd>-</kbd><kbd>*</kbd><kbd>/</kbd><kbd>(</kbd><kbd>)</kbd> insert · number keys place a card · <kbd>Backspace</kbd> remove · <kbd>Enter</kbd> select · <kbd>Ctrl</kbd>+<kbd>Z</kbd> or <kbd>U</kbd> undo · <kbd>R</kbd> restart · <kbd>H</kbd> hint · <kbd>Esc</kbd> back</p>
+    <button class="btn secondary" data-close>Got it</button>
+  </div>
+</div>
+<div class="sr" id="live" aria-live="polite"></div>
+
+<script type="application/json" id="levelData">{
+  "schemaVersion": 1,
+  "status": "Proposed rules; verified arithmetic",
+  "levels": [
+    {
+      "id": "1-1",
+      "name": "First hand",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 1
+        },
+        {
+          "id": "n2",
+          "value": 2
+        },
+        {
+          "id": "n3",
+          "value": 3
+        },
+        {
+          "id": "n4",
+          "value": 4
+        },
+        {
+          "id": "n5",
+          "value": 5
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "15",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "1+2+3+4+5",
+        "tokens": [
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n5"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-2",
+      "name": "A little less",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 5
+        },
+        {
+          "id": "n5",
+          "value": 6
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "16",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "6+5+4+3-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-3",
+      "name": "Balance",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 1
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 6
+        },
+        {
+          "id": "n5",
+          "value": 8
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "8",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "8+6+1-4-3",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-4",
+      "name": "Back and forth",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 2
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 5
+        },
+        {
+          "id": "n5",
+          "value": 7
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "8",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "7+5-4+2-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-5",
+      "name": "Ten on the table",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 1
+        },
+        {
+          "id": "n2",
+          "value": 2
+        },
+        {
+          "id": "n3",
+          "value": 5
+        },
+        {
+          "id": "n4",
+          "value": 7
+        },
+        {
+          "id": "n5",
+          "value": 9
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "10",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "9+7+1-5-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-6",
+      "name": "Small change",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 3
+        },
+        {
+          "id": "n2",
+          "value": 4
+        },
+        {
+          "id": "n3",
+          "value": 5
+        },
+        {
+          "id": "n4",
+          "value": 6
+        },
+        {
+          "id": "n5",
+          "value": 8
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "8",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "8+6+3-5-4",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-7",
+      "name": "Close company",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 4
+        },
+        {
+          "id": "n3",
+          "value": 6
+        },
+        {
+          "id": "n4",
+          "value": 8
+        },
+        {
+          "id": "n5",
+          "value": 9
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "9",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "9+8+2-6-4",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-8",
+      "name": "A full hand",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 3
+        },
+        {
+          "id": "n2",
+          "value": 5
+        },
+        {
+          "id": "n3",
+          "value": 7
+        },
+        {
+          "id": "n4",
+          "value": 8
+        },
+        {
+          "id": "n5",
+          "value": 9
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "16",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "9+8+7-5-3",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "2-1",
+      "name": "Three of a kind",
+      "collection": "multiply",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 3
+        },
+        {
+          "id": "n4",
+          "value": 3
+        },
+        {
+          "id": "n5",
+          "value": 4
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "26",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "(4+3)*3+3+2",
+        "tokens": [
+          {
+            "operator": "("
+          },
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": ")"
+          },
+          {
+            "operator": "*"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "3-1",
+      "name": "Half measures",
+      "collection": "divide",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 5
+        },
+        {
+          "id": "n2",
+          "value": 4
+        },
+        {
+          "id": "n3",
+          "value": 3
+        },
+        {
+          "id": "n4",
+          "value": 3
+        },
+        {
+          "id": "n5",
+          "value": 2
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "15.5",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "5+(4*3)-3/2",
+        "tokens": [
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "operator": "("
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "*"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": ")"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "/"
+          },
+          {
+            "numberId": "n5"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "3-2",
+      "name": "Sharing equally",
+      "collection": "divide",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 6
+        },
+        {
+          "id": "n5",
+          "value": 8
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "9",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "8/4+6+3-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "/"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "4-1",
+      "name": "A longer thought",
+      "collection": "master",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 4
+        },
+        {
+          "id": "n2",
+          "value": 5
+        },
+        {
+          "id": "n3",
+          "value": 6
+        },
+        {
+          "id": "n4",
+          "value": 8
+        },
+        {
+          "id": "n5",
+          "value": 12
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "33",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "(12-8)*6+5+4",
+        "tokens": [
+          {
+            "operator": "("
+          },
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": ")"
+          },
+          {
+            "operator": "*"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    }
+  ]
+}</script>
 <script>
-// ======================= constants =======================
-const OPS = { "+": (a, b) => a + b, "-": (a, b) => a - b, "×": (a, b) => a * b, "÷": (a, b) => (b !== 0 && a % b === 0 ? a / b : NaN) };
-const OP_LABEL = { "+": "+", "-": "−", "×": "×", "÷": "÷" };
-const MAXV = 99999;
-const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
-const WORLDS = [
-  { name: "Addition Meadow", blurb: "Plus and minus. Small numbers.", color: "var(--w0)",
-    ops: [["+"], ["+"], ["+", "-"], ["+", "-"], ["+", "-"], ["+", "-"], ["+", "-"], ["+", "-"]], n: [3, 3, 3, 4, 4, 4, 5, 5],
-    pool: range(1, 9), t: [10, 40], must: [null, null, "-", "-", "-", "-", "-", "-"] },
-  { name: "Times Hills", blurb: "Multiplication joins in.", color: "var(--w1)",
-    ops: Array(8).fill(["+", "-", "×"]), n: [4, 4, 4, 4, 5, 5, 5, 5], pool: range(1, 12), t: [20, 150], must: Array(8).fill("×") },
-  { name: "Divide Dunes", blurb: "Division, and a few big numbers.", color: "var(--w2)",
-    ops: Array(8).fill(["+", "-", "×", "÷"]), n: [4, 4, 5, 5, 5, 5, 6, 6], pool: [...range(1, 10), 25, 50], t: [30, 300], must: Array(8).fill("÷") },
-  { name: "The Summit", blurb: "Six numbers, three-digit targets.", color: "var(--w3)",
-    ops: Array(8).fill(["+", "-", "×", "÷"]), n: [5, 5, 5, 6, 6, 6, 6, 6], pool: [...range(1, 10), 25, 50, 75, 100], t: [100, 999], must: Array(8).fill("×") },
+"use strict";
+// ======================================================================
+// 1. CONSTANTS
+// ======================================================================
+const DATA = JSON.parse(document.getElementById("levelData").textContent);
+const LEVELS = DATA.levels;
+const COLLECTIONS = [
+  { key: "starter",  name: "Starter",        mark: "+",   blurb: "Eight hands to get comfortable", hero: "A good place to start", copy: "Eight puzzles with small cards. + and − are enough." },
+  { key: "multiply", name: "Multiplication", mark: "×",   blurb: "Find a different way to multiply", hero: "Bigger steps", copy: "One sample board from the designer. More arrive with practice boards." },
+  { key: "divide",   name: "Division",       mark: "÷",   blurb: "A little division. More possibilities.", hero: "Clean cuts", copy: "Two sample boards, one with a half in the target." },
+  { key: "master",   name: "Mastery",        mark: "( )", blurb: "Bring it all together", hero: "Bring it all together", copy: "One sample board with nested grouping." },
 ];
-const PER_WORLD = 8, TRAIL = WORLDS.length * PER_WORLD;
+const OPS = ["+", "-", "*", "/", "(", ")"];
+const SHOW = { "+": "+", "-": "−", "*": "×", "/": "÷", "(": "(", ")": ")" };
+const SPEAK = { "+": "plus", "-": "minus", "*": "times", "/": "divided by", "(": "open parenthesis", ")": "close parenthesis" };
+const REQUIRE_ALL = true; // proposed O1: requireAllNumbers
 
-// ======================= rng + generator =======================
-function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-const pick = (r, arr) => arr[Math.floor(r() * arr.length)];
-// build a hand of numbers and a target that has a route using every number
-function generate(spec, seed) {
-  const r = rng(seed);
-  for (let attempt = 0; attempt < 6000; attempt++) {
-    const cap = spec.cap ? spec.cap * (attempt < 2000 ? 1 : attempt < 4000 ? 3 : 1e9) : 0;
-    const nums = [];
-    for (let i = 0; i < spec.n; i++) {
-      let v = pick(r, spec.pool);
-      if ((v >= 25 || v === 1) && nums.includes(v)) v = pick(r, range(2, 9));
-      if (nums.filter((q) => q === v).length >= 2) v = pick(r, range(2, 9));
-      nums.push(v);
-    }
-    let list = nums.slice(), route = [], used = new Set(), ok = true;
-    while (list.length > 1 && ok) {
-      let done = false;
-      for (let k = 0; k < 30 && !done; k++) {
-        const i = Math.floor(r() * list.length); let j = Math.floor(r() * (list.length - 1)); if (j >= i) j++;
-        let op = spec.must && !used.has(spec.must) && r() < 0.5 ? spec.must : pick(r, spec.ops);
-        let x = list[i], y = list[j];
-        if (op === "-" || op === "÷") { if (x < y) [x, y] = [y, x]; }
-        if (op === "×" && (x === 1 || y === 1)) continue;
-        if (op === "÷" && y === 1) continue;
-        if (op === "-" && x === y) continue;
-        const v = OPS[op](x, y);
-        if (!Number.isInteger(v) || v <= 0 || v > MAXV) continue;
-        route.push(`${x} ${OP_LABEL[op]} ${y} = ${v}`); used.add(op);
-        list = list.filter((_, q) => q !== i && q !== j); list.push(v); done = true;
+// ======================================================================
+// 2. EXACT RATIONALS (BigInt, always reduced, denominator > 0)
+// ======================================================================
+const gcd = (a, b) => { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) [a, b] = [b, a % b]; return a; };
+function R(n, d = 1n) { n = BigInt(n); d = BigInt(d); if (d < 0n) { n = -n; d = -d; } const g = gcd(n, d) || 1n; return { n: n / g, d: d / g }; }
+const rAdd = (a, b) => R(a.n * b.d + b.n * a.d, a.d * b.d);
+const rSub = (a, b) => R(a.n * b.d - b.n * a.d, a.d * b.d);
+const rMul = (a, b) => { const g1 = gcd(a.n, b.d) || 1n, g2 = gcd(b.n, a.d) || 1n; return R((a.n / g1) * (b.n / g2), (a.d / g2) * (b.d / g1)); };
+const rDiv = (a, b) => b.n === 0n ? null : rMul(a, { n: b.d, d: b.n });
+const rEq = (a, b) => !!a && !!b && a.n === b.n && a.d === b.d;
+function rParse(s) { // "15", "15.5", "31/2"
+  s = String(s).trim();
+  if (s.includes("/")) { const [a, b] = s.split("/"); return R(a, b); }
+  const neg = s.startsWith("-"); if (neg) s = s.slice(1);
+  const [i, f = ""] = s.split(".");
+  const r = R(BigInt(i + f || "0"), 10n ** BigInt(f.length));
+  return neg ? R(-r.n, r.d) : r;
+}
+function rFmt(r, plain) { // exact finite decimal up to 6 places, else reduced fraction
+  if (!r) return "";
+  const minus = plain ? "-" : "−";
+  const neg = r.n < 0n, n = neg ? -r.n : r.n;
+  let d = r.d, k2 = 0, k5 = 0;
+  while (d % 2n === 0n) { d /= 2n; k2++; } while (d % 5n === 0n) { d /= 5n; k5++; }
+  let s;
+  if (r.d === 1n) s = String(n);
+  else if (d === 1n && Math.max(k2, k5) <= 6) {
+    const k = Math.max(k2, k5), scaled = n * 10n ** BigInt(k) / r.d, str = String(scaled).padStart(k + 1, "0");
+    s = str.slice(0, -k) + "." + str.slice(-k);
+  } else s = n + "/" + r.d;
+  return (neg ? minus : "") + s;
+}
+
+// ======================================================================
+// 3. PARSER — tokens → state (no eval). Grammar from DESIGN.md §2.
+//    token: {k:"n", id} | {k:"o", v:"+"|"-"|"*"|"/"|"("|")"}
+// ======================================================================
+function analyse(tokens, valueOf) {
+  if (!tokens.length) return { state: "empty" };
+  // syntax scan: find the first repair point
+  let prev = "start", depth = 0;
+  const fail = (state, reason, at) => ({ state, reason, at });
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    if (t.k === "n") {
+      if (prev === "num" || prev === ")") return fail("incomplete", "Missing operator", i);
+      prev = "num";
+    } else if (t.v === "(") {
+      if (prev === "num" || prev === ")") return fail("incomplete", "Missing operator", i);
+      depth++; prev = "(";
+    } else if (t.v === ")") {
+      if (prev === "start" || prev === "(") return fail("incomplete", "Empty parentheses", i);
+      if (prev === "op") return fail("incomplete", "Missing number", i);
+      if (depth === 0) return fail("incomplete", "Missing open parenthesis", i);
+      depth--; prev = ")";
+    } else {
+      if (prev === "start" || prev === "(") {
+        if (t.v === "-") return fail("invalid", "No minus signs on their own", i);
+        return fail("incomplete", "Needs a number first", i);
       }
-      if (!done) ok = false;
+      if (prev === "op") return fail("incomplete", "Missing number", i);
+      prev = "op";
     }
-    if (!ok) continue;
-    const target = list[0];
-    if (target < spec.t[0] || target > spec.t[1]) continue;
-    if (spec.must && !used.has(spec.must)) continue;
-    if (nums.includes(target)) continue;
-    const sum = nums.reduce((a, b) => a + b, 0);
-    if (spec.ops.length > 1 && target === sum) continue;
-    if (spec.avoid && spec.avoid.has(target)) continue;
-    if (nums.length > 3 && oneMerge(nums, target, spec.ops)) continue;   // no single-merge shortcuts
-    const routes = cap ? countRoutes(nums, target, spec.ops, cap) : 0;
-    if (cap && routes > cap) continue;
-    return { tiles: nums, target, ops: spec.ops, route, routes };
   }
-  throw new Error("generator failed");
-}
-function levelSpec(i) {
-  const w = WORLDS[Math.floor(i / PER_WORLD)], l = i % PER_WORLD;
-  return { n: w.n[l], ops: w.ops[l], pool: w.pool, t: w.t, must: w.must[l] };
-}
-// all-tile routes allowed per board (fewer routes = harder), see capFor(); each world's boards are sorted easiest first
-const worldCache = {};
-// Precomputed from the generator below (same seeds and rules) so the map opens instantly.
-const TRAIL_DATA = [
-  [{"tiles":[8,8,7],"target":23,"routes":0},
-   {"tiles":[9,6,9],"target":24,"routes":3},
-   {"tiles":[8,2,9],"target":15,"routes":3},
-   {"tiles":[8,3,5,6],"target":16,"routes":18},
-   {"tiles":[5,7,8,5],"target":11,"routes":18},
-   {"tiles":[8,3,1,6],"target":12,"routes":18},
-   {"tiles":[5,4,9,5,6],"target":17,"routes":180},
-   {"tiles":[9,5,4,6,8],"target":20,"routes":180}],
-  [{"tiles":[2,2,9,4],"target":144,"routes":22},
-   {"tiles":[4,1,2,6],"target":20,"routes":12},
-   {"tiles":[11,6,1,8],"target":59,"routes":10},
-   {"tiles":[8,1,11,5],"target":82,"routes":5},
-   {"tiles":[9,7,11,3,9],"target":100,"routes":78},
-   {"tiles":[8,4,8,5,9],"target":105,"routes":76},
-   {"tiles":[7,12,1,6,3],"target":62,"routes":68},
-   {"tiles":[2,4,9,9,10],"target":25,"routes":62}],
-  [{"tiles":[5,50,4,1],"target":30,"routes":15},
-   {"tiles":[50,8,1,8],"target":48,"routes":8},
-   {"tiles":[8,1,50,9,3],"target":168,"routes":41},
-   {"tiles":[25,7,10,5,1],"target":44,"routes":30},
-   {"tiles":[3,10,50,8,25],"target":32,"routes":26},
-   {"tiles":[50,4,2,1,6],"target":255,"routes":5},
-   {"tiles":[6,8,50,7,8,10],"target":239,"routes":244},
-   {"tiles":[5,8,3,10,5,10],"target":261,"routes":146}],
-  [{"tiles":[25,50,1,6,3],"target":225,"routes":142},
-   {"tiles":[50,7,5,2,7],"target":126,"routes":26},
-   {"tiles":[5,50,9,4,100],"target":891,"routes":25},
-   {"tiles":[9,7,100,50,9,7],"target":738,"routes":240},
-   {"tiles":[100,25,3,9,75,4],"target":746,"routes":183},
-   {"tiles":[75,1,7,7,4,10],"target":529,"routes":98},
-   {"tiles":[6,5,6,100,5,4],"target":342,"routes":90},
-   {"tiles":[4,2,3,3,4,5],"target":242,"routes":28}]
-];
-function worldLevels(w) {
-  if (worldCache[w]) return worldCache[w];
-  if (TRAIL_DATA[w]) return (worldCache[w] = TRAIL_DATA[w].map((g, l) => ({ ...g, ops: levelSpec(w * PER_WORLD + l).ops, kind: "trail", index: w * PER_WORLD + l, id: `${w + 1}-${l + 1}`, world: w })));
-  const avoid = new Set(), out = [];
-  for (let l = 0; l < PER_WORLD; l++) {
-    const i = w * PER_WORLD + l;
-    const sp = levelSpec(i);
-    const g = generate({ ...sp, cap: l === 0 && w === 0 ? 0 : capFor(sp.n), avoid }, 1000 + i * 7919);
-    avoid.add(g.target); out.push(g);
-  }
-  const first = w === 0 ? out.shift() : null;   // 1-1 stays the tutorial
-  // keep each slot's tile count/ops (they grow through the world); within equal specs, more routes first
-  const slots = out.map((g, k) => ({ g, k: k + (first ? 1 : 0) }));
-  slots.sort((x, y) => x.g.tiles.length - y.g.tiles.length || x.g.ops.length - y.g.ops.length || y.g.routes - x.g.routes);
-  const list = first ? [first, ...slots.map((x) => x.g)] : slots.map((x) => x.g);
-  return (worldCache[w] = list.map((g, l) => ({ ...g, kind: "trail", index: w * PER_WORLD + l, id: `${w + 1}-${l + 1}`, world: w })));
-}
-function trailLevel(i) {
-  return worldLevels(Math.floor(i / PER_WORLD))[i % PER_WORLD];
-}
-function todayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
-function dailyLevel() {
-  const key = todayKey(), seed = Number(key.replace(/-/g, ""));
-  return { ...generate({ n: 6, ops: ["+", "-", "×", "÷"], pool: WORLDS[3].pool, t: [100, 999], must: "×", cap: capFor(6) }, seed), kind: "daily", id: key, world: 3 };
-}
-function randomLevel(world) {
-  const w = WORLDS[world];
-  const spec = { n: w.n[PER_WORLD - 1], ops: w.ops[PER_WORLD - 1], pool: w.pool, t: w.t, must: w.must[PER_WORLD - 1], cap: capFor(w.n[PER_WORLD - 1]) };
-  return { ...generate(spec, (Math.random() * 2 ** 31) | 0), kind: "random", id: "Random", world };
+  if (prev === "op") return fail("incomplete", "Add a number", tokens.length);
+  if (depth > 0) return fail("incomplete", "Missing close parenthesis", tokens.length);
+  // recursive descent evaluation
+  let p = 0, divZero = false;
+  const expr = () => { let v = term(); while (p < tokens.length && (tokens[p].v === "+" || tokens[p].v === "-")) { const op = tokens[p++].v; const r = term(); v = v && r ? (op === "+" ? rAdd(v, r) : rSub(v, r)) : null; } return v; };
+  const term = () => { let v = factor(); while (p < tokens.length && (tokens[p].v === "*" || tokens[p].v === "/")) { const op = tokens[p++].v; const r = factor(); if (!v || !r) { v = null; continue; } if (op === "*") v = rMul(v, r); else { const q = rDiv(v, r); if (!q) divZero = true; v = q; } } return v; };
+  const factor = () => { const t = tokens[p++]; if (t.k === "n") return R(valueOf(t.id)); const v = expr(); p++; return v; };
+  const value = expr();
+  if (divZero || !value) return { state: "invalid", reason: "Cannot divide by zero" };
+  return { state: "valid", value };
 }
 
-// ======================= core (pure, no DOM) =======================
-function newGame(level) { return { level, tiles: level.tiles.slice(), target: level.target, ops: level.ops, history: [], log: [], done: false, hinted: false }; }
-// a and b index into g.tiles; result "a op b" takes b's place. Returns {ok, reason}.
-function merge(g, a, op, b) {
-  if (g.done || a === b || a < 0 || b < 0 || a >= g.tiles.length || b >= g.tiles.length || !g.ops.includes(op)) return { ok: false, reason: "That move isn't available." };
-  const x = g.tiles[a], y = g.tiles[b], v = OPS[op](x, y);
-  if (op === "÷" && !Number.isInteger(v)) return { ok: false, reason: `${x} ÷ ${y} isn't a whole number.` };
-  if (v <= 0) return { ok: false, reason: `${x} − ${y} would go below 1.` };
-  if (v > MAXV) return { ok: false, reason: "That number is too big." };
-  g.history.push({ tiles: g.tiles.slice(), log: g.log.slice() });
-  const t = g.tiles.slice(); t[b] = v; t.splice(a, 1);
-  g.tiles = t; g.log = [...g.log, `${x} ${OP_LABEL[op]} ${y} = ${v}`];
-  return { ok: true, value: v, at: a < b ? b - 1 : b };
+// ======================================================================
+// 4. GAME CORE — pure state + edits, no DOM
+// ======================================================================
+function boardOf(li) {
+  const L = LEVELS[li];
+  return { li, id: L.id, name: L.name, collection: L.collection, target: rParse(L.target),
+    cards: L.numbers.map((c) => ({ id: c.id, value: c.value })),
+    solution: L.solution.tokens.map((t) => t.numberId ? { k: "n", id: t.numberId } : { k: "o", v: t.operator }) };
 }
-function undo(g) { if (!g.history.length || g.done) return false; const h = g.history.pop(); g.tiles = h.tiles; g.log = h.log; return true; }
-const made = (g) => g.tiles.includes(g.target);
-const starsNow = (g) => { const s = !made(g) ? 0 : g.tiles.length === 1 ? 3 : g.tiles.length === 2 ? 2 : 1; return g.hinted ? Math.min(2, s) : s; };
-function validMerges(g) {
-  const out = [];
-  for (let a = 0; a < g.tiles.length; a++) for (let b = 0; b < g.tiles.length; b++) {
-    if (a === b) continue;
-    for (const op of g.ops) { const v = OPS[op](g.tiles[a], g.tiles[b]); if (Number.isInteger(v) && v > 0 && v <= MAXV) out.push({ a, op, b }); }
-  }
-  return out;
+function newAttempt(li, tokens) {
+  const g = { board: boardOf(li), tokens: tokens ? tokens.map((t) => ({ ...t })) : [], caret: 0, sel: -1, hist: [], lastValid: null,
+    hint: 0, assisted: false, solved: false, review: false };
+  g.caret = g.tokens.length;
+  evaluate(g);
+  return g;
 }
-
-function oneMerge(nums, target, ops) {
-  for (let a = 0; a < nums.length; a++) for (let b = 0; b < nums.length; b++) if (a !== b) for (const op of ops) if (OPS[op](nums[a], nums[b]) === target) return true;
-  return false;
+const valueOfCard = (g) => (id) => g.board.cards.find((c) => c.id === id).value;
+const usedIds = (g) => new Set(g.tokens.filter((t) => t.k === "n").map((t) => t.id));
+function evaluate(g) {
+  g.res = analyse(g.tokens, valueOfCard(g));
+  if (g.res.state === "valid") g.lastValid = g.res.value;
+  if (g.res.state === "empty") g.lastValid = null;
+  const used = usedIds(g).size;
+  g.used = used;
+  g.matched = g.res.state === "valid" && rEq(g.res.value, g.board.target);
+  if (g.matched && (!REQUIRE_ALL || used === g.board.cards.length)) g.solved = true;
+  return g;
 }
-// number of distinct all-tile routes (commutative merges counted once), stops early past cap
-function countRoutes(tiles, target, ops, cap, budget = 150000) {
-  const memo = new Map();
-  let visits = 0;
-  function rec(t) {
-    if (++visits > budget) return Infinity;
-    if (t.length === 1) return t[0] === target ? 1 : 0;
-    const key = t.slice().sort((p, q) => p - q).join(",");
-    if (memo.has(key)) return memo.get(key);
-    let n = 0;
-    for (let a = 0; a < t.length && n <= cap; a++) for (let b = 0; b < t.length; b++) {
-      if (a === b) continue;
-      for (const op of ops) {
-        if ((op === "+" || op === "×") && a > b) continue;
-        const v = OPS[op](t[a], t[b]);
-        if (!Number.isInteger(v) || v <= 0 || v > MAXV) continue;
-        const nt = t.slice(); nt[b] = v; nt.splice(a, 1);
-        n += rec(nt);
-      }
-    }
-    memo.set(key, n); return n;
-  }
-  return rec(tiles);
-}
-const capFor = (n) => ({ 3: Infinity, 4: 40, 5: 150, 6: 300 })[n] || Infinity;
-
-// ======================= solver =======================
-// depth-first search for a route that uses every tile; returns merge actions (indexes as they are at each step)
-function solveTiles(tiles, target, ops) {
-  const dead = new Set();
-  function rec(t) {
-    if (t.length === 1) return t[0] === target ? [] : null;
-    const key = t.slice().sort((p, q) => p - q).join(",");
-    if (dead.has(key)) return null;
-    for (let a = 0; a < t.length; a++) for (let b = 0; b < t.length; b++) {
-      if (a === b) continue;
-      for (const op of ops) {
-        if ((op === "+" || op === "×") && a > b) continue;   // commutative: one order is enough
-        const v = OPS[op](t[a], t[b]);
-        if (!Number.isInteger(v) || v <= 0 || v > MAXV) continue;
-        const n = t.slice(); n[b] = v; n.splice(a, 1);
-        const r = rec(n);
-        if (r) return [{ a, op, b }, ...r];
-      }
-    }
-    dead.add(key); return null;
-  }
-  return rec(tiles);
-}
-
-// ======================= storage =======================
-let save = { stars: {}, daily: {}, muted: false };
-try { const s = JSON.parse(localStorage.getItem("mathly-trails-v1") || "null"); if (s && typeof s === "object") save = { stars: s.stars || {}, daily: s.daily || {}, muted: !!s.muted }; } catch (e) {}
-function persist() { try { localStorage.setItem("mathly-trails-v1", JSON.stringify(save)); } catch (e) {} }
-const starsOf = (i) => save.stars[trailLevel(i).id] || 0;
-const WORLD_GATE = 14;   // stars needed in a world to travel to the next one
-const worldStars = (w) => { let n = 0; for (let l = 0; l < PER_WORLD; l++) n += starsOf(w * PER_WORLD + l); return n; };
-function unlocked(i) {
-  if (i === 0) return true;
-  if (i % PER_WORLD === 0) return starsOf(i - 1) > 0 && worldStars(i / PER_WORLD - 1) >= WORLD_GATE;
-  return starsOf(i - 1) > 0;
-}
-function firstOpen() { for (let i = 0; i < TRAIL; i++) if (!starsOf(i)) return unlocked(i) ? i : Math.max(0, i - 1); return TRAIL - 1; }
-
-// ======================= audio =======================
-let actx = null;
-function ensureAudio() { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; } } if (actx && actx.state === "suspended") actx.resume(); }
-function tone(f, d = 0.09, type = "triangle", vol = 0.1, when = 0) {
-  if (!actx || save.muted) return;
-  const t0 = actx.currentTime + when, o = actx.createOscillator(), g = actx.createGain();
-  o.type = type; o.frequency.setValueAtTime(f, t0); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
-  o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0 + d + 0.02);
-}
-const SFX = {
-  pick: () => tone(520, 0.05, "sine", 0.06), op: () => tone(660, 0.05, "sine", 0.06),
-  merge: (n) => tone(440 * Math.pow(2, n / 12), 0.12, "triangle", 0.11),
-  bad: () => tone(140, 0.12, "square", 0.05), undo: () => tone(330, 0.06, "sine", 0.06),
-  made: () => { tone(784, 0.12); tone(988, 0.16, "sine", 0.07, 0.06); },
-  win: (s) => [523, 659, 784, 1046, 1318].slice(0, 2 + s).forEach((f, i) => tone(f, 0.18, "triangle", 0.11, i * 0.08)),
-};
-
-// ======================= UI =======================
-const $ = (id) => document.getElementById(id);
-let screen = "title", game = null, sel = { a: null, op: null }, lastMerged = -1, finished = false, hint = null;
-function show(id) { screen = id; for (const s of ["title", "map", "play"]) $(s).hidden = s !== id; $("ov").hidden = true; }
-function goTitle() { show("title"); const f = firstOpen(); $("contBtn").textContent = Object.keys(save.stars).length ? `Continue ${trailLevel(f).id}` : "Play"; paintMute(); }
-function paintMute() { $("muteBtn").textContent = save.muted ? "Sound: off" : "Sound: on"; $("muteBtn").setAttribute("aria-label", save.muted ? "Unmute sound" : "Mute sound"); }
-const starStr = (n) => "★".repeat(n) + "☆".repeat(3 - n);
-function goMap() {
-  show("map");
-  const total = Object.values(save.stars).reduce((a, b) => a + b, 0);
-  $("starTotal").textContent = `★ ${total}/${TRAIL * 3}`;
-  const d = save.daily[todayKey()];
-  $("dailyInfo").textContent = d ? `Today: ${starStr(d)} · try for more stars` : "Same puzzle for everyone today";
-  const cur = firstOpen();
-  let html = "";
-  WORLDS.forEach((w, wi) => {
-    const open = unlocked(wi * PER_WORLD);
-    html += `<div class="card world${open ? "" : " locked"}" style="--wc:${w.color}"><h3>${wi + 1} · ${w.name} <small class="ops">${open ? worldStars(wi) + "/24★ · " : ""}${[...new Set(w.ops.flat())].map((o) => OP_LABEL[o]).join(" ")}</small></h3>`;
-    html += `<p>${open ? w.blurb : `Clear ${wi}-8 and earn ${WORLD_GATE}★ in ${WORLDS[wi - 1].name} (${worldStars(wi - 1)}/${WORLD_GATE}) to travel here.`}</p><div class="trail" data-w="${wi}">`;
-    // serpentine: row 1 left→right, row 2 right→left
-    const order = [0, 1, 2, 3, 7, 6, 5, 4];
-    for (const slot of order) {
-      const i = wi * PER_WORLD + slot, s = starsOf(i), u = unlocked(i);
-      html += `<button class="node${i === cur ? " cur" : ""}" data-lv="${i}"${u ? "" : " disabled"} aria-label="Level ${trailLevel(i).id}${u ? ", " + s + " stars" : ", locked"}">${slot + 1}<small>${s ? "★".repeat(s) : ""}</small></button>`;
-    }
-    html += `</div>${open ? `<div style="margin-top:12px"><button class="btn2" data-rand="${wi}">Random board</button></div>` : ""}</div>`;
-  });
-  $("worlds").innerHTML = html;
-  requestAnimationFrame(drawTrails);
-  const c = $("worlds").querySelector(".node.cur"); if (c) c.focus({ preventScroll: true });
-}
-function drawTrails() {
-  document.querySelectorAll(".trail").forEach((tr) => {
-    const box = tr.getBoundingClientRect();
-    const pts = [];
-    for (let s = 0; s < PER_WORLD; s++) {
-      const n = tr.querySelector(`[data-lv="${+tr.dataset.w * PER_WORLD + s}"]`).getBoundingClientRect();
-      pts.push([n.left + n.width / 2 - box.left, n.top + n.height / 2 - box.top]);
-    }
-    const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
-    const old = tr.querySelector("svg.path"); if (old) old.remove();
-    tr.insertAdjacentHTML("afterbegin", `<svg class="path" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--trail)" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/></svg>`);
-  });
-}
-function startLevel(level) {
-  game = newGame(level); sel = { a: null, op: null }; lastMerged = -1; finished = false; hint = null;
-  show("play");
-  $("lvlName").innerHTML = level.kind === "trail" ? `${level.id} <small>${WORLDS[level.world].name}</small>` : level.kind === "daily" ? `Daily <small>${level.id}</small>` : `Random <small>${WORLDS[level.world].name}</small>`;
-  renderOps(); render();
-  setMsg(level.kind === "trail" && level.index === 0 ? "Tap a number, then +, then another number." : "");
-}
-function renderOps() {
-  $("opsrow").innerHTML = game.ops.map((o) => `<button class="op" data-op="${o}" aria-label="${{ "+": "plus", "-": "minus", "×": "times", "÷": "divided by" }[o]}">${OP_LABEL[o]}</button>`).join("");
-}
-function render() {
-  $("tval").textContent = game.target;
-  const m = made(game), st = starsNow(game);
-  $("targetCard").classList.toggle("made", m);
-  $("goalLine").textContent = m ? (st === 3 ? "Every number used ★★★" : `Made with ${game.tiles.length - 1} left · use them all for ★★★`) : `${game.tiles.length} numbers · use every one for ★★★`;
-  $("tiles").innerHTML = game.tiles.map((v, i) => `<button class="tile${sel.a === i ? " sel" : ""}${v === game.target ? " hit" : ""}${i === lastMerged ? " pop" : ""}" data-i="${i}" aria-label="${v}${sel.a === i ? ", selected" : ""}"><span class="pos" aria-hidden="true">${i + 1}</span>${v}</button>`).join("");
-  if (hint) { const t = $("tiles").children; if (t[hint.a]) t[hint.a].classList.add("hint"); if (t[hint.b]) t[hint.b].classList.add("hint"); }
-  document.querySelectorAll(".op").forEach((b) => { b.classList.toggle("sel", b.dataset.op === sel.op); b.classList.toggle("hint", !!hint && b.dataset.op === hint.op); });
-  $("hintBtn").disabled = game.done;
-  $("log").innerHTML = game.log.map((s) => `<span>${s}</span>`).join("");
-  $("undoBtn").disabled = !game.history.length;
-  $("finishBtn").hidden = !m || game.tiles.length === 1;
-  $("finishBtn").textContent = `Finish ${"★".repeat(st)}`;
-  lastMerged = -1;
-}
-function setMsg(t, cls) { $("msg").textContent = t; $("msg").className = cls || ""; }
-function tapTile(i) {
-  if (screen !== "play" || finished) return;
-  ensureAudio();
-  if (sel.a === null) { sel.a = i; SFX.pick(); setMsg(""); }
-  else if (sel.a === i) { sel = { a: null, op: null }; }
-  else if (sel.op === null) { sel.a = i; SFX.pick(); }
-  else { doMerge(sel.a, sel.op, i); return; }
-  render();
-}
-function tapOp(op) {
-  if (screen !== "play" || finished) return;
-  ensureAudio();
-  if (sel.a === null) { setMsg("Pick a number first."); SFX.bad(); return; }
-  sel.op = sel.op === op ? null : op; SFX.op(); render();
-}
-function doMerge(a, op, b) {
-  const wasMade = made(game);
-  const r = merge(game, a, op, b);
-  if (!r.ok) {
-    setMsg(r.reason, "bad"); SFX.bad();
-    sel.op = null; render();
-    const el = $("tiles").children[b]; if (el) el.classList.add("shake");
-    return false;
-  }
-  sel = { a: null, op: null }; lastMerged = r.at; hint = null;
-  SFX.merge(Math.min(12, game.log.length * 2));
-  render();
-  afterMove(wasMade);
+function commit(g, tokens, caret) {
+  if (g.solved) return false;
+  g.hist.push({ tokens: g.tokens, caret: g.caret });
+  g.tokens = tokens; g.caret = Math.max(0, Math.min(caret, tokens.length)); g.sel = -1;
+  evaluate(g);
   return true;
 }
-function afterMove(wasMade) {
-  if (made(game) && game.tiles.length === 1) { finish(); return; }
-  if (made(game) && !wasMade) { SFX.made(); setMsg("Target made! Finish now, or keep going to use every number.", "good"); return; }
-  if (game.tiles.length === 1) { setMsg(`Stuck at ${game.tiles[0]}. Undo ↶ or restart ↻.`, "bad"); return; }
-  if (!made(game)) setMsg("");
-}
-function finish() {
-  if (!made(game) || finished) return;
-  finished = true; game.done = true;
-  const st = starsNow(game), L = game.level;
-  if (L.kind === "trail") save.stars[L.id] = Math.max(save.stars[L.id] || 0, st);
-  if (L.kind === "daily") save.daily[L.id] = Math.max(save.daily[L.id] || 0, st);
-  persist();
-  SFX.win(st);
-  $("wonTitle").textContent = st === 3 ? "Perfect!" : "Target made!";
-  $("wonStars").innerHTML = "★".repeat(st) + `<span class="off">${"★".repeat(3 - st)}</span>`;
-  $("wonStars").setAttribute("aria-label", `${st} of 3 stars`);
-  $("wonText").textContent = st === 3 ? "You used every number." : `Use all ${L.tiles.length} numbers for ★★★. Replay to try.`;
-  $("wonRoute").innerHTML = game.log.map((s) => `<span>${s}</span>`).join("");
-  const isLast = L.kind === "trail" && L.index === TRAIL - 1;
-  $("nextBtn").textContent = L.kind === "trail" ? (isLast ? "Trail map" : (L.index + 1) % PER_WORLD === 0 ? `Travel to ${WORLDS[L.world + 1].name}` : "Next level") : L.kind === "daily" ? "Trail map" : "New random board";
-  $("ov").hidden = false; screen = "won";
-  requestAnimationFrame(() => $("nextBtn").focus({ preventScroll: true }));
-}
-function next() {
-  const L = game.level;
-  if (L.kind === "trail" && L.index < TRAIL - 1) startLevel(trailLevel(L.index + 1));
-  else if (L.kind === "random") startLevel(randomLevel(L.world));
-  else goMap();
+const E = { // edits: each returns true when it changed the expression
+  card(g, id, at = g.caret) { if (usedIds(g).has(id) || !g.board.cards.some((c) => c.id === id)) return false; const t = g.tokens.slice(); t.splice(at, 0, { k: "n", id }); return commit(g, t, at + 1); },
+  op(g, v, at = g.caret) { if (!OPS.includes(v)) return false; const t = g.tokens.slice(); t.splice(at, 0, { k: "o", v }); return commit(g, t, at + 1); },
+  remove(g, i) { if (i < 0 || i >= g.tokens.length) return false; const t = g.tokens.slice(); t.splice(i, 1); return commit(g, t, i); },
+  move(g, from, to) { // `to` is a boundary index in the current array
+    if (from < 0 || from >= g.tokens.length || to < 0 || to > g.tokens.length || to === from || to === from + 1) return false;
+    const t = g.tokens.slice(); const [x] = t.splice(from, 1); if (to > from) to--; t.splice(to, 0, x); return commit(g, t, to + 1);
+  },
+  replace(g, i, v) { const x = g.tokens[i]; if (!x || x.k !== "o" || x.v === v || !OPS.includes(v)) return false; const t = g.tokens.slice(); t[i] = { k: "o", v }; const ok = commit(g, t, g.caret); return ok; },
+  restart(g) { if (!g.tokens.length) return false; return commit(g, [], 0); },
+  undo(g) { if (g.solved || !g.hist.length) return false; const h = g.hist.pop(); g.tokens = h.tokens; g.caret = h.caret; g.sel = -1; evaluate(g); return true; },
+};
+function exprText(tokens, cards, plain) {
+  const val = (id) => cards.find((c) => c.id === id).value;
+  let s = "";
+  tokens.forEach((t, i) => {
+    if (t.k === "n") s += val(t.id);
+    else if (t.v === "(") s += (i && tokens[i - 1].k === "o" && tokens[i - 1].v !== "(" ? " " : "") + "(";
+    else if (t.v === ")") s += ")";
+    else s += " " + (plain ? t.v : SHOW[t.v]) + " ";
+  });
+  return s.replace(/\s+/g, " ").trim();
 }
 
-// ======================= input =======================
-$("tiles").addEventListener("click", (e) => { const t = e.target.closest("[data-i]"); if (t) tapTile(+t.dataset.i); });
-$("opsrow").addEventListener("click", (e) => { const t = e.target.closest("[data-op]"); if (t) tapOp(t.dataset.op); });
-$("undoBtn").addEventListener("click", () => { if (undo(game)) { sel = { a: null, op: null }; SFX.undo(); render(); afterMove(false); } });
-$("restartBtn").addEventListener("click", () => startLevel(game.level));
-$("finishBtn").addEventListener("click", finish);
-$("hintBtn").addEventListener("click", giveHint);
-function giveHint() {
-  if (screen !== "play" || game.done) return;
-  const r = solveTiles(game.tiles, game.target, game.ops);
-  if (!r) { setMsg("No route uses every number from here. Undo ↶ a step or two.", "bad"); return; }
-  if (!r.length) return;
-  game.hinted = true; hint = r[0]; sel = { a: null, op: null };
-  render();
-  setMsg(`Try ${game.tiles[hint.a]} ${OP_LABEL[hint.op]} ${game.tiles[hint.b]}. Hints cap this board at ★★.`, "good");
+// ---------- independent solver: every binary tree over the five cards ----------
+function solveBoard(board) {
+  const target = board.target;
+  const prec = { "+": 1, "-": 1, "*": 2, "/": 2 };
+  const wrap = (x, need) => need ? [{ k: "o", v: "(" }, ...x.toks, { k: "o", v: ")" }] : x.toks;
+  function join(a, op, b) {
+    const val = op === "+" ? rAdd(a.r, b.r) : op === "-" ? rSub(a.r, b.r) : op === "*" ? rMul(a.r, b.r) : rDiv(a.r, b.r);
+    if (!val) return null;
+    const lp = a.p < prec[op];
+    const rp = b.p < prec[op] || (b.p === prec[op] && (op === "-" || op === "/"));
+    return { r: val, p: prec[op], toks: [...wrap(a, lp), { k: "o", v: op }, ...wrap(b, rp)] };
+  }
+  const seen = new Set();
+  function rec(items) {
+    if (items.length === 1) return rEq(items[0].r, target) ? items[0].toks : null;
+    const key = items.map((x) => x.r.n + "/" + x.r.d).sort().join(",");
+    if (seen.has(key)) return null; seen.add(key);
+    for (let i = 0; i < items.length; i++) for (let j = 0; j < items.length; j++) {
+      if (i === j) continue;
+      const rest = items.filter((_, k) => k !== i && k !== j);
+      for (const op of ["+", "-", "*", "/"]) {
+        if ((op === "+" || op === "*") && j < i) continue;
+        const c = join(items[i], op, items[j]);
+        if (!c) continue;
+        const out = rec([...rest, c]);
+        if (out) return out;
+      }
+    }
+    return null;
+  }
+  return rec(board.cards.map((c) => ({ r: R(c.value), p: 3, toks: [{ k: "n", id: c.id }] })));
 }
-$("playBack").addEventListener("click", goMap);
-$("mapBack").addEventListener("click", goTitle);
-$("contBtn").addEventListener("click", () => { ensureAudio(); startLevel(trailLevel(firstOpen())); });
-$("mapBtn").addEventListener("click", () => { ensureAudio(); goMap(); });
-const playDaily = () => { ensureAudio(); startLevel(dailyLevel()); };
-$("dailyBtn").addEventListener("click", playDaily); $("dailyBtn2").addEventListener("click", playDaily);
-$("muteBtn").addEventListener("click", () => { save.muted = !save.muted; persist(); paintMute(); ensureAudio(); });
-$("worlds").addEventListener("click", (e) => {
-  const n = e.target.closest("[data-lv]"); if (n && !n.disabled) { ensureAudio(); startLevel(trailLevel(+n.dataset.lv)); return; }
-  const r = e.target.closest("[data-rand]"); if (r) { ensureAudio(); startLevel(randomLevel(+r.dataset.rand)); }
-});
-$("nextBtn").addEventListener("click", next);
-$("replayBtn").addEventListener("click", () => startLevel(game.level));
-$("toMapBtn").addEventListener("click", goMap);
-window.addEventListener("resize", () => { if (screen === "map") drawTrails(); });
-const KEYOP = { "+": "+", "-": "-", "*": "×", x: "×", X: "×", "/": "÷" };
+
+// ---------- hints: three steps from a verified solution of the original board ----------
+function hintSteps(board) {
+  const sol = board.solution, has = (v) => sol.some((t) => t.v === v);
+  const val = (id) => board.cards.find((c) => c.id === id).value;
+  let s1;
+  if (has("(")) s1 = "Grouping helps here: one pair of cards works best inside parentheses.";
+  else if (has("/")) s1 = "One clean division sets this up. The rest is adding and taking away.";
+  else if (has("*")) s1 = "Multiplication gets you close. Adjust with the other cards.";
+  else s1 = "Only + and − are needed. Add the big cards, then take the small ones away.";
+  let s2;
+  const open = sol.findIndex((t) => t.v === "(");
+  if (open >= 0) { const close = sol.indexOf(sol.find((t, i) => i > open && t.v === ")")); s2 = "Try grouping " + exprText(sol.slice(open + 1, close), board.cards) + "."; }
+  else s2 = "Try starting with " + exprText(sol.slice(0, 3), board.cards) + ".";
+  return [s1, s2, "One solution: " + exprText(sol, board.cards) + " = " + rFmt(board.target) + "."];
+}
+
+// ======================================================================
+// 5. PERSISTENCE (best effort)
+// ======================================================================
+const SAVE_KEY = "mathly.v1";
+let save = { done: {}, cur: null, settings: { sound: false, contrast: false } };
+try { const s = JSON.parse(localStorage.getItem(SAVE_KEY) || "null"); if (s && s.done) save = { ...save, ...s, settings: { ...save.settings, ...(s.settings || {}) } }; } catch (e) {}
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
+
+// ======================================================================
+// 6. UI STATE + RENDERING
+// ======================================================================
+const $ = (id) => document.getElementById(id);
+const ui = { screen: "home", coll: "starter", from: [], game: null, page: 0, view: "play", showHint: false };
+const levelsIn = (key) => LEVELS.map((l, i) => ({ l, i })).filter((x) => x.l.collection === key);
+const collOf = (key) => COLLECTIONS.find((c) => c.key === key);
+const levelLabel = (li) => { const L = LEVELS[li], c = collOf(L.collection), n = levelsIn(L.collection).findIndex((x) => x.i === li) + 1; return c.name + " · " + String(n).padStart(2, "0"); };
+function announce(msg) { const el = $("live"); el.textContent = ""; setTimeout(() => (el.textContent = msg), 30); }
+
+function show(screen) {
+  ui.screen = screen;
+  for (const [k, id] of Object.entries({ home: "sHome", collections: "sCollections", collection: "sCollection", play: "sPlay", done: "sDone" })) $(id).hidden = k !== screen;
+  render();
+}
+function render() {
+  document.documentElement.classList.toggle("hc", !!save.settings.contrast);
+  if (ui.screen === "home") renderHome();
+  if (ui.screen === "collections") renderCollections();
+  if (ui.screen === "collection") renderCollection();
+  if (ui.screen === "play") renderPlay();
+  if (ui.screen === "done") renderDone();
+}
+function firstIncomplete(key) { const ls = levelsIn(key); const x = ls.find((x) => !save.done[x.l.id]); return (x || ls[0]).i; }
+function renderHome() {
+  const cur = save.cur;
+  $("bContinue").textContent = cur && LEVELS[cur.li] ? "Continue · " + levelLabel(cur.li) : (Object.keys(save.done).length ? "Continue playing" : "Start playing");
+}
+function renderCollections() {
+  $("collList").replaceChildren(...COLLECTIONS.map((c) => {
+    const ls = levelsIn(c.key), n = ls.filter((x) => save.done[x.l.id]).length;
+    const b = document.createElement("button");
+    b.className = "panel collection";
+    b.innerHTML = `<span class="mark" aria-hidden="true">${c.mark}</span><span class="meta"><strong>${c.name}</strong><small>${c.blurb}</small></span><span class="small">${n === ls.length ? "✓ " : ""}${n}/${ls.length}</span>`;
+    b.setAttribute("aria-label", `${c.name}, ${n} of ${ls.length} complete`);
+    b.onclick = () => openCollection(c.key);
+    return b;
+  }));
+}
+function renderCollection() {
+  const c = collOf(ui.coll), ls = levelsIn(ui.coll), idx = COLLECTIONS.indexOf(c) + 1;
+  $("cTitle").textContent = c.name; $("cEyebrow").textContent = "Collection " + String(idx).padStart(2, "0");
+  $("cHero").textContent = c.hero; $("cCopy").textContent = c.copy;
+  const next = firstIncomplete(ui.coll), n = ls.filter((x) => save.done[x.l.id]).length;
+  $("cGrid").replaceChildren(...ls.map((x, k) => {
+    const b = document.createElement("button"), done = !!save.done[x.l.id];
+    b.className = "level" + (done ? " done" : "") + (x.i === next && n < ls.length ? " current" : "");
+    b.textContent = k + 1;
+    b.setAttribute("aria-label", `Puzzle ${k + 1}, ${x.l.name}${done ? ", complete" : x.i === next ? ", next" : ""}`);
+    b.onclick = () => startLevel(x.i);
+    return b;
+  }));
+  $("cCount").textContent = `${n} of ${ls.length} complete`;
+  const nk = ls.findIndex((x) => x.i === next) + 1;
+  $("cGo").textContent = n === ls.length ? "Play again · Puzzle 1" : "Continue · Puzzle " + nk;
+  $("cGo").onclick = () => startLevel(n === ls.length ? ls[0].i : next);
+}
+
+// ---------- play screen ----------
+function cellGeometry() {
+  const well = $("well"), w = well.clientWidth - 12;
+  const cols = Math.max(1, Math.floor((w + 4) / 48));
+  const reserved = 44 + ($("notice").hidden ? 0 : $("notice").offsetHeight + 8) + ($("hintPanel").hidden ? 0 : $("hintPanel").offsetHeight + 8);
+  const rows = Math.max(1, Math.floor((well.clientHeight - 12 - reserved + 4) / 48));
+  return { cols, rows, per: cols * rows };
+}
+function renderPlay() {
+  const g = ui.game; if (!g) return;
+  const b = g.board, used = usedIds(g), solvedView = g.solved;
+  $("pTitle").textContent = levelLabel(b.li);
+  $("pTarget").textContent = rFmt(b.target);
+  $("pTarget").setAttribute("aria-label", "Target " + rFmt(b.target, true));
+  // result plaque + notice copy (DESIGN.md §2 table)
+  const r = g.res, res = $("pResult"), box = $("pResultBox"), notice = $("notice");
+  let value = "—", word = false, note = "", kind = "", aria;
+  const n = b.cards.length;
+  if (r.state === "empty") { value = "—"; aria = "No result yet"; }
+  else if (r.state === "incomplete") { value = "Incomplete"; word = true; note = (g.lastValid ? "Last valid: " + rFmt(g.lastValid) + " · " : "") + r.reason; }
+  else if (r.state === "invalid") { value = r.reason === "Cannot divide by zero" ? "No value" : "Invalid"; word = true; note = r.reason; }
+  else {
+    value = rFmt(r.value);
+    if (g.solved) { value += " ✓"; note = "Solved · All five cards used" + (g.assisted ? " · With hint" : ""); kind = "good"; }
+    else if (g.matched) { note = "Target matched · Use all " + n + " cards"; kind = "info"; }
+    else if (g.used === n) { note = "Result " + rFmt(r.value) + " · target " + rFmt(b.target) + ". Rearrange or try a hint."; kind = "info"; }
+  }
+  res.textContent = value; res.classList.toggle("word", word); box.classList.toggle("ok", g.solved);
+  res.setAttribute("aria-label", aria || ("Your result " + value.replace("✓", "solved")));
+  notice.textContent = note; notice.hidden = !note; notice.className = "notice" + (kind ? " " + kind : "");
+  $("pUsed").textContent = (g.sel >= 0 ? "Selected · " : "") + g.used + " of " + n + " used";
+  // hint panel
+  const hp = $("hintPanel");
+  if (ui.showHint && !g.solved) {
+    const steps = hintSteps(b), k = Math.max(1, g.hint);
+    hp.hidden = false;
+    hp.innerHTML = steps.slice(0, k).map((s, i) => `<div${i ? ' style="margin-top:6px"' : ""}><b>Hint ${i + 1}.</b> ${s}</div>`).join("") +
+      `<div class="row">${k < 3 ? '<button id="hNext">Next hint</button>' : ""}<button id="hClose">Close</button></div>`;
+    if ($("hNext")) $("hNext").onclick = () => { g.hint = Math.min(3, g.hint + 1); render(); };
+    $("hClose").onclick = () => { ui.showHint = false; render(); $("well").focus({ preventScroll: true }); };
+  } else hp.hidden = true;
+  // cells (paged)
+  const geo = cellGeometry();
+  const total = g.tokens.length, pages = Math.max(1, Math.ceil((total + 1) / geo.per));
+  const focusIdx = g.sel >= 0 ? g.sel : g.caret;
+  if (ui.followCaret !== false) ui.page = Math.min(pages - 1, Math.floor(focusIdx / geo.per));
+  ui.page = Math.max(0, Math.min(ui.page, pages - 1));
+  const start = ui.page * geo.per, end = Math.min(total, start + geo.per);
+  ui.pageStart = start; ui.pageEnd = end;
+  const cells = $("cells");
+  cells.replaceChildren(...g.tokens.slice(start, end).map((t, k) => {
+    const i = start + k, el = document.createElement("button");
+    const isNum = t.k === "n";
+    el.className = "card " + (isNum ? "num" : "op") + (i === g.sel ? " sel" : "") + (g.solved ? " ok" : "") + (i === ui.snap ? " snap" : "");
+    el.textContent = isNum ? b.cards.find((c) => c.id === t.id).value : SHOW[t.v];
+    el.dataset.i = i;
+    el.tabIndex = -1;
+    el.setAttribute("aria-label", `Position ${i + 1}: ${isNum ? el.textContent : SPEAK[t.v]}${i === g.sel ? ", selected" : ""}`);
+    el.onclick = () => clickToken(i);
+    el.onpointerdown = (e) => dragStart(e, { kind: "token", i });
+    return el;
+  }));
+  ui.snap = -1;
+  $("emptyHint").hidden = total > 0;
+  // footer: pager + edit strip or guidance
+  const foot = $("wellFoot");
+  const pager = pages > 1 ? `<span class="pager"><button id="pgPrev" aria-label="Previous page" ${ui.page === 0 ? "disabled" : ""}>‹</button><span>${ui.page + 1} / ${pages}</span><button id="pgNext" aria-label="Next page" ${ui.page >= pages - 1 ? "disabled" : ""}>›</button></span>` : "";
+  if (g.solved) {
+    foot.innerHTML = ui.view === "review" ? `<div class="editactions"><button id="rAgain">Try another way</button><button id="rNext">Next puzzle</button></div>` : `${pager}<span>Solved</span>`;
+    if ($("rAgain")) { $("rAgain").onclick = () => tryAnother(); $("rNext").onclick = () => nextPuzzle(); }
+  } else if (g.sel >= 0) {
+    const isOp = g.tokens[g.sel].k === "o";
+    foot.innerHTML = `<div class="editactions"><button id="eBefore">Before</button><button id="eAfter">After</button><button id="eRemove">Remove</button><button id="eDone">Done</button></div>`;
+    $("eBefore").onclick = () => { g.caret = g.sel; g.sel = -1; render(); };
+    $("eAfter").onclick = () => { g.caret = g.sel + 1; g.sel = -1; render(); };
+    $("eRemove").onclick = () => doEdit(() => E.remove(g, g.sel));
+    $("eDone").onclick = () => { g.sel = -1; render(); };
+    if (isOp) $("pUsed").textContent = "Tap an operator to replace";
+  } else foot.innerHTML = `${pager || "<span></span>"}<span>${total ? "Tap a placed card to edit" : ""}</span>`;
+  if ($("pgPrev")) { $("pgPrev").onclick = () => { ui.followCaret = false; ui.page--; render(); }; $("pgNext").onclick = () => { ui.followCaret = false; ui.page++; render(); }; }
+  // caret
+  placeCaret(g.solved || g.sel >= 0 ? -1 : g.caret, false);
+  // source tray
+  $("slots").replaceChildren(...b.cards.map((c, k) => {
+    const el = document.createElement("button"), u = used.has(c.id);
+    el.className = "card " + (u ? "ghost" : "num");
+    el.textContent = u ? "Used" : c.value;
+    el.setAttribute("aria-label", u ? `Card ${k + 1} used` : `${c.value}, card ${k + 1} of ${n}`);
+    el.disabled = g.solved;
+    if (!u) { el.onclick = () => clickSource(c.id); el.onpointerdown = (e) => dragStart(e, { kind: "card", id: c.id }); }
+    else el.tabIndex = -1;
+    return el;
+  }));
+  // palette
+  const selOp = g.sel >= 0 && g.tokens[g.sel].k === "o";
+  $("palette").replaceChildren(...OPS.map((v) => {
+    const el = document.createElement("button");
+    el.className = "card op" + (selOp ? " armed" : "");
+    el.textContent = SHOW[v];
+    el.setAttribute("aria-label", (selOp ? "Replace with " : "Insert ") + SPEAK[v]);
+    el.disabled = g.solved;
+    el.onclick = () => clickOp(v);
+    el.onpointerdown = (e) => dragStart(e, { kind: "op", v });
+    return el;
+  }));
+  $("bUndo").disabled = g.solved || !g.hist.length;
+  $("bRestart").disabled = g.solved || !g.tokens.length;
+  $("bHint").disabled = g.solved;
+}
+function placeCaret(boundary, preview) {
+  const caret = $("caret"), cells = $("cells"), g = ui.game;
+  if (boundary < 0 || boundary < ui.pageStart || boundary > ui.pageEnd) { caret.hidden = true; return; }
+  const kids = cells.children, wellR = $("well").getBoundingClientRect();
+  let x, y;
+  if (!kids.length) { const r = cells.getBoundingClientRect(); x = r.left - wellR.left - 2; y = r.top - wellR.top; }
+  else {
+    const k = boundary - ui.pageStart;
+    const el = kids[Math.min(k, kids.length - 1)], r = el.getBoundingClientRect();
+    if (k < kids.length) x = r.left - wellR.left - 3.5; else x = r.right - wellR.left + 0.5;
+    y = r.top - wellR.top + (el.classList.contains("sel") ? 4 : 0);
+  }
+  caret.style.left = x + "px"; caret.style.top = y + "px";
+  caret.hidden = false;
+  caret.classList.toggle("blink", !preview && document.activeElement === $("well"));
+}
+function renderDone() {
+  const g = ui.game, b = g.board;
+  $("dEyebrow").textContent = levelLabel(b.li);
+  $("dCopy").textContent = "All five cards. One good solution." + (g.assisted ? " With hint." : "");
+  $("dExpr").innerHTML = "";
+  const line = document.createElement("div"); line.textContent = exprText(g.tokens, b.cards);
+  const eq = document.createElement("div"); eq.className = "success"; eq.textContent = "= " + rFmt(b.target);
+  $("dExpr").append(line, eq);
+  const nxt = nextLevelIndex(b.li);
+  $("dNext").textContent = nxt == null ? "Collections" : "Next puzzle";
+  $("dColl").textContent = "Back to " + collOf(b.collection).name;
+}
+
+// ======================================================================
+// 7. ACTIONS (UI → core)
+// ======================================================================
+function startLevel(li, tokens) {
+  ui.game = newAttempt(li, tokens); ui.view = "play"; ui.showHint = false; ui.page = 0; ui.followCaret = true;
+  ui.coll = LEVELS[li].collection;
+  save.cur = { li, tokens: ui.game.tokens }; persist();
+  show("play");
+  $("well").focus({ preventScroll: true }); placeCaret(ui.game.caret, false);
+}
+function openCollection(key) { ui.coll = key; show("collection"); }
+function nextLevelIndex(li) { const ls = levelsIn(LEVELS[li].collection); const k = ls.findIndex((x) => x.i === li); return k + 1 < ls.length ? ls[k + 1].i : null; }
+function nextPuzzle() { const n = nextLevelIndex(ui.game.board.li); if (n == null) show("collections"); else startLevel(n); }
+function tryAnother() { const li = ui.game.board.li; startLevel(li); }
+let solveTimer = 0;
+function doEdit(fn, snapIdx) {
+  const g = ui.game; if (!g || g.solved) return false;
+  const wasSolved = g.solved;
+  const changed = fn();
+  if (!changed) { render(); return false; }
+  ui.followCaret = true;
+  ui.snap = snapIdx != null ? snapIdx : g.caret - 1;
+  save.cur = { li: g.board.li, tokens: g.tokens }; persist();
+  sfx("place");
+  if (g.solved && !wasSolved) onSolved();
+  render();
+  speakResult();
+  return true;
+}
+let speakT = 0;
+function speakResult() { clearTimeout(speakT); speakT = setTimeout(() => { const g = ui.game; if (!g || g.solved) return; announce($("pResult").getAttribute("aria-label") + ". " + ($("notice").hidden ? g.used + " of 5 cards used" : $("notice").textContent)); }, 250); }
+function onSolved() {
+  const g = ui.game, b = g.board;
+  const prev = save.done[b.id];
+  save.done[b.id] = { assisted: prev ? prev.assisted && g.assisted : g.assisted };
+  save.cur = nextLevelIndex(b.li) != null ? { li: nextLevelIndex(b.li), tokens: [] } : null;
+  persist();
+  ui.showHint = false;
+  sfx("solve");
+  announce("Solved. " + exprText(g.tokens, b.cards, true) + " equals " + rFmt(b.target, true));
+  clearTimeout(solveTimer);
+  solveTimer = setTimeout(() => { if (ui.game === g && ui.screen === "play" && ui.view === "play") { show("done"); const s = $("dSeal"); s.classList.remove("pop"); void s.offsetWidth; s.classList.add("pop"); $("dHero").focus({ preventScroll: true }); } }, 600);
+}
+function clickToken(i) {
+  if (ui.dragged) { ui.dragged = false; return; }
+  const g = ui.game; if (g.solved) return;
+  g.sel = g.sel === i ? -1 : i; render();
+}
+function clickSource(id) {
+  if (ui.dragged) { ui.dragged = false; return; }
+  const g = ui.game; if (g.solved) return;
+  const at = g.sel >= 0 ? g.sel + 1 : g.caret;
+  doEdit(() => E.card(g, id, at));
+}
+function clickOp(v) {
+  if (ui.dragged) { ui.dragged = false; return; }
+  const g = ui.game; if (g.solved) return;
+  if (g.sel >= 0 && g.tokens[g.sel].k === "o") { const i = g.sel; doEdit(() => E.replace(g, i, v), i); return; }
+  const at = g.sel >= 0 ? g.sel + 1 : g.caret;
+  doEdit(() => E.op(g, v, at));
+}
+function goBack() {
+  if (!$("shSettings").hidden || !$("shHowto").hidden) return closeSheets();
+  if (ui.screen === "play" || ui.screen === "done") { clearTimeout(solveTimer); openCollection(ui.game.board.collection); }
+  else if (ui.screen === "collection") show("collections");
+  else if (ui.screen === "collections") show("home");
+}
+
+// ---------- drag and drop (pointer) ----------
+let drag = null;
+function dragStart(e, src) {
+  if (e.button > 0 || !ui.game || ui.game.solved) return;
+  drag = { src, x0: e.clientX, y0: e.clientY, on: false, el: e.currentTarget, id: e.pointerId };
+  try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+  e.currentTarget.addEventListener("pointermove", dragMove);
+  e.currentTarget.addEventListener("pointerup", dragEnd);
+  e.currentTarget.addEventListener("pointercancel", dragCancel);
+}
+function dragMove(e) {
+  if (!drag) return;
+  if (!drag.on) {
+    if (Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 8) return;
+    drag.on = true;
+    const f = drag.el.cloneNode(true); f.className = drag.el.className.replace(/\b(sel|snap|armed)\b/g, "") + " float"; f.removeAttribute("id");
+    document.body.appendChild(f); drag.float = f;
+    drag.el.style.opacity = ".35";
+  }
+  drag.float.style.left = e.clientX - 22 + "px"; drag.float.style.top = e.clientY - 22 - 12 + "px";
+  const zone = dropZone(e.clientX, e.clientY);
+  drag.zone = zone;
+  $("well").classList.toggle("drop", zone.kind === "well");
+  $("tray").classList.toggle("drop", zone.kind === "tray" && drag.src.kind === "token");
+  if (zone.kind === "well") placeCaret(zone.at, true); else placeCaret(-1, true);
+}
+function dropZone(x, y) {
+  const inR = (el) => { const r = el.getBoundingClientRect(); return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; };
+  if (inR($("well"))) {
+    const kids = [...$("cells").children];
+    if (!kids.length) return { kind: "well", at: ui.pageStart };
+    let best = null, bd = Infinity;
+    kids.forEach((el) => { const r = el.getBoundingClientRect(), cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2, d = Math.hypot((x - cx) * 0.6, y - cy); if (d < bd) { bd = d; best = { el, cx }; } });
+    const i = +best.el.dataset.i;
+    return { kind: "well", at: x < best.cx ? i : i + 1 };
+  }
+  if (inR($("tray")) || inR($("palette"))) return { kind: "tray" };
+  return { kind: "none" };
+}
+function dragEnd(e) {
+  if (!drag) return;
+  const d = drag; cleanupDrag();
+  if (!d.on) return; // a plain tap: the click handler does the work
+  ui.dragged = true; setTimeout(() => (ui.dragged = false), 0);
+  const g = ui.game, z = d.zone || { kind: "none" };
+  if (z.kind === "well") {
+    if (d.src.kind === "card") doEdit(() => E.card(g, d.src.id, z.at));
+    else if (d.src.kind === "op") doEdit(() => E.op(g, d.src.v, z.at));
+    else doEdit(() => E.move(g, d.src.i, z.at));
+  } else if (z.kind === "tray" && d.src.kind === "token") doEdit(() => E.remove(g, d.src.i));
+  else { sfx("nope"); render(); }
+}
+function dragCancel() { cleanupDrag(); render(); }
+function cleanupDrag() {
+  if (!drag) return;
+  drag.el.removeEventListener("pointermove", dragMove); drag.el.removeEventListener("pointerup", dragEnd); drag.el.removeEventListener("pointercancel", dragCancel);
+  if (drag.float) drag.float.remove();
+  drag.el.style.opacity = "";
+  $("well").classList.remove("drop"); $("tray").classList.remove("drop");
+  drag = null;
+}
+document.addEventListener("visibilitychange", () => { if (document.hidden && drag) dragCancel(); });
+
+// ---------- keyboard ----------
+let digitBuf = "", digitT = 0;
 document.addEventListener("keydown", (e) => {
-  if (screen === "won") {
-    if (e.key === "r" || e.key === "R") startLevel(game.level);
-    else if (e.key === "Escape") goMap();
+  const sheetOpen = !$("shSettings").hidden || !$("shHowto").hidden;
+  if (e.key === "Escape") { e.preventDefault(); if (ui.screen === "play" && ui.game && ui.game.sel >= 0) { ui.game.sel = -1; render(); } else if (ui.screen === "play" && ui.showHint) { ui.showHint = false; render(); } else goBack(); return; }
+  if (sheetOpen) return trapTab(e);
+  if (ui.screen !== "play" || !ui.game) return;
+  const g = ui.game, a = document.activeElement;
+  const inBoard = a === document.body || a === $("well") || $("sPlay").contains(a);
+  if (!inBoard) return;
+  const onButton = a && a.tagName === "BUTTON";
+  const mod = e.ctrlKey || e.metaKey;
+  if (mod && e.key.toLowerCase() === "z") { e.preventDefault(); doUndo(); return; }
+  if (mod || e.altKey) return;
+  if (g.solved) { if (e.key === "Enter" && !onButton) { e.preventDefault(); } return; }
+  const k = e.key;
+  const len = g.tokens.length, cols = cellGeometry().cols;
+  const moveC = (d) => { if (g.sel >= 0) g.sel = Math.max(0, Math.min(len - 1, g.sel + d)); else g.caret = Math.max(0, Math.min(len, g.caret + d)); ui.followCaret = true; render(); };
+  if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(k) && !onButton) {
+    e.preventDefault();
+    if (k === "ArrowLeft") moveC(-1); else if (k === "ArrowRight") moveC(1);
+    else if (k === "ArrowUp") moveC(-cols); else if (k === "ArrowDown") moveC(cols);
+    else if (k === "Home") moveC(-len); else if (k === "End") moveC(len);
+    else moveC((k === "PageUp" ? -1 : 1) * cellGeometry().per);
     return;
   }
-  if (screen === "map" && e.key === "Escape") { goTitle(); return; }
-  if (screen !== "play") return;
-  if (/^[1-6]$/.test(e.key) && +e.key <= game.tiles.length) { tapTile(+e.key - 1); return; }
-  if (KEYOP[e.key] && game.ops.includes(KEYOP[e.key])) { e.preventDefault(); tapOp(KEYOP[e.key]); return; }
-  if (e.key === "u" || e.key === "U" || e.key === "Backspace") { e.preventDefault(); $("undoBtn").click(); return; }
-  if (e.key === "r" || e.key === "R") { startLevel(game.level); return; }
-  if (e.key === "Enter" && made(game)) { e.preventDefault(); finish(); return; }
-  if (e.key === "h" || e.key === "H") { giveHint(); return; }
-  if (e.key === "Escape") { if (sel.a !== null) { sel = { a: null, op: null }; render(); } else goMap(); }
+  if (k === "Enter" && !onButton) { e.preventDefault(); if (g.sel >= 0) { g.caret = g.sel + 1; g.sel = -1; } else if (len) g.sel = Math.min(g.caret, len - 1); render(); return; }
+  if (k === "Insert") { e.preventDefault(); if (g.sel >= 0) { g.caret = g.sel; g.sel = -1; render(); } return; }
+  if (k === "Backspace" || k === "Delete") {
+    e.preventDefault();
+    if (g.sel >= 0) doEdit(() => E.remove(g, g.sel));
+    else if (k === "Backspace" && g.caret > 0) doEdit(() => E.remove(g, g.caret - 1));
+    else if (k === "Delete" && g.caret < len) doEdit(() => E.remove(g, g.caret));
+    return;
+  }
+  const opKey = { "+": "+", "-": "-", "*": "*", "x": "*", "X": "*", "/": "/", ":": "/", "(": "(", ")": ")", "÷": "/", "×": "*" }[k];
+  if (opKey) { e.preventDefault(); clickOp(opKey); return; }
+  if (/^[0-9]$/.test(k)) {
+    e.preventDefault();
+    clearTimeout(digitT); digitBuf += k;
+    const used = usedIds(g), free = g.board.cards.filter((c) => !used.has(c.id));
+    const exact = free.filter((c) => String(c.value) === digitBuf), longer = free.filter((c) => String(c.value).startsWith(digitBuf) && String(c.value) !== digitBuf);
+    if (exact.length && !longer.length) { const id = exact[0].id; digitBuf = ""; clickSource(id); }
+    else if (!exact.length && !longer.length) { digitBuf = ""; sfx("nope"); }
+    else digitT = setTimeout(() => { if (exact.length) clickSource(exact[0].id); digitBuf = ""; }, 600);
+    return;
+  }
+  if (k === "u" || k === "U") { e.preventDefault(); doUndo(); return; }
+  if (k === "r" || k === "R") { e.preventDefault(); doRestart(); return; }
+  if (k === "h" || k === "H") { e.preventDefault(); openHint(); return; }
 });
+function trapTab(e) {
+  if (e.key !== "Tab") return;
+  const sheet = !$("shSettings").hidden ? $("shSettings") : $("shHowto");
+  const f = [...sheet.querySelectorAll("button")]; if (!f.length) return;
+  const i = f.indexOf(document.activeElement);
+  if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+  else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+}
+function doUndo() { const g = ui.game; const before = g.caret; if (doEdit(() => E.undo(g), -1)) announce("Undone"); }
+function doRestart() { const g = ui.game; if (doEdit(() => E.restart(g), -1)) { announce("Restarted. Undo brings the expression back."); } }
+function openHint() { const g = ui.game; if (!g || g.solved) return; if (!ui.showHint) { g.hint = Math.max(1, g.hint); ui.showHint = true; } else if (g.hint < 3) g.hint++; g.assisted = true; render(); }
 
-goTitle();
+// ---------- sound (off by default; starts only after a gesture) ----------
+let actx = null;
+function sfx(kind) {
+  if (!save.settings.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime, notes = kind === "solve" ? [523, 659, 784] : kind === "nope" ? [180] : [660];
+    notes.forEach((f, i) => {
+      const o = actx.createOscillator(), gn = actx.createGain();
+      o.type = kind === "nope" ? "triangle" : "sine"; o.frequency.value = f;
+      gn.gain.setValueAtTime(0.0001, t + i * 0.09); gn.gain.exponentialRampToValueAtTime(kind === "place" ? 0.05 : 0.09, t + i * 0.09 + 0.01);
+      gn.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.09 + (kind === "solve" ? 0.35 : 0.08));
+      o.connect(gn).connect(actx.destination); o.start(t + i * 0.09); o.stop(t + i * 0.09 + 0.4);
+    });
+  } catch (_) {}
+}
 
-// ======================= QA hook =======================
-function levelByIndex(i) { return i >= TRAIL ? dailyLevel() : trailLevel(Math.max(0, i | 0)); }
+// ---------- sheets ----------
+let sheetOpener = null;
+function openSheet(id) { sheetOpener = document.activeElement; $(id).hidden = false; $(id).querySelector("h2").focus(); syncToggles(); }
+function closeSheets() { $("shSettings").hidden = true; $("shHowto").hidden = true; if (sheetOpener && sheetOpener.focus) sheetOpener.focus({ preventScroll: true }); render(); }
+function syncToggles() { $("tSound").setAttribute("aria-checked", !!save.settings.sound); $("tContrast").setAttribute("aria-checked", !!save.settings.contrast); }
+$("tSound").onclick = () => { save.settings.sound = !save.settings.sound; persist(); syncToggles(); sfx("place"); };
+$("tContrast").onclick = () => { save.settings.contrast = !save.settings.contrast; persist(); syncToggles(); render(); };
+document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = closeSheets));
+document.querySelectorAll(".sheet").forEach((s) => s.addEventListener("click", (e) => { if (e.target === s) closeSheets(); }));
+document.querySelectorAll("[data-settings]").forEach((b) => (b.onclick = () => openSheet("shSettings")));
+document.querySelectorAll("[data-back]").forEach((b) => (b.onclick = goBack));
+
+// ---------- wiring ----------
+$("bContinue").onclick = () => { const c = save.cur; if (c && LEVELS[c.li]) startLevel(c.li, c.tokens); else startLevel(firstIncomplete("starter")); };
+$("bCollections").onclick = () => show("collections");
+$("bHowto").onclick = () => openSheet("shHowto");
+$("bUndo").onclick = doUndo;
+$("bRestart").onclick = doRestart;
+$("bHint").onclick = openHint;
+$("dNext").onclick = nextPuzzle;
+$("dColl").onclick = () => openCollection(ui.game.board.collection);
+$("dReview").onclick = () => { ui.view = "review"; show("play"); };
+$("well").addEventListener("click", (e) => { // tap empty space: caret to end of the page
+  const g = ui.game; if (!g || g.solved || e.target.closest(".card,button")) return;
+  if (g.sel >= 0) { g.sel = -1; } else g.caret = ui.pageEnd;
+  render();
+});
+$("well").addEventListener("focus", () => placeCaret(ui.game && !ui.game.solved && ui.game.sel < 0 ? ui.game.caret : -1, false));
+$("well").addEventListener("blur", () => $("caret").classList.remove("blink"));
+window.addEventListener("resize", () => render());
+render();
+
+// ======================================================================
+// 8. QA HOOK (studio contract)
+// ======================================================================
+const tokStr = (t) => t.k === "n" ? t.id : t.v;
 window.__qa = {
-  state: () => ({ screen: screen === "play" ? "playing" : screen, world: game ? game.level.world : 0, level: game ? (game.level.kind === "trail" ? game.level.index : game.level.kind) : 0,
-    target: game ? game.target : null, tiles: game ? game.tiles.slice() : [], ops: game ? game.ops.slice() : [], moves: game ? game.log.length : 0,
-    made: game ? made(game) : false, stars: game ? starsNow(game) : 0, selected: { ...sel } }),
+  state: () => {
+    const g = ui.game;
+    const screen = ui.screen === "home" ? "home" : ui.screen === "collections" ? "collections" : ui.screen === "collection" ? "collection"
+      : g && g.solved ? (ui.view === "review" ? "review" : "won") : "playing";
+    if (!g || screen === "home" || screen === "collections" || screen === "collection") return { screen, collection: ui.coll, done: Object.keys(save.done) };
+    return { screen, level: g.board.li, levelId: g.board.id, target: rFmt(g.board.target, true), cards: g.board.cards.map((c) => c.value),
+      tokens: g.tokens.map(tokStr), expression: exprText(g.tokens, g.board.cards, true), caret: g.caret, sel: g.sel,
+      result: { state: g.res.state, value: g.res.value ? rFmt(g.res.value, true) : null, reason: g.res.reason || null },
+      used: g.used, matched: g.matched, solved: g.solved, assisted: g.assisted, undoDepth: g.hist.length };
+  },
   actions: () => {
-    if (screen === "title" || screen === "map") return ["start"];
-    if (screen !== "play") return [];
-    const acts = validMerges(game);
-    if (game.history.length) acts.push("undo");
-    if (made(game)) acts.push("finish");
-    return acts;
+    if (ui.screen === "home") return ["continue", "collections"];
+    if (ui.screen === "collections") return COLLECTIONS.map((c) => ({ t: "collection", key: c.key }));
+    if (ui.screen === "collection") return levelsIn(ui.coll).map((x) => ({ t: "level", i: x.i }));
+    const g = ui.game; if (!g || g.solved) return [];
+    const out = [], used = usedIds(g), n = g.tokens.length;
+    for (let at = 0; at <= n; at++) {
+      for (const c of g.board.cards) if (!used.has(c.id)) out.push({ t: "card", id: c.id, at });
+      for (const v of OPS) out.push({ t: "op", op: v, at });
+    }
+    for (let i = 0; i < n; i++) { out.push({ t: "remove", at: i }); out.push({ t: "move", from: i, to: (i + 2) % (n + 1) }); }
+    if (g.hist.length) out.push("undo");
+    if (n) out.push("restart");
+    return out;
   },
   act: (a) => {
-    if (a === "start") { if (screen === "title" || screen === "map") startLevel(trailLevel(firstOpen())); return; }
-    if (screen !== "play") return;
-    if (a === "undo") { $("undoBtn").click(); return; }
-    if (a === "finish") { finish(); return; }
-    if (a && typeof a === "object") { sel = { a: null, op: null }; doMerge(a.a, a.op, a.b); }
+    clearTimeout(solveTimer);
+    if (a === "continue") return $("bContinue").onclick();
+    if (a === "collections") return show("collections");
+    if (a && a.t === "collection") return openCollection(a.key);
+    if (a && a.t === "level") return startLevel(a.i);
+    const g = ui.game; if (!g || ui.screen !== "play") return;
+    if (a === "undo") return doUndo();
+    if (a === "restart") return doRestart();
+    if (a.t === "card") return doEdit(() => E.card(g, a.id, a.at));
+    if (a.t === "op") return doEdit(() => E.op(g, a.op, a.at));
+    if (a.t === "remove") return doEdit(() => E.remove(g, a.at));
+    if (a.t === "move") return doEdit(() => E.move(g, a.from, a.to));
   },
-  reset: (i) => { startLevel(i == null ? (game ? game.level : trailLevel(0)) : levelByIndex(i)); },
-  levels: () => TRAIL + 1,
-  solve: () => game ? (solveTiles(game.tiles, game.target, game.ops) || []) : [],
+  reset: (level) => { clearTimeout(solveTimer); startLevel(level ?? (ui.game ? ui.game.board.li : 0)); },
+  levels: () => LEVELS.length,
+  solve: () => { // stored verified solution, built from an empty expression
+    const g = ui.game; if (!g) return [];
+    const seq = g.tokens.length ? ["restart"] : [];
+    g.board.solution.forEach((t, i) => seq.push(t.k === "n" ? { t: "card", id: t.id, at: i } : { t: "op", op: t.v, at: i }));
+    return seq;
+  },
+  // extra hooks for tests
+  _engine: { analyse, rParse, rFmt, R, solveBoard, boardOf, hintSteps },
 };
 </script>
 </body>
