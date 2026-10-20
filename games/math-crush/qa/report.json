@@ -1,0 +1,329 @@
+{
+  "game": "games/math-crush/index.html",
+  "at": "2026-10-20T20:52:45.086Z",
+  "checks": [
+    {
+      "name": "file under 2 MB",
+      "ok": true,
+      "detail": "77 KB"
+    },
+    {
+      "name": "external resources only from allowed CDNs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "library versions pinned",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no alert/confirm/prompt/print/iframe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "has a <title>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "declares window.__qa",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[desktop] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null}"
+    },
+    {
+      "name": "[desktop] survives 400 random actions",
+      "ok": true,
+      "detail": "screens seen: playing, lost, won; resets: 84"
+    },
+    {
+      "name": "every level completable via solve() (36 levels)",
+      "ok": true,
+      "detail": "L1:3 L2:3 L3:3 L4:3 L5:4 L6:4 L7:4 L8:4 L9:5 L10:5 L11:5 L12:5 L13:12 L14:12 L15:12 L16:12 L17:12 L18:12 L19:12 L20:12 L21:16 L22:16 L23:12 L24:16 L25:24 L26:24 L27:24 L28:24 L29:16 L30:16 L31:16 L32:16 L33:20 L34:20 L35:20 L36:20"
+    },
+    {
+      "name": "[desktop] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[phone] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null}"
+    },
+    {
+      "name": "[phone] survives 60 random actions",
+      "ok": true,
+      "detail": "screens seen: playing, lost, won; resets: 13"
+    },
+    {
+      "name": "[phone] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "games/math-crush/qa/desktop-01-load.png",
+    "games/math-crush/qa/desktop-02-after-play.png",
+    "games/math-crush/qa/desktop-03-solved.png",
+    "games/math-crush/qa/phone-01-load.png",
+    "games/math-crush/qa/phone-02-after-play.png"
+  ],
+  "desktop_initialState": {
+    "screen": "hub",
+    "mode": "match",
+    "level": null,
+    "qaLevel": null
+  },
+  "solveResults": [
+    {
+      "lv": 0,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 1,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 2,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 3,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 4,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 5,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 6,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 7,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 8,
+      "ok": true,
+      "moves": 5,
+      "screen": "won"
+    },
+    {
+      "lv": 9,
+      "ok": true,
+      "moves": 5,
+      "screen": "won"
+    },
+    {
+      "lv": 10,
+      "ok": true,
+      "moves": 5,
+      "screen": "won"
+    },
+    {
+      "lv": 11,
+      "ok": true,
+      "moves": 5,
+      "screen": "won"
+    },
+    {
+      "lv": 12,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 13,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 14,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 15,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 16,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 17,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 18,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 19,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 20,
+      "ok": true,
+      "moves": 16,
+      "screen": "won"
+    },
+    {
+      "lv": 21,
+      "ok": true,
+      "moves": 16,
+      "screen": "won"
+    },
+    {
+      "lv": 22,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 23,
+      "ok": true,
+      "moves": 16,
+      "screen": "won"
+    },
+    {
+      "lv": 24,
+      "ok": true,
+      "moves": 24,
+      "screen": "won"
+    },
+    {
+      "lv": 25,
+      "ok": true,
+      "moves": 24,
+      "screen": "won"
+    },
+    {
+      "lv": 26,
+      "ok": true,
+      "moves": 24,
+      "screen": "won"
+    },
+    {
+      "lv": 27,
+      "ok": true,
+      "moves": 24,
+      "screen": "won"
+    },
+    {
+      "lv": 28,
+      "ok": true,
+      "moves": 16,
+      "screen": "won"
+    },
+    {
+      "lv": 29,
+      "ok": true,
+      "moves": 16,
+      "screen": "won"
+    },
+    {
+      "lv": 30,
+      "ok": true,
+      "moves": 16,
+      "screen": "won"
+    },
+    {
+      "lv": 31,
+      "ok": true,
+      "moves": 16,
+      "screen": "won"
+    },
+    {
+      "lv": 32,
+      "ok": true,
+      "moves": 20,
+      "screen": "won"
+    },
+    {
+      "lv": 33,
+      "ok": true,
+      "moves": 20,
+      "screen": "won"
+    },
+    {
+      "lv": 34,
+      "ok": true,
+      "moves": 20,
+      "screen": "won"
+    },
+    {
+      "lv": 35,
+      "ok": true,
+      "moves": 20,
+      "screen": "won"
+    }
+  ],
+  "phone_initialState": {
+    "screen": "hub",
+    "mode": "match",
+    "level": null,
+    "qaLevel": null
+  },
+  "passed": true
+}
