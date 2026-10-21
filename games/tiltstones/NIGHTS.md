@@ -1,5 +1,40 @@
 # Ricochet (tiltstones) — night log
 
+## Night 4 — 2026-10-21 (03:50 shift)
+
+**Job:** build the approved design hand-over H-001-v1 (design-studio/games/ricochet, RIC-N-001–007): one night of compact level exploration. The board had no pending notes or queued ideas; the studio read Benji's 20 Oct approval ("for one overnight exploration shift") as tonight's job rather than pitching a studio game.
+
+**Shipped:**
+- Three new Level Lab candidates at the top of the lab, all 14 × 9, standard speed, current 0.5 s dip and combo:
+  - **N1 Twin Harbours** — two mirrored stone harbours (blue left, red right) with the red well on a pillar between their mouths.
+  - **N2 Red Door Circuit** — a stone shelf splits two floors; as blue you go up through the left gaps; once red, breaking the red door on the right opens a short way between floors.
+  - **N3 Return Ticket** — a red-capped vault next to the blue well keeps blue inside, and a red plug sits on the blue well: blue → red → blue.
+- All existing levels (World 1, L1–L10, H1–H6, S1–S3, S1F/S1A, P1–P3) unchanged; the five H-001 witnesses replay (5/5 won, 3 lives).
+- The published build was still night 3's; it now also carries the designer baseline (H/S/P levels, 0.5 s dip, combo tiers) that had only been on main.
+- Lab tools: `witness.mjs` (replay witnesses), `make-witness.mjs`, `trace.mjs` (solver route with events), `access.mjs` (before/after access check), `night4/shots-n.mjs`; `play1x.mjs` now picks desktop/phone viewport from map orientation and logs events.
+- Versions v1–v5 of N1–N3 in `lab/night4/`, witnesses in `lab/night4-witnesses.json`.
+
+**Results (final v5; single samples, bot not human):**
+
+| Level | Solver clear / dead | 1× bot clear / dead / worst gap | Longest 1× flight | Colours |
+|---|---|---|---|---|
+| N1 Twin Harbours | 13.7 s / 28% | 13.1 s / 19% / 2.1 s | 5.7 rows | B→R (early red dip → B) |
+| N2 Red Door Circuit | 13.2 s / 29% | 20.6 s / 41% / 3.6 s | 5.1 rows | B→R |
+| N3 Return Ticket | 28.7 s / 38% | 28.9 s / 33% / 2.7 s | 5.0 rows | B→R→B |
+| S1 / S2 / S3 tonight | — | 15.8 / 19.9 / 20.2 s | | |
+
+**Studio ranking:** N1, N2, N3. Reviewer (on v4, before fixes): N2, N1, N3.
+
+**QA:** 17/17 checks · 2 rounds · 35 levels completable by solve() · known issues: 1× bot times vary ±30% between runs on this 2-core machine; open run after clearing is 9 rows in every N level (edge columns stay open, as in S1–S3).
+
+**Reviewer:** ship with fixes — readable, no soft-locks (30/30 random-prefix recoveries), but greys broke in the first seconds so breaking had no purpose, N1 had a 6.9 s pocket cleanup, N3 repeats the shell idea and its hint promised a risk that doesn't exist and named the R key on phone. Fixed: N2 trapdoor → red door (closed 3.7 s vs open 0.9 s to the upper floor), N3 start greys removed and hint rewritten, N1 inner harbour columns opened from below (1× worst gap 6.5 → 2.1 s), "↻" instead of R. Not fixed: N3 is still a small shell (kept as the return-colour candidate RIC-N-004 asks for; ranked last); phone tiles are ~24 px (orientation is open).
+
+**Assumptions:** the approved hand-over counts as Benji's job without a board note; RIC-N-003 evidence is solver before/after access runs.
+
+**Questions for Benji:** see the board report and FB-001.
+
+**Play:** https://claude.ai/artifact/VAXzjHmZLmMTJS5zQsRJH4
+
 ## Night 3 — 2026-10-19 (22:30 shift)
 
 **Job:** iteration on note "ricochet-level-lab": "I'm not happy with the World 1 level designs. Tonight: build a Level Lab — 8 or more levels, each a different level-design direction … dense … corridors … little open space … better balance between breakable and unbreakable … Keep World 1 playable for comparison."
