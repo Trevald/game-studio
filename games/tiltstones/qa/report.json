@@ -1,11 +1,11 @@
 {
   "game": "games/tiltstones/index.html",
-  "at": "2026-10-19T22:23:59.190Z",
+  "at": "2026-10-21T02:31:15.894Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "81 KB"
+      "detail": "92 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -53,9 +53,9 @@
       "detail": "screens seen: playing, won; resets: 1"
     },
     {
-      "name": "every level completable via solve() (18 levels)",
+      "name": "every level completable via solve() (35 levels)",
       "ok": true,
-      "detail": "L1:135 L2:50 L3:205 L4:138 L5:207 L6:117 L7:112 L8:242 L9:279 L10:249 L11:293 L12:257 L13:271 L14:322 L15:293 L16:361 L17:185 L18:123"
+      "detail": "L1:135 L2:50 L3:208 L4:129 L5:217 L6:120 L7:111 L8:200 L9:139 L10:136 L11:237 L12:238 L13:255 L14:160 L15:161 L16:185 L17:186 L18:205 L19:171 L20:655 L21:719 L22:832 L23:146 L24:278 L25:223 L26:298 L27:249 L28:293 L29:257 L30:274 L31:326 L32:293 L33:369 L34:182 L35:124"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -136,97 +136,199 @@
     {
       "lv": 2,
       "ok": true,
-      "moves": 205,
+      "moves": 208,
       "screen": "won"
     },
     {
       "lv": 3,
       "ok": true,
-      "moves": 138,
+      "moves": 129,
       "screen": "won"
     },
     {
       "lv": 4,
       "ok": true,
-      "moves": 207,
+      "moves": 217,
       "screen": "won"
     },
     {
       "lv": 5,
       "ok": true,
-      "moves": 117,
+      "moves": 120,
       "screen": "won"
     },
     {
       "lv": 6,
       "ok": true,
-      "moves": 112,
+      "moves": 111,
       "screen": "won"
     },
     {
       "lv": 7,
       "ok": true,
-      "moves": 242,
+      "moves": 200,
       "screen": "won"
     },
     {
       "lv": 8,
       "ok": true,
-      "moves": 279,
+      "moves": 139,
       "screen": "won"
     },
     {
       "lv": 9,
       "ok": true,
-      "moves": 249,
+      "moves": 136,
       "screen": "won"
     },
     {
       "lv": 10,
       "ok": true,
-      "moves": 293,
+      "moves": 237,
       "screen": "won"
     },
     {
       "lv": 11,
       "ok": true,
-      "moves": 257,
+      "moves": 238,
       "screen": "won"
     },
     {
       "lv": 12,
       "ok": true,
-      "moves": 271,
+      "moves": 255,
       "screen": "won"
     },
     {
       "lv": 13,
       "ok": true,
-      "moves": 322,
+      "moves": 160,
       "screen": "won"
     },
     {
       "lv": 14,
       "ok": true,
-      "moves": 293,
+      "moves": 161,
       "screen": "won"
     },
     {
       "lv": 15,
       "ok": true,
-      "moves": 361,
+      "moves": 185,
       "screen": "won"
     },
     {
       "lv": 16,
       "ok": true,
-      "moves": 185,
+      "moves": 186,
       "screen": "won"
     },
     {
       "lv": 17,
       "ok": true,
-      "moves": 123,
+      "moves": 205,
+      "screen": "won"
+    },
+    {
+      "lv": 18,
+      "ok": true,
+      "moves": 171,
+      "screen": "won"
+    },
+    {
+      "lv": 19,
+      "ok": true,
+      "moves": 655,
+      "screen": "won"
+    },
+    {
+      "lv": 20,
+      "ok": true,
+      "moves": 719,
+      "screen": "won"
+    },
+    {
+      "lv": 21,
+      "ok": true,
+      "moves": 832,
+      "screen": "won"
+    },
+    {
+      "lv": 22,
+      "ok": true,
+      "moves": 146,
+      "screen": "won"
+    },
+    {
+      "lv": 23,
+      "ok": true,
+      "moves": 278,
+      "screen": "won"
+    },
+    {
+      "lv": 24,
+      "ok": true,
+      "moves": 223,
+      "screen": "won"
+    },
+    {
+      "lv": 25,
+      "ok": true,
+      "moves": 298,
+      "screen": "won"
+    },
+    {
+      "lv": 26,
+      "ok": true,
+      "moves": 249,
+      "screen": "won"
+    },
+    {
+      "lv": 27,
+      "ok": true,
+      "moves": 293,
+      "screen": "won"
+    },
+    {
+      "lv": 28,
+      "ok": true,
+      "moves": 257,
+      "screen": "won"
+    },
+    {
+      "lv": 29,
+      "ok": true,
+      "moves": 274,
+      "screen": "won"
+    },
+    {
+      "lv": 30,
+      "ok": true,
+      "moves": 326,
+      "screen": "won"
+    },
+    {
+      "lv": 31,
+      "ok": true,
+      "moves": 293,
+      "screen": "won"
+    },
+    {
+      "lv": 32,
+      "ok": true,
+      "moves": 369,
+      "screen": "won"
+    },
+    {
+      "lv": 33,
+      "ok": true,
+      "moves": 182,
+      "screen": "won"
+    },
+    {
+      "lv": 34,
+      "ok": true,
+      "moves": 124,
       "screen": "won"
     }
   ],
