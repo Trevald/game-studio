@@ -1,11 +1,11 @@
 # ADR-001 — Explore a more expressive card-table presentation
 
-- State: proposed
+- State: superseded for direction selection by ADR-002; draft requirements remain proposed
 - Date: 2026-10-20
 - Decision owner: Benji
 - Approval evidence and revision: none; exploration only, revision 1
 - Related requirements / feedback: MATHLY-VIS-001–004 below; owner request in this Mathly chat, 2026-10-20
-- Supersedes / superseded by: none; existing handover stays unchanged
+- Supersedes / superseded by: direction recommendation superseded by ADR-002; existing handover stays unchanged
 
 ## Context
 

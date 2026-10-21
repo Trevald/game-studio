@@ -1,0 +1,153 @@
+{
+  "results": [
+    {
+      "width": 375,
+      "example": "normal",
+      "variant": 0,
+      "height": 667,
+      "pager": "All visible \u00b7 1\u201311 of 11",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 375,
+      "example": "normal",
+      "variant": 1,
+      "height": 667,
+      "pager": "All visible \u00b7 1\u201311 of 11",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 375,
+      "example": "long",
+      "variant": 0,
+      "height": 667,
+      "pager": "Page 1 / 2 \u00b7 1\u201314 of 19",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 375,
+      "example": "long",
+      "variant": 1,
+      "height": 667,
+      "pager": "All visible \u00b7 1\u201319 of 19",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 320,
+      "example": "normal",
+      "variant": 0,
+      "height": 568,
+      "pager": "All visible \u00b7 1\u201311 of 11",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 320,
+      "example": "normal",
+      "variant": 1,
+      "height": 568,
+      "pager": "All visible \u00b7 1\u201311 of 11",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 320,
+      "example": "long",
+      "variant": 0,
+      "height": 568,
+      "pager": "Page 1 / 2 \u00b7 1\u201312 of 19",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 320,
+      "example": "long",
+      "variant": 1,
+      "height": 568,
+      "pager": "Page 1 / 2 \u00b7 1\u201312 of 19",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 390,
+      "example": "normal",
+      "variant": 0,
+      "height": 844,
+      "pager": "All visible \u00b7 1\u201311 of 11",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 390,
+      "example": "normal",
+      "variant": 1,
+      "height": 844,
+      "pager": "All visible \u00b7 1\u201311 of 11",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 390,
+      "example": "long",
+      "variant": 0,
+      "height": 844,
+      "pager": "Page 1 / 2 \u00b7 1\u201314 of 19",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    },
+    {
+      "width": 390,
+      "example": "long",
+      "variant": 1,
+      "height": 844,
+      "pager": "All visible \u00b7 1\u201319 of 19",
+      "overflow": false,
+      "smallTarget": false,
+      "tokensOutside": false,
+      "workspaceOverflow": false,
+      "bottom": true
+    }
+  ],
+  "interaction": {
+    "pager": "Page 2 / 2 \u00b7 13\u201319 of 19",
+    "selection": "13. 3 selected \u00b7 insertion 14"
+  },
+  "errors": []
+}
