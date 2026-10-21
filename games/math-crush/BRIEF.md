@@ -124,3 +124,19 @@ Restart / Levels). Retry is instant.
 - `solve()`: Match simulates the seeded refills and plays the shortest legal chain each move; Equation
   enumerates the shortest solution per round; Clear runs the exact-cover search. `__qa.validate()` checks the
   game's evaluator against every designer witness.
+
+### Night 2 design notes (Match, H-001-v1)
+Rules, constants and screens are the designer's (HANDOVER.md MC-001–009, SCREENS.md); this records the mapping.
+- **Core loop:** unchanged drag chain to the target; now longer chains pay more (×1.5 / ×2 / ×3) and chains of
+  4+ (from level 4) leave a striped candy, 5+ (from level 7) a wrapped candy. Using a special in a later chain
+  blasts its row / 3×3 for a separate +25 per extra candy.
+- **Twist served:** the decision is now "short safe chain vs. long chain that pays and builds a special".
+- **Controls:** drag; Settings → "Tap to select" (tap adjacent tiles, tap the last to step back, Submit);
+  keyboard arrows/Space/Enter, U undo, H hint, Esc pause.
+- **Win/lose:** quota before moves run out; Retry card offers Undo last move. Stars from score thresholds
+  (200×/300× quota), shown on the intro and result. Undo/Hint mark the attempt Assisted, no star cap.
+- **Juice tonight:** blast band preview while holding, reward badge preview, score popup split chain/blast.
+- **QA plan:** `state()` adds `chainPts, blastPts, coreScore, specials[], undoCount, assisted, elapsedMs`;
+  actions add `"undo"`; `__qa.fixtures()` runs mechanics-fixtures.json through the real `M.resolve` engine;
+  `__qa.tick(ms)` advances speed-timer time deterministically; `__qa.threeStar(li)` searches for a no-speed
+  3-star route with the real engine. `solve()` unchanged (shortest chains).

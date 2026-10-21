@@ -118,11 +118,162 @@
     .press:active:not(:disabled) { transform: none; }
   }
   @keyframes fadeout { to { opacity: 0; } }
+
+  /* ================= Candy Match (H-001-v1) — flowing phone-width layout ================= */
+  #flow { position: fixed; inset: 0; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #4A1736;
+    --cream: #FFF3DD; --edge: #E9BE8B; --plum: #4A1736; --rasp: #C81758; --rasp2: #A10F45; --gold: #FFE09A; --amber: #E8890C;
+    --well: rgba(74,23,54,.75); --muted: #7A4B63; font-size: 16px; }
+  #flow[hidden] { display: none; }
+  .mc { position: relative; max-width: 480px; margin: 0 auto; min-height: 100%; padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    display: flex; flex-direction: column; gap: 12px; }
+  .mc button { font-family: var(--font); color: inherit; cursor: pointer; }
+  .mc button:focus-visible, .mcm button:focus-visible, .mc .kfocus { outline: none; box-shadow: 0 0 0 3px var(--cream), 0 0 0 6px var(--plum) !important; }
+  .panel { background: var(--cream); border: 1px solid var(--edge); border-radius: 24px; box-shadow: 0 6px 14px rgba(74,23,54,.22); }
+  .pbtn { min-height: 56px; border-radius: 18px; border: 1px solid #8F1647; background: var(--rasp); color: #fff !important; font-weight: 900; font-size: 20px;
+    box-shadow: 0 4px 0 #8F1647, 0 6px 12px rgba(74,23,54,.25); padding: 8px 18px; width: 100%; transition: transform 70ms, box-shadow 70ms, background 70ms; }
+  .sbtn { min-height: 48px; border-radius: 18px; border: 1px solid var(--plum); background: var(--cream); color: var(--plum) !important; font-weight: 900; font-size: 18px;
+    box-shadow: 0 3px 0 rgba(74,23,54,.35); padding: 6px 16px; width: 100%; transition: transform 70ms, box-shadow 70ms, background 70ms; }
+  .tbtn { min-height: 44px; border: 0; background: none; color: var(--plum) !important; font-weight: 800; font-size: 16px; text-decoration: underline; text-underline-offset: 3px; padding: 6px 12px; }
+  .ibtn { width: 44px; height: 44px; min-width: 44px; border-radius: 14px; border: 1px solid var(--edge); background: var(--cream); color: var(--plum) !important;
+    display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(74,23,54,.3); padding: 0; }
+  .ibtn svg { width: 22px; height: 22px; }
+  .pbtn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 #8F1647; background: var(--rasp2); }
+  .sbtn:active:not(:disabled), .ibtn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 rgba(74,23,54,.35); background: #F4E2C4; }
+  .pbtn:disabled, .sbtn:disabled { background: #E7D7C6; color: #8E7584 !important; border-color: #C9B3A3; box-shadow: none; cursor: default; }
+  .row { display: flex; gap: 12px; align-items: center; }
+  .grow { flex: 1; min-width: 0; }
+  .center-text { text-align: center; }
+  .eyebrow { font-size: 14px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+  .h1 { font-size: 30px; line-height: 1.1; font-weight: 900; margin: 0; }
+  .lede { font-size: 17px; line-height: 1.35; font-weight: 700; margin: 0; }
+  .small { font-size: 14px; line-height: 1.35; font-weight: 700; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .stars { display: inline-flex; gap: 2px; vertical-align: middle; }
+  .stars svg { width: 1.05em; height: 1.05em; }
+
+  /* home */
+  .mc-top { display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
+  .quiet { min-height: 44px; border: 0; background: rgba(255,243,221,.86); color: var(--plum) !important; border-radius: 22px; padding: 0 14px; font-weight: 800; font-size: 15px; }
+  .logo { text-align: center; margin-top: 8px; }
+  .logo .t { font-size: 46px; line-height: 1; font-weight: 900; color: #fff; letter-spacing: -.5px;
+    text-shadow: 0 3px 0 var(--rasp), 0 6px 0 var(--plum), 0 10px 18px rgba(74,23,54,.45); }
+  .logo .m { display: inline-block; margin-top: 14px; padding: 6px 14px; border-radius: 16px; background: var(--cream); border: 1px solid var(--edge); font-weight: 900; font-size: 16px; letter-spacing: .5px; }
+  .vign { padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .vign .tiles { display: grid; grid-template-columns: repeat(3, 72px); gap: 8px; padding: 8px; border-radius: 18px; background: var(--well); }
+  .vign .tiles .tile2 { width: 72px; height: 72px; font-size: 32px; }
+
+  /* level trail */
+  .trail { position: relative; width: 100%; height: 540px; }
+  .trail svg.path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .node2 { position: absolute; width: 58px; height: 58px; margin-left: -29px; margin-top: -29px; border-radius: 50%; font-size: 24px; font-weight: 900;
+    background: var(--cream); border: 2px solid var(--plum); color: var(--plum) !important; box-shadow: 0 4px 0 rgba(74,23,54,.35); }
+  .node2.next { background: var(--rasp); border-color: #8F1647; color: #fff !important; box-shadow: 0 4px 0 #8F1647, 0 0 0 6px rgba(255,224,154,.8); }
+  .node2.locked { background: #E7D7C6; border-color: #B79C8D; color: #8E7584 !important; }
+  .node2 .lock { position: absolute; right: -6px; bottom: -6px; width: 22px; height: 22px; border-radius: 50%; background: var(--plum); display: flex; align-items: center; justify-content: center; }
+  .nodecap { position: absolute; width: 96px; margin-left: -48px; margin-top: 34px; text-align: center; font-size: 13px; font-weight: 900; color: var(--plum);
+    background: rgba(255,243,221,.92); border-radius: 10px; padding: 2px 4px; pointer-events: none; }
+
+  /* intro */
+  .card { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .fact { background: #fff; border: 1px solid var(--edge); border-radius: 16px; padding: 8px 6px; text-align: center; }
+  .fact b { display: block; font-size: 26px; line-height: 1.1; }
+  .fact span { font-size: 14px; font-weight: 800; color: var(--muted); }
+  .thresh { display: flex; flex-direction: column; gap: 6px; background: #fff; border: 1px solid var(--edge); border-radius: 16px; padding: 10px 12px; }
+  .thresh .row { justify-content: space-between; font-weight: 800; }
+  .coachcard { border: 2px dashed var(--rasp); background: #FFF9EE; border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .demo { display: flex; gap: 6px; justify-content: center; padding: 6px; border-radius: 14px; background: var(--well); align-self: center; }
+  .demo .tile2 { width: 48px; height: 48px; font-size: 22px; }
+
+  /* gameplay */
+  .playtop { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; min-height: 44px; gap: 8px; }
+  .lvl { text-align: center; font-weight: 900; font-size: 18px; background: rgba(255,243,221,.9); border-radius: 14px; padding: 4px 10px; justify-self: center; display: flex; gap: 10px; align-items: center; }
+  .clock { font-variant-numeric: tabular-nums; font-size: 15px; padding: 2px 8px; border-radius: 10px; background: #fff; border: 1px solid var(--edge); }
+  .hud { display: grid; grid-template-columns: 88px 1fr 88px; gap: 12px; }
+  .hcard { min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4px; border-radius: 18px; }
+  .hcard span { font-size: 14px; font-weight: 900; color: var(--muted); }
+  .hcard b { font-size: 26px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .hcard.tgt b { font-size: 36px; }
+  .quota { min-height: 32px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 2px 12px; border-radius: 16px; font-weight: 900; font-size: 15px; }
+  .qdot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--plum); background: #fff; }
+  .qdot.on { background: var(--rasp); border-color: #8F1647; }
+  .boardwrap { position: relative; width: min(100%, 350px); align-self: center; }
+  #mboard { position: relative; width: 100%; aspect-ratio: 1; padding: 4px; border-radius: 22px; background: var(--well); display: grid; grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr); gap: 8px; touch-action: none; container-type: inline-size; box-shadow: inset 0 3px 12px rgba(0,0,0,.35); }
+  .tile2 { position: relative; display: flex; align-items: center; justify-content: center; border-radius: 16px; font-weight: 900; color: #fff; font-size: 9.6cqw;
+    text-shadow: -2px -2px 0 #3a1a10, 2px -2px 0 #3a1a10, -2px 2px 0 #3a1a10, 2px 2px 0 #3a1a10, 0 3px 0 #3a1a10; background-repeat: no-repeat; user-select: none; -webkit-user-select: none; }
+  .tile2 .d { position: relative; z-index: 3; line-height: 1; }
+  .tile2.noart { box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), inset 0 3px 0 rgba(255,255,255,.4); border: 2px solid rgba(255,255,255,.6); }
+  .tile2 .sp-stripe { position: absolute; inset: 14% 10%; border-radius: 8px; z-index: 2; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,.92) 0 3px, rgba(255,255,255,0) 3px 8px); box-shadow: 0 0 0 2px rgba(255,255,255,.7); }
+  .tile2 .sp-wrap { position: absolute; inset: 3px; border-radius: 13px; z-index: 2; pointer-events: none; border: 3px dashed rgba(255,255,255,.95);
+    background: linear-gradient(135deg, #fff 0 9px, transparent 9px), linear-gradient(225deg, #fff 0 9px, transparent 9px), linear-gradient(45deg, #fff 0 9px, transparent 9px), linear-gradient(315deg, #fff 0 9px, transparent 9px); }
+  .tile2 .badge2 { position: absolute; right: -5px; top: -7px; z-index: 6; min-width: 22px; height: 22px; padding: 0 3px; border-radius: 11px; background: var(--gold); color: var(--plum);
+    border: 2px solid var(--plum); font-size: 13px; line-height: 18px; text-align: center; text-shadow: none; font-weight: 900; }
+  .tile2.sel::after { content: ""; position: absolute; inset: -3px; border-radius: 18px; border: 4px solid var(--gold); box-shadow: 0 0 10px 2px rgba(255,224,154,.85); z-index: 4; pointer-events: none; }
+  .tile2.over::after { border-color: var(--amber); box-shadow: 0 0 0 2px var(--plum); }
+  .tile2.blast::before { content: ""; position: absolute; inset: -2px; border-radius: 18px; z-index: 4; pointer-events: none; border: 3px dotted #fff;
+    background: repeating-linear-gradient(45deg, rgba(255,224,154,.5) 0 6px, rgba(255,224,154,.1) 6px 12px); }
+  .tile2.hint::after { content: ""; position: absolute; inset: -3px; border-radius: 18px; border: 4px dashed #fff; z-index: 4; pointer-events: none; animation: hintpulse 1s ease-in-out infinite alternate; }
+  .tile2.kcur { box-shadow: 0 0 0 3px var(--cream), 0 0 0 6px var(--plum); z-index: 5; }
+  .tile2.drop2 { animation: drop2 180ms ease-in both; }
+  @keyframes drop2 { from { transform: translateY(calc(var(--dr) * (-100% - 8px))); } to { transform: none; } }
+  .tile2.fresh-reward { animation: rewardin 320ms ease-out; }
+  @keyframes rewardin { 0% { transform: scale(.6); } 70% { transform: scale(1.12); } 100% { transform: none; } }
+  #mboard svg.trace { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); z-index: 5; pointer-events: none; overflow: visible; }
+  .ghosts { position: absolute; inset: 4px; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 8px; pointer-events: none; z-index: 7; }
+  .ghosts .tile2 { animation: pop 180ms ease-out forwards; }
+  .ghosts .tile2.bl { animation: blastpop 260ms ease-out forwards; }
+  @keyframes blastpop { 0% { transform: scale(1); filter: brightness(1.6); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
+  .popup { position: absolute; left: 50%; top: 38%; transform: translate(-50%, 0); z-index: 9; pointer-events: none; background: var(--cream); border: 2px solid var(--plum);
+    border-radius: 16px; padding: 6px 12px; font-weight: 900; text-align: center; white-space: nowrap; animation: popup 1100ms ease-out forwards; font-size: 18px; }
+  .popup small { display: block; font-size: 14px; color: var(--muted); }
+  @keyframes popup { 0% { opacity: 0; transform: translate(-50%, 10px); } 15% { opacity: 1; transform: translate(-50%, 0); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -24px); } }
+  .sumcard { min-height: 56px; padding: 6px 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 18px; }
+  .sumcard .ex { font-size: 21px; font-weight: 900; line-height: 1.2; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .sumcard.over { border: 3px solid var(--amber); }
+  .feedback { min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; text-align: center; font-weight: 900; font-size: 16px;
+    padding: 4px 12px; border-radius: 16px; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 12px; background: var(--plum); color: var(--cream); font-size: 14px; font-weight: 900; }
+  .chip.gold { background: var(--gold); color: var(--plum); border: 1px solid var(--plum); }
+  .footer { display: flex; gap: 12px; flex-wrap: wrap; }
+  .footer > button { flex: 1 1 120px; }
+  .banner { padding: 10px 14px; border-radius: 16px; display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; }
+  .toast2 { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 90; background: var(--plum); color: var(--cream);
+    padding: 10px 16px; border-radius: 16px; font-weight: 800; font-size: 15px; pointer-events: none; transition: opacity .2s; max-width: calc(100% - 32px); text-align: center; }
+
+  /* modal */
+  .mcm { position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(40,10,30,.62); animation: fade 150ms ease-out;
+    overflow-y: auto; color: var(--plum); }
+  .mcm .card { width: 100%; max-width: 380px; max-height: 100%; overflow-y: auto; margin: auto; }
+  .mcm .h1:focus { outline: none; }
+  .switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; width: 100%; border: 1px solid var(--edge); border-radius: 16px;
+    background: #fff; padding: 6px 12px; font-size: 16px; font-weight: 800; text-align: left; color: var(--plum) !important; }
+  .switch .kn { flex: none; width: 46px; height: 28px; border-radius: 14px; background: #CDB8AA; position: relative; transition: background .15s; }
+  .switch .kn::after { content: ""; position: absolute; left: 3px; top: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: left .15s; }
+  .switch[aria-checked="true"] .kn { background: var(--rasp); }
+  .switch[aria-checked="true"] .kn::after { left: 21px; }
+  .switch small { display: block; font-size: 13px; color: var(--muted); font-weight: 700; }
+  .bigstars { display: flex; justify-content: center; gap: 10px; }
+  .bigstars svg { width: 56px; height: 56px; }
+  .bigstars svg.mid { width: 70px; height: 70px; margin-top: -8px; }
+  .scorerows { background: #fff; border: 1px solid var(--edge); border-radius: 16px; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; font-weight: 800; }
+  .scorerows .row { justify-content: space-between; min-height: 26px; }
+  .scorerows .tot { border-top: 1px solid var(--edge); padding-top: 6px; font-size: 20px; font-weight: 900; }
+  .loading { position: fixed; inset: 0; z-index: 85; display: flex; align-items: center; justify-content: center; background: rgba(74,23,54,.35); }
+  @media (prefers-reduced-motion: reduce) {
+    .tile2.drop2, .tile2.fresh-reward, .tile2.hint::after { animation: none; }
+    .ghosts .tile2, .ghosts .tile2.bl { animation: fadeout 80ms linear forwards; }
+    .popup { animation: fadeout 900ms steps(1, end) forwards; }
+    .pbtn, .sbtn, .ibtn { transition: none; }
+    .pbtn:active:not(:disabled), .sbtn:active:not(:disabled), .ibtn:active:not(:disabled) { transform: none; }
+  }
 </style>
 </head>
 <body>
 <div id="bg" class="hub"></div>
 <div id="app"><div id="stage" aria-live="off"></div></div>
+<div id="flow" hidden></div>
 <div id="sr" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></div>
 <script>
 "use strict";
@@ -153,13 +304,18 @@ function mulberry32(s) { // returns [value in [0,1), next state]
   return [((t ^ (t >>> 14)) >>> 0) / 4294967296, s];
 }
 
-// ---------- Match to Make Target ----------
+// ---------- Match to Make Target — candy-v2 (H-001-v1: MC-002..MC-008) ----------
+// Pure model. Every committed move returns a new state; the previous committed state is kept in g.hist
+// (full snapshot: board, IDs, specials, RNG, counters, score) so Undo is exact.
+const MATCH_VERSION = "candy-v2";
 const M = {
-  start(li) {
+  start(li, opts = {}) {
     const L = LEVELS.match[li];
-    return { mode: "match", li, rows: L.rows, cols: L.cols, target: L.target, quota: L.quota, movesLeft: L.moves, made: 0, score: 0,
-      cells: L.values.map((v, i) => ({ id: i, v })), nextId: L.values.length, rng: L.seed, refills: 0, assisted: false, hints: 0,
-      status: "playing", last: null, seq: 0 };
+    return { mode: "match", version: MATCH_VERSION, li, rows: L.rows, cols: L.cols, target: L.target, quota: L.quota, moves: L.moves,
+      movesLeft: L.moves, made: 0, chainPts: 0, blastPts: 0, finish: 0, speedBonus: 0,
+      cells: L.values.map((v, i) => ({ id: i, v, sp: null })), nextId: L.values.length, rng: L.seed, refills: 0,
+      assisted: false, hints: 0, undos: 0, status: "playing", last: null, seq: 0,
+      speed: !!opts.speed, timing: false, elapsed: 0, hist: [] };
   },
   adjacent(g, a, b) {
     const ra = Math.floor(a / g.cols), ca = a % g.cols, rb = Math.floor(b / g.cols), cb = b % g.cols;
@@ -170,14 +326,62 @@ const M = {
     if (r > 0) out.push(i - g.cols); if (c > 0) out.push(i - 1); if (c < g.cols - 1) out.push(i + 1); if (r < g.rows - 1) out.push(i + g.cols);
     return out;
   },
+  // drag / tap rule: immediate-tail backtrack, ignore repeats, non-adjacent and a 9th tile
+  extend(g, chain, i) {
+    if (i < 0 || i >= g.cells.length) return chain;
+    if (!chain.length) return [i];
+    if (chain.length >= 2 && i === chain[chain.length - 2]) return chain.slice(0, -1);
+    if (chain.includes(i) || chain.length >= 8 || !M.adjacent(g, chain[chain.length - 1], i)) return chain;
+    return chain.concat([i]);
+  },
   validChain(g, chain) {
-    if (chain.length < 2 || chain.length > 8 || new Set(chain).size !== chain.length) return false;
+    if (!Array.isArray(chain) || chain.length < 2 || chain.length > 8 || new Set(chain).size !== chain.length) return false;
+    if (!chain.every((i) => Number.isInteger(i) && i >= 0 && i < g.cells.length)) return false;
     for (let k = 1; k < chain.length; k++) if (!M.adjacent(g, chain[k - 1], chain[k])) return false;
-    return chain.every((i) => i >= 0 && i < g.cells.length);
+    return true;
   },
   sum(g, chain) { return chain.reduce((s, i) => s + g.cells[i].v, 0); },
-  // shortest legal chain, row-major lexicographic tie-break (iterative deepening DFS)
-  shortest(g) {
+  // MC-003
+  mult(n) { return n <= 2 ? 1 : n === 3 ? 1.5 : n === 4 ? 2 : 3; },
+  base(n) { return 100 + 25 * (n - 2); },
+  chainPoints(n) { return Math.floor(M.base(n) * M.mult(n)); },
+  // MC-004: level 1-3 none; 4-6 n>=4 stripe; 7-12 n==4 stripe, n>=5 wrapped
+  rewardFor(li, n) {
+    const lv = li + 1;
+    if (lv <= 3 || n < 4) return null;
+    if (lv <= 6) return "stripe";
+    return n === 4 ? "stripe" : "wrapped";
+  },
+  // MC-005: blast area of one special on the pre-gravity board
+  area(g, i, sp) {
+    const r = Math.floor(i / g.cols), c = i % g.cols, out = [];
+    if (sp === "stripe") { for (let cc = 0; cc < g.cols; cc++) out.push(r * g.cols + cc); }
+    else if (sp === "wrapped") {
+      for (let rr = r - 1; rr <= r + 1; rr++) for (let cc = c - 1; cc <= c + 1; cc++)
+        if (rr >= 0 && rr < g.rows && cc >= 0 && cc < g.cols) out.push(rr * g.cols + cc);
+    }
+    return out;
+  },
+  // closure: activate specials in row-major order, each once, until nothing new is hit
+  closure(g, chain) {
+    const removal = new Set(chain), done = new Set();
+    for (;;) {
+      const pending = [...removal].filter((i) => g.cells[i].sp && !done.has(i)).sort((a, b) => a - b);
+      if (!pending.length) break;
+      const i = pending[0]; done.add(i);
+      for (const j of M.area(g, i, g.cells[i].sp)) removal.add(j);
+    }
+    const all = [...removal].sort((a, b) => a - b);
+    return { removal: all, activated: [...done].sort((a, b) => a - b), blastOnly: all.filter((i) => !chain.includes(i)) };
+  },
+  // what an exact chain would do (used for the live preview and by release)
+  resolve(g, chain) {
+    const n = chain.length, cl = M.closure(g, chain), type = M.rewardFor(g.li, n);
+    return { n, base: M.base(n), mult: M.mult(n), chainPts: M.chainPoints(n), blastPts: 25 * cl.blastOnly.length,
+      removal: cl.removal, blastOnly: cl.blastOnly, activated: cl.activated,
+      reward: type ? { cell: chain[n - 1], value: g.cells[chain[n - 1]].v, type } : null };
+  },
+  shortest(g) { // shortest legal chain, row-major lexicographic tie-break
     const n = g.cells.length;
     for (let L = 2; L <= 8; L++) {
       for (let s = 0; s < n; s++) {
@@ -199,7 +403,7 @@ const M = {
     }
     return null;
   },
-  allChains(g, cap = 30) { // for QA fuzz
+  allChains(g, cap = 30) {
     const out = [], n = g.cells.length;
     for (let s = 0; s < n && out.length < cap; s++) {
       const path = [s], used = new Set([s]);
@@ -218,55 +422,91 @@ const M = {
     return out;
   },
   draw(g) { const [r, s] = mulberry32(g.rng); g.rng = s; return 1 + Math.floor(r * 9); },
-  // Release a chain. Returns {g, ev}. g is a new committed state.
+  snap(g) { const { hist, ...rest } = g; return JSON.parse(JSON.stringify(rest)); },
+  core(g) { return g.chainPts + g.blastPts + g.finish; },
+  score(g) { return g.chainPts + g.blastPts + g.finish; },
+  thresholds(quota) { return [200 * quota, 300 * quota]; },
+  // Release a chain. Returns {g, ev}. Atomic: g is the next stable committed state.
   release(g0, chain) {
     if (g0.status !== "playing") return { g: g0, ev: null };
-    if (chain.length < 2) return { g: g0, ev: { type: "cancel" } }; // single tile: free
+    if (!Array.isArray(chain) || chain.length < 2) return { g: g0, ev: { type: "cancel" } }; // single tile: free
     if (!M.validChain(g0, chain)) return { g: g0, ev: { type: "cancel" } };
-    const g = JSON.parse(JSON.stringify(g0));
+    const g = M.snap(g0);
+    g.hist = g0.hist.concat([M.snap(g0)]);
     g.seq++;
+    if (g.speed) g.timing = true;
     const sum = M.sum(g, chain);
-    if (sum !== g.target) {
-      g.movesLeft--; g.last = { type: "wrong", sum, chain };
-      if (g.movesLeft <= 0) g.status = "lost";
+    if (sum !== g.target) { // wrong sum: one move, nothing activates
+      g.movesLeft--; g.last = { type: "wrong", sum, chain: chain.slice() };
+      if (g.movesLeft <= 0) { g.status = "lost"; g.timing = false; }
       return { g, ev: { type: "wrong", sum, chain } };
     }
-    const removed = chain.map((i) => ({ i, v: g.cells[i].v }));
-    const pts = 100 + 25 * (chain.length - 2);
-    g.score += pts; g.movesLeft--; g.made++;
-    g.last = { type: "clear", chain, pts };
-    if (g.made >= g.quota) { g.status = "won"; g.score += 50 * g.movesLeft; return { g, ev: { type: "clear", removed, pts, won: true } }; }
-    if (g.movesLeft <= 0) { g.status = "lost"; return { g, ev: { type: "clear", removed, pts } }; }
-    // collapse columns (survivors keep order), refill from the top with the seeded RNG
-    const gone = new Set(chain);
-    const next = new Array(g.cells.length);
+    const R = M.resolve(g, chain);
+    const removed = R.removal.map((i) => ({ i, v: g.cells[i].v, sp: g.cells[i].sp, chain: chain.includes(i) }));
+    // points before quota, quota before zero-moves failure
+    g.chainPts += R.chainPts; g.blastPts += R.blastPts; g.movesLeft--; g.made++;
+    g.last = { type: "clear", chain: chain.slice(), chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, reward: R.reward ? R.reward.type : null };
+    const ev = { type: "clear", chain: chain.slice(), removed, blastOnly: R.blastOnly, chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, base: R.base, reward: R.reward };
+    if (g.made >= g.quota) {
+      g.status = "won"; g.timing = false; g.finish = 50 * g.movesLeft;
+      if (g.speed) g.speedBonus = M.speedBonus(g.elapsed, g.quota);
+      ev.won = true; return { g, ev };
+    }
+    if (g.movesLeft <= 0) { g.status = "lost"; g.timing = false; return { g, ev }; }
+    // remove union, place reward on the last selected cell, collapse, refill
+    const cur = g.cells.slice();
+    for (const i of R.removal) cur[i] = null;
+    if (R.reward) cur[R.reward.cell] = { id: g.nextId++, v: R.reward.value, sp: R.reward.type, fresh: true };
+    const next = new Array(cur.length);
     for (let c = 0; c < g.cols; c++) {
       const col = [];
-      for (let r = 0; r < g.rows; r++) { const i = r * g.cols + c; if (!gone.has(i)) col.push(g.cells[i]); }
-      const missing = g.rows - col.length;
+      for (let r = 0; r < g.rows; r++) { const t = cur[r * g.cols + c]; if (t) col.push(t); }
       const fresh = [];
-      for (let k = 0; k < missing; k++) fresh.push({ id: g.nextId++, v: M.draw(g), fresh: true });
+      for (let k = col.length; k < g.rows; k++) fresh.push({ id: g.nextId++, v: M.draw(g), sp: null });
       const full = fresh.concat(col);
       for (let r = 0; r < g.rows; r++) next[r * g.cols + c] = full[r];
     }
-    g.cells = next.map((t) => ({ id: t.id, v: t.v }));
+    g.cells = next.map((t) => ({ id: t.id, v: t.v, sp: t.sp || null }));
     g.refills++;
-    let refreshed = false;
-    if (!M.shortest(g)) { // replacement board, guaranteed adjacent pair in row 1
-      refreshed = true;
-      g.cells = g.cells.map(() => ({ id: g.nextId++, v: M.draw(g) }));
+    if (!M.shortest(g)) { // replacement board (specials are lost), guaranteed pair in row 1
+      ev.refreshed = true;
+      g.cells = g.cells.map(() => ({ id: g.nextId++, v: M.draw(g), sp: null }));
       const a = Math.max(1, g.target - 9), b = g.target - a;
       g.cells[0].v = a; g.cells[1].v = b;
     }
-    return { g, ev: { type: "clear", removed, pts, refreshed } };
+    return { g, ev };
+  },
+  undo(g0) {
+    if (!g0.hist.length || g0.status === "won") return { g: g0, ev: null };
+    const prev = g0.hist[g0.hist.length - 1];
+    const g = JSON.parse(JSON.stringify(prev));
+    g.hist = g0.hist.slice(0, -1);
+    g.assisted = true; g.undos = g0.undos + 1; g.hints = g0.hints;
+    g.elapsed = g0.elapsed; g.timing = !!g.speed; // a move was committed: clock keeps running, never rewinds
+    g.seq = g0.seq + 1; g.status = "playing"; g.last = { type: "undo" };
+    return { g, ev: { type: "undo" } };
   },
   hint(g0) {
     if (g0.status !== "playing") return { g: g0, chain: null };
     const g = { ...g0, assisted: true, hints: g0.hints + 1 };
     return { g, chain: M.shortest(g) };
   },
-  stars(g) { if (g.status !== "won") return 0; if (g.assisted) return 1; return g.movesLeft >= 2 ? 3 : g.movesLeft >= 1 ? 2 : 1; },
-  hasProgress(g) { return g.movesLeft !== LEVELS.match[g.li].moves || g.hints > 0; },
+  speedBonus(ms, quota) { return Math.floor(100 * Math.max(0, 1 - ms / 1000 / (30 * quota))); },
+  // MC-006: completion 1, core >= 200*quota 2, >= 300*quota 3
+  stars(g) { if (g.status !== "won") return 0; const [t2, t3] = M.thresholds(g.quota), c = M.core(g); return c >= t3 ? 3 : c >= t2 ? 2 : 1; },
+  hasProgress(g) { return g.hist.length > 0 || g.hints > 0; },
+  // structural check for a restored save
+  validSave(g) {
+    try {
+      if (!g || g.mode !== "match" || g.version !== MATCH_VERSION) return false;
+      const L = LEVELS.match[g.li]; if (!L) return false;
+      if (!Array.isArray(g.cells) || g.cells.length !== L.rows * L.cols) return false;
+      if (!g.cells.every((c) => c && Number.isInteger(c.v) && c.v >= 1 && c.v <= 9 && Number.isInteger(c.id) && (c.sp === null || c.sp === "stripe" || c.sp === "wrapped"))) return false;
+      for (const k of ["movesLeft", "made", "chainPts", "blastPts", "rng", "nextId", "seq", "elapsed"]) if (!Number.isFinite(g[k])) return false;
+      if (!["playing", "lost"].includes(g.status) || !Array.isArray(g.hist)) return false;
+      return g.movesLeft >= 0 && g.movesLeft <= L.moves && g.made < L.quota;
+    } catch (e) { return false; }
+  },
 };
 
 // ---------- Equation Builder ----------
@@ -464,11 +704,33 @@ function validateData() {
 // ======================================================================
 // PERSISTENCE (localStorage in try/catch; the game works without it)
 // ======================================================================
-const SAVE_KEY = "mathcrush.v1";
-function blankProgress() { const p = { schemaVersion: 1, settings: { sound: true, haptics: true }, coach: {} }; for (const m of MODES) p[m] = { unlocked: 1, stars: Array(12).fill(0), best: Array(12).fill(0) }; return p; }
-let progress = blankProgress();
-try { const raw = localStorage.getItem(SAVE_KEY); if (raw) { const p = JSON.parse(raw); if (p && p.schemaVersion === 1) progress = Object.assign(blankProgress(), p); } } catch (e) { /* storage blocked */ }
-function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); } catch (e) { /* ignore */ } }
+const SAVE_KEY = "mathcrush.v1"; // same key as night 1: unlocks, Equation/Clear and legacy Match bests stay put
+function blankProgress() {
+  const p = { schemaVersion: 1, settings: { sound: true, haptics: true, speed: false, tap: false }, coach: {}, coach2: {}, active: null };
+  for (const m of MODES) p[m] = { unlocked: 1, stars: Array(12).fill(0), best: Array(12).fill(0) };
+  // candy-v2 Match scoring (H-001-v1). progress.match.stars/best stay as the legacy (v1) record, never compared.
+  p.matchV2 = { version: "candy-v2", stars: Array(12).fill(0), best: Array(12).fill(0), bestTimed: Array(12).fill(0), assisted: Array(12).fill(false) };
+  return p;
+}
+let progress = blankProgress(), storageOk = true, saveFailed = false;
+try {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (raw) {
+    const p = JSON.parse(raw);
+    if (p && p.schemaVersion === 1) {
+      const b = blankProgress();
+      progress = Object.assign(b, p);
+      progress.settings = Object.assign(blankProgress().settings, p.settings || {});
+      progress.coach2 = p.coach2 || {};
+      progress.matchV2 = Object.assign(blankProgress().matchV2, p.matchV2 || {});
+      for (const m of MODES) if (!progress[m] || !Array.isArray(progress[m].stars)) progress[m] = blankProgress()[m];
+    }
+  }
+} catch (e) { storageOk = false; /* storage blocked or unreadable: play in memory */ }
+function save() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); return true; }
+  catch (e) { if (!saveFailed) { saveFailed = true; if (typeof onSaveError === "function") onSaveError(); } return false; }
+}
 
 // ======================================================================
 // SOUND (WebAudio, starts after a gesture) + haptics
@@ -546,6 +808,9 @@ function setBg() {
 }
 
 function render() {
+  const flowOn = ui.mode === "match" && ui.screen !== "hub";
+  flowEl.hidden = !flowOn; appEl.style.display = flowOn ? "none" : "";
+  if (flowOn) { setBg(); bgEl.classList.remove("dim"); renderFlow(); return; }
   const focusKey = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.k : null;
   setBg();
   let h = "";
@@ -565,15 +830,15 @@ function render() {
 
 // ---------- hub ----------
 function renderHub() {
-  const desc = { match: ["Match to Make Target", "Drag touching numbers that add up. The board refills."],
+  const desc = { match: ["Candy Match", "Drag touching numbers that add up. Long chains make special candies."],
     equation: ["Equation Builder", "Build a short equation with + − × to hit the target."],
     clear: ["Clear the Board", "Pair numbers anywhere. Empty the board."] };
   let h = `<div class="abs hubtitle shadowtext">Math Crush</div><div class="abs hubsub">Three ways to make a number.<br>Pick one and see which you'd play again.</div>`;
   MODES.forEach((m, k) => {
-    const st = progress[m].stars.reduce((a, b) => a + b, 0);
+    const P = m === "match" ? progress.matchV2 : progress[m], st = P.stars.reduce((a, b) => a + b, 0);
     h += `<button class="abs card press" data-k="mode-${m}" style="top:${186 + k * 196}px;background-image:url(assets/${m}-bg.webp)" aria-label="${desc[m][0]}, ${st} of 36 stars">
       <div class="shade"></div><div class="t1">${THEME[m].world}</div><div class="t2 shadowtext">${desc[m][0]}</div><div class="t3">${desc[m][1]}</div>
-      <div class="t4">★ ${st} / 36 · ${progress[m].stars.filter((x) => x > 0).length} / 12 levels</div><div class="go">▶</div></button>`;
+      <div class="t4">★ ${st} / 36 · ${P.stars.filter((x) => x > 0).length} / 12 levels${m === "match" ? " · new candy scoring" : ""}</div><div class="go">▶</div></button>`;
   });
   return h;
 }
@@ -633,59 +898,12 @@ function renderPlay() {
   h += plaque(m, 299, 125, 76, 73, `<span class="lbl" style="font-size:${R[0].length > 6 ? 11 : 13}px">${R[0]}</span><span style="font-size:${String(R[1]).length > 3 ? 19 : 24}px">${R[1]}</span>`);
   h += hollowStars(232, 0, 22);
   h += `<div class="abs well" style="background:${T.well}"></div>`;
-  if (m === "match") h += renderMatch(g);
-  else if (m === "equation") h += renderEquation(g);
+  if (m === "equation") h += renderEquation(g);
   else h += renderClear(g);
   if (ui.showCoach && g.status === "playing" && !ui.modal) {
     const coach = { match: "Drag through touching numbers that add up to " + g.target + ", then let go.", equation: "Tap a number, an operator, then another number. Submit when it hits the target.", clear: "Tap two tiles that add up to " + g.target + " — anywhere on the board — then Clear." }[m];
     h += `<div class="abs coach" style="top:206px">${coach}</div>`;
   }
-  return h;
-}
-
-function matchPlaque(g) {
-  const ch = ui.chain;
-  if (ch.length) {
-    const s = M.sum(g, ch), terms = ch.map((i) => g.cells[i].v).join(" + ");
-    const status = s === g.target ? "Ready" : s > g.target ? "Too high" : (g.target - s) + " to go";
-    return { text: `${terms} = ${s}`, status, color: s === g.target ? "#1b7f2a" : s > g.target ? "#b3261e" : null };
-  }
-  if (g.last && g.last.type === "wrong" && Date.now() < (ui.lastMsgUntil || 0)) return { text: `That makes ${g.last.sum}`, status: "−1 move", color: "#b3261e" };
-  if (ui.hintChain) return { text: "Hint: " + ui.hintChain.map((i) => g.cells[i].v).join(" + "), status: "", color: null };
-  return { text: `Make a chain of ${g.target}`, status: "", color: null };
-}
-function renderMatch(g) {
-  const T = THEME.match;
-  let h = `<div id="board" class="abs" style="${box(26, 266, 338, 342)}touch-action:none" role="grid" aria-label="Number board, ${g.rows} rows by ${g.cols} columns">`;
-  const posNow = {};
-  g.cells.forEach((c, i) => { posNow[c.id] = i; });
-  // drop offsets for animation: survivors that moved down, and fresh tiles
-  const prev = ui.prevPos, freshPerCol = {};
-  if (prev) g.cells.forEach((c, i) => { if (!(c.id in prev)) freshPerCol[i % g.cols] = (freshPerCol[i % g.cols] || 0) + 1; });
-  g.cells.forEach((c, i) => {
-    const r = Math.floor(i / g.cols), col = i % g.cols, x = 13 + col * 64, y = 12 + r * 64;
-    const k = ui.chain.indexOf(i), hk = ui.hintChain ? ui.hintChain.indexOf(i) : -1;
-    let dy = 0;
-    if (prev && !reduced) { if (c.id in prev) dy = (Math.floor(prev[c.id] / g.cols) - r) * 64; else dy = -freshPerCol[col] * 64 - 20; }
-    h += `<div class="tile ${T.digit}${k >= 0 ? " sel" : ""}${hk >= 0 && k < 0 ? " hint" : ""}${dy ? " drop" : ""}${ui.kbd && ui.cursor === i ? " kcur" : ""}" data-cell="${i}" role="gridcell"
-      aria-label="Row ${r + 1}, column ${col + 1}, ${c.v}${k >= 0 ? ", selected " + (k + 1) : ""}" style="${box(x, y, 56, 56)}${spr("match", "tile_" + (c.v % 6), 56, 56)}font-size:32px;${dy ? `--dy:${dy}px;` : ""}border-radius:14px">${c.v}${k >= 0 ? `<span class="badge">${k + 1}</span>` : hk >= 0 ? `<span class="badge" style="background:#d8fbff;border-color:#2cc6d6">${hk + 1}</span>` : ""}</div>`;
-  });
-  if (ui.chain.length > 1) {
-    // connectors in the gaps between consecutive tiles (keeps digits readable)
-    const cxy = (i) => [13 + (i % g.cols) * 64 + 28, 12 + Math.floor(i / g.cols) * 64 + 28];
-    let segs = "";
-    for (let k = 1; k < ui.chain.length; k++) {
-      const [ax, ay] = cxy(ui.chain[k - 1]), [bx, by] = cxy(ui.chain[k]);
-      segs += `<line x1="${ax + (bx - ax) * 0.3}" y1="${ay + (by - ay) * 0.3}" x2="${ax + (bx - ax) * 0.7}" y2="${ay + (by - ay) * 0.7}"/>`;
-    }
-    h += `<svg class="abs" style="${box(0, 0, 338, 342)};z-index:5" aria-hidden="true"><g stroke="#ffd54a" stroke-width="10" stroke-linecap="round">${segs}</g><g stroke="#fff6cf" stroke-width="4" stroke-linecap="round">${segs}</g></svg>`;
-  }
-  h += `</div>`;
-  ui.prevPos = posNow;
-  const p = matchPlaque(g);
-  h += `<div id="mplaque">${plaque("match", 54, 641, 282, 55, `<span style="font-size:${p.text.length > 22 ? 17 : 21}px;line-height:22px">${esc(p.text)}</span>${p.status ? `<span class="lbl" style="color:${p.color || "#6b4a2a"}">${esc(p.status)}</span>` : ""}`)}</div>`;
-  h += `<div class="abs shadowtext" style="left:0;width:390px;top:706px;text-align:center;font-size:16px;font-weight:800">Release to clear · ${g.made} / ${g.quota} chains</div>`;
-  h += medal("match", "hint", "hint", "Hint", 195, 766);
   return h;
 }
 
@@ -814,9 +1032,504 @@ function runFx() {
 }
 
 // ======================================================================
+// CANDY MATCH UI (H-001-v1 MC-001/002/006/007/008) — flowing phone-width layout in #flow.
+// Equation / Clear / mode picker keep the night-1 scaled stage below.
+// ======================================================================
+const flowEl = document.getElementById("flow"), appEl = document.getElementById("app");
+const TILE_FALLBACK = ["#E8414E", "#FF42AC", "#2777EE", "#FF961C", "#7147DB", "#65C748"];
+let artState = "idle"; // idle | loading | ok | failed (MC-001 loading / art failure states)
+function loadArt() {
+  if (artState === "ok" || artState === "loading") return;
+  artState = "loading";
+  const im = new Image();
+  im.onload = () => { artState = "ok"; if (ui.mode === "match") render(); };
+  im.onerror = () => { artState = "failed"; if (ui.mode === "match") render(); };
+  im.src = "assets/match-atlas.webp";
+}
+function tileBg(v) {
+  if (artState !== "ok") return `background:${TILE_FALLBACK[v % 6]};`;
+  const [x, y, w, h] = ATLAS.match["tile_" + (v % 6)], S = ATLAS_SIZE;
+  return `background-image:url(assets/match-atlas.webp);background-size:${(S / w * 100).toFixed(2)}% ${(S / h * 100).toFixed(2)}%;background-position:${(x / (S - w) * 100).toFixed(2)}% ${(y / (S - h) * 100).toFixed(2)}%;`;
+}
+const STAR_PATH = "M12 2.2l2.9 6.4 7 .7-5.3 4.7 1.6 6.9L12 17.3l-6.2 3.6 1.6-6.9L2.1 9.3l7-.7z";
+function starSvg(on, cls = "") { return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${STAR_PATH}" fill="${on ? "#FFC83A" : "rgba(255,255,255,.6)"}" stroke="#4A1736" stroke-width="1.6" stroke-linejoin="round"/></svg>`; }
+function starRow(n) { return `<span class="stars" aria-label="${n} of 3 stars">${[0, 1, 2].map((k) => starSvg(k < n)).join("")}</span>`; }
+const ICON = {
+  pause: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  gear: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  lock: `<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" fill="#FFF3DD"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF3DD" stroke-width="2.6"/></svg>`,
+};
+const SPNAME = { stripe: "striped", wrapped: "wrapped" };
+const COACH = {
+  mult: { title: "Longer chains score more", text: "2 candies score 100. Chains of 3 score ×1.5, 4 score ×2 and 5–8 score ×3.", demo: [[3], [3], [4]], foot: "3 + 3 + 4 = 10 → 125 ×1.5 = 187" },
+  stripe: { title: "New: striped candy", text: "A chain of 4 or more leaves a striped candy where it ends. Use it in a later chain and it clears its whole row (+25 per extra candy).", demo: [[2], [3], [1], [4, "stripe"]], foot: "The last candy of the chain turns striped." },
+  wrapped: { title: "New: wrapped candy", text: "From here, chains of exactly 4 leave a striped candy and chains of 5 or more leave a wrapped candy. A wrapped candy clears the 3×3 square around it.", demo: [[1], [2], [3], [1], [3, "wrapped"]], foot: "Specials keep their number and still count when you select them." },
+};
+function coachKey(li) { return li === 0 ? "mult" : li === 3 ? "stripe" : li === 6 ? "wrapped" : null; }
+
+function tileHtml(v, sp, extra = "", inner = "") {
+  return `<div class="tile2${artState !== "ok" ? " noart" : ""}${extra}" style="${tileBg(v)}">${sp === "stripe" ? '<i class="sp-stripe"></i>' : sp === "wrapped" ? '<i class="sp-wrap"></i>' : ""}<span class="d">${v}</span>${inner}</div>`;
+}
+function activeAttempt() { // {ok, g} | null
+  const a = progress.active;
+  if (!a) return null;
+  if (a.version === MATCH_VERSION && M.validSave(a.game)) return { ok: true, g: a.game };
+  return { ok: false, li: a && a.game && Number.isInteger(a.game.li) && a.game.li >= 0 && a.game.li < 12 ? a.game.li : 0 };
+}
+function persistActive() {
+  const g = ui.game;
+  progress.active = g && g.mode === "match" && (g.status === "playing" || g.status === "lost") ? { version: MATCH_VERSION, game: g } : null;
+  save();
+}
+function onSaveError() { mToast("Progress could not be saved. You can keep playing."); }
+let toastTimer = 0;
+function mToast(t, ms = 2200) {
+  ui.mtoast = t; clearTimeout(toastTimer);
+  const el = document.getElementById("mtoast"); if (el) { el.textContent = t; el.style.opacity = 1; }
+  toastTimer = setTimeout(() => { ui.mtoast = null; const e2 = document.getElementById("mtoast"); if (e2) e2.style.opacity = 0; }, ms);
+}
+
+// ---------- views ----------
+function mHome() {
+  const act = activeAttempt(), st = progress.matchV2.stars.reduce((a, b) => a + b, 0);
+  let h = `<div class="mc-top"><button class="quiet" data-k="hub">‹ All modes</button><button class="ibtn" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
+  h += `<div class="logo"><div class="t" role="heading" aria-level="1">Math Crush</div><div class="m">Candy Match</div></div>`;
+  h += `<div class="panel vign"><div class="tiles" aria-hidden="true">${[[2, 1], [3, 2], [5, 3], [4], [6], [8, 0, "stripe"]].map((s) => tileHtml(s[0], s[2] || null, s[1] ? " sel" : "", s[1] ? `<span class="badge2">${s[1]}</span>` : "")).join("")}</div>
+    <p class="lede center-text">2 + 3 + 5 = 10</p><p class="small center-text" style="margin:0">Drag touching candies that add up to the target. Longer chains score more and leave special candies.</p></div>`;
+  h += `<div class="grow"></div>`;
+  if (act) {
+    const g = act.g;
+    h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:15px;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} moves left` : "Saved attempt"}</span></button>`;
+    h += `<button class="sbtn" data-k="choose">Choose level</button>`;
+  } else {
+    h += `<button class="pbtn" data-k="play">Play</button>`;
+  }
+  h += `<div class="panel small center-text" style="padding:6px 12px;align-self:center">★ ${st} / 36 · 12 levels · No timer</div>`;
+  return h;
+}
+function mLevels() {
+  const P = progress.matchV2, U = progress.match.unlocked;
+  let h = `<div class="playtop"><button class="ibtn" data-k="home" aria-label="Back to home">${ICON.back}</button><h1 class="h1 lvl panel" style="font-size:24px">Candy trail</h1><span></span></div>`;
+  const xs = [18, 50, 82], pos = [];
+  for (let k = 0; k < 12; k++) { const r = Math.floor(k / 3), c = r % 2 ? 2 - (k % 3) : k % 3; pos.push([xs[c], 62 + r * 132]); }
+  h += `<div class="panel" style="padding:4px 8px"><div class="trail"><svg class="path" viewBox="0 0 100 540" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pos.map((p) => p.join(",")).join(" ")}" fill="none" stroke="#C81758" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity=".55"/></svg>`;
+  for (let k = 0; k < 12; k++) {
+    const [x, y] = pos[k], locked = k + 1 > U, next = !locked && k + 1 === Math.min(U, 12) && !P.stars[k], st = P.stars[k];
+    const label = `Level ${k + 1}${locked ? ", locked. Complete level " + k + " to unlock" : st ? ", " + st + " of 3 stars" : next ? ", next level" : ", not completed with candy scoring yet"}`;
+    h += `<button class="node2${locked ? " locked" : ""}${next ? " next" : ""}" data-k="lvl-${k}" style="left:${x}%;top:${y}px" aria-label="${label}"${locked ? ' aria-disabled="true"' : ""}>${k + 1}${locked ? `<span class="lock">${ICON.lock}</span>` : ""}</button>`;
+    h += `<div class="nodecap" style="left:${x}%;top:${y}px" aria-hidden="true">${locked ? "Locked" : st ? "★".repeat(st) + "☆".repeat(3 - st) : next ? "Play" : "☆☆☆"}</div>`;
+  }
+  h += `</div></div>`;
+  return h;
+}
+function mIntro() {
+  const li = ui.introLi, L = LEVELS.match[li], [t2, t3] = M.thresholds(L.quota), P = progress.matchV2;
+  const ck = coachKey(li), showCoach = ck && !progress.coach2[ck];
+  const ex = M.shortest(M.start(li)) || [0, 1];
+  let h = `<div class="playtop"><button class="ibtn" data-k="levels-back" aria-label="Back to levels">${ICON.back}</button><h1 class="h1 lvl panel mfocus" tabindex="-1" style="font-size:24px">Level ${li + 1}</h1><span></span></div>`;
+  h += `<div class="panel card">`;
+  h += `<div class="facts"><div class="fact"><b>${L.target}</b><span>Target</span></div><div class="fact"><b>${L.quota}</b><span>Chains</span></div><div class="fact"><b>${L.moves}</b><span>Moves</span></div></div>`;
+  h += `<p class="lede">Make ${L.quota} chains that add up to ${L.target} in ${L.moves} moves.</p>`;
+  h += `<div class="demo" aria-label="Example chain: ${ex.map((i) => L.values[i]).join(" plus ")} equals ${L.target}">${ex.map((i, k) => tileHtml(L.values[i], null, " sel", `<span class="badge2">${k + 1}</span>`)).join("")}</div>`;
+  h += `<div class="thresh"><div class="row"><span>${starRow(1)} Complete</span></div><div class="row"><span>${starRow(2)}</span><span>${t2} points</span></div><div class="row"><span>${starRow(3)}</span><span>${t3} points</span></div>
+    <div class="small" style="color:var(--muted)">Points: chains, blasts and 50 per unused move. Hints and Undo don't cost stars; the result just says Assisted.</div></div>`;
+  const bits = [];
+  if (P.best[li]) bits.push(`Best: ${P.best[li]} ${starRow(P.stars[li])}${P.assisted[li] ? " (assisted)" : ""}`);
+  if (P.bestTimed[li]) bits.push(`Best with speed bonus: ${P.bestTimed[li]}`);
+  if (progress.match.best[li]) bits.push(`Legacy best (old scoring, not compared): ${progress.match.best[li]} · ${progress.match.stars[li]}★`);
+  if (bits.length) h += `<div class="small">${bits.join("<br>")}</div>`;
+  const sp = li < 3 ? "No special candies yet." : li < 6 ? "Chains of 4+ leave a striped candy." : "Chains of 4 leave a striped candy, 5+ a wrapped candy.";
+  h += `<p class="small" style="margin:0">Chains of 3 ×1.5 · 4 ×2 · 5–8 ×3. ${sp}</p>`;
+  if (showCoach) {
+    const C2 = COACH[ck];
+    h += `<div class="coachcard" role="note"><b style="font-size:18px">${C2.title}</b><span class="small">${C2.text}</span>
+      <div class="demo" aria-hidden="true">${C2.demo.map((d, k) => tileHtml(d[0], d[1] || null, d[1] ? "" : " sel", d[1] ? "" : `<span class="badge2">${k + 1}</span>`)).join("")}</div>
+      <span class="small center-text">${C2.foot}</span><div class="row"><button class="sbtn" data-k="coach-ok">Got it</button><button class="tbtn" data-k="coach-ok" aria-label="Skip tip">Skip</button></div></div>`;
+  }
+  h += `</div><button class="pbtn" data-k="intro-play">Play</button><button class="sbtn" data-k="levels-back">Back to levels</button>`;
+  return h;
+}
+function fmtClock(ms) { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
+function mSumCard(g) {
+  const ch = ui.chain, tap = progress.settings.tap || ui.kbd;
+  if (ch.length) {
+    const s = M.sum(g, ch), ex = ch.map((i) => g.cells[i].v).join(" + ") + " = " + s;
+    let status;
+    if (s === g.target && ch.length >= 2) status = tap ? "Submit to clear" : "Release to clear";
+    else if (s === g.target) status = "Add one more candy";
+    else if (s > g.target) status = tap ? "Too high · tap the last candy to step back" : "Too high · slide back to adjust";
+    else status = `${g.target - s} missing`;
+    return { ex, status, over: s > g.target, exact: s === g.target && ch.length >= 2 };
+  }
+  return { ex: `Make ${g.target}`, status: tap ? "Tap touching candies, then Submit" : "Drag through touching candies", over: false, exact: false };
+}
+function mFeedback(g, sc) {
+  const ch = ui.chain;
+  if (ch.length >= 2) {
+    const n = ch.length, pts = M.chainPoints(n), m = M.mult(n);
+    let h = `<span class="chip">${n} candies ×${m}</span>`;
+    if (sc.exact) {
+      const R = M.resolve(g, ch);
+      h += `<span>${M.base(n)}${m > 1 ? " ×" + m : ""} → ${pts} pts</span>`;
+      if (R.blastPts) h += `<span class="chip gold">+${R.blastPts} blast</span>`;
+      if (R.reward) h += `<span class="chip gold">Leaves a ${SPNAME[R.reward.type]} candy</span>`;
+    } else h += `<span>would score ${pts}</span>`;
+    return h;
+  }
+  const L = g.last;
+  if (ui.hintChain) return `<span>Hint: ${ui.hintChain.map((i) => g.cells[i].v).join(" + ")}</span>`;
+  if (L && L.type === "wrong") return `<span style="color:#9B1B1B">That makes ${L.sum} · 1 move used</span>`;
+  if (L && L.type === "clear") return `<span>+${L.chainPts} chain${L.blastPts ? ` · +${L.blastPts} blast` : ""}${L.reward ? ` · ${SPNAME[L.reward]} candy made` : ""}</span>`;
+  if (L && L.type === "undo") return `<span>Move undone</span>`;
+  if (ui.refreshedNote) return `<span>Board refreshed</span>`;
+  return `<span>Chains of 3+ multiply your points</span>`;
+}
+function mPlay() {
+  const g = ui.game, sc = mSumCard(g), ch = ui.chain, tap = progress.settings.tap || ui.kbd;
+  let h = `<div class="playtop"><button class="ibtn" data-k="pause" aria-label="Pause">${ICON.pause}</button>
+    <div class="lvl panel" role="heading" aria-level="1">Level ${g.li + 1}${g.speed ? `<span class="clock" id="mclock" aria-label="Active time">${fmtClock(g.elapsed)}</span>` : ""}</div><span></span></div>`;
+  h += `<div class="hud"><div class="hcard panel"><span>Moves</span><b>${g.movesLeft}</b></div><div class="hcard panel tgt"><span>Target</span><b>${g.target}</b></div><div class="hcard panel"><span>Score</span><b>${M.score(g)}</b></div></div>`;
+  h += `<div class="quota panel" aria-label="${g.made} of ${g.quota} chains made">${Array.from({ length: g.quota }, (_, k) => `<i class="qdot${k < g.made ? " on" : ""}"></i>`).join("")}<span>Chains ${g.made} / ${g.quota}</span></div>`;
+  // board
+  const exact = sc.exact, prev = exact ? M.resolve(g, ch) : null, blastSet = new Set(prev ? prev.blastOnly : []);
+  const from = ui.dropFrom, freshCol = {};
+  if (from) g.cells.forEach((c, i) => { if (!(c.id in from)) freshCol[i % g.cols] = (freshCol[i % g.cols] || 0) + 1; });
+  let cells = "";
+  g.cells.forEach((c, i) => {
+    const r = Math.floor(i / g.cols), col = i % g.cols, k = ch.indexOf(i), hk = ui.hintChain && k < 0 ? ui.hintChain.indexOf(i) : -1;
+    let dr = 0;
+    if (from && !reduced) dr = c.id in from ? r - Math.floor(from[c.id] / g.cols) : freshCol[col] + 0.3;
+    let cls = "";
+    if (k >= 0) cls += " sel" + (sc.over ? " over" : "");
+    if (blastSet.has(i)) cls += " blast";
+    if (hk >= 0) cls += " hint";
+    if (dr > 0) cls += " drop2";
+    if (ui.kbd && ui.cursor === i) cls += " kcur";
+    if (ui.rewardId === c.id && !reduced) cls += " fresh-reward";
+    let inner = k >= 0 ? `<span class="badge2">${k + 1}</span>` : "";
+    if (prev && prev.reward && i === prev.reward.cell) inner += `<span class="badge2" style="right:auto;left:-5px;top:auto;bottom:-7px;background:#fff">→${prev.reward.type === "stripe" ? "≡" : "▣"}</span>`;
+    const lab = `Row ${r + 1}, column ${col + 1}, ${c.v}${c.sp ? ", " + SPNAME[c.sp] + " candy" : ""}${k >= 0 ? ", selected " + (k + 1) : ""}${blastSet.has(i) ? ", will be blasted" : ""}`;
+    cells += tileHtml(c.v, c.sp, cls, inner).replace('<div class="tile2', `<div role="gridcell" aria-label="${lab}" data-cell="${i}" class="tile2`).replace('style="', `style="${dr > 0 ? `--dr:${dr};` : ""}`);
+  });
+  ui.dropFrom = null; ui.rewardId = null;
+  let trace = "";
+  if (ch.length > 1) {
+    const cxy = (i) => [(i % g.cols) * 70 + 31, Math.floor(i / g.cols) * 70 + 31];
+    const pts = ch.map((i) => cxy(i).join(",")).join(" ");
+    trace = `<svg class="trace" viewBox="0 0 342 342" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#4A1736" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/><polyline points="${pts}" fill="none" stroke="${sc.over ? "#E8890C" : "#FFE09A"}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+  let ghosts = "";
+  if (ui.ghosts) {
+    ghosts = `<div class="ghosts" aria-hidden="true">${ui.ghosts.map((t) => tileHtml(t.v, t.sp, t.chain ? "" : " bl").replace('style="', `style="grid-row:${Math.floor(t.i / 5) + 1};grid-column:${(t.i % 5) + 1};`)).join("")}</div>`;
+    ui.ghosts = null;
+  }
+  let popup = "";
+  if (ui.popup) { popup = `<div class="popup" aria-hidden="true">+${ui.popup.chainPts}${ui.popup.blastPts ? ` <small>chain · +${ui.popup.blastPts} blast</small>` : ""}</div>`; ui.popup = null; }
+  h += `<div class="boardwrap"><div id="mboard" role="grid" aria-label="Candy board, 5 by 5. Target ${g.target}.">${cells}${trace}</div>${ghosts}${popup}</div>`;
+  h += `<div class="sumcard panel${sc.over ? " over" : ""}" aria-hidden="true"><div class="ex">${esc(sc.ex)}</div><div class="small" style="color:${sc.over ? "#9B1B1B" : sc.exact ? "#1E6B2E" : "var(--muted)"}">${esc(sc.status)}</div></div>`;
+  h += `<div class="feedback panel">${mFeedback(g, sc)}</div>`;
+  h += `<div class="footer"><button class="sbtn" data-k="hint">Hint</button><button class="sbtn" data-k="undo"${g.hist.length && g.status === "playing" ? "" : " disabled"}>Undo</button>`;
+  if (tap) h += `<button class="sbtn" data-k="clearsel"${ch.length ? "" : " disabled"}>Clear</button><button class="pbtn" data-k="submit" style="flex-basis:100%"${ch.length >= 2 ? "" : " disabled"}>Submit</button>`;
+  h += `</div>`;
+  if (saveFailed || !storageOk) h += `<div class="banner panel small" role="status">Progress could not be saved on this device. Play continues.</div>`;
+  return h;
+}
+function switchBtn(k, label, on, note) {
+  return `<button class="switch" role="switch" data-k="${k}" aria-checked="${on}"><span>${label}${note ? `<small>${note}</small>` : ""}</span><span class="kn" aria-hidden="true"></span></button>`;
+}
+function settingsRows() {
+  const S = progress.settings;
+  return switchBtn("snd", "Sound", !!S.sound) + switchBtn("hap", "Haptics", !!S.haptics) +
+    switchBtn("tap", "Tap to select", !!S.tap, "Tap touching candies, then Submit") +
+    switchBtn("speed", "Speed bonus (experimental)", !!S.speed, "No countdown. Applies from your next attempt.");
+}
+function mModal() {
+  const g = ui.game, mod = ui.modal;
+  const head = (t) => `<h2 class="h1 mfocus" tabindex="-1" id="mhead">${t}</h2>`;
+  let body = null;
+  if (mod === "pause") body = head("Paused") + `<button class="pbtn" data-k="resume">Resume</button><button class="sbtn" data-k="restart">Restart</button><button class="sbtn" data-k="levels">Levels</button>${settingsRows()}<button class="tbtn" data-k="help">How to play</button>`;
+  else if (mod === "settings") body = head("Settings") + settingsRows() + `<button class="tbtn" data-k="help">How to play</button><button class="pbtn" data-k="closeset">Done</button>`;
+  else if (mod === "confirm-restart" || mod === "confirm-levels") body = head(mod === "confirm-restart" ? "Restart this level?" : "Leave this level?") +
+    `<p class="lede">This attempt's chains and moves will be lost.</p><button class="pbtn" data-k="confirm">${mod === "confirm-restart" ? "Restart level" : "Leave level"}</button><button class="sbtn" data-k="cancel">Cancel</button>`;
+  else if (mod === "help") body = head("How to play") + `<p class="lede">Drag through touching candies (no diagonals) so the numbers add up to the target, then let go. Slide back onto the previous candy to undo a step.</p>
+    <p class="small" style="margin:0">A wrong sum uses a move. Lifting on one candy is free. Chains of 3 score ×1.5, 4 ×2, 5–8 ×3. Striped candies clear their row, wrapped candies their 3×3 square, for +25 per extra candy. Undo and Hint are always free; the result marks them Assisted.</p>
+    <p class="small" style="margin:0">Keys: arrows move, Space adds (or steps back), Enter submits, Backspace removes the last, U undo, H hint, Esc pause.</p><button class="pbtn" data-k="closehelp">Back</button>`;
+  else if (mod === "restore-error") body = head("Could not restore this attempt") + `<p class="lede">The saved game was damaged. Your unlocked levels and stars are safe.</p><button class="pbtn" data-k="restore-start">Start level ${(ui.restoreLi || 0) + 1}</button><button class="sbtn" data-k="restore-levels">Levels</button>`;
+  else if (ui.screen === "play" && g && g.status === "won") {
+    const st = M.stars(g), [t2, t3] = M.thresholds(g.quota), core = M.core(g);
+    body = `<div class="bigstars" aria-hidden="true">${[0, 1, 2].map((k) => starSvg(k < st, k === 1 ? "mid" : "")).join("")}</div>` + head(g.li === 11 ? "All 12 levels done!" : "Level complete!") +
+      `<p class="small center-text" style="margin:0">${st} of 3 stars${g.assisted ? ' · <span class="chip">Assisted</span>' : ""}</p>
+      <div class="scorerows"><div class="row"><span>Chain points</span><span>${g.chainPts}</span></div><div class="row"><span>Blast points</span><span>${g.blastPts}</span></div>
+      <div class="row"><span>Moves bonus</span><span>${g.finish}</span></div><div class="row tot"><span>Score</span><span>${core}</span></div>
+      ${g.speed ? `<div class="row"><span>Speed bonus <small>(${fmtClock(g.elapsed)}, not in stars)</small></span><span>+${g.speedBonus}</span></div>` : ""}</div>
+      <p class="small center-text" style="margin:0">${core >= t3 ? "Three-star score reached!" : core >= t2 ? `${t3 - core} more for ★★★ (${t3})` : `${t2 - core} more for ★★ (${t2}) · ★★★ at ${t3}`}</p>` +
+      (g.li === 11 ? `<button class="pbtn" data-k="levels2">Back to levels</button><button class="sbtn" data-k="retry">Play again</button>` : `<button class="pbtn" data-k="next">Next level</button><button class="sbtn" data-k="levels2">Levels</button>`);
+  } else if (ui.screen === "play" && g && g.status === "lost") {
+    body = head("One more try?") + `<p class="lede">You made ${g.made} of ${g.quota} chains before the moves ran out.</p><button class="pbtn" data-k="retry">Try again</button>
+      ${g.hist.length ? `<button class="sbtn" data-k="undo2">Undo last move</button>` : ""}<button class="tbtn" data-k="levels2">Levels</button>`;
+  }
+  if (!body) return "";
+  return `<div class="mcm" role="dialog" aria-modal="true" aria-labelledby="mhead"><div class="panel card">${body}</div></div>`;
+}
+function renderFlow() {
+  const focusKey = document.activeElement && flowEl.contains(document.activeElement) && document.activeElement.dataset ? document.activeElement.dataset.k : null;
+  let h = `<div class="mc">`;
+  if (ui.screen === "home") h += mHome();
+  else if (ui.screen === "levels") h += mLevels();
+  else if (ui.screen === "intro") h += mIntro();
+  else if (ui.screen === "play" && ui.game) h += mPlay();
+  h += `</div>`;
+  const modal = mModal();
+  h += modal;
+  if (artState === "loading") h += `<div class="loading" role="status"><div class="panel card" style="width:auto"><b>Loading candies…</b></div></div>`;
+  else if (artState === "failed") h += `<div class="banner panel" role="alert" style="position:fixed;left:16px;right:16px;top:max(64px,env(safe-area-inset-top));z-index:70;max-width:448px;margin:0 auto"><span class="grow">Art could not load. The game still works.</span><button class="sbtn" style="width:auto" data-k="retryart">Retry art</button></div>`;
+  h += `<div id="mtoast" class="toast2" role="status" style="opacity:${ui.mtoast ? 1 : 0}">${esc(ui.mtoast || "")}</div>`;
+  const scrollTop = flowEl.scrollTop;
+  flowEl.innerHTML = h;
+  flowEl.scrollTop = scrollTop;
+  const modalOpen = !!modal;
+  if (modalOpen && ui.modalShown !== (ui.modal || "result")) { // a new dialog: focus its heading
+    ui.modalShown = ui.modal || "result";
+    const f = flowEl.querySelector(".mcm .mfocus"); if (f) f.focus({ preventScroll: true });
+    return;
+  }
+  if (!modalOpen && ui.modalShown) { ui.modalShown = null; const r = ui.modalReturn && flowEl.querySelector(`[data-k="${ui.modalReturn}"]`); ui.modalReturn = null; if (r) { r.focus({ preventScroll: true }); return; } }
+  if (ui.focusNext) { const el = flowEl.querySelector(ui.focusNext); ui.focusNext = null; if (el) { el.focus({ preventScroll: true }); return; } }
+  if (focusKey) { const el = flowEl.querySelector(`${modalOpen ? ".mcm " : ""}[data-k="${focusKey}"]`); if (el && !el.disabled) el.focus({ preventScroll: true }); }
+}
+
+// ---------- controller ----------
+function mStart(li) {
+  ui.game = M.start(li, { speed: !!progress.settings.speed });
+  ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.dropFrom = null; ui.ghosts = null; ui.popup = null;
+  ui.refreshedNote = false; ui.resultSeq = -1; ui.cursor = 0; drag = null; ui.focusNext = '[data-k="pause"]';
+  persistActive();
+}
+function mFx(kind) {
+  if (kind === "confetti" && !reduced) {
+    const cols = ["#FF42AC", "#2777EE", "#FF961C", "#7147DB", "#65C748", "#FFE09A"];
+    for (let k = 0; k < 36; k++) {
+      const d = document.createElement("div");
+      d.className = "confetti"; d.style.cssText = `position:fixed;left:${Math.random() * 100}vw;background:${cols[k % 6]};--cx:${(Math.random() - .5) * 120}px;--cr:${Math.random() * 720}deg;animation-delay:${Math.random() * 250}ms;border-radius:${k % 3 ? 2 : 50}%;z-index:95`;
+      document.body.appendChild(d); setTimeout(() => d.remove(), 1600);
+    }
+  }
+}
+function mResult(g) {
+  if (ui.resultSeq === g.seq) return; // never record the same result twice
+  ui.resultSeq = g.seq;
+  if (g.status === "won") {
+    const P = progress.matchV2, st = M.stars(g), core = M.core(g);
+    P.stars[g.li] = Math.max(P.stars[g.li], st);
+    if (core > P.best[g.li]) { P.best[g.li] = core; P.assisted[g.li] = !!g.assisted; }
+    if (g.speed) P.bestTimed[g.li] = Math.max(P.bestTimed[g.li], core + g.speedBonus);
+    progress.match.unlocked = Math.max(progress.match.unlocked, Math.min(12, g.li + 2));
+    progress.active = null; save();
+    sfx.win(); buzz([20, 40, 20]); mFx("confetti");
+    announce(`Level complete. ${st} of 3 stars. Score ${core}.${g.assisted ? " Assisted." : ""}`);
+  } else if (g.status === "lost") { persistActive(); sfx.bad(); buzz(60); announce(`Out of moves. ${g.made} of ${g.quota} chains. Try again or undo the last move.`); }
+}
+function mCommit(chain) {
+  const before = ui.game;
+  const { g, ev } = M.release(before, chain);
+  ui.chain = []; ui.hintChain = null;
+  if (!ev) return;
+  if (ev.type === "cancel") { render(); return; }
+  // stable model first, saved before any animation
+  ui.game = g; ui.refreshedNote = false;
+  persistActive();
+  if (ev.type === "wrong") { sfx.bad(); buzz(30); announce(`That makes ${ev.sum}. One move used. ${g.movesLeft} moves left.`); }
+  else {
+    sfx.good(); buzz(15);
+    if (ev.blastPts) setTimeout(() => tone(330, 0.18, "square", 0.05), 60);
+    ui.ghosts = ev.removed;
+    ui.popup = { chainPts: ev.chainPts, blastPts: ev.blastPts };
+    if (g.status === "playing") {
+      ui.dropFrom = {}; before.cells.forEach((c, i) => { ui.dropFrom[c.id] = i; });
+      if (ev.reward) ui.rewardId = g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId) ? g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId).id : null;
+      ui.busyUntil = performance.now() + (reduced ? 80 : 200);
+    }
+    if (ev.refreshed) { ui.refreshedNote = true; mToast("Board refreshed"); }
+    announce(`Cleared. ${ev.chainPts} points${ev.blastPts ? ", blast " + ev.blastPts : ""}${ev.reward && !ev.won ? ", made a " + SPNAME[ev.reward.type] + " candy" : ""}. ${g.made} of ${g.quota} chains.`);
+  }
+  mResult(g);
+  render();
+}
+function mUndo() {
+  const r = M.undo(ui.game); if (!r.ev) return;
+  ui.game = r.g; ui.chain = []; ui.hintChain = null; ui.modal = null; ui.resultSeq = -1;
+  persistActive(); sfx.tap(); announce(`Move undone. ${r.g.movesLeft} moves left. ${r.g.made} of ${r.g.quota} chains.`);
+  render();
+}
+function mHint() {
+  const r = M.hint(ui.game); if (!r.chain && r.g === ui.game) return;
+  ui.game = r.g; ui.hintChain = r.chain; ui.chain = []; persistActive(); sfx.tap();
+  if (r.chain) announce("Hint: " + r.chain.map((i) => ui.game.cells[i].v).join(" plus "));
+  render();
+}
+function mCancelGesture() { drag = null; ui.chain = []; }
+function mOpenModal(name, trigger) { mCancelGesture(); if (!ui.modal && trigger) ui.modalReturn = trigger; ui.modal = name; }
+function chainAnnounce() {
+  const g = ui.game; if (!ui.chain.length) return;
+  const sc = mSumCard(g); announce(`${sc.ex}. ${sc.status}.`);
+}
+function mButton(k) {
+  sfx.tap();
+  const g = ui.game;
+  if (k === "hub") { ui.screen = "hub"; }
+  else if (k === "settings") mOpenModal("settings", "settings");
+  else if (k === "closeset") ui.modal = null;
+  else if (k === "play" || k === "choose" || k === "levels2" || k === "levels-back") { ui.modal = null; ui.screen = "levels"; }
+  else if (k === "home") ui.screen = "home";
+  else if (k === "continue") {
+    const a = activeAttempt();
+    if (a && a.ok) { ui.game = JSON.parse(JSON.stringify(a.g)); ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.resultSeq = ui.game.status === "lost" ? ui.game.seq : -1; ui.focusNext = '[data-k="pause"]'; }
+    else { ui.restoreLi = a ? a.li : 0; ui.modal = "restore-error"; }
+  }
+  else if (k === "restore-start") { mStart(ui.restoreLi || 0); }
+  else if (k === "restore-levels") { progress.active = null; save(); ui.modal = null; ui.screen = "levels"; }
+  else if (k.startsWith("lvl-")) {
+    const li = +k.slice(4);
+    if (li + 1 > progress.match.unlocked) { mToast(`Complete level ${li} to unlock level ${li + 1}`); return; }
+    ui.introLi = li; ui.screen = "intro"; ui.focusNext = ".mfocus";
+  }
+  else if (k === "coach-ok") { const ck = coachKey(ui.introLi); if (ck) { progress.coach2[ck] = true; save(); } ui.focusNext = '[data-k="intro-play"]'; }
+  else if (k === "intro-play") mStart(ui.introLi);
+  else if (k === "pause") mOpenModal("pause", "pause");
+  else if (k === "resume") ui.modal = null;
+  else if (k === "cancel") ui.modal = "pause";
+  else if (k === "restart") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-restart"; else mStart(g.li); }
+  else if (k === "levels") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-levels"; else { progress.active = null; save(); ui.modal = null; ui.screen = "levels"; } }
+  else if (k === "confirm") { if (ui.modal === "confirm-restart") mStart(g.li); else { progress.active = null; save(); ui.modal = null; ui.screen = "levels"; } }
+  else if (k === "snd") { progress.settings.sound = !progress.settings.sound; save(); }
+  else if (k === "hap") { progress.settings.haptics = !progress.settings.haptics; save(); if (progress.settings.haptics) buzz(20); }
+  else if (k === "tap") { progress.settings.tap = !progress.settings.tap; save(); }
+  else if (k === "speed") { progress.settings.speed = !progress.settings.speed; save(); mToast(`Speed bonus ${progress.settings.speed ? "on" : "off"} from your next attempt`); }
+  else if (k === "help") { ui.helpFrom = ui.modal; ui.modal = "help"; }
+  else if (k === "closehelp") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; }
+  else if (k === "next") { ui.modal = null; ui.introLi = g.li + 1; ui.screen = "intro"; ui.focusNext = ".mfocus"; }
+  else if (k === "retry") mStart(g.li);
+  else if (k === "undo" || k === "undo2") { mUndo(); return; }
+  else if (k === "hint") { mHint(); return; }
+  else if (k === "submit") { mCommit(ui.chain.slice()); return; }
+  else if (k === "clearsel") { ui.chain = []; }
+  else if (k === "retryart") { artState = "idle"; loadArt(); }
+  render();
+}
+flowEl.addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-k]");
+  if (!b || b.disabled || b.getAttribute("aria-disabled") === "true" && !b.dataset.k.startsWith("lvl-")) return;
+  if (ui.screen === "play" && !ui.modal && performance.now() < ui.busyUntil && ["hint", "undo", "submit"].includes(b.dataset.k)) return;
+  if (e.detail !== 0) ui.kbd = false;
+  mButton(b.dataset.k);
+});
+
+// ---------- pointer: drag chains (one pointer owns the gesture), or tap mode ----------
+let drag = null;
+function mCellAt(e) {
+  const board = document.getElementById("mboard"); if (!board) return -1;
+  const g = ui.game, rect = board.getBoundingClientRect();
+  const pad = 4 * rect.width / board.offsetWidth, gap = 8 * rect.width / board.offsetWidth;
+  const inner = rect.width - 2 * pad, t = (inner - (g.cols - 1) * gap) / g.cols;
+  const x = e.clientX - rect.left - pad, y = e.clientY - rect.top - pad;
+  const c = Math.floor(x / (t + gap)), r = Math.floor(y / (t + gap));
+  if (c < 0 || r < 0 || c >= g.cols || r >= g.rows) return -1;
+  const fx = (x - c * (t + gap)) / t, fy = (y - r * (t + gap)) / t; // central 80 % of the tile
+  if (fx < 0.1 || fx > 0.9 || fy < 0.1 || fy > 0.9) return -1;
+  return r * g.cols + c;
+}
+function mPlayable() { return ui.mode === "match" && ui.screen === "play" && !ui.modal && ui.game && ui.game.status === "playing"; }
+flowEl.addEventListener("pointerdown", (e) => {
+  if (!mPlayable() || drag || performance.now() < ui.busyUntil) return;
+  const i = mCellAt(e); if (i < 0) return;
+  e.preventDefault();
+  ui.kbd = false; ui.hintChain = null;
+  if (progress.settings.tap) { // tap mode: append / step back
+    const ch = ui.chain, last = ch[ch.length - 1];
+    ui.chain = i === last ? ch.slice(0, -1) : M.extend(ui.game, ch, i);
+    if (ui.chain === ch && !ch.includes(i) && ch.length) mToast(ch.length >= 8 ? "Chains are at most 8 candies" : "Pick a candy next to the last one", 1400);
+    sfx.pick(ui.chain.length); render(); chainAnnounce(); return;
+  }
+  drag = { pid: e.pointerId };
+  try { flowEl.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  ui.chain = [i]; sfx.pick(1); render();
+});
+flowEl.addEventListener("pointermove", (e) => {
+  if (!drag || e.pointerId !== drag.pid) return;
+  const i = mCellAt(e); if (i < 0) return;
+  const before = ui.chain, next = M.extend(ui.game, before, i);
+  if (next === before) return;
+  ui.chain = next; sfx.pick(next.length); if (next.length > before.length) buzz(5);
+  render();
+});
+function mEndDrag(e, cancel) {
+  if (!drag || e.pointerId !== drag.pid) return;
+  drag = null;
+  if (cancel || !mPlayable()) { ui.chain = []; render(); return; } // OS cancellation: free
+  const ch = ui.chain.slice();
+  if (ch.length >= 2) chainAnnounce();
+  mCommit(ch); // release anywhere evaluates; one tile is free
+}
+flowEl.addEventListener("pointerup", (e) => mEndDrag(e, false));
+flowEl.addEventListener("pointercancel", (e) => mEndDrag(e, true));
+
+// ---------- keyboard ----------
+function mKey(e) {
+  const k = e.key;
+  if (ui.modal || (ui.screen === "play" && ui.game && ui.game.status !== "playing")) {
+    if (k === "Escape") { e.preventDefault(); if (ui.modal === "help") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; } else if (ui.modal === "pause" || ui.modal === "settings") ui.modal = null; else if (ui.modal && ui.modal.startsWith("confirm")) ui.modal = "pause"; else if (!ui.modal) return; render(); return; }
+    if (k === "Tab") { // focus trap
+      const f = [...flowEl.querySelectorAll(".mcm button:not(:disabled), .mcm [tabindex]")]; if (!f.length) return;
+      const i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    }
+    return;
+  }
+  if (k === "Escape") { e.preventDefault(); if (ui.screen === "play") mOpenModal("pause", "pause"); else if (ui.screen === "intro") ui.screen = "levels"; else if (ui.screen === "levels") ui.screen = "home"; else ui.screen = "hub"; render(); return; }
+  if (ui.screen !== "play" || !mPlayable()) return;
+  const g = ui.game, onBtn = document.activeElement && document.activeElement.tagName === "BUTTON";
+  if (k === "h" || k === "H") { mHint(); return; }
+  if (k === "u" || k === "U" || (k === "z" && (e.ctrlKey || e.metaKey))) { e.preventDefault(); mUndo(); return; }
+  const mv = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -g.cols, ArrowDown: g.cols }[k];
+  if (mv !== undefined) {
+    e.preventDefault();
+    if (!ui.kbd) { ui.kbd = true; if (ui.chain.length) ui.cursor = ui.chain[ui.chain.length - 1]; }
+    else { const c = ui.cursor % g.cols; if (!((k === "ArrowLeft" && c === 0) || (k === "ArrowRight" && c === g.cols - 1))) ui.cursor = Math.max(0, Math.min(g.cells.length - 1, ui.cursor + mv)); }
+    render(); const cur = flowEl.querySelector(`[data-cell="${ui.cursor}"]`); if (cur) cur.scrollIntoView({ block: "nearest" });
+    announce(cur ? cur.getAttribute("aria-label") : ""); return;
+  }
+  if ((k === " " || k === "Spacebar") && !onBtn) {
+    e.preventDefault(); ui.kbd = true; ui.hintChain = null;
+    const ch = ui.chain, i = ui.cursor;
+    if (ch.length && i === ch[ch.length - 1]) ui.chain = ch.slice(0, -1);
+    else { ui.chain = M.extend(g, ch, i); if (ui.chain === ch) mToast(ch.includes(i) ? "Already in the chain" : ch.length >= 8 ? "Chains are at most 8 candies" : "Pick a candy next to the last one", 1400); }
+    sfx.pick(ui.chain.length); render(); chainAnnounce(); return;
+  }
+  if (k === "Backspace" && ui.chain.length) { e.preventDefault(); ui.chain = ui.chain.slice(0, -1); render(); chainAnnounce(); return; }
+  if (k === "Enter" && !onBtn) { e.preventDefault(); mCommit(ui.chain.slice()); }
+}
+
+// ---------- MC-007 active-time clock (count-up, no loss from time) ----------
+let lastTick = null;
+function mTimingActive() {
+  const g = ui.game;
+  return !!(g && g.mode === "match" && g.speed && g.timing && g.status === "playing" && ui.mode === "match" && ui.screen === "play" && !ui.modal && !document.hidden && performance.now() >= ui.busyUntil);
+}
+function accrue(ms) { if (!mTimingActive()) return false; ui.game.elapsed += ms; const c = document.getElementById("mclock"); if (c) c.textContent = fmtClock(ui.game.elapsed); return true; }
+setInterval(() => {
+  const now = performance.now();
+  if (!mTimingActive()) { lastTick = null; return; }
+  if (lastTick !== null) accrue(Math.min(1000, now - lastTick));
+  lastTick = now;
+  if (Math.floor(ui.game.elapsed / 5000) !== Math.floor((ui.game.elapsed - 250) / 5000)) persistActive();
+}, 250);
+
+// ======================================================================
 // CONTROLLER — every input (UI, keyboard, QA) goes through these
 // ======================================================================
 function startLevel(mode, li) {
+  if (mode === "match") { ui.mode = "match"; mStart(li); return; }
   ui.mode = mode; ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.prevPos = null; ui.lastMsgUntil = 0;
   ui.game = CORE[mode].start(li);
   ui.cursor = 0;
@@ -842,23 +1555,6 @@ function tileFx(g, idxs, kind) { // ghost copies of removed tiles for pop/shard 
   ui.fx.push({ type: "pop", tiles }); if (kind === "shards") ui.fx.push({ type: "shards", tiles });
 }
 
-function matchRelease(chain) {
-  const before = ui.game;
-  const { g, ev } = M.release(before, chain);
-  ui.chain = [];
-  if (!ev) return;
-  if (ev.type === "cancel") { ui.prevPos = null; render(); return; }
-  ui.game = g; ui.hintChain = null;
-  if (ev.type === "wrong") { ui.lastMsgUntil = Date.now() + 1800; sfx.bad(); buzz(30); ui.prevPos = null; announce(`That makes ${ev.sum}. One move used.`); ui.fx.push({ type: "shake", sel: "#mplaque" }); setTimeout(() => { if (ui.game === g) render(); }, 1850); }
-  else {
-    sfx.good(); buzz(15); tileFx(before, ev.removed, "pop"); ui.busyUntil = Date.now() + 360;
-    if (ev.refreshed) toast("Board refreshed");
-    announce(`Cleared. ${g.made} of ${g.quota} chains.`);
-    if (g.status !== "playing") ui.prevPos = null;
-  }
-  onResult(g);
-  render();
-}
 function eqInput(a) {
   const before = ui.game;
   if (a === "hint") { ui.game = E.hint(before).g; sfx.tap(); render(); return; }
@@ -887,13 +1583,12 @@ function clearAct(a) {
   onResult(r.g);
   render();
 }
-function matchHint() { const r = M.hint(ui.game); ui.game = r.g; ui.hintChain = r.chain; ui.chain = []; sfx.tap(); render(); }
 
 function requestRestart() { if (CORE[ui.mode].hasProgress(ui.game) && ui.game.status === "playing") { ui.modal = "confirm-restart"; render(); } else { startLevel(ui.mode, ui.game.li); render(); } }
 
 function onButton(k) {
   sfx.tap();
-  if (k.startsWith("mode-")) { ui.mode = k.slice(5); ui.screen = "home"; }
+  if (k.startsWith("mode-")) { ui.mode = k.slice(5); ui.screen = "home"; if (ui.mode === "match") loadArt(); }
   else if (k === "hub") ui.screen = "hub";
   else if (k === "play") { ui.screen = "levels"; }
   else if (k === "home") ui.screen = "home";
@@ -915,7 +1610,7 @@ function onButton(k) {
   else if (k === "retry" || k === "restart2") startLevel(ui.mode, ui.game.li);
   else if (k === "levels2") { ui.modal = null; ui.screen = "levels"; }
   else if (k === "undo2" || k === "undo") { clearAct("undo"); return; }
-  else if (k === "hint") { if (ui.mode === "match") matchHint(); else if (ui.mode === "equation") eqInput("hint"); else clearAct("hint"); return; }
+  else if (k === "hint") { if (ui.mode === "match") mHint(); else if (ui.mode === "equation") eqInput("hint"); else clearAct("hint"); return; }
   else if (k === "submit") { eqInput("submit"); return; }
   else if (k === "back") { eqInput("back"); return; }
   else if (k === "clr") { eqInput("clear"); return; }
@@ -937,54 +1632,13 @@ stage.addEventListener("click", (e) => {
   onButton(b.dataset.k);
 });
 
-let drag = null; // {pid}
-function cellAt(e) {
-  const board = document.getElementById("board"); if (!board) return -1;
-  const g = ui.game, rect = board.getBoundingClientRect();
-  const lx = (e.clientX - rect.left) * 338 / rect.width, ly = (e.clientY - rect.top) * 342 / rect.height;
-  const c = Math.floor((lx - 13 + 4) / 64), r = Math.floor((ly - 12 + 4) / 64);
-  if (c < 0 || r < 0 || c >= g.cols || r >= g.rows) return -1;
-  const fx = (lx - 13 - c * 64) / 56, fy = (ly - 12 - r * 64) / 56; // central 80% of the tile
-  if (fx < 0.1 || fx > 0.9 || fy < 0.1 || fy > 0.9) return -1;
-  return r * g.cols + c;
-}
-function updateChainView() { // light update during drag: re-render the board only
-  ui.prevPos = null;
-  render();
-}
-stage.addEventListener("pointerdown", (e) => {
-  if (ui.screen !== "play" || ui.mode !== "match" || ui.modal || !ui.game || ui.game.status !== "playing") return;
-  if (drag || Date.now() < ui.busyUntil) return; // one pointer owns the gesture
-  const i = cellAt(e); if (i < 0) return;
-  e.preventDefault();
-  ui.kbd = false; ui.hintChain = null; ui.showCoach = false;
-  drag = { pid: e.pointerId };
-  try { stage.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-  ui.chain = [i]; sfx.pick(1); updateChainView();
-});
-stage.addEventListener("pointermove", (e) => {
-  if (!drag || e.pointerId !== drag.pid) return;
-  const i = cellAt(e); if (i < 0) return;
-  const ch = ui.chain, g = ui.game;
-  if (ch.length >= 2 && i === ch[ch.length - 2]) { ch.pop(); sfx.pick(ch.length); updateChainView(); return; }
-  if (ch.includes(i)) return;
-  if (ch.length >= 8 || !M.adjacent(g, ch[ch.length - 1], i)) return;
-  ch.push(i); sfx.pick(ch.length); buzz(5); updateChainView();
-});
-function endDrag(e, cancel) {
-  if (!drag || e.pointerId !== drag.pid) return;
-  drag = null;
-  const ch = ui.chain.slice();
-  if (cancel) { ui.chain = []; render(); return; }
-  matchRelease(ch);
-}
-stage.addEventListener("pointerup", (e) => endDrag(e, false));
-stage.addEventListener("pointercancel", (e) => endDrag(e, true));
 document.addEventListener("visibilitychange", () => { // OS interruption: cancel gesture, pause
-  if (document.hidden && ui.screen === "play" && ui.game && ui.game.status === "playing") { drag = null; ui.chain = []; if (ui.game.mode === "equation") { /* keep tokens; editing is reversible */ } ui.modal = ui.modal || "pause"; render(); }
+  if (document.hidden && ui.mode === "match" && ui.screen === "play" && ui.game && ui.game.status === "playing") { mOpenModal(ui.modal || "pause", "pause"); persistActive(); render(); return; }
+  if (document.hidden && ui.screen === "play" && ui.game && ui.game.status === "playing") { ui.chain = []; if (ui.game.mode === "equation") { /* keep tokens; editing is reversible */ } ui.modal = ui.modal || "pause"; render(); }
 });
 
 document.addEventListener("keydown", (e) => {
+  if (ui.mode === "match" && ui.screen !== "hub") { mKey(e); return; }
   const k = e.key;
   if (k === "Escape") {
     e.preventDefault();
@@ -1034,7 +1688,7 @@ document.addEventListener("keydown", (e) => {
   }
   if (k === "Enter" && !(document.activeElement && document.activeElement.tagName === "BUTTON")) {
     e.preventDefault();
-    if (g.mode === "match") matchRelease(ui.chain.slice()); else clearAct("clear");
+    clearAct("clear");
     return;
   }
   if ((k === "u" || k === "U" || (k === "z" && (e.ctrlKey || e.metaKey))) && g.mode === "clear") { e.preventDefault(); clearAct("undo"); }
@@ -1046,15 +1700,61 @@ render();
 // QA HOOK — levels() = 36: 0–11 Match, 12–23 Equation, 24–35 Clear
 // ======================================================================
 function qaScreen() {
+  if (ui.mode === "match" && ui.screen !== "play") return ui.screen; // hub | home | levels | intro
   if (ui.screen !== "play") return ui.screen;
   if (ui.modal) return "paused";
   return ui.game.status; // playing | won | lost | stuck
 }
+// MC-009: run the designer's mechanics fixtures through the real engine (M.resolve / M.release / M.extend)
+const FIXTURES = {"schemaVersion":1,"indexing":"row-major 0..24","board":[2,3,1,4,7,4,1,6,2,8,5,3,2,9,1,7,2,4,3,6,1,5,2,4,8],"target":10,"cases":[{"id":"ordinary-four","level":4,"chain":[0,1,2,3],"specials":{},"sum":10,"chainPoints":300,"blastPoints":0,"removed":[0,1,2,3],"reward":{"cell":3,"value":4,"type":"stripe"}},{"id":"stripe","level":4,"chain":[0,1,2,3],"specials":{"2":"stripe"},"sum":10,"chainPoints":300,"blastPoints":25,"removed":[0,1,2,3,4],"reward":{"cell":3,"value":4,"type":"stripe"}},{"id":"wrapped-edge","level":7,"chain":[0,1,2,3],"specials":{"0":"wrapped"},"sum":10,"chainPoints":300,"blastPoints":50,"removed":[0,1,2,3,5,6]},{"id":"recursive","level":7,"chain":[0,1,2,3],"specials":{"0":"wrapped","5":"stripe"},"sum":10,"chainPoints":300,"blastPoints":125,"removed":[0,1,2,3,5,6,7,8,9]},{"id":"wrong-sum","level":4,"chain":[0,1,6,7],"specials":{"1":"stripe"},"sum":12,"chainPoints":0,"blastPoints":0,"removed":[]},{"id":"diagonal-invalid","chain":[0,6],"reject":"non-orthogonal selection; ignore second tile, no committed move"},{"id":"repeated-nontail","chain":[0,1,2,0],"reject":"ignore repeated non-tail entry"}]};
+function runFixtures() {
+  const out = [];
+  for (const c of FIXTURES.cases) {
+    const li = (c.level || 4) - 1, g = M.start(li);
+    g.target = FIXTURES.target; g.cells = FIXTURES.board.map((v, i) => ({ id: i, v, sp: (c.specials || {})[i] || null }));
+    if (c.reject) {
+      let ch = []; for (const i of c.chain) ch = M.extend(g, ch, i);
+      const r = M.release(g, c.chain);
+      const ok = ch.length < c.chain.length && r.g === g && r.ev && r.ev.type === "cancel";
+      out.push({ id: c.id, ok, got: { dragChain: ch, committed: r.g !== g } });
+      continue;
+    }
+    const sum = M.sum(g, c.chain), r = M.release(g, c.chain);
+    let got;
+    if (sum !== g.target) got = { sum, chainPoints: 0, blastPoints: 0, removed: [], movesUsed: g.movesLeft - r.g.movesLeft, made: r.g.made };
+    else { const R = M.resolve(g, c.chain); got = { sum, chainPoints: R.chainPts, blastPoints: R.blastPts, removed: R.removal, reward: R.reward, committedPts: r.g.chainPts + r.g.blastPts, made: r.g.made, movesUsed: g.movesLeft - r.g.movesLeft }; }
+    let ok = got.sum === c.sum && got.chainPoints === c.chainPoints && got.blastPoints === c.blastPoints && JSON.stringify(got.removed) === JSON.stringify(c.removed) && got.movesUsed === 1;
+    if (c.reward) ok = ok && got.reward && got.reward.cell === c.reward.cell && got.reward.value === c.reward.value && got.reward.type === c.reward.type;
+    if (sum === g.target) ok = ok && got.committedPts === c.chainPoints + c.blastPoints && got.made === 1;
+    else ok = ok && got.made === 0 && r.ev.type === "wrong";
+    out.push({ id: c.id, ok, got });
+  }
+  return { ok: out.every((x) => x.ok), cases: out };
+}
+// MC-006 evidence: beam search for a no-speed three-star route with the real engine (no hints/undo)
+function threeStar(li, width = 60) {
+  const L = LEVELS.match[li], [, t3] = M.thresholds(L.quota);
+  let beam = [{ g: M.start(li), path: [] }], best = null;
+  for (let step = 0; step < L.quota; step++) {
+    const next = [];
+    for (const b of beam) for (const ch of M.allChains(b.g, 4000)) {
+      const r = M.release(b.g, ch); if (!r.ev || r.ev.type !== "clear") continue;
+      const n = { g: r.g, path: b.path.concat([ch]) };
+      if (r.g.status === "won") { if (!best || M.core(r.g) > M.core(best.g)) best = n; } else if (r.g.status === "playing") next.push(n);
+    }
+    next.sort((a, b) => (b.g.chainPts + b.g.blastPts) - (a.g.chainPts + a.g.blastPts));
+    const seen = new Set(); beam = [];
+    for (const n of next) { const key = n.g.cells.map((c) => c.v + (c.sp ? c.sp[0] : "")).join(""); if (seen.has(key)) continue; seen.add(key); beam.push(n); if (beam.length >= width) break; }
+  }
+  return best ? { level: li + 1, core: M.core(best.g), threeStar: t3, stars: M.stars(best.g), reached: M.core(best.g) >= t3, route: best.path } : { level: li + 1, reached: false };
+}
 window.__qa = {
   state: () => {
-    const g = ui.game, base = { screen: qaScreen(), mode: ui.mode, level: g ? g.li : null, qaLevel: g ? MODES.indexOf(g.mode) * 12 + g.li : null };
-    if (!g || ui.screen !== "play") return base;
-    if (g.mode === "match") return { ...base, target: g.target, movesLeft: g.movesLeft, made: g.made, quota: g.quota, score: g.score, board: g.cells.map((c) => c.v), chain: ui.chain.slice() };
+    const g = ui.game, base = { screen: qaScreen(), mode: ui.mode, level: ui.mode === "match" && ui.screen === "intro" ? ui.introLi : g ? g.li : null, qaLevel: g ? MODES.indexOf(g.mode) * 12 + g.li : null, modal: ui.modal || null };
+    if (!g || ui.screen !== "play" || g.mode !== ui.mode) return base;
+    if (g.mode === "match") return { ...base, version: g.version, target: g.target, movesLeft: g.movesLeft, made: g.made, quota: g.quota, score: M.score(g), coreScore: M.core(g),
+      chainPts: g.chainPts, blastPts: g.blastPts, finish: g.finish, speedBonus: g.speedBonus, stars: M.stars(g), assisted: g.assisted, hints: g.hints, undoCount: g.undos, undoAvailable: g.hist.length,
+      board: g.cells.map((c) => c.v), specials: g.cells.map((c) => c.sp), ids: g.cells.map((c) => c.id), rng: g.rng, chain: ui.chain.slice(), speed: g.speed, timing: g.timing, elapsedMs: g.elapsed, seq: g.seq };
     if (g.mode === "equation") return { ...base, target: E.tray(g).target, round: g.round, attempts: g.attempts, score: g.score, tray: E.tray(g).values.slice(), expression: E.text(g.tokens, E.tray(g).values) };
     return { ...base, target: g.target, remaining: C.remaining(g).length, selected: g.sel.slice(), score: g.score, assists: g.assists, board: g.values.map((v, i) => (g.removed[i] ? null : v)) };
   },
@@ -1065,7 +1765,7 @@ window.__qa = {
       if (g.status !== "playing") return [];
       const out = [];
       for (let i = 0; i < g.cells.length; i++) { if ((i + 1) % g.cols) out.push({ chain: [i, i + 1] }); if (i + g.cols < g.cells.length) out.push({ chain: [i, i + g.cols] }); }
-      return out.concat(M.allChains(g, 20).map((c) => ({ chain: c })), ["hint"]);
+      return out.concat(M.allChains(g, 40).map((c) => ({ chain: c })), ["hint"], g.hist.length ? ["undo"] : []);
     }
     if (g.mode === "equation") return g.status === "playing" ? E.legal(g).concat(["hint"]) : [];
     if (g.status === "stuck") return ["undo"];
@@ -1079,7 +1779,7 @@ window.__qa = {
     const g = ui.game; if (!g || ui.screen !== "play") return;
     if (ui.modal) ui.modal = null;
     ui.busyUntil = 0;
-    if (g.mode === "match") { if (a === "hint") matchHint(); else if (a && a.chain) matchRelease(a.chain); }
+    if (g.mode === "match") { if (a === "hint") mHint(); else if (a === "undo") mUndo(); else if (a && a.chain) mCommit(a.chain); }
     else if (g.mode === "equation") eqInput(a);
     else clearAct(a);
   },
@@ -1112,6 +1812,16 @@ window.__qa = {
     return seq;
   },
   validate: validateData,
+  // H-001-v1 extensions (MC-009); not used by normal play
+  fixtures: runFixtures,
+  threeStar,
+  tick: (ms) => accrue(ms),           // deterministic active-time advance (only counts when the clock would run)
+  timingActive: () => mTimingActive(),
+  setSetting: (k, v) => { progress.settings[k] = v; save(); render(); },
+  open: (screen, li) => { ui.mode = "match"; ui.modal = null; if (screen === "intro") { ui.introLi = li || 0; } ui.screen = screen; if (screen === "home") loadArt(); render(); },
+  modal: (name) => { ui.modal = name; render(); },
+  dragChain: (cells) => { let ch = []; for (const i of cells) ch = M.extend(ui.game, ch, i); return ch; },
+  saved: () => JSON.parse(JSON.stringify(progress)),
 };
 </script>
 </body>

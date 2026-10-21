@@ -1,11 +1,11 @@
 {
   "game": "games/math-crush/index.html",
-  "at": "2026-10-20T20:59:41.657Z",
+  "at": "2026-10-21T20:56:52.958Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "78 KB"
+      "detail": "136 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -45,12 +45,12 @@
     {
       "name": "[desktop] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null}"
+      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
     },
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, lost, won; resets: 83"
+      "detail": "screens seen: playing, lost, won; resets: 81"
     },
     {
       "name": "every level completable via solve() (36 levels)",
@@ -75,12 +75,12 @@
     {
       "name": "[phone] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null}"
+      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
     },
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won, lost; resets: 13"
+      "detail": "screens seen: playing, lost, won; resets: 12"
     },
     {
       "name": "[phone] no console errors or exceptions",
@@ -99,7 +99,8 @@
     "screen": "hub",
     "mode": "match",
     "level": null,
-    "qaLevel": null
+    "qaLevel": null,
+    "modal": null
   },
   "solveResults": [
     {
@@ -323,7 +324,8 @@
     "screen": "hub",
     "mode": "match",
     "level": null,
-    "qaLevel": null
+    "qaLevel": null,
+    "modal": null
   },
   "passed": true
 }
