@@ -22,9 +22,27 @@ prototypes (Match, Equation, Clear) so Benji can feel which core loop he wants.
   `DESIGN.md` → `design/handover-v1/docs/Studio-Handoff.md` (rules, scoring, layout coordinates),
   `design/handover-v1/designs/` (21 screens), `reference/approved-art-direction.jpg`, runtime art in `assets/`.
 - Math Crush is **not registered** in `design-studio/PROJECTS.md` yet (no approved hand-over there), so
-  `games/math-crush/DESIGN.md` is in force. Design questions go to `design/REQUESTS.md`.
+  `games/math-crush/DESIGN.md` is in force. Design questions go to `design/REQUESTS.md`. *(Night 1. Superseded
+  on 21 Oct: see Night 2.)*
+- **Night 2:** the approved hand-over `design-studio/games/math-crush/handovers/H-001-v1/` (HANDOVER.md,
+  SCREENS.md, mechanics-fixtures.json, assets/; SHA256SUMS verified) is the design source, read in place.
+  Authorization: `design-studio/games/math-crush/STATUS.md` (Benji, 21 Oct). Reports go to
+  `design-studio/games/math-crush/feedback/FB-NNN-*.md`. No URLs in the idea or tonight's note.
 
-## Tonight (night 1)
+## Tonight (night 2) — H-001-v1 candy refinement (Match only)
+Board note `math-crush-h001`: build the approved hand-over, Phase A then B, C if time allows.
+1. **Phase A:** MC-001 new cream/plum/raspberry shell for Match: Home (Continue when saved), Candy trail
+   level map 1→12, level Intro (thresholds, coach cards), Pause/Settings, Success, Retry, Loading/art-failure
+   and save-error states; flowing phone-width layout (not the scaled stage) so targets stay ≥44px at 360×640
+   and 150 % text scrolls. MC-002 gameplay feedback (live expression, sum, multiplier, missing/Release/Too high
+   copy, fixed HUD), MC-003 chain multipliers, MC-006 score stars, MC-008 Undo + saved active attempt +
+   candy-v2 score versioning beside legacy bests + accessibility.
+2. **Phase B:** MC-004/005 striped and wrapped candies (earning, activation, closure, blast bonus, reward
+   placement, gravity), engine tests against `mechanics-fixtures.json`, MC-009 evidence.
+3. **Phase C (if A/B pass):** MC-007 optional speed bonus, off by default.
+4. FB-001-candy-refinement.md completion report per MC-ID. Equation and Clear unchanged.
+
+## Night 1 plan (history)
 DESIGN.md phase 1, slightly stretched because the level data is ready to load:
 1. Shared shell: mode picker → mode home → level grid → gameplay → pause (Resume / Restart / Levels with
    confirmation, Sound, Haptics, Help) → success / failure (Clear: Stuck).
@@ -34,7 +52,16 @@ DESIGN.md phase 1, slightly stretched because the level data is ready to load:
 4. Hints for all three modes, Undo for Clear, progress (unlocks + best stars) in localStorage.
 5. Keyboard play for all three modes (studio contract), `window.__qa` covering all 36 levels.
 
-## Assumptions
+## Assumptions (night 2)
+- Match screens render in a normal scrolling page (max 480 px wide, centred on desktop) instead of the
+  night-1 scaled 390×844 stage, because SCREENS.md requires 44 px targets at 360×640 and 150 % text. The
+  mode picker, Equation and Clear keep the stage unchanged.
+- Tap-to-select is a "Tap to select" switch in Settings (spec: tap/keyboard mode adds Submit); keyboard
+  play turns the same Submit on automatically.
+- Legacy (v1) Match stars and bests stay in their old fields, shown as "Legacy" on the intro card; v2 stars
+  drive the level map. Unlocks are shared.
+
+## Assumptions (night 1)
 - One page, three modes; a small "Math Crush" mode picker sits in front of the spec's per-mode Home screens
   (the spec has no shared hub; DESIGN.md asks for one).
 - Restart asks for confirmation only once the attempt has progress (spec: confirm; RULES/DESIGN.md: instant
@@ -43,6 +70,7 @@ DESIGN.md phase 1, slightly stretched because the level data is ready to load:
 - Match keyboard play doubles as the spec's tap-to-select mode: arrows move, Space adds/backtracks, Enter submits.
 
 ## Later
+- (night 2) R2 level data, R3 fourth prototype: designer requests, unchanged.
 - Guided tutorials (fixed demo board, Skip / Start level), Continue (saving an active attempt), corrupted-save
   message, screen reader announcements beyond labels, 150 % text pass, short-screen scrolling.
 - Phase 3 polish and the spec's recovery and visual checks; playtest balancing of the starter data.
