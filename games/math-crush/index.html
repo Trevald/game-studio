@@ -198,7 +198,8 @@
   .qdot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--plum); background: #fff; }
   .qdot.on { background: var(--rasp); border-color: #8F1647; }
   .boardwrap { position: relative; width: min(100%, 350px); align-self: center; }
-  #mboard { position: relative; width: 100%; aspect-ratio: 1; padding: 4px; border-radius: 22px; background: var(--well); display: grid; grid-template-columns: repeat(5, 1fr);
+  #mboard:focus { outline: none; } #mboard:focus-visible { box-shadow: 0 0 0 3px var(--cream), 0 0 0 6px var(--plum); }
+  #mboard { overflow: hidden; position: relative; width: 100%; aspect-ratio: 1; padding: 4px; border-radius: 22px; background: var(--well); display: grid; grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr); gap: 8px; touch-action: none; container-type: inline-size; box-shadow: inset 0 3px 12px rgba(0,0,0,.35); }
   .tile2 { position: relative; display: flex; align-items: center; justify-content: center; border-radius: 16px; font-weight: 900; color: #fff; font-size: 9.6cqw;
     text-shadow: -2px -2px 0 #3a1a10, 2px -2px 0 #3a1a10, -2px 2px 0 #3a1a10, 2px 2px 0 #3a1a10, 0 3px 0 #3a1a10; background-repeat: no-repeat; user-select: none; -webkit-user-select: none; }
@@ -208,12 +209,12 @@
     background: repeating-linear-gradient(0deg, rgba(255,255,255,.8) 0 3px, rgba(255,255,255,0) 3px 8px); box-shadow: 0 0 0 2px rgba(255,255,255,.7); }
   .tile2 .sp-wrap { position: absolute; inset: 3px; border-radius: 13px; z-index: 2; pointer-events: none; border: 3px dashed rgba(255,255,255,.95);
     background: linear-gradient(135deg, #fff 0 9px, transparent 9px), linear-gradient(225deg, #fff 0 9px, transparent 9px), linear-gradient(45deg, #fff 0 9px, transparent 9px), linear-gradient(315deg, #fff 0 9px, transparent 9px); }
-  .tile2 .badge2 { position: absolute; right: -5px; top: -7px; z-index: 6; min-width: 22px; height: 22px; padding: 0 3px; border-radius: 11px; background: var(--gold); color: var(--plum);
+  .tile2 .badge2 { position: absolute; right: 2px; top: 2px; z-index: 6; min-width: 22px; height: 22px; padding: 0 3px; border-radius: 11px; background: var(--gold); color: var(--plum);
     border: 2px solid var(--plum); font-size: 0.8125rem; line-height: 18px; text-align: center; text-shadow: none; font-weight: 900; }
   .tile2.sel::after { content: ""; position: absolute; inset: -3px; border-radius: 18px; border: 4px solid var(--gold); box-shadow: 0 0 10px 2px rgba(255,224,154,.85); z-index: 4; pointer-events: none; }
   .tile2.over::after { border-color: var(--amber); box-shadow: 0 0 0 2px var(--plum); }
-  .tile2.blast::before { content: ""; position: absolute; inset: -2px; border-radius: 18px; z-index: 4; pointer-events: none; border: 3px dotted #fff;
-    background: repeating-linear-gradient(45deg, rgba(255,224,154,.5) 0 6px, rgba(255,224,154,.1) 6px 12px); }
+  .tile2.blast::before { content: ""; position: absolute; inset: -2px; border-radius: 18px; z-index: 4; pointer-events: none; border: 3px dotted #FFF3DD;
+    background: rgba(255,224,154,.28); box-shadow: 0 0 12px 3px rgba(255,224,154,.7); }
   .tile2.hint::after { content: ""; position: absolute; inset: -3px; border-radius: 18px; border: 4px dashed #fff; z-index: 4; pointer-events: none; animation: hintpulse 1s ease-in-out infinite alternate; }
   .tile2.kcur { box-shadow: 0 0 0 3px var(--cream), 0 0 0 6px var(--plum); z-index: 5; }
   .tile2.drop2 { animation: drop2 180ms ease-in both; }
@@ -223,9 +224,9 @@
   #mboard svg.trace { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); z-index: 5; pointer-events: none; overflow: visible; }
   .ghosts { position: absolute; inset: 4px; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 8px; pointer-events: none; z-index: 7; }
   .ghosts .tile2 { animation: pop 180ms ease-out forwards; }
-  .ghosts .tile2.bl { animation: blastpop 260ms ease-out forwards; }
+  .ghosts .tile2.bl { animation: blastpop 300ms ease-out forwards; }
   @keyframes blastpop { 0% { transform: scale(1); filter: brightness(1.6); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
-  .popup { position: absolute; left: 50%; top: 38%; transform: translate(-50%, 0); z-index: 9; pointer-events: none; background: var(--cream); border: 2px solid var(--plum);
+  .popup { position: absolute; left: 50%; top: calc(100% + 4px); transform: translate(-50%, 0); z-index: 9; pointer-events: none; background: var(--cream); border: 2px solid var(--plum);
     border-radius: 16px; padding: 6px 12px; font-weight: 900; text-align: center; white-space: nowrap; animation: popup 1100ms ease-out forwards; font-size: 1.125rem; }
   .popup small { display: block; font-size: 0.875rem; color: var(--muted); }
   @keyframes popup { 0% { opacity: 0; transform: translate(-50%, 10px); } 15% { opacity: 1; transform: translate(-50%, 0); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -24px); } }
@@ -830,7 +831,7 @@ function render() {
 
 // ---------- hub ----------
 function renderHub() {
-  const desc = { match: ["Candy Match", "Drag touching numbers that add up. Long chains pay more."],
+  const desc = { match: ["Candy Match", "Chain touching numbers to the target. Longer pays more."],
     equation: ["Equation Builder", "Build a short equation with + − × to hit the target."],
     clear: ["Clear the Board", "Pair numbers anywhere. Empty the board."] };
   let h = `<div class="abs hubtitle shadowtext">Math Crush</div><div class="abs hubsub">Three ways to make a number.<br>Pick one and see which you'd play again.</div>`;
@@ -1100,7 +1101,7 @@ function mHome() {
   h += `<div class="grow"></div>`;
   if (act) {
     const g = act.g;
-    h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:15px;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} moves left` : "Saved attempt"}</span></button>`;
+    h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:15px;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} move${g.movesLeft === 1 ? "" : "s"} left` : "Saved attempt"}</span></button>`;
     h += `<button class="sbtn" data-k="choose">Choose level</button>`;
   } else {
     h += `<button class="pbtn" data-k="play">Play</button>`;
@@ -1174,7 +1175,8 @@ function mFeedback(g, sc) {
       h += `<span>${M.base(n)}${m > 1 ? " ×" + m : ""} → ${pts} pts</span>`;
       if (R.blastPts) h += `<span class="chip gold">+${R.blastPts} blast</span>`;
       if (R.reward) h += `<span class="chip gold">Leaves a ${SPNAME[R.reward.type]} candy</span>`;
-    } else h += `<span>would score ${pts}</span>`;
+    } else if (sc.over) h = `<span style="color:#9B1B1B">Wrong sum · releasing now costs 1 move</span>`;
+    else h += `<span>${pts} pts if it makes ${g.target}</span>`;
     return h;
   }
   const L = g.last;
@@ -1208,7 +1210,7 @@ function mPlay() {
     if (ui.kbd && ui.cursor === i) cls += " kcur";
     if (ui.rewardId === c.id && !reduced) cls += " fresh-reward";
     let inner = k >= 0 ? `<span class="badge2">${k + 1}</span>` : "";
-    if (prev && prev.reward && i === prev.reward.cell) inner += `<span class="badge2" style="right:auto;left:-5px;top:auto;bottom:-7px;background:#fff">→${prev.reward.type === "stripe" ? "≡" : "▣"}</span>`;
+    if (prev && prev.reward && i === prev.reward.cell) inner += `<span class="badge2" style="right:auto;left:2px;top:auto;bottom:2px;background:#fff">→${prev.reward.type === "stripe" ? "≡" : "▣"}</span>`;
     const lab = `Row ${r + 1}, column ${col + 1}, ${c.v}${c.sp ? ", " + SPNAME[c.sp] + " candy" : ""}${k >= 0 ? ", selected " + (k + 1) : ""}${blastSet.has(i) ? ", will be blasted" : ""}`;
     cells += tileHtml(c.v, c.sp, cls, inner).replace('<div class="tile2', `<div role="gridcell" aria-label="${lab}" data-cell="${i}" class="tile2`).replace('style="', `style="${dr > 0 ? `--dr:${dr};` : ""}`);
   });
@@ -1227,7 +1229,7 @@ function mPlay() {
   }
   let popup = "";
   if (ui.popup) { popup = `<div class="popup" aria-hidden="true">+${ui.popup.chainPts}${ui.popup.blastPts ? ` <small>chain · +${ui.popup.blastPts} blast</small>` : ""}</div>`; ui.popup = null; }
-  h += `<div class="boardwrap"><div id="mboard" role="grid" aria-label="Candy board, 5 by 5. Target ${g.target}.">${cells}${trace}</div>${ghosts}${popup}</div>`;
+  h += `<div class="boardwrap"><div id="mboard" tabindex="0" role="grid" aria-label="Candy board, 5 by 5. Target ${g.target}.">${cells}${trace}</div>${ghosts}${popup}</div>`;
   h += `<div class="sumcard panel${sc.over ? " over" : ""}" aria-hidden="true"><div class="ex">${esc(sc.ex)}</div><div class="small" style="color:${sc.over ? "#9B1B1B" : sc.exact ? "#1E6B2E" : "var(--muted)"}">${esc(sc.status)}</div></div>`;
   h += `<div class="feedback panel">${mFeedback(g, sc)}</div>`;
   h += `<div class="footer"><button class="sbtn" data-k="hint">Hint</button><button class="sbtn" data-k="undo"${g.hist.length && g.status === "playing" ? "" : " disabled"}>Undo</button>`;
@@ -1297,6 +1299,7 @@ function renderFlow() {
   }
   if (!modalOpen && ui.modalShown) { ui.modalShown = null; const r = ui.modalReturn && flowEl.querySelector(`[data-k="${ui.modalReturn}"]`); ui.modalReturn = null; if (r) { r.focus({ preventScroll: true }); return; } }
   if (ui.focusNext) { const el = flowEl.querySelector(ui.focusNext); ui.focusNext = null; if (el) { el.focus({ preventScroll: true }); return; } }
+  if (!focusKey && document.activeElement && document.activeElement.id === "mboard") { const b = document.getElementById("mboard"); if (b) b.focus({ preventScroll: true }); return; }
   if (focusKey) { const el = flowEl.querySelector(`${modalOpen ? ".mcm " : ""}[data-k="${focusKey}"]`); if (el && !el.disabled) el.focus({ preventScroll: true }); }
 }
 
@@ -1304,7 +1307,7 @@ function renderFlow() {
 function mStart(li) {
   ui.game = M.start(li, { speed: !!progress.settings.speed });
   ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.dropFrom = null; ui.ghosts = null; ui.popup = null;
-  ui.refreshedNote = false; ui.resultSeq = -1; ui.cursor = 0; drag = null; ui.focusNext = '[data-k="pause"]';
+  ui.refreshedNote = false; ui.resultSeq = -1; ui.cursor = 0; drag = null; ui.focusNext = "#mboard"; announce("");
   persistActive();
 }
 function mFx(kind) {
@@ -1385,7 +1388,7 @@ function mButton(k) {
   else if (k === "home") ui.screen = "home";
   else if (k === "continue") {
     const a = activeAttempt();
-    if (a && a.ok) { ui.game = JSON.parse(JSON.stringify(a.g)); ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.resultSeq = ui.game.status === "lost" ? ui.game.seq : -1; ui.focusNext = '[data-k="pause"]'; }
+    if (a && a.ok) { ui.game = JSON.parse(JSON.stringify(a.g)); ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.resultSeq = ui.game.status === "lost" ? ui.game.seq : -1; ui.focusNext = "#mboard"; }
     else { ui.restoreLi = a ? a.li : 0; ui.modal = "restore-error"; }
   }
   else if (k === "restore-start") { mStart(ui.restoreLi || 0); }
