@@ -25,3 +25,7 @@ These are synthetic canvas checks with 12/16 px padding, not real-device safe-ar
 ## Proposed acceptance scope — MATHLY-VIS-005
 
 For this draft layout: the 11-token fixture remains on one page at all three canvases; the 19-token fixture is fully visible on taller canvases in Adaptive rows and spans 12+7 tokens at 320×568. Page navigation must preserve order, selected identity and result. Tokens never become smaller to avoid paging. Boundary cases: first/last page arrows disabled; selection and caret must remain identifiable at a row/page boundary. Future implementation must additionally test delete/move across boundaries and dynamic usable height after safe areas/text enlargement. This is pending owner approval, not an executable Claude contract.
+
+## Subsequent owner selection — 2026-10-21
+
+Benji selected Adaptive rows. See [ADR-003](../../decisions/ADR-003-adaptive-rows.md) for exact approval scope and pinned reference. The study above retains its original findings; selection does not make its incomplete interaction/accessibility specification implementation-ready.

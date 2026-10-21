@@ -13,4 +13,4 @@ Continue with Playful Deck: jade table, coral controls, cream tactile cards, yel
 
 ## Next design work
 
-Owner requested long-equation exploration. [Layout study v1](../explorations/playful-deck-equations-v1/README.md) compares two-row paging with adaptive rows. MATHLY-VIS-005 and Adaptive rows are proposed, not accepted. Existing historical handover remains unchanged. A new approved packet is required before Claude implements the selected visual system and layout.
+Owner requested long-equation exploration. [Layout study v1](../explorations/playful-deck-equations-v1/README.md) compares two-row paging with adaptive rows. Subsequent decision: ADR-003 selects Adaptive rows; MATHLY-VIS-005 still needs a complete implementation contract. Existing historical handover remains unchanged. A new approved packet is required before Claude implements the selected visual system and layout.

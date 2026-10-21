@@ -33,3 +33,7 @@ The owner has requested a more exciting presentation and suggested the card/casi
 ## Selected direction and equation layout — 2026-10-21
 
 [ADR-002](decisions/ADR-002-playful-deck-selection.md) records Benji's explicit selection of **Playful Deck**, replacing the prior Grand Table recommendation. Direction selection only; no implementation approval. [Long-equation study](explorations/playful-deck-equations-v1/README.md) compares fixed two-row paging with adaptive rows at three phone sizes. Recommend adaptive rows for further review, with a compact fallback. MATHLY-VIS-005 is proposed.
+
+## Adaptive rows selected — 2026-10-21
+
+[ADR-003](decisions/ADR-003-adaptive-rows.md) records Benji’s “Yes Adaptive rows” against the reviewed v1 study. Use three rows on the taller reviewed canvases and two rows with paging on the compact canvas, retaining 44 px tokens and visible target/result. Detailed usable-height, safe-area and text-enlargement rules remain part of the next packet; no implementation handover is approved. This selection supersedes the prior recommendation-only status of the layout study.
