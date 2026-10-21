@@ -4,7 +4,7 @@
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync } from "node:fs";
 const here = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(join(here, "../../../tools/package.json"));
 const { chromium } = require("playwright");
@@ -13,7 +13,9 @@ const shots = join(here, "shots"); mkdirSync(shots, { recursive: true });
 const browser = await chromium.launch(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {});
 const ids = process.argv.slice(2);
 async function run(id) {
-  const viewport = /^[HSP]/.test(id) ? { width: 1440, height: 900 } : { width: 390, height: 844 };
+  // landscape maps (wider than tall) are played on a desktop viewport, portrait maps on a phone
+  const map = JSON.parse(readFileSync(join(here, "levels.json"), "utf8")).find((L) => L.id === id)?.map;
+  const viewport = map && map[0].length > map.length ? { width: 1440, height: 900 } : { width: 390, height: 844 };
   const ctx = await browser.newContext({ viewport, deviceScaleFactor: 2, hasTouch: false });
   const page = await ctx.newPage();
   await page.goto(url);
@@ -22,7 +24,7 @@ async function run(id) {
   await page.click(`[data-lab="${idx}"]`);
   if (id === "L1") await page.screenshot({ path: join(shots, "card-L1.png") });
   await page.evaluate(() => {
-    window.__m = { hits: [], flights: [], travel: 0, lastY: null, lastVy: null, deaths: 0 };
+    window.__m = { log: [], pos: [], hits: [], flights: [], travel: 0, lastY: null, lastVy: null, deaths: 0 };
     const orig = window.step;
     window.step = function (g, s) {
       const r = orig(g, s);
@@ -30,8 +32,9 @@ async function run(id) {
         const m = window.__m, t = g.steps * DT;
         if (m.lastY != null) m.travel += Math.abs(g.ball.y - m.lastY);
         let contact = m.lastVy != null && Math.sign(g.ball.vy) !== Math.sign(m.lastVy);
-        for (const e of g.ev) { if (e.t !== "win") contact = true; if (["break", "grey", "diamond", "key", "unlock", "paint"].includes(e.t)) m.hits.push(t); if (e.t === "die") m.deaths++; }
+        for (const e of g.ev) { if (e.t !== "win") contact = true; if (["break", "grey", "diamond", "key", "unlock", "paint"].includes(e.t)) { m.hits.push(t); m.log.push([+t.toFixed(2), e.t, Math.floor(e.x), Math.floor(e.y)]); } if (e.t === "die") m.deaths++; }
         if (contact) { m.flights.push(m.travel); m.travel = 0; }
+        if (g.steps % 30 === 0) m.pos.push([+t.toFixed(1), +g.ball.x.toFixed(1), +g.ball.y.toFixed(1), g.ball.color]);
         m.lastY = g.ball.y; m.lastVy = g.ball.vy;
       }
       return r;
@@ -40,7 +43,7 @@ async function run(id) {
   await page.click("#cPlay");
   await page.screenshot({ path: join(shots, `start-${id}.png`) });
   const t0 = Date.now(); let held = null, shot = false;
-  while (Date.now() - t0 < 150000) {
+  while (Date.now() - t0 < 240000) {
     const st = await page.evaluate(() => {
       if (screen === "stuck") return { screen: "stuck" };
       if (screen !== "playing") return { screen: game.screen === "playing" ? screen : game.screen };
@@ -62,7 +65,7 @@ async function run(id) {
   const res = await page.evaluate(() => {
     const m = window.__m, t = game.steps * DT, gaps = []; let last = 0;
     for (const h of m.hits) { gaps.push(h - last); last = h; }
-    return { screen: game.screen, ui: screen, time: t, deaths: m.deaths, dead: gaps.reduce((s, x) => s + Math.max(0, x - 1), 0), maxGap: Math.max(0, ...gaps), maxFlight: Math.max(0, ...m.flights) };
+    return { screen: game.screen, ui: screen, time: t, deaths: m.deaths, dead: gaps.reduce((s, x) => s + Math.max(0, x - 1), 0), maxGap: Math.max(0, ...gaps), maxFlight: Math.max(0, ...m.flights), log: m.log, pos: m.pos };
   });
   await page.screenshot({ path: join(shots, `end-${id}.png`) });
   await ctx.close();

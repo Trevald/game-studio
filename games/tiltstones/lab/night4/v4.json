@@ -1,0 +1,56 @@
+[
+ {
+  "id": "N1",
+  "name": "Twin Harbours",
+  "family": "night 4 \u00b7 two-destination crossing",
+  "idea": "Two mirrored stone harbours, blue on the left and red on the right. The red well sits on a pillar between their mouths.",
+  "hint": "Blue first. The red well sits between the harbour mouths; dipping early is fine, the blue well at the bottom left is reusable.",
+  "map": [
+   "..............",
+   ".##aaa..bbb##.",
+   ".#a.*a..b*.b#.",
+   ".#aa.#..#.bb#.",
+   ".###..#B#.###.",
+   "...a...#..b...",
+   "..a...##...b..",
+   "...a..o...b...",
+   ".#A#..##..##.."
+  ]
+ },
+ {
+  "id": "N2",
+  "name": "Trapdoor Circuit",
+  "family": "night 4 \u00b7 shortcut circuit",
+  "idea": "A stone shelf splits the field, with a gap at the far left and a grey trapdoor on the right. The red well sits on the shelf.",
+  "hint": "Both floors need both colours. The trapdoor gives quick rebounds while it lasts; break it and the right side becomes a short way up.",
+  "map": [
+   ".bb...aa....bb",
+   "......##......",
+   ".a..b....a..b.",
+   "...##..##.....",
+   ".####B####g###",
+   "..b..#a...a...",
+   ".##..##..##.a.",
+   "...b...o....g.",
+   ".#A#.......##."
+  ]
+ },
+ {
+  "id": "N3",
+  "name": "Return Ticket",
+  "family": "night 4 \u00b7 colour route",
+  "idea": "A red-capped vault beside the blue well keeps blue inside, and a red plug sits on the well. Turn red to open both, then return to blue.",
+  "hint": "Blue \u2192 red \u2192 blue. Break the red plug over the blue well before you need it again. R restarts instantly.",
+  "map": [
+   "..aa..........",
+   ".#bb#....####.",
+   ".#aa#.**..bb..",
+   ".#bb#.....##..",
+   "....aa..aa..b.",
+   "..####..####..",
+   ".a.b..gg..b.a.",
+   "..b......o....",
+   ".#A#.#B#..##.."
+  ]
+ }
+]

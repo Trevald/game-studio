@@ -1,0 +1,56 @@
+[
+ {
+  "id": "N1",
+  "name": "Twin Harbours",
+  "family": "night 4 \u00b7 two-destination crossing",
+  "idea": "Two stone harbours, blue on the left and red on the right, with a short bounce lane between them.",
+  "hint": "Blue first. The red well sits under the right harbour's roof; the blue well under the left one is reusable.",
+  "map": [
+   "..............",
+   ".##aaa..bbb##.",
+   ".#a.*a..b*.b#.",
+   ".#aaa#..#bbb#.",
+   ".###......###.",
+   "......gg......",
+   "..a...##...b..",
+   "......o.......",
+   ".#A#..##..#B#."
+  ]
+ },
+ {
+  "id": "N2",
+  "name": "Grey Gate",
+  "family": "night 4 \u00b7 shortcut circuit",
+  "idea": "A stone wall splits the field. Go over the top, or break the grey gate low in the wall and change every trip after it.",
+  "hint": "The red well is behind the wall. The grey gate is a one-time rebound: keep it, or break it for a short way through.",
+  "map": [
+   "..aa...a......",
+   ".###.###..#...",
+   "..a..a..a.#bb.",
+   "..##..##..#...",
+   ".a...a....g.b.",
+   "..#.###...#...",
+   "..a.......#bb.",
+   "....o.....#...",
+   ".#A#..##..##B#"
+  ]
+ },
+ {
+  "id": "N3",
+  "name": "Return Ticket",
+  "family": "night 4 \u00b7 colour route",
+  "idea": "Blue opens the way to red; a red plug sits on the blue well. Turn red to open your way back to blue.",
+  "hint": "Blue \u2192 red \u2192 blue. Break the red plug over the blue well before you need it again. R restarts instantly.",
+  "map": [
+   "..bb......aa..",
+   ".####....####.",
+   "..aa..**..bb..",
+   "..##......##..",
+   ".b..aa..aa..b.",
+   "..####..####..",
+   ".a.b..gg..b.a.",
+   "..b...o.......",
+   ".#A#..##..#B#."
+  ]
+ }
+]
