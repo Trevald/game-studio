@@ -1,5 +1,33 @@
 {
   "schema_version": 1,
   "game": "mathly",
-  "assets": []
+  "assets": [
+    {
+      "id": "MATHLY-ASSET-CONCEPT-001",
+      "revision": 1,
+      "role": "Three-direction visual comparison",
+      "status": "concept",
+      "path_or_url": "assets/concepts/visual-directions-v1.png",
+      "sha256": "732acf34a7fa8e912c1ae21cf87f3e867a7c57ce1a3025976085fec1577062e2",
+      "format": "png",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "source": "Built-in imagegen, owner-requested visual exploration",
+      "creator": "Codex via built-in imagegen",
+      "rights_status": "Not reviewed for production",
+      "rights_evidence": null,
+      "generation_details": {
+        "model": "Not exposed by tool",
+        "prompt": "assets/concepts/visual-directions-v1-prompt.txt",
+        "date": "2026-10-20"
+      },
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002"
+      ],
+      "notes": "Concept only; generated UI is not measured layout, production assets or approval evidence."
+    }
+  ]
 }

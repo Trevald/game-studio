@@ -1,0 +1,81 @@
+<div id="mathly-equation-study">
+<style>
+#mathly-equation-study {font-family:system-ui,sans-serif;color:#123e36;}
+#mathly-equation-study *{box-sizing:border-box}
+#mathly-equation-study .study-controls{display:flex;gap:12px;flex-wrap:wrap;margin:0 auto 16px;max-width:520px;color:light-dark(#173c35,#f5ead2)}
+#mathly-equation-study label{display:grid;gap:5px;font-size:13px;flex:1;min-width:145px}
+#mathly-equation-study select{font:inherit;min-height:44px;padding:8px;border-radius:8px;background:#fff5df;color:#173c35;border:1px solid #948872;max-width:100%}
+#mathly-equation-study .stage{min-height:700px;display:flex;justify-content:center;align-items:flex-start;padding:12px 0 20px}
+#mathly-equation-study .phone{width:375px;max-width:100%;height:667px;padding:16px 12px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(ellipse at 30% 20%,#298f73,#13705d 65%,#085343);border-radius:24px;color:#fff5df;box-shadow:0 12px 25px #092c3626;position:relative;container-type:inline-size}
+#mathly-equation-study .phone.compact{height:568px;gap:8px;padding:12px}
+#mathly-equation-study .mast{height:44px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#mathly-equation-study .brand{font:bold 30px Georgia,serif;letter-spacing:-1px}
+#mathly-equation-study .navmark{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;font-size:25px;background:#ed7056;color:#173c35;box-shadow:0 3px 0 #994835}
+#mathly-equation-study .mode{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;text-align:center;margin-top:-4px}
+#mathly-equation-study .plaques{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex-shrink:0}
+#mathly-equation-study .plaque{border-radius:14px;background:#fff1d6;color:#123e36;padding:10px 16px;box-shadow:0 4px 0 #bda77d;}
+#mathly-equation-study .target{background:#ffd34f;box-shadow:0 4px 0 #bc8d1c}
+#mathly-equation-study .plaque small{font-size:11px;font-weight:750;letter-spacing:1.8px;display:block}
+#mathly-equation-study .plaque strong{font-size:40px;line-height:1.2;letter-spacing:-2px;font-weight:850;font-variant-numeric:tabular-nums}
+#mathly-equation-study .workspace{background:#fff0d4;color:#123e36;border-radius:16px;padding:8px 6px;box-shadow:0 4px 0 #bda77d;display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+#mathly-equation-study .well-title{display:flex;justify-content:space-between;padding:0 4px;font-size:11px;font-weight:700;letter-spacing:.6px}
+#mathly-equation-study .tokens{display:grid;grid-template-columns:repeat(var(--cols),44px);grid-auto-rows:44px;gap:6px 4px;align-content:start;justify-content:center;min-height:94px}
+#mathly-equation-study button{font:inherit;color:inherit;touch-action:manipulation}
+#mathly-equation-study .token{width:44px;height:44px;border:0;border-radius:8px;background:#fffaf0;box-shadow:0 3px 0 #cbb68c,0 4px 5px #173c3517;font-size:27px;font-weight:800;position:relative;padding:0}
+#mathly-equation-study .token.operator{background:#eaddbf;box-shadow:0 2px 0 #c0ae88;font-size:24px;font-weight:500}
+#mathly-equation-study .token.selected{background:#ffd34f;box-shadow:0 3px 0 #b88c24}
+#mathly-equation-study .token.caret-before:before,#mathly-equation-study .token.caret-after:after{content:'';position:absolute;top:3px;bottom:0;width:3px;background:#b83d29;border-radius:2px}
+#mathly-equation-study .token.caret-before:before{left:-3px}#mathly-equation-study .token.caret-after:after{right:-3px}
+#mathly-equation-study .selection{font-size:12px;min-height:16px;text-align:center;color:#31564b}
+#mathly-equation-study .edit-actions{display:flex;justify-content:center;gap:8px;margin-top:auto}
+#mathly-equation-study .edit-actions button,#mathly-equation-study .pager button{min-width:44px;min-height:44px;border:0;border-radius:8px;padding:5px 12px;background:#e3d4b5;font-size:13px;font-weight:650}
+#mathly-equation-study button:disabled{opacity:.45}
+#mathly-equation-study .page-label{font-size:12px;text-align:center;margin-top:auto}
+#mathly-equation-study .pager{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;flex-shrink:0}
+#mathly-equation-study .tray{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;flex-shrink:0;margin-top:2px}
+#mathly-equation-study .ghost{height:60px;border:1px dashed #b7dfca;border-radius:10px;display:grid;place-content:center;text-align:center;background:#0b5345;color:#e1f4e5;font-size:12px;gap:2px}
+#mathly-equation-study .ghost small{font-size:11px}
+#mathly-equation-study .palette{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;flex-shrink:0}
+#mathly-equation-study .palette span{height:44px;display:grid;place-items:center;background:#f07a60;color:#173c35;border-radius:9px;box-shadow:0 3px 0 #a64835;font-size:25px;font-weight:700}
+#mathly-equation-study .footer{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;flex-shrink:0}
+#mathly-equation-study .footer span{display:grid;place-items:center;min-height:44px;border-radius:24px;background:#fff1d6;color:#123e36;font-size:13px;font-weight:750;box-shadow:0 3px 0 #bda77d}
+#mathly-equation-study .footer span:nth-child(2){background:#ffd34f;box-shadow:0 3px 0 #bc8d1c}
+#mathly-equation-study .compact .plaque{padding:8px 12px}#mathly-equation-study .compact .plaque strong{font-size:34px}
+#mathly-equation-study .compact .ghost{height:48px}
+#mathly-equation-study .study-note{font-size:11px;text-align:center;letter-spacing:.6px;color:#ddf3e8}
+</style>
+<div class="study-controls">
+<label>Equation example<select id="mathly-example"><option value="normal">Full equation · 11 tokens</option><option value="long">Nested equation · 19 tokens</option></select></label>
+<label>Phone canvas<select id="mathly-size"><option value="375">375 × 667</option><option value="320">320 × 568</option><option value="390">390 × 844</option></select></label>
+</div>
+<div class="viz-carousel viz-dotted-background" aria-label="Playful Deck equation layouts">
+<section data-variant="Two rows + pages" aria-label="Two rows and pages"><div class="stage"><div class="phone" data-rows="2"></div></div></section>
+<section data-variant="Adaptive rows" aria-label="Three rows on taller phones, two on compact phones" hidden><div class="stage"><div class="phone" data-rows="3"></div></div></section>
+</div>
+<script>
+(()=>{
+const root=document.getElementById('mathly-equation-study');
+const sample=root.querySelector('#mathly-example'),size=root.querySelector('#mathly-size');
+const base=['5','+','(','4','×','3',')','−','3','÷','2'];
+let example='normal',width=375;
+const panels=[...root.querySelectorAll('.phone')].map(el=>({el,rows:+el.dataset.rows,page:0,selected:0,caret:0,cols:7}));
+function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{equationExample:example,phoneWidth:width},privateContent:null}).catch(()=>{});}
+function tokens(){return example==='long'?['(','(','(','(',...base,')',')',')',')']:base;}
+for(const p of panels){p.el.innerHTML=`<div class="mast"><span class="navmark" aria-hidden="true">‹</span><span class="brand">Mathly</span><span class="navmark" aria-hidden="true">⋯</span></div><div class="plaques"><div class="plaque target"><small>TARGET</small><strong>16</strong></div><div class="plaque"><small>YOUR RESULT</small><strong>15.5</strong></div></div><div class="workspace"><div class="well-title"><span>YOUR EXPRESSION</span><span>5 / 5 used</span></div><div class="tokens" aria-label="Expression tokens"></div><div class="selection" aria-live="polite"></div><div class="page-label" aria-live="polite"></div><div class="pager"><button type="button" data-page="-1" aria-label="Previous expression page">‹</button><button type="button" data-place="before">Before</button><button type="button" data-place="after">After</button><button type="button" data-page="1" aria-label="Next expression page">›</button></div></div><div class="tray" aria-label="All five source cards used">${['5','4','3','3','2'].map(n=>`<div class="ghost"><span>${n}</span><small>Used</small></div>`).join('')}</div><div class="palette" aria-label="Operator palette, display only">${['+','−','×','÷','(',')'].map(n=>`<span>${n}</span>`).join('')}</div><div class="footer" aria-label="Game actions, display only"><span>↶ Undo</span><span>Hint</span><span>↻ Restart</span></div>`;
+p.el.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{p.page+=+b.dataset.page;renderPanel(p);save();});
+p.el.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>{p.caret=p.selected+(b.dataset.place==='after'?1:0);renderPanel(p);save();});}
+function renderPanel(p){const t=tokens(),actual=Math.min(width,root.clientWidth||width),inner=actual-36;p.cols=Math.max(1,Math.floor((inner+4)/48));const rows=width===320?2:p.rows;const cap=p.cols*rows,pages=Math.ceil(t.length/cap);p.page=Math.max(0,Math.min(p.page,pages-1));p.el.style.width=width+'px';p.el.style.height=(width===320?568:width===390?844:667)+'px';p.el.classList.toggle('compact',width===320);p.el.style.setProperty('--cols',p.cols);const list=p.el.querySelector('.tokens');list.style.minHeight=(rows*44+(rows-1)*6)+'px';list.replaceChildren();const start=p.page*cap,end=Math.min(t.length,start+cap);
+for(let i=start;i<end;i++){const b=document.createElement('button');b.type='button';b.textContent=t[i];b.className='token'+(/\d/.test(t[i])?'':' operator')+(i===p.selected?' selected':'')+(p.caret===i?' caret-before':'')+(p.caret===i+1&&i===end-1?' caret-after':'');b.setAttribute('aria-label',`Token ${i+1}: ${t[i]}`);b.setAttribute('aria-pressed',i===p.selected?'true':'false');b.onclick=()=>{p.selected=i;p.caret=i;renderPanel(p);p.el.querySelectorAll('.token')[i-start]?.focus();save();};list.appendChild(b);}
+p.el.querySelector('.selection').textContent=`${p.selected+1}. ${t[p.selected]} selected · insertion ${p.caret+1}`;
+p.el.querySelector('.page-label').textContent=`${pages===1?'All visible':`Page ${p.page+1} / ${pages}`} · ${start+1}–${end} of ${t.length}`;
+p.el.querySelector('[data-page="-1"]').disabled=p.page===0;p.el.querySelector('[data-page="1"]').disabled=p.page===pages-1;
+p.el.querySelectorAll('[data-place]').forEach(b=>b.disabled=p.selected<start||p.selected>=end);
+}
+function render(){sample.value=example;size.value=String(width);panels.forEach(renderPanel);root.querySelectorAll('.stage').forEach(e=>e.style.minHeight=(width===390?876:700)+'px');}
+function restore(s){const v=s?.modelContent;if(v){example=v.equationExample==='long'?'long':'normal';width=[320,375,390].includes(v.phoneWidth)?v.phoneWidth:375;}render();}
+sample.onchange=()=>{example=sample.value;panels.forEach(p=>{p.page=0;p.selected=0;p.caret=0;});render();save();};size.onchange=()=>{width=+size.value;panels.forEach(p=>p.page=0);render();save();};
+restore(window.openai?.widgetState);window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState)restore(e.detail.globals.widgetState);});new ResizeObserver(()=>render()).observe(root);
+if(globalThis.Tweak){for(const p of panels){const settings={coral:'#f07a60'};const tweak=new Tweak({container:p.el,onChange:()=>p.el.querySelectorAll('.palette span').forEach(e=>e.style.background=settings.coral)});tweak.addColorPicker(settings,'coral',{label:'Operator coral'});}}
+})();
+</script>
+</div>

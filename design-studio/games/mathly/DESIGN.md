@@ -25,3 +25,11 @@ Recommend reviewing Starter variety and resolving core defaults before expanding
 ## Open decisions
 
 Choose the next milestone. Resolve relevant O1–O9 in the existing handover before approving affected scope, especially all-five completion, factorial, rational domain, scoring/hints and paging. Native pricing/restore remain outside the current web prototype. Original-site Daily compatibility is unknown. No accepted ADRs or new approved packets exist in this studio folder.
+
+## Visual exploration — 2026-10-20
+
+The owner has requested a more exciting presentation and suggested the card/casino theme as one possibility. [ADR-001](decisions/ADR-001-visual-direction.md) compares Grand Table, Midnight Club and Playful Deck with [a concept image](assets/concepts/visual-directions-v1.png). Recommendation: refine Grand Table with quieter controls. Historical state at exploration: selection and implementation approval were pending; the historical design master is unchanged.
+
+## Selected direction and equation layout — 2026-10-21
+
+[ADR-002](decisions/ADR-002-playful-deck-selection.md) records Benji's explicit selection of **Playful Deck**, replacing the prior Grand Table recommendation. Direction selection only; no implementation approval. [Long-equation study](explorations/playful-deck-equations-v1/README.md) compares fixed two-row paging with adaptive rows at three phone sizes. Recommend adaptive rows for further review, with a compact fallback. MATHLY-VIS-005 is proposed.
