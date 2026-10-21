@@ -3,13 +3,15 @@
 - Updated: 2026-10-21
 - Stage: Playful Deck and Adaptive rows selected; detailed packet pending
 - Current goal: capture the selected adaptive layout and prepare the next design checkpoint
-- Branch: `design/mathly/adaptive-rows-decision`
-- PR: https://github.com/Trevald/game-studio/pull/5 (draft; published); prior exploration PR #4 and baseline PR #2 are merged
+- Publishing branch: `main` (direct commits authorized by Benji on 2026-10-21)
+- PR: none required going forward. PR #5 is superseded by direct publication of its decision commits to main; prior PRs #4 and #2 are merged.
 - Inspected baseline: `7b5e8306d66ebfc4dac02c8e357b05fcf58f5d2b`
 - Existing handover: `games/mathly-trails/design/handover-v1/`, spec v1.1, 2026-10-19. No exact approval commit/comment recovered; do not retroactively mark it approved under the new protocol.
 - New approved handover / delivery / implementation PR / owner acceptance: none
 
 ## Completed
+
+2026-10-21: owner changed the publishing workflow to direct commits on main. Recorded the override in PROJECT.md and carried the pending Adaptive rows decision into direct publication. Design/implementation approval requirements are unchanged.
 
 2026-10-21: Benji explicitly selected Adaptive rows (“Yes Adaptive rows”). ADR-003 pins the reviewed reference and approval scope. Three-row taller layouts and two-row compact paging are selected; the implementation packet is still pending.
 
@@ -38,4 +40,4 @@ Prepare the scoped Playful Deck + Adaptive rows design packet, covering screen s
 
 ## Session checkpoint
 
-Visual exploration adds ADR-001, a concept comparison and exact generation prompt, plus manifest/design/status updates. Existing implementation and historical packet are unchanged. Generated image inspected for arithmetic and intended controls; no fresh runtime/device tests. Work is on an isolated Mathly worktree. Playful Deck and Adaptive rows are selected; no complete handover or implementation authorization is implied. This checkpoint records the decision only; earlier layout results were not rerun.
+Visual exploration adds ADR-001, a concept comparison and exact generation prompt, plus manifest/design/status updates. Existing implementation and historical packet are unchanged. Generated image inspected for arithmetic and intended controls; no fresh runtime/device tests. Work uses an isolated Mathly worktree; its commits are published directly to main under the owner override. Playful Deck and Adaptive rows are selected; no complete handover or implementation authorization is implied. This checkpoint records the decision only; earlier layout results were not rerun.
