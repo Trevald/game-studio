@@ -7,7 +7,8 @@ artifact: https://claude.ai/artifact/VAXzjHmZLmMTJS5zQsRJH4
 
 # Ricochet (was Tiltstones)
 
-> Design v2 hand-over: see DESIGN.md, which overrides this brief.
+> Since 20 Oct the approved design is **design-studio/games/ricochet/handovers/H-001-v1/** (RIC-N-001–007), read in place.
+> It wins over DESIGN.md and this brief. Earlier: DESIGN.md (v2 hand-over).
 
 ## The idea
 > A mobile version of the 1990 Mac game Diamonds — Instead of using arrow keys to control the ball we can use the gyro of a mobile phone.
@@ -17,6 +18,32 @@ A Diamonds-style brick puzzle where the ball bounces up and down by itself and y
 ## References
 - 1990 Mac game *Diamonds* (named, not linked; looked up via Wikipedia "Diamonds (video game)") — the ball bounces vertically on its own, the player only controls horizontal motion. Coloured blocks only break when the ball has the same colour; brush blocks repaint the ball; diamonds can only be broken once every coloured block is gone; skulls cost a life. The ball starts each level/life in its base colour and nothing paints it back, so base-colour blocks must be cleared first (or you lose a life on purpose). Keys/locks and solid blocks also exist in the original; the page didn't detail them.
 - *Diamonds PD* (Playdate remake, itch.io page) — confirms the control scheme (left/right only, crank as analog input) and that a 1-axis analog input fits the game. Page has no rules detail.
+
+## Tonight (night 4) — H-001-v1 level exploration (approved hand-over)
+Job choice: the board had no pending notes or queued ideas, but Benji approved H-001-v1 on 20 Oct
+("for one overnight exploration shift"; STATUS: "the next night shift that picks Ricochet builds from
+H-001-v1"). Benji's approved design work comes before a studio pitch, so tonight builds it.
+
+Goals, in the hand-over's order (scope RIC-N-001…007 only):
+1. Keep every existing level (World 1, L1–L10, H1–H6, S1–S3, S1F/S1A, P1–P3) and the campaign unchanged;
+   replay the five witnesses first.
+2. Add three meaningfully different compact (14 × 9) candidates **N1–N3**, standard speed, current dip and combo:
+   - **N1 compact two-destination crossing** — two recognisable stone "harbours" (H-style) at left and right,
+     paint under roofs between them, so a crossing is a short bounce lane rather than an empty hall.
+   - **N2 shortcut circuit** — a grey "gate" in a stone wall: break it and the next trip to the paint changes;
+     permanent stone gives the other route.
+   - **N3 colour-route puzzle** — blue → red → blue return: a red plug sits on the reusable blue well,
+     so you open your way back by being red; both sides stay active.
+3. Each candidate: persistent rebound aid + useful paint approach; inspect the cleared-board state; ≥ 1 revision
+   from play evidence; deterministic solution witness; 1× keyboard-bot playthrough; desktop + phone check.
+4. Lab screen lists N1–N3 first (a new "Night candidates" group) so Benji finds them; play1x picks the
+   viewport from map orientation instead of the H/S/P id prefix.
+5. Report per requirement in `design-studio/games/ricochet/feedback/FB-001-night-level-exploration.md`.
+
+### Assumptions (night 4)
+- No board note existed; picking Ricochet from the approved hand-over is the studio's reading of the runbook (asked in the report).
+- "Clearing a specified block changes access" is demonstrated with before/after solver states (reachability of a well or lane).
+- All N levels use the existing tile set only (no new tiles allowed by the hand-over).
 
 ## Tonight (night 3) — Level Lab (from Benji's note "ricochet-level-lab" + DESIGN.md "Level Lab")
 1. A **Level Lab** reachable from the start screen: 10 lab levels, each a different level-design
