@@ -158,6 +158,38 @@ await p2.goto(url); await p2.waitForTimeout(300);
 const bl = await p2.evaluate(() => { __qa.reset(0); for (const a of __qa.solve()) __qa.act(a); return { s: __qa.state().screen, banner: document.body.innerText.includes("could not be saved") }; });
 t("storage blocked: plays in memory with a non-blocking notice", bl.s === "won" && err2.length === 0, JSON.stringify(bl));
 await ctx2.close();
+
+// 19. real input: UI navigation, mouse drag with backtrack, release outside the board, tap mode, keyboard
+const p3 = await (await browser.newContext({ viewport: { width: 390, height: 844 } })).newPage();
+const err3 = []; p3.on("pageerror", (e) => err3.push(e.message));
+await p3.goto(url); await p3.waitForTimeout(300);
+for (const k of ["mode-match", "play", "lvl-0"]) { await p3.click(`[data-k="${k}"]`); await p3.waitForTimeout(150); }
+if (await p3.$('[data-k="coach-ok"]')) await p3.click('[data-k="coach-ok"]');
+await p3.click('[data-k="intro-play"]'); await p3.waitForTimeout(250);
+const center = async (i) => { const b = await p3.$(`[data-cell="${i}"]`); const r = await b.boundingBox(); return [r.x + r.width / 2, r.y + r.height / 2]; };
+let [x, y] = await center(0); await p3.mouse.move(x, y); await p3.mouse.down();
+for (const i of [1, 2, 1]) { [x, y] = await center(i); await p3.mouse.move(x, y, { steps: 6 }); }
+const mid = await p3.evaluate(() => __qa.state().chain);
+await p3.mouse.move(x, 820, { steps: 6 }); await p3.mouse.up(); await p3.waitForTimeout(300); // release outside the board
+const s3 = await p3.evaluate(() => __qa.state());
+t("mouse drag 1→9 with backtrack over 5, released below the board, clears", JSON.stringify(mid) === "[0,1]" && s3.made === 1 && s3.chainPts === 100, JSON.stringify({ mid, made: s3.made }));
+await p3.evaluate(() => __qa.setSetting("tap", true));
+const ch = await p3.evaluate(() => __qa.solve()[0].chain);
+for (const i of ch) { const [cx, cy] = await center(i); await p3.mouse.click(cx, cy); await p3.waitForTimeout(80); }
+await p3.click('[data-k="submit"]'); await p3.waitForTimeout(300);
+const s4 = await p3.evaluate(() => __qa.state());
+t("tap mode: tap candies then Submit clears", s4.made === 2, JSON.stringify({ ch, made: s4.made }));
+await p3.evaluate(() => __qa.setSetting("tap", false));
+const kc = await p3.evaluate(() => __qa.solve()[0].chain);
+await p3.evaluate(() => document.activeElement && document.activeElement.blur());
+await p3.keyboard.press("ArrowRight"); // enter keyboard mode, cursor at 0
+const steps = await p3.evaluate((kc) => { const out = []; let cur = 0; for (const i of kc) { const dr = Math.floor(i / 5) - Math.floor(cur / 5), dc = (i % 5) - (cur % 5); for (let k = 0; k < Math.abs(dr); k++) out.push(dr > 0 ? "ArrowDown" : "ArrowUp"); for (let k = 0; k < Math.abs(dc); k++) out.push(dc > 0 ? "ArrowRight" : "ArrowLeft"); out.push(" "); cur = i; } return out; }, kc);
+for (const k of steps) await p3.keyboard.press(k === " " ? "Space" : k);
+await p3.keyboard.press("Enter"); await p3.waitForTimeout(300);
+const s5 = await p3.evaluate(() => __qa.state());
+t("keyboard: arrows + Space + Enter completes the level", s5.screen === "won", JSON.stringify({ kc, screen: s5.screen }));
+await p3.keyboard.press("Escape");
+t("no page errors (real input)", err3.length === 0, err3.join(" | "));
 t("no page errors", errors.length === 0, errors.join(" | "));
 await browser.close();
 fs.writeFileSync(path.join(here, "engine-tests.json"), JSON.stringify({ at: new Date().toISOString(), passed: results.every((r) => r.ok), results }, null, 2));

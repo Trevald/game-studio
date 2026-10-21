@@ -830,15 +830,15 @@ function render() {
 
 // ---------- hub ----------
 function renderHub() {
-  const desc = { match: ["Candy Match", "Drag touching numbers that add up. Long chains make special candies."],
+  const desc = { match: ["Candy Match", "Drag touching numbers that add up. Long chains pay more."],
     equation: ["Equation Builder", "Build a short equation with + − × to hit the target."],
     clear: ["Clear the Board", "Pair numbers anywhere. Empty the board."] };
   let h = `<div class="abs hubtitle shadowtext">Math Crush</div><div class="abs hubsub">Three ways to make a number.<br>Pick one and see which you'd play again.</div>`;
   MODES.forEach((m, k) => {
     const P = m === "match" ? progress.matchV2 : progress[m], st = P.stars.reduce((a, b) => a + b, 0);
     h += `<button class="abs card press" data-k="mode-${m}" style="top:${186 + k * 196}px;background-image:url(assets/${m}-bg.webp)" aria-label="${desc[m][0]}, ${st} of 36 stars">
-      <div class="shade"></div><div class="t1">${THEME[m].world}</div><div class="t2 shadowtext">${desc[m][0]}</div><div class="t3">${desc[m][1]}</div>
-      <div class="t4">★ ${st} / 36 · ${P.stars.filter((x) => x > 0).length} / 12 levels${m === "match" ? " · new candy scoring" : ""}</div><div class="go">▶</div></button>`;
+      <div class="shade"></div><div class="t1">${THEME[m].world}${m === "match" ? " · RECOMMENDED" : ""}</div><div class="t2 shadowtext">${desc[m][0]}</div><div class="t3">${desc[m][1]}</div>
+      <div class="t4">★ ${st} / 36 · ${P.stars.filter((x) => x > 0).length} / 12 levels</div><div class="go">▶</div></button>`;
   });
   return h;
 }

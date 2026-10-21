@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-21T21:00:30.350Z",
+  "at": "2026-10-21T21:01:15.127Z",
   "passed": true,
   "results": [
     {
@@ -241,6 +241,26 @@
       "name": "storage blocked: plays in memory with a non-blocking notice",
       "ok": true,
       "detail": "{\"s\":\"won\",\"banner\":true}"
+    },
+    {
+      "name": "mouse drag 1→9 with backtrack over 5, released below the board, clears",
+      "ok": true,
+      "detail": "{\"mid\":[0,1],\"made\":1}"
+    },
+    {
+      "name": "tap mode: tap candies then Submit clears",
+      "ok": true,
+      "detail": "{\"ch\":[3,4],\"made\":2}"
+    },
+    {
+      "name": "keyboard: arrows + Space + Enter completes the level",
+      "ok": true,
+      "detail": "{\"kc\":[2,3],\"screen\":\"won\"}"
+    },
+    {
+      "name": "no page errors (real input)",
+      "ok": true,
+      "detail": ""
     },
     {
       "name": "no page errors",
