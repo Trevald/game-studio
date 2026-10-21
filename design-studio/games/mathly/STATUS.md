@@ -4,7 +4,7 @@
 - Stage: Playful Deck and Adaptive rows selected; detailed packet pending
 - Current goal: capture the selected adaptive layout and prepare the next design checkpoint
 - Branch: `design/mathly/adaptive-rows-decision`
-- PR: pending publication; prior exploration PR #4 and baseline PR #2 are merged
+- PR: https://github.com/Trevald/game-studio/pull/5 (draft; published); prior exploration PR #4 and baseline PR #2 are merged
 - Inspected baseline: `7b5e8306d66ebfc4dac02c8e357b05fcf58f5d2b`
 - Existing handover: `games/mathly-trails/design/handover-v1/`, spec v1.1, 2026-10-19. No exact approval commit/comment recovered; do not retroactively mark it approved under the new protocol.
 - New approved handover / delivery / implementation PR / owner acceptance: none
