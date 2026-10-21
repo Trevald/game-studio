@@ -4,7 +4,7 @@ This kit is installed under `design-studio/` in `trevald/game-studio`. Paths in 
 
 ## Existing workflow
 
-The repository already has a root CLAUDE.md, studio/RULES.md, studio/NIGHT_SHIFT.md, and playable projects under root games/. These remain authoritative for the existing overnight workflow. Read the root studio/RULES.md for the owner's standing preferences before design work. The new design PR and approval workflow applies to owner-led work in this directory; it does not change scheduled night shifts or authorize migration of existing games.
+The repository already has a root CLAUDE.md, studio/RULES.md, studio/NIGHT_SHIFT.md, and playable projects under root games/. These remain authoritative for the existing overnight workflow. Read the root studio/RULES.md for the owner's standing preferences before design work. The design approval workflow applies to owner-led work in this directory; direct commits to main are preferred for all Game Studio work under studio/RULES.md, it does not change scheduled night shifts or authorize migration of existing games.
 
 Existing game folders observed: math-crush, mathly-trails, sweepvault, and tiltstones. The template folder is games/_template. No mapping from Mathly, Ricochet, or Auguru to these folders has been confirmed. Do not create a second design master for an existing game: confirm mappings and inspect its DESIGN.md and design/ materials before adopting or migrating it.
 
@@ -14,7 +14,7 @@ The kit's docs/design/studio/ destination is a default for separate implementati
 
 ## GitHub templates
 
-The .github folder inside this kit is reference material; GitHub only activates templates at the repository root. Existing automation and root templates are not replaced. Use the kit PR template manually for design PRs until root-level activation is intentionally reviewed.
+The .github folder inside this kit is reference material; GitHub only activates templates at the repository root. Existing automation and root templates are not replaced. PR templates are optional reference material: use them only if the owner explicitly requests a PR. Direct commits to main are the default.
 
 ## First session
 

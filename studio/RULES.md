@@ -20,3 +20,9 @@ Add a line whenever you catch yourself giving the same feedback twice.
 ## Studio habits
 - Small and finished beats big and broken.
 - When unsure about my intent, make a choice, write it down, and ask me in the report.
+
+## Publishing — owner preference, 2026-10-21
+- For **all Game Studio work**, prefer committing and pushing directly to `main`: design, implementation, documentation and overnight work across every game. Do not create PRs unless Benji explicitly requests one.
+- Owner instruction: “For all work with Game Studio commit to main is preferred”. This supersedes older PR-first/default-branch restrictions in studio instructions and templates.
+- Fetch before publishing, inspect and preserve dirty/concurrent work, review the diff and run relevant checks. Use ordinary fast-forward pushes; never force-push shared history.
+- Publication is separate from design approval: drafts on main remain drafts. Claude implements only the approved scope under the existing handover rules. Record exact version, commit, scope and approval evidence in files; owner approval in chat is valid evidence when durably captured.

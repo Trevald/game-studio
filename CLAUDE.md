@@ -4,13 +4,14 @@ This repo is a small game studio run by Claude overnight for Benji.
 
 - Running the nightly shift? Follow `studio/NIGHT_SHIFT.md` exactly.
 - Benji's standing preferences: `studio/RULES.md` (overrides role files).
+- Publishing for all Game Studio work: commit and push directly to `main` by default; create a PR only when Benji explicitly requests it. Preserve concurrent work and never force-push.
 - Ideas board (artifact database): `studio/BOARD.md`.
 - Build contract and reference game: `studio/roles/developer.md`, `games/_template/index.html`.
 - Automated playtest: `node tools/qa/playtest.mjs games/<slug>/index.html` (run `npm ci` in `tools/` first).
 
 ## Design comes from Benji's designer (since 20 Oct)
 - The design record for each game lives in **`design-studio/games/<game>/`**, owned by the designer.
-  Benji approves designs there through pull requests; approved, frozen hand-overs sit in
+  Benji approves exact design scope and revisions; record that evidence in the design files. Approved, frozen hand-overs sit in
   `design-studio/games/<game>/handovers/<ID>/`. Mapping to studio folders: `design-studio/PROJECTS.md`.
 - **Ownership:** the designer owns `design-studio/` and `games/<slug>/design/`. The studio owns game code,
   `BRIEF.md`, `NIGHTS.md` and `qa/`. The studio writes in `design-studio/` only to add feedback records

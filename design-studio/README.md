@@ -1,6 +1,6 @@
 # Game Design Studio
 
-A GitHub-first home for mobile puzzle game design, shared across computers and handed to Claude Code through reviewed implementation PRs.
+A GitHub-first home for mobile puzzle game design, shared across computers and handed to Claude Code through explicitly approved, versioned design packets. All Game Studio work defaults to direct commits on main; PRs are created only on owner request.
 
 **Start here:** [Setup](SETUP.md) · [Project index](PROJECTS.md) · [Working workflow](studio/WORKFLOW.md) · [Handover protocol](studio/HANDOVER-PROTOCOL.md)
 
@@ -35,6 +35,6 @@ integration/                Safe instructions for implementation repos
 
 ## Source of truth
 
-GitHub's merged studio branch is the shared design record. Open branches and local work are drafts. Each game's code repository is the authority for implementation and test results. A copied handover is a versioned delivery snapshot, not a second editable design master. Chat is a working surface; decisions and next steps belong in files before switching projects or computers.
+GitHub's main branch is the shared design record. Drafts may be committed there; approval is determined by the recorded scope, version and evidence, not branch placement. Each game's code repository is the authority for implementation and test results. A copied handover is a versioned delivery snapshot, not a second editable design master. Chat is a working surface; decisions and next steps belong in files before switching projects or computers.
 
 The owner approves design; the design agent develops and records it; Claude Code implements only approved scope and returns evidence. No multi-agent setup is required. Shared policy lives in `studio/`; game mechanics and exceptions live under that game.

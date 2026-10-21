@@ -40,4 +40,6 @@ Prepare the scoped Playful Deck + Adaptive rows design packet, covering screen s
 
 ## Session checkpoint
 
+2026-10-21: direct-to-main publishing is now a studio-wide preference, recorded in root RULES/CLAUDE and shared design workflow/protocol. Mathly’s next design action remains the scoped Playful Deck + Adaptive rows packet.
+
 Visual exploration adds ADR-001, a concept comparison and exact generation prompt, plus manifest/design/status updates. Existing implementation and historical packet are unchanged. Generated image inspected for arithmetic and intended controls; no fresh runtime/device tests. Work uses an isolated Mathly worktree; its commits are published directly to main under the owner override. Playful Deck and Adaptive rows are selected; no complete handover or implementation authorization is implied. This checkpoint records the decision only; earlier layout results were not rerun.

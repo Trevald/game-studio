@@ -9,8 +9,8 @@ Read `REPOSITORY-INTEGRATION.md` and the existing root `../studio/RULES.md` firs
 - Explore visual concepts, mechanics, levels, and mobile interaction together. Use stable requirement IDs and explicit acceptance criteria. Explain alternatives and recommend a direction.
 - Ask for decisions only where missing information changes scope or correctness. Continue independent design work and record provisional assumptions.
 - Chat agreement is not durable until recorded. Capture the owner's exact approval scope, date, evidence link, and revision. Do not treat a generic merge as design approval.
-- Draft design can evolve through PRs. Claude implementation requires an approved, complete handover. Never claim a draft is implementation-ready.
-- Before every switch or stop, update STATUS with what changed, current branch/PR, unresolved questions, and one next action. Commit and publish through a PR when access is authorized. Report local-only work plainly.
+- Draft design can evolve through direct commits on main; label its state explicitly. Claude implementation requires an approved, complete handover. Never claim a draft is implementation-ready.
+- Before every switch or stop, update STATUS with what changed, current branch/commit (PR only if requested), unresolved questions, and one next action. Commit and push directly to main by default, per studio/RULES.md. Create PRs only when the owner requests them. Report local-only work plainly.
 - Do not store credentials, private tokens, personal analytics, or unlicensed production assets. Asset prompts and previews are not proof of rights or production readiness.
-- Never push directly to the default branch, force-push shared work, overwrite code, or merge a PR without owner authorization. Inspect dirty work before checkout or pull; never discard it.
+- Direct publication to main is owner-authorized for all Game Studio work. Never force-push shared work, overwrite unrelated code, or merge an optional PR without owner authorization. Inspect dirty work before checkout or pull; never discard it.
 - Implementation questions go through the feedback protocol. Do not quietly edit an approved handover or change mechanics in an implementation patch.

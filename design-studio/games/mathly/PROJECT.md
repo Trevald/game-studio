@@ -26,3 +26,5 @@ Current task: identify the project and load its design/status. No new mechanic o
 ## Owner-directed publishing workflow — 2026-10-21
 
 Benji instructed in this Mathly chat: “Stop doing PRs just commit directly to main”. For subsequent Mathly work, commit and push directly to `main`; do not create PRs. This explicit owner instruction overrides the shared design PR/default-branch restrictions for this work. Preserve concurrent changes, fetch before publishing, use ordinary fast-forward pushes, and never force-push. Design approval and Claude implementation gates still apply; publishing is not design approval.
+
+On 2026-10-21 Benji extended this preference to **all Game Studio work**. The authoritative shared rule is now root `studio/RULES.md`; this is no longer a Mathly-only exception.
