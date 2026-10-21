@@ -223,7 +223,7 @@
     <h2>Level Lab</h2>
     <button class="icon" data-mute aria-label="Mute sound"><svg><use href="#i-sound"/></svg></button>
   </div>
-  <p class="lab-intro">New tonight: N1–N3, three compact candidates built from S with H-style structure (a two-harbour crossing, a trapdoor shortcut circuit, a blue → red → blue return). P1–P3 are planning puzzles: preserve a shortcut, prepare your return, then unlock a colour loop. S1–S3 compare compact rebound layouts. Compare S1F (fast) and S1A (accelerating) on the same shuttle board. Earlier experiments: landscape prototypes for desktop playtesting (← → or A/D). Compare crossings, approaches and late-level cleanup. The ten portrait experiments remain below. Bar: coloured blocks (in their colours) · <b style="color:#c9d0e2">grey</b> · <b style="color:#8a90a8">stone</b> · empty.</p>
+  <p class="lab-intro">New tonight: N1–N3, three compact candidates built from S with H-style structure (a two-harbour crossing, a red-door shortcut circuit, a blue → red → blue return). P1–P3 are planning puzzles: preserve a shortcut, prepare your return, then unlock a colour loop. S1–S3 compare compact rebound layouts. Compare S1F (fast) and S1A (accelerating) on the same shuttle board. Earlier experiments: landscape prototypes for desktop playtesting (← → or A/D). Compare crossings, approaches and late-level cleanup. The ten portrait experiments remain below. Bar: coloured blocks (in their colours) · <b style="color:#c9d0e2">grey</b> · <b style="color:#8a90a8">stone</b> · empty.</p>
   <div class="lab-list" id="labList"></div>
 </section>
 
@@ -480,32 +480,32 @@ const LAB = [
     "..............",
     ".##aaa..bbb##.",
     ".#a.*a..b*.b#.",
-    ".#aa.#..#.bb#.",
+    ".#aa......bb#.",
     ".###..#B#.###.",
     "...a...#..b...",
     "..a...##...b..",
     "...a..o...b...",
     ".#A#..##..##..",
   ]},
-  { id: "N2", name: "Trapdoor Circuit", family: "night 4 · shortcut circuit", idea: "A stone shelf splits the field, with a gap at the far left and a grey trapdoor on the right. The red well sits on the shelf.", hint: "Both floors need both colours. The trapdoor gives quick rebounds while it lasts; break it and the right side becomes a short way up.", map: [
+  { id: "N2", name: "Red Door Circuit", family: "night 4 · shortcut circuit", idea: "A stone shelf splits the field: two gaps on the left, and a red door on the right. The red well sits on the shelf.", hint: "As blue, the gaps on the left are the only way up. Once red, break the red door on the right and it becomes a short way between floors.", map: [
     ".bb...aa....bb",
     "......##......",
     ".a..b....a..b.",
-    "...##..##.....",
-    ".####B####g###",
+    "....#..##.....",
+    ".##.#B####b###",
     "..b..#a...a...",
     ".##..##..##.a.",
-    "...b...o....g.",
+    "...b...o....#.",
     ".#A#.......##.",
   ]},
-  { id: "N3", name: "Return Ticket", family: "night 4 · colour route", idea: "A red-capped vault beside the blue well keeps blue inside, and a red plug sits on the well. Turn red to open both, then return to blue.", hint: "Blue → red → blue. Break the red plug over the blue well before you need it again. R restarts instantly.", map: [
+  { id: "N3", name: "Return Ticket", family: "night 4 · colour route", idea: "A red-capped vault beside the blue well keeps blue inside, and a red plug sits on the well. Turn red to open both, then return to blue.", hint: "Blue → red → blue. Red opens the vault caps and the plug on the blue well; then dip blue to finish the vault. ↻ restarts instantly.", map: [
     "..aa..........",
     ".#bb#....####.",
     ".#aa#.**..bb..",
     ".#bb#.....##..",
     "....aa..aa..b.",
     "..####..####..",
-    ".a.b..gg..b.a.",
+    ".a.b......b.a.",
     "..b......o....",
     ".#A#.#B#..##..",
   ]},

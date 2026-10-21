@@ -1,6 +1,6 @@
 {
   "game": "games/tiltstones/index.html",
-  "at": "2026-10-21T02:31:15.894Z",
+  "at": "2026-10-21T03:23:08.929Z",
   "checks": [
     {
       "name": "file under 2 MB",
@@ -55,7 +55,7 @@
     {
       "name": "every level completable via solve() (35 levels)",
       "ok": true,
-      "detail": "L1:135 L2:50 L3:208 L4:129 L5:217 L6:120 L7:111 L8:200 L9:139 L10:136 L11:237 L12:238 L13:255 L14:160 L15:161 L16:185 L17:186 L18:205 L19:171 L20:655 L21:719 L22:832 L23:146 L24:278 L25:223 L26:298 L27:249 L28:293 L29:257 L30:274 L31:326 L32:293 L33:369 L34:182 L35:124"
+      "detail": "L1:135 L2:50 L3:208 L4:129 L5:217 L6:120 L7:111 L8:200 L9:138 L10:133 L11:287 L12:238 L13:255 L14:160 L15:161 L16:185 L17:186 L18:205 L19:171 L20:655 L21:719 L22:832 L23:146 L24:278 L25:223 L26:298 L27:249 L28:293 L29:257 L30:274 L31:326 L32:293 L33:369 L34:182 L35:124"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -172,19 +172,19 @@
     {
       "lv": 8,
       "ok": true,
-      "moves": 139,
+      "moves": 138,
       "screen": "won"
     },
     {
       "lv": 9,
       "ok": true,
-      "moves": 136,
+      "moves": 133,
       "screen": "won"
     },
     {
       "lv": 10,
       "ok": true,
-      "moves": 237,
+      "moves": 287,
       "screen": "won"
     },
     {

@@ -9,7 +9,7 @@
    "..............",
    ".##aaa..bbb##.",
    ".#a.*a..b*.b#.",
-   ".#aa.#..#.bb#.",
+   ".#aa......bb#.",
    ".###..#B#.###.",
    "...a...#..b...",
    "..a...##...b..",
@@ -19,19 +19,19 @@
  },
  {
   "id": "N2",
-  "name": "Trapdoor Circuit",
+  "name": "Red Door Circuit",
   "family": "night 4 \u00b7 shortcut circuit",
-  "idea": "A stone shelf splits the field, with a gap at the far left and a grey trapdoor on the right. The red well sits on the shelf.",
-  "hint": "Both floors need both colours. The trapdoor gives quick rebounds while it lasts; break it and the right side becomes a short way up.",
+  "idea": "A stone shelf splits the field: two gaps on the left, and a red door on the right. The red well sits on the shelf.",
+  "hint": "As blue, the gaps on the left are the only way up. Once red, break the red door on the right and it becomes a short way between floors.",
   "map": [
    ".bb...aa....bb",
    "......##......",
    ".a..b....a..b.",
-   "...##..##.....",
-   ".####B####g###",
+   "....#..##.....",
+   ".##.#B####b###",
    "..b..#a...a...",
    ".##..##..##.a.",
-   "...b...o....g.",
+   "...b...o....#.",
    ".#A#.......##."
   ]
  },
@@ -40,7 +40,7 @@
   "name": "Return Ticket",
   "family": "night 4 \u00b7 colour route",
   "idea": "A red-capped vault beside the blue well keeps blue inside, and a red plug sits on the well. Turn red to open both, then return to blue.",
-  "hint": "Blue \u2192 red \u2192 blue. Break the red plug over the blue well before you need it again. R restarts instantly.",
+  "hint": "Blue \u2192 red \u2192 blue. Red opens the vault caps and the plug on the blue well; then dip blue to finish the vault. \u21bb restarts instantly.",
   "map": [
    "..aa..........",
    ".#bb#....####.",
@@ -48,7 +48,7 @@
    ".#bb#.....##..",
    "....aa..aa..b.",
    "..####..####..",
-   ".a.b..gg..b.a.",
+   ".a.b......b.a.",
    "..b......o....",
    ".#A#.#B#..##.."
   ]
