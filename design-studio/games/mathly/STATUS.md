@@ -1,15 +1,18 @@
 # Mathly — status
 
 - Updated: 2026-10-21
-- Stage: Playful Deck and Adaptive rows selected; detailed packet pending
-- Current goal: review the proposed Playful Deck v2 visual refinement
+- Stage: H-001-v1 in review — exact-revision approval pending
+- Current goal: review the complete Playful Deck + Adaptive rows handover candidate
 - Publishing branch: `main` (direct commits authorized by Benji on 2026-10-21)
 - PR: none required going forward. PR #5 is superseded by direct publication of its decision commits to main; prior PRs #4 and #2 are merged.
 - Inspected baseline: `7b5e8306d66ebfc4dac02c8e357b05fcf58f5d2b`
 - Existing handover: `games/mathly-trails/design/handover-v1/`, spec v1.1, 2026-10-19. No exact approval commit/comment recovered; do not retroactively mark it approved under the new protocol.
-- New approved handover / delivery / implementation PR / owner acceptance: none
+- New approved handover: none. Candidate: `handovers/H-001-v1/HANDOVER.md`; exact candidate commit recorded below after publication.
+- Delivery: read in place after approval; no redundant copy. Implementation / owner acceptance: not started.
 
 ## Completed
+
+2026-10-21: prepared H-001-v1 at owner request. Includes scoped visual/interaction contract, screen atlas, exact palette, 12 existing level snapshots and 11 UI fixtures, all runtime raster/vector assets, source PNG, reference screens, provenance and hashes. 54 static layout combinations, exact arithmetic fixtures, 8 base contrast pairs and asset decoding/budget checks passed. No implementation tests claimed. ADR-004 captures visual endorsement and preparation scope.
 
 2026-10-21: reviewed Playful Deck concept versus equation study; generated partial/solved refinement v2 and recorded prompt, provenance, arithmetic/card-count inspection and visual limitations. New treatments are proposed; game code is unchanged.
 
@@ -38,10 +41,14 @@ Read shared instructions, project scaffold, existing game design, full handover,
 
 ## Next action
 
-Review the v2 recessed jade workspace and cream/mint hierarchy with Benji, then apply selected treatments to the measured Adaptive rows study before preparing the complete packet.
+Benji reviews and approves the exact H-001-v1 candidate commit for MATHLY-VIS-001–005 and MATHLY-R-006–009, with the packet exclusions, before Claude starts.
 
 ## Session checkpoint
 
 2026-10-21: direct-to-main publishing is now a studio-wide preference, recorded in root RULES/CLAUDE and shared design workflow/protocol. Mathly’s next design action remains the scoped Playful Deck + Adaptive rows packet.
 
 Visual exploration adds ADR-001, a concept comparison and exact generation prompt, plus manifest/design/status updates. Existing implementation and historical packet are unchanged. Generated image inspected for arithmetic and intended controls; no fresh runtime/device tests. Work uses an isolated Mathly worktree; its commits are published directly to main under the owner override. Playful Deck and Adaptive rows are selected; no complete handover or implementation authorization is implied. This checkpoint records the decision only; earlier layout results were not rerun.
+
+### Handover checkpoint
+
+H-001-v1 is an in-review candidate on main, not an approved night-shift job. Raster/runtime files are included and local references resolve. No PR, code edits or changes to the old packet. Newly specified detail remains subject to exact-revision approval.

@@ -1,0 +1,571 @@
+{
+  "schemaVersion": 1,
+  "packet": "H-001-v1",
+  "runtimeTotalBytes": 344388,
+  "runtimeRasterCount": 1,
+  "assets": [
+    {
+      "id": "MATHLY-H001-RUNTIME-FELT-JADE-V1",
+      "revision": 1,
+      "path": "assets/runtime/felt-jade-v1.webp",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "webp",
+      "bytes": 342272,
+      "dimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "sha256": "06da23853e13eca636654b62068c67a44f9f9fcb9c35d216dfe7e97af592da5a",
+      "source": "Built-in imagegen on 2026-10-21; source prompt assets/source/felt-prompt.txt; WebP is encoding-only derivative of source PNG",
+      "creator": "Codex / built-in imagegen",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": {
+        "tool": "built-in imagegen",
+        "model": "not exposed",
+        "date": "2026-10-21",
+        "prompt": "assets/source/felt-prompt.txt"
+      },
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-BACK",
+      "revision": 1,
+      "path": "assets/runtime/icons/back.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 194,
+      "dimensions": null,
+      "sha256": "70c50ddfc165bbed844a6d592cd8c0be426b23b676ebb5c5b3060ed8802f3b25",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/back.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-CHECK",
+      "revision": 1,
+      "path": "assets/runtime/icons/check.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 194,
+      "dimensions": null,
+      "sha256": "dadd49104a2291310e88a09810cab19451fc120b5544e894d4f2327a31439c49",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/check.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-CHEVRON",
+      "revision": 1,
+      "path": "assets/runtime/icons/chevron.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 194,
+      "dimensions": null,
+      "sha256": "b6cdd8de30d6a94dd0f3fbfd3bbee40b39bfd048280f90d039048452b700eb19",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/chevron.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-CLOSE",
+      "revision": 1,
+      "path": "assets/runtime/icons/close.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 200,
+      "dimensions": null,
+      "sha256": "77989ec88556fca86dae3138607bf9c8c226bd869565ff124dfede36e1d026f7",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/close.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-DELETE",
+      "revision": 1,
+      "path": "assets/runtime/icons/delete.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 236,
+      "dimensions": null,
+      "sha256": "4dbb569890bcee55a8abe3755acc33cd0d79ba25e014fc306120fa243c076cb6",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/delete.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-HINT",
+      "revision": 1,
+      "path": "assets/runtime/icons/hint.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 234,
+      "dimensions": null,
+      "sha256": "dbf8fbcf66b1e56570f62bedb409082e3755c662692a0c68502862cea03df363",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/hint.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-RESTART",
+      "revision": 1,
+      "path": "assets/runtime/icons/restart.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 211,
+      "dimensions": null,
+      "sha256": "209ab700768f39e95d0761d5fa36622a70114b8b2438b70bfc7b8779a3b5d976",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/restart.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-SETTINGS",
+      "revision": 1,
+      "path": "assets/runtime/icons/settings.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 212,
+      "dimensions": null,
+      "sha256": "2d12e092fde71cff61f8cc58301d5ba9546f138f1237ad153eea5097fa9fc82c",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/settings.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-SOUND",
+      "revision": 1,
+      "path": "assets/runtime/icons/sound.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 221,
+      "dimensions": null,
+      "sha256": "f44de30346b75a9761f41ceeeb5a30a9506e98fb0b43a133f9ea11334fd744c6",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/sound.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-RUNTIME-UNDO",
+      "revision": 1,
+      "path": "assets/runtime/icons/undo.svg",
+      "role": "runtime",
+      "status": "implementation-candidate",
+      "format": "svg",
+      "bytes": 220,
+      "dimensions": null,
+      "sha256": "f04d6cf71182b4eee18b7a9ae78c83daf1ebf5cb354e88779cb9129dd66345e7",
+      "source": "Existing Mathly SVG at games/mathly-trails/assets/icons/undo.svg; source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Existing project designer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md and source prompt; imported SVG history at pinned source commit",
+      "requirement_ids": [
+        "MATHLY-R-006"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-SOURCE-FELT-JADE-V1",
+      "revision": 1,
+      "path": "assets/source/felt-jade-v1.png",
+      "role": "source",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 3474715,
+      "dimensions": {
+        "width": 1024,
+        "height": 1536
+      },
+      "sha256": "733bf652bdb66ef45ed93d6d1f05030eb1747c0aa4a20d6604776e34ac8a3613",
+      "source": "Built-in imagegen on 2026-10-21; source prompt assets/source/felt-prompt.txt; WebP is encoding-only derivative of source PNG",
+      "creator": "Codex / built-in imagegen",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": {
+        "tool": "built-in imagegen",
+        "model": "not exposed",
+        "date": "2026-10-21",
+        "prompt": "assets/source/felt-prompt.txt"
+      },
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-ART-DIRECTION-V2",
+      "revision": 1,
+      "path": "references/art-direction-v2.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 1870942,
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "sha256": "370eab21c73acdafda45e45a8e8852709b88e3fe0fef4ddb7b432e687826cc49",
+      "source": "Built-in imagegen concept; copied from design-studio/games/mathly/assets/concepts/playful-deck-refinement-v2.png at source commit 51710591d7ab5dec44c0d31e7c13ff4a838f6c1f",
+      "creator": "Codex / built-in imagegen",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": {
+        "tool": "built-in imagegen",
+        "model": "not exposed",
+        "date": "2026-10-21",
+        "prompt": "references/art-direction-prompt.txt"
+      },
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-EARLY-375",
+      "revision": 1,
+      "path": "references/early-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 126532,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "a1012da45cac8e82a6292689ff2c135d2aecf3b827a7a6c12a0a9dbe3f3bd8a9",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-EMPTY-375",
+      "revision": 1,
+      "path": "references/empty-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 122847,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "229813dfc1bfd1f937266b3d2a14e4c35739555c85435d7e36223409da02e86a",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-FULL-375",
+      "revision": 1,
+      "path": "references/full-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 133530,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "f23ae85feeedb716cc383b69b31b4fdebd1e048a8f2a1c389d752116dfbe5f1e",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-INCOMPLETE-375",
+      "revision": 1,
+      "path": "references/incomplete-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 128568,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "51f0bd184217a7c66572661e44694f6b579a3357aae5ea533a5c5dd14fb3a9df",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-INVALID-375",
+      "revision": 1,
+      "path": "references/invalid-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 130036,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "36f573d13a31edb0cddc3f3dee601ff267696c99d63177b26420521365a4efde",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-LONG-320-PAGE1",
+      "revision": 1,
+      "path": "references/long-320-page1.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 111787,
+      "dimensions": {
+        "width": 320,
+        "height": 569
+      },
+      "sha256": "95d748d3c09651fa7d3e9611aa1296ea4aed16433a4a8b632bd0fb2275aa1861",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-LONG-320-PAGE2",
+      "revision": 1,
+      "path": "references/long-320-page2.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 109411,
+      "dimensions": {
+        "width": 320,
+        "height": 569
+      },
+      "sha256": "07de7bcf85efe86fba4cdd4790ee812749a38b2bdc679c26a8443b17ef5f3a9c",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-LONG-375",
+      "revision": 1,
+      "path": "references/long-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 135557,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "6c3a6629d85a0d77f011ff4acd7998430f4465214c05baf7cf4b889addb75046",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-PARTIAL-375",
+      "revision": 1,
+      "path": "references/partial-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 126314,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "ce1f87f12974e14cdcd2353e6fd4cb4d058a5c08e8bd18b6e94e15ce47e988f8",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-SELECTED-375",
+      "revision": 1,
+      "path": "references/selected-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 126090,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "e0eac60b9bad90636ef0a956cb2e97951f676fa57264e005f912d297f46504a9",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    },
+    {
+      "id": "MATHLY-H001-REFERENCE-SOLVED-375",
+      "revision": 1,
+      "path": "references/solved-375.png",
+      "role": "reference",
+      "status": "documentation-only",
+      "format": "png",
+      "bytes": 132895,
+      "dimensions": {
+        "width": 376,
+        "height": 668
+      },
+      "sha256": "f5b82904feeb51f2c710edfd257d2ef2203398a4e942c168eb9bba83acfd7b56",
+      "source": "Local Chrome rendering of this packet design/atlas.html on 2026-10-21",
+      "creator": "Codex / local browser renderer",
+      "rights_status": "Project-origin provenance recorded; no independent legal clearance or exclusivity asserted",
+      "rights_evidence": "assets/README.md; generated source or local renderer",
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-005"
+      ],
+      "generation_details": null,
+      "notes": "Runtime assets only are copied to the game; source/reference assets stay in this packet."
+    }
+  ]
+}

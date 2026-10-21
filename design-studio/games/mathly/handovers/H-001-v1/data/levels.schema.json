@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Mathly proposed v1 sample level bundle",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "levels"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "status": {
+      "type": "string"
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "collection",
+          "rulesVersion",
+          "numbers",
+          "operators",
+          "target",
+          "requireAllNumbers",
+          "solution"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "collection": {
+            "enum": [
+              "starter",
+              "multiply",
+              "divide",
+              "master"
+            ]
+          },
+          "rulesVersion": {
+            "type": "string"
+          },
+          "numbers": {
+            "type": "array",
+            "minItems": 5,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "value"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "operators": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "+",
+                "-",
+                "*",
+                "/",
+                "(",
+                ")"
+              ]
+            }
+          },
+          "target": {
+            "type": "string",
+            "pattern": "^-?[0-9]+(\\.[0-9]+|/[1-9][0-9]*)?$"
+          },
+          "requireAllNumbers": {
+            "type": "boolean"
+          },
+          "authored": {
+            "type": "boolean"
+          },
+          "solution": {
+            "type": "object",
+            "required": [
+              "expression",
+              "tokens"
+            ],
+            "properties": {
+              "expression": {
+                "type": "string"
+              },
+              "tokens": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "numberId"
+                      ],
+                      "properties": {
+                        "numberId": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "operator"
+                      ],
+                      "properties": {
+                        "operator": {
+                          "enum": [
+                            "+",
+                            "-",
+                            "*",
+                            "/",
+                            "(",
+                            ")"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

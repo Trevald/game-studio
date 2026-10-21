@@ -1,0 +1,876 @@
+{
+  "schemaVersion": 1,
+  "status": "Proposed rules; verified arithmetic",
+  "levels": [
+    {
+      "id": "1-1",
+      "name": "First hand",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 1
+        },
+        {
+          "id": "n2",
+          "value": 2
+        },
+        {
+          "id": "n3",
+          "value": 3
+        },
+        {
+          "id": "n4",
+          "value": 4
+        },
+        {
+          "id": "n5",
+          "value": 5
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "15",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "1+2+3+4+5",
+        "tokens": [
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n5"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-2",
+      "name": "A little less",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 5
+        },
+        {
+          "id": "n5",
+          "value": 6
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "16",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "6+5+4+3-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-3",
+      "name": "Balance",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 1
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 6
+        },
+        {
+          "id": "n5",
+          "value": 8
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "8",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "8+6+1-4-3",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-4",
+      "name": "Back and forth",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 2
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 5
+        },
+        {
+          "id": "n5",
+          "value": 7
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "8",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "7+5-4+2-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-5",
+      "name": "Ten on the table",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 1
+        },
+        {
+          "id": "n2",
+          "value": 2
+        },
+        {
+          "id": "n3",
+          "value": 5
+        },
+        {
+          "id": "n4",
+          "value": 7
+        },
+        {
+          "id": "n5",
+          "value": 9
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "10",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "9+7+1-5-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-6",
+      "name": "Small change",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 3
+        },
+        {
+          "id": "n2",
+          "value": 4
+        },
+        {
+          "id": "n3",
+          "value": 5
+        },
+        {
+          "id": "n4",
+          "value": 6
+        },
+        {
+          "id": "n5",
+          "value": 8
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "8",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "8+6+3-5-4",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-7",
+      "name": "Close company",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 4
+        },
+        {
+          "id": "n3",
+          "value": 6
+        },
+        {
+          "id": "n4",
+          "value": 8
+        },
+        {
+          "id": "n5",
+          "value": 9
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "9",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "9+8+2-6-4",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "1-8",
+      "name": "A full hand",
+      "collection": "starter",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 3
+        },
+        {
+          "id": "n2",
+          "value": 5
+        },
+        {
+          "id": "n3",
+          "value": 7
+        },
+        {
+          "id": "n4",
+          "value": 8
+        },
+        {
+          "id": "n5",
+          "value": 9
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "16",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "9+8+7-5-3",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "2-1",
+      "name": "Three of a kind",
+      "collection": "multiply",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 3
+        },
+        {
+          "id": "n4",
+          "value": 3
+        },
+        {
+          "id": "n5",
+          "value": 4
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "26",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "(4+3)*3+3+2",
+        "tokens": [
+          {
+            "operator": "("
+          },
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": ")"
+          },
+          {
+            "operator": "*"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "3-1",
+      "name": "Half measures",
+      "collection": "divide",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 5
+        },
+        {
+          "id": "n2",
+          "value": 4
+        },
+        {
+          "id": "n3",
+          "value": 3
+        },
+        {
+          "id": "n4",
+          "value": 3
+        },
+        {
+          "id": "n5",
+          "value": 2
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "15.5",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "5+(4*3)-3/2",
+        "tokens": [
+          {
+            "numberId": "n1"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "operator": "("
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "*"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": ")"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "/"
+          },
+          {
+            "numberId": "n5"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "3-2",
+      "name": "Sharing equally",
+      "collection": "divide",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 2
+        },
+        {
+          "id": "n2",
+          "value": 3
+        },
+        {
+          "id": "n3",
+          "value": 4
+        },
+        {
+          "id": "n4",
+          "value": 6
+        },
+        {
+          "id": "n5",
+          "value": 8
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "9",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "8/4+6+3-2",
+        "tokens": [
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "/"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    },
+    {
+      "id": "4-1",
+      "name": "A longer thought",
+      "collection": "master",
+      "rulesVersion": "proposed-v1",
+      "numbers": [
+        {
+          "id": "n1",
+          "value": 4
+        },
+        {
+          "id": "n2",
+          "value": 5
+        },
+        {
+          "id": "n3",
+          "value": 6
+        },
+        {
+          "id": "n4",
+          "value": 8
+        },
+        {
+          "id": "n5",
+          "value": 12
+        }
+      ],
+      "operators": [
+        "+",
+        "-",
+        "*",
+        "/",
+        "(",
+        ")"
+      ],
+      "target": "33",
+      "requireAllNumbers": true,
+      "solution": {
+        "expression": "(12-8)*6+5+4",
+        "tokens": [
+          {
+            "operator": "("
+          },
+          {
+            "numberId": "n5"
+          },
+          {
+            "operator": "-"
+          },
+          {
+            "numberId": "n4"
+          },
+          {
+            "operator": ")"
+          },
+          {
+            "operator": "*"
+          },
+          {
+            "numberId": "n3"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n2"
+          },
+          {
+            "operator": "+"
+          },
+          {
+            "numberId": "n1"
+          }
+        ]
+      },
+      "authored": true
+    }
+  ]
+}

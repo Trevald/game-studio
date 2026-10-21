@@ -1,0 +1,61 @@
+{
+  "method": "WCAG relative-luminance formula; base colours only",
+  "pairs": [
+    {
+      "pair": "ink on cream",
+      "foreground": "#123E36",
+      "background": "#FFF6E3",
+      "ratio": 11.05,
+      "passes_4_5": true
+    },
+    {
+      "pair": "ink on cream bottom",
+      "foreground": "#123E36",
+      "background": "#F2E3C5",
+      "ratio": 9.37,
+      "passes_4_5": true
+    },
+    {
+      "pair": "ink on mint",
+      "foreground": "#123E36",
+      "background": "#D9E8C9",
+      "ratio": 9.24,
+      "passes_4_5": true
+    },
+    {
+      "pair": "ink on mint bottom",
+      "foreground": "#123E36",
+      "background": "#C2D6B1",
+      "ratio": 7.66,
+      "passes_4_5": true
+    },
+    {
+      "pair": "ink on coral",
+      "foreground": "#123E36",
+      "background": "#F4876D",
+      "ratio": 4.83,
+      "passes_4_5": true
+    },
+    {
+      "pair": "ink on yellow",
+      "foreground": "#123E36",
+      "background": "#FFD34F",
+      "ratio": 8.3,
+      "passes_4_5": true
+    },
+    {
+      "pair": "cream on deep",
+      "foreground": "#FFF6E3",
+      "background": "#094C3C",
+      "ratio": 9.26,
+      "passes_4_5": true
+    },
+    {
+      "pair": "cream on jade",
+      "foreground": "#FFF6E3",
+      "background": "#14755F",
+      "ratio": 5.23,
+      "passes_4_5": true
+    }
+  ]
+}

@@ -41,3 +41,7 @@ The owner has requested a more exciting presentation and suggested the card/casi
 ## Visual refinement v2 — proposed, 2026-10-21
 
 [Refinement study](explorations/playful-deck-refinement-v2/README.md) explores a recessed jade expression area, tactile cream number cards, pale-mint operator tiles and quieter Hint controls. Playful Deck and Adaptive rows remain selected; these new visual treatments are pending review. The raster is not a measured layout or implementation contract.
+
+## H-001-v1 handover candidate — 2026-10-21
+
+[Packet](handovers/H-001-v1/HANDOVER.md) packages Playful Deck v2 and Adaptive rows with exact requirements, screen atlas, runtime felt WebP, source PNG, existing SVG icons, data fixtures, provenance and verification. [ADR-004](decisions/ADR-004-refinement-handover.md) records owner endorsement and request to prepare it. Exact-revision approval is pending. Read the approved packet in place once authorized; no implementation or historical packet was changed.

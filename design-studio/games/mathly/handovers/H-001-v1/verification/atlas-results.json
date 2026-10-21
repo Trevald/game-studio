@@ -1,0 +1,549 @@
+{
+  "date": "2026-10-21",
+  "environment": "Local headless Chrome; static atlas, not game implementation",
+  "checks": [
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "empty",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "partial",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "selected",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "early",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "incomplete",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "invalid",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "full",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "long",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "0",
+      "state": "solved",
+      "metrics": "375 × 667 · safe 0px × 2 · workspace 329px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 487,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "empty",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "partial",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "selected",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "early",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "incomplete",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "invalid",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "full",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "long",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "375x667",
+      "safe": "24",
+      "state": "solved",
+      "metrics": "375 × 667 · safe 24px × 2 · workspace 311px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 455,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "empty",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "partial",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "selected",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "early",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "incomplete",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "invalid",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "full",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "long",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "0",
+      "state": "solved",
+      "metrics": "320 × 568 · safe 0px × 2 · workspace 260px · 6 columns × 2 rows · 12 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 404,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "empty",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "partial",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "selected",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "early",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "incomplete",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "invalid",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "full",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "long",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "320x568",
+      "safe": "24",
+      "state": "solved",
+      "metrics": "320 × 568 · safe 24px × 2 · workspace 212px · 6 columns × 1 rows · 6 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 356,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "empty",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "partial",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "selected",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "early",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "incomplete",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "invalid",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "full",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "long",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "0",
+      "state": "solved",
+      "metrics": "390 × 844 · safe 0px × 2 · workspace 506px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 664,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "empty",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "partial",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "selected",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "early",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "incomplete",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "invalid",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "full",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "long",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    },
+    {
+      "size": "390x844",
+      "safe": "24",
+      "state": "solved",
+      "metrics": "390 × 844 · safe 24px × 2 · workspace 458px · 7 columns × 3 rows · 21 tokens/page",
+      "overflow": false,
+      "smallTargets": false,
+      "trayY": 616,
+      "noticeOverflow": false
+    }
+  ],
+  "stableTray": true,
+  "errors": [],
+  "passed": true
+}

@@ -1,0 +1,54 @@
+{
+  "note": "Production parser acceptance fixtures, not executed by the static arithmetic verifier",
+  "cases": [
+    {
+      "expression": "",
+      "state": "empty"
+    },
+    {
+      "expression": "5+",
+      "state": "incomplete",
+      "lastValid": "5"
+    },
+    {
+      "expression": "5 4",
+      "state": "incomplete",
+      "reason": "Missing operator"
+    },
+    {
+      "expression": "5/(3-3)",
+      "state": "invalid",
+      "reason": "Division by zero"
+    },
+    {
+      "expression": "5+(4*3)-3/2",
+      "state": "valid",
+      "exact": "31/2"
+    },
+    {
+      "expression": "8/4/2",
+      "state": "valid",
+      "exact": "1"
+    },
+    {
+      "expression": "1/3+1/3+1/3",
+      "state": "valid",
+      "exact": "1"
+    },
+    {
+      "expression": "(5+4",
+      "state": "incomplete",
+      "reason": "Missing close parenthesis"
+    },
+    {
+      "expression": "3!",
+      "state": "invalid",
+      "reason": "Factorial excluded pending O2"
+    },
+    {
+      "expression": "-3+4",
+      "state": "invalid",
+      "reason": "Unary minus excluded in proposed v1"
+    }
+  ]
+}
