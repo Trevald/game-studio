@@ -2,6 +2,7 @@
 
 | Game | Studio folder | Implementation repository | State |
 |---|---|---|---|
+| Math Crush | [games/math-crush](games/math-crush/PROJECT.md) | `Trevald/game-studio`, `games/math-crush/` | H-001-v1 authorized for overnight refinement |
 | Mathly | [games/mathly](games/mathly/PROJECT.md) | this repo, `games/mathly-trails/` (owner-confirmed 20 Oct) | Intake needed |
 | Ricochet | [games/ricochet](games/ricochet/PROJECT.md) | this repo, `games/tiltstones/` (owner-confirmed 20 Oct; folder kept from the old name Tiltstones) | Intake needed |
 | Auguru | [games/auguru](games/auguru/PROJECT.md) | separate repo `Trevald/Auguru` — not built by the night studio | Intake needed |

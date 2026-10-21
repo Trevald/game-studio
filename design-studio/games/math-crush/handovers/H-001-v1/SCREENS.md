@@ -1,0 +1,24 @@
+# Layout and visual contract
+References are look-only generated concepts. This spec resolves image inaccuracies and includes missing states. Use 390×844 as the design canvas, not a fixed screenshot. At 360×640 reduce scenery/vertical gaps and allow page scroll; never shrink touch targets below 44px. Desktop centers a phone-width view (max 480px). At 150% text cards grow and scroll.
+
+Palette: cream #FFF3DD, card edge #E9BE8B, plum #4A1736, raspberry #C81758, primary text #FFFFFF, selection gold #FFE09A, board well #4A1736 at 75% opacity. Rounded system font; body 16–18px, labels ≥14px, digits 28–36px, headings 28–32px. Panel radius 24px, button 18px, 1px border, quiet downward shadow. Primary button 56px high, secondary ≥48px, icon targets 44px. 16px outer gutters, 12/16/24px spacing scale. Pressed: move down 2px and darken; disabled: subdued fill with disabled semantics, not opacity alone. Focus: 3px plum ring with cream gap.
+
+Runtime panels/buttons/icons/stripes/wrappers/path/stars/confetti are SVG or CSS. assets/controls.svg is an editable starter, not baked labels; use live HTML text. Existing tile artwork supplies candy texture and painted background. Do not use concept-screen crops as controls. Title can be live rounded bold text with restrained shadow; exact raster logo reproduction is not required.
+
+## Gameplay geometry
+Safe top 16–44px. Pause at x16,y44,44×44; Level centered. HUD x16,y104,w358,h72: Moves 88px / Target 158px / Score 88px with 12px gaps. Quota x16,y188,w358,h32. Board x20,y240,w350,h350; 5 cells each62px, gaps8px, 4px internal padding. Sum card x20,y614,w350,min56px. Feedback x20,y682,w350,min40px. Footer y744 with Hint and Undo ≥48px; tap/keyboard mode adds Submit and allows wrapped footer. Small clock when enabled sits beside level label without collision. On short screens use flowing layout, board width min(viewport−40,350), scroll footer into view without hiding selection feedback. Board itself never scrolls during a drag.
+
+Use stable numeric tile IDs, live digits, gold selection perimeter/ordinal and visible connecting stroke. Specials keep digits unobscured: striped overlay clipped behind digit, wrapped uses corner folds/ribbon. Invalid selection uses text plus amber edge. Blast-only preview is a soft band/outline, no ordinal. Reward preview appears only for eligible exact chains. Keep Ready/Release text visible alongside reward badge. Score popup separates chain and blast contributions. Freeze input only during model resolution animation.
+
+## Views and transitions
+- Home: candy scenery, title and small number vignette; Play→levels. Saved attempt: Continue primary, Choose level secondary. Settings icon opens same settings controls as pause. Back to modes is quiet but reachable.
+- Levels: back→home; Candy trail header; 12 nodes in ordered winding path, 58px controls, numbers and stars/lock. Current next level raspberry. Locked node accessible label explains preceding level. Selecting unlocked node→intro.
+- Intro: Level N, Target, chain quota, move limit, 2/3-star thresholds, example number vignette. Play→attempt. Back→levels without consuming an attempt. First introduction to multiplier/stripe/wrapped uses a brief coach card and small demo; Skip allowed, no score granted.
+- Pause: whole-screen dim scrim; heading, Resume primary; Restart and Levels secondary; sound/haptics toggles, speed experiment toggle with Next attempt note, Help. Close/Esc resumes; restart/leave confirmation has explicit destructive action and Cancel. Dialog traps focus/restores trigger.
+- Success: three final stars, score with Chain / Blast / Moves bonus / optional Speed bonus rows; assisted flag if relevant. Next level primary, Levels secondary. Level12: Back to levels primary. Score animation skippable, actions available within200ms. Never label numeric move bonus as Moves left.
+- Retry: One more try?, actual quota reached, Try again primary, Undo last move secondary if available, Levels tertiary. No ambiguous X close. Undo returns to play with snapshot restored; Retry starts seeded fresh attempt.
+- Loading: cream card Loading candies; decode only active theme. On asset failure use legible CSS tiles and say Art could not load with Retry art control. Controls still work; log as visual defect.
+- Save error: nonblocking Progress could not be saved; memory play continues. Invalid active save: Could not restore this attempt, Start level and Levels, preserve valid progress.
+- Confirm/Help/tutorial: reuse same cream card, live typography, explicit actions, no added ornate sprite panel.
+
+Existing gameplay screen remains the anchor: generous candy tiles, background scenery at edges, compact HUD. The concept image's teal pause button is a reference defect: use cream/plum control. Stars stay hollow until completion. Level map's 5–7 order must be corrected. Explosion example score is325 including blast bonus. Neither screenshot defines mechanics.

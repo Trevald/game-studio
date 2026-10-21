@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "file": "assets/controls.svg",
+      "bytes": 1489,
+      "sha256": "d3d17d90627e983ee46db58c6ab257cf72dfc6cc2aa50565e2bb5c4634c86071",
+      "runtimeDestination": "games/math-crush/assets/controls.svg",
+      "status": "supplied runtime source",
+      "provenance": "Existing repository-generated candy art; controls.svg newly authored vector. No independent third-party rights audit claimed.",
+      "usage": "Editable vector control examples and symbols; labels live."
+    },
+    {
+      "file": "assets/match-atlas.json",
+      "bytes": 1470,
+      "sha256": "0b967b8496ed3c6bf5ac0eeb3fb69f59f1a712f5fa1540830b4bca0397a41f01",
+      "runtimeDestination": "games/math-crush/assets/match-atlas.json",
+      "status": "supplied runtime source",
+      "provenance": "Existing repository-generated candy art; controls.svg newly authored vector. No independent third-party rights audit claimed.",
+      "usage": "For atlas use tile_0..tile_5 and star only; replace old button/hud/modal styles. Numbers and labels live."
+    },
+    {
+      "file": "assets/match-atlas.webp",
+      "bytes": 307958,
+      "sha256": "bf55aaf8c4b3ee9eb0e774f9f0a0e1026343a5ac9e1123614b70c38dadfded77",
+      "runtimeDestination": "games/math-crush/assets/match-atlas.webp",
+      "status": "supplied runtime source",
+      "provenance": "Existing repository-generated candy art; controls.svg newly authored vector. No independent third-party rights audit claimed.",
+      "usage": "For atlas use tile_0..tile_5 and star only; replace old button/hud/modal styles. Numbers and labels live."
+    },
+    {
+      "file": "assets/match-bg.webp",
+      "bytes": 218086,
+      "sha256": "dcfcaa0452430f76ed728df8a5725f8cb137fedcecb64642c85b1a8f8377aca6",
+      "runtimeDestination": "games/math-crush/assets/match-bg.webp",
+      "status": "supplied runtime source",
+      "provenance": "Existing repository-generated candy art; controls.svg newly authored vector. No independent third-party rights audit claimed.",
+      "usage": "Painted scenery"
+    }
+  ]
+}

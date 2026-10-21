@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "indexing": "row-major 0..24",
+  "board": [
+    2,
+    3,
+    1,
+    4,
+    7,
+    4,
+    1,
+    6,
+    2,
+    8,
+    5,
+    3,
+    2,
+    9,
+    1,
+    7,
+    2,
+    4,
+    3,
+    6,
+    1,
+    5,
+    2,
+    4,
+    8
+  ],
+  "target": 10,
+  "cases": [
+    {
+      "id": "ordinary-four",
+      "level": 4,
+      "chain": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "specials": {},
+      "sum": 10,
+      "chainPoints": 300,
+      "blastPoints": 0,
+      "removed": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "reward": {
+        "cell": 3,
+        "value": 4,
+        "type": "stripe"
+      }
+    },
+    {
+      "id": "stripe",
+      "level": 4,
+      "chain": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "specials": {
+        "2": "stripe"
+      },
+      "sum": 10,
+      "chainPoints": 300,
+      "blastPoints": 25,
+      "removed": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "reward": {
+        "cell": 3,
+        "value": 4,
+        "type": "stripe"
+      }
+    },
+    {
+      "id": "wrapped-edge",
+      "level": 7,
+      "chain": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "specials": {
+        "0": "wrapped"
+      },
+      "sum": 10,
+      "chainPoints": 300,
+      "blastPoints": 50,
+      "removed": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6
+      ]
+    },
+    {
+      "id": "recursive",
+      "level": 7,
+      "chain": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "specials": {
+        "0": "wrapped",
+        "5": "stripe"
+      },
+      "sum": 10,
+      "chainPoints": 300,
+      "blastPoints": 125,
+      "removed": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "id": "wrong-sum",
+      "level": 4,
+      "chain": [
+        0,
+        1,
+        6,
+        7
+      ],
+      "specials": {
+        "1": "stripe"
+      },
+      "sum": 12,
+      "chainPoints": 0,
+      "blastPoints": 0,
+      "removed": []
+    },
+    {
+      "id": "diagonal-invalid",
+      "chain": [
+        0,
+        6
+      ],
+      "reject": "non-orthogonal selection; ignore second tile, no committed move"
+    },
+    {
+      "id": "repeated-nontail",
+      "chain": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "reject": "ignore repeated non-tail entry"
+    }
+  ]
+}
