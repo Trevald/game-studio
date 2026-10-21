@@ -32,6 +32,10 @@ Read the board (`ideas`, `feedback`, `studio/state`) as described in `studio/BOA
    far it got, and complete the remaining steps for that same job. Don't start over.
 1. **Iterate** — if any `feedback` doc has `status: "pending"` and its idea is not `parked`:
    take the idea whose oldest pending note is oldest. Tonight's input is *all* pending notes for that idea.
+1b. **Approved hand-over not yet built** — if a game in `design-studio/PROJECTS.md` has an approved
+   hand-over (see "Which design to build from") with no `completion-report` feedback record for that
+   hand-over yet, build it. Same priority as a board note; when both exist, the older one goes first.
+   A hand-over that was only partly done (report says what's left) counts as unfinished.
 2. **New game** — otherwise, the first `queued` idea in Benji's queue order: lowest `order` first;
    ideas without an `order` come after those, oldest `createdAt` first.
 3. **Studio's own game** — if neither exists, the studio works on its own idea:
