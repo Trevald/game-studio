@@ -1,3 +1,5 @@
+> **Approved refresh, 2026-10-21:** Read [Mathly STATUS](../../design-studio/games/mathly/STATUS.md), [approval record](../../design-studio/games/mathly/handovers/APPROVAL-H-001-v1.md), and [H-001-v1](../../design-studio/games/mathly/handovers/H-001-v1/HANDOVER.md) in place. Benji approved commit `5b019c0ff7daab13de703567b237913fd25c6e5e`, scope MATHLY-VIS-001–005 and MATHLY-R-006–009. That packet overrides the historical design below only within its scope; preserve the old packet and current arithmetic/content. Publishing goes directly to main.
+
 > **Moving:** the design record for this game is moving to `design-studio/games/mathly/` (owned by Benji's designer).
 > Until an approved hand-over exists there, this file stays in force. See studio/NIGHT_SHIFT.md, "Which design to build from".
 

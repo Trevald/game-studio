@@ -6,7 +6,7 @@
 - Implementation: `games/mathly-trails/index.html`, single HTML/CSS/JavaScript game with BigInt arithmetic; runtime art in `games/mathly-trails/assets/`.
 - Targets: phone-first portrait and desktop, keyboard and touch. Minimum browser/OS support remains unspecified.
 - Existing packet: `games/mathly-trails/design/handover-v1/` (spec version 1.1). Preserve it.
-- Packet destination: read approved packets in place at `design-studio/games/mathly/handovers/<handover-id>/`, per the current night-shift convention for games in this repository. H-001-v1 is an approval candidate. Do not copy it into a second design folder.
+- Packet destination: read approved packets in place at `design-studio/games/mathly/handovers/<handover-id>/`, per the current night-shift convention for games in this repository. H-001-v1 is approved at 5b019c0ff7daab13de703567b237913fd25c6e5e; see STATUS and the external approval record. Do not copy it into a second design folder.
 
 ## Mapping evidence
 
@@ -21,7 +21,7 @@ The original daily site, https://mathly.trevald.com, is a reference in the exist
 
 ## Scope
 
-Current milestone: Playful Deck visual refresh + Adaptive rows. H-001-v1 contains the bounded appearance/editing contract; exact packet approval remains pending and no new arithmetic rules or levels are in scope. Standing preferences: adult puzzle audience, phone and desktop, clean visuals, undo and instant restart, no ads/currencies/energy or mandatory timers.
+Current milestone: Playful Deck visual refresh + Adaptive rows. H-001-v1 contains the bounded appearance/editing contract; the packet is approved for MATHLY-VIS-001–005 and MATHLY-R-006–009, with no new arithmetic rules or levels in scope. Standing preferences: adult puzzle audience, phone and desktop, clean visuals, undo and instant restart, no ads/currencies/energy or mandatory timers.
 
 ## Owner-directed publishing workflow — 2026-10-21
 

@@ -45,3 +45,7 @@ The owner has requested a more exciting presentation and suggested the card/casi
 ## H-001-v1 handover candidate — 2026-10-21
 
 [Packet](handovers/H-001-v1/HANDOVER.md) packages Playful Deck v2 and Adaptive rows with exact requirements, screen atlas, runtime felt WebP, source PNG, existing SVG icons, data fixtures, provenance and verification. [ADR-004](decisions/ADR-004-refinement-handover.md) records owner endorsement and request to prepare it. Exact-revision approval is pending. Read the approved packet in place once authorized; no implementation or historical packet was changed.
+
+## H-001-v1 approved — 2026-10-21
+
+Benji approved candidate `5b019c0ff7daab13de703567b237913fd25c6e5e`, scope MATHLY-VIS-001–005 and MATHLY-R-006–009. [External approval record](handovers/APPROVAL-H-001-v1.md) supersedes candidate/pending statements above. Claude reads the frozen packet in place; no copy or PR required. Implementation acceptance remains pending.
