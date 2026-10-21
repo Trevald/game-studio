@@ -2,7 +2,7 @@
 
 - Updated: 2026-10-21
 - Stage: Playful Deck and Adaptive rows selected; detailed packet pending
-- Current goal: capture the selected adaptive layout and prepare the next design checkpoint
+- Current goal: review the proposed Playful Deck v2 visual refinement
 - Publishing branch: `main` (direct commits authorized by Benji on 2026-10-21)
 - PR: none required going forward. PR #5 is superseded by direct publication of its decision commits to main; prior PRs #4 and #2 are merged.
 - Inspected baseline: `7b5e8306d66ebfc4dac02c8e357b05fcf58f5d2b`
@@ -10,6 +10,8 @@
 - New approved handover / delivery / implementation PR / owner acceptance: none
 
 ## Completed
+
+2026-10-21: reviewed Playful Deck concept versus equation study; generated partial/solved refinement v2 and recorded prompt, provenance, arithmetic/card-count inspection and visual limitations. New treatments are proposed; game code is unchanged.
 
 2026-10-21: owner changed the publishing workflow to direct commits on main. Recorded the override in PROJECT.md and carried the pending Adaptive rows decision into direct publication. Design/implementation approval requirements are unchanged.
 
@@ -36,7 +38,7 @@ Read shared instructions, project scaffold, existing game design, full handover,
 
 ## Next action
 
-Prepare the scoped Playful Deck + Adaptive rows design packet, covering screen states, usable-height rules, editing across boundaries and accessibility, for exact-version implementation approval.
+Review the v2 recessed jade workspace and cream/mint hierarchy with Benji, then apply selected treatments to the measured Adaptive rows study before preparing the complete packet.
 
 ## Session checkpoint
 

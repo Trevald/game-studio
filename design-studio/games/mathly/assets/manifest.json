@@ -28,6 +28,34 @@
         "MATHLY-VIS-002"
       ],
       "notes": "Concept only; generated UI is not measured layout, production assets or approval evidence."
+    },
+    {
+      "id": "MATHLY-ASSET-CONCEPT-002",
+      "revision": 1,
+      "role": "Playful Deck v2 partial and solved visual refinement",
+      "status": "concept",
+      "path_or_url": "assets/concepts/playful-deck-refinement-v2.png",
+      "sha256": "370eab21c73acdafda45e45a8e8852709b88e3fe0fef4ddb7b432e687826cc49",
+      "format": "png",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "source": "Built-in imagegen; references: v1 adaptive layout screenshot and original theme comparison",
+      "creator": "Codex via built-in imagegen",
+      "rights_status": "Not reviewed for production",
+      "rights_evidence": null,
+      "generation_details": {
+        "model": "Not exposed by tool",
+        "prompt": "assets/concepts/playful-deck-refinement-v2-prompt.txt",
+        "date": "2026-10-21"
+      },
+      "requirement_ids": [
+        "MATHLY-VIS-001",
+        "MATHLY-VIS-002",
+        "MATHLY-VIS-003"
+      ],
+      "notes": "Illustrative concept only. See exploration review for selection, duplicate checkmark and tray-position limitations."
     }
   ]
 }

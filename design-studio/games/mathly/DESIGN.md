@@ -37,3 +37,7 @@ The owner has requested a more exciting presentation and suggested the card/casi
 ## Adaptive rows selected — 2026-10-21
 
 [ADR-003](decisions/ADR-003-adaptive-rows.md) records Benji’s “Yes Adaptive rows” against the reviewed v1 study. Use three rows on the taller reviewed canvases and two rows with paging on the compact canvas, retaining 44 px tokens and visible target/result. Detailed usable-height, safe-area and text-enlargement rules remain part of the next packet; no implementation handover is approved. This selection supersedes the prior recommendation-only status of the layout study.
+
+## Visual refinement v2 — proposed, 2026-10-21
+
+[Refinement study](explorations/playful-deck-refinement-v2/README.md) explores a recessed jade expression area, tactile cream number cards, pale-mint operator tiles and quieter Hint controls. Playful Deck and Adaptive rows remain selected; these new visual treatments are pending review. The raster is not a measured layout or implementation contract.
