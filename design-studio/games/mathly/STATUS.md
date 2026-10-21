@@ -7,7 +7,7 @@
 - PR: none required going forward. PR #5 is superseded by direct publication of its decision commits to main; prior PRs #4 and #2 are merged.
 - Inspected baseline: `7b5e8306d66ebfc4dac02c8e357b05fcf58f5d2b`
 - Existing handover: `games/mathly-trails/design/handover-v1/`, spec v1.1, 2026-10-19. No exact approval commit/comment recovered; do not retroactively mark it approved under the new protocol.
-- New approved handover: none. Candidate: `handovers/H-001-v1/HANDOVER.md`; exact candidate commit recorded below after publication.
+- New approved handover: none. Candidate: `handovers/H-001-v1/HANDOVER.md`; candidate commit `5b019c0ff7daab13de703567b237913fd25c6e5e` (published to main).
 - Delivery: read in place after approval; no redundant copy. Implementation / owner acceptance: not started.
 
 ## Completed
@@ -52,3 +52,5 @@ Visual exploration adds ADR-001, a concept comparison and exact generation promp
 ### Handover checkpoint
 
 H-001-v1 is an in-review candidate on main, not an approved night-shift job. Raster/runtime files are included and local references resolve. No PR, code edits or changes to the old packet. Newly specified detail remains subject to exact-revision approval.
+
+Candidate approval request: H-001-v1 at `5b019c0ff7daab13de703567b237913fd25c6e5e`, scope MATHLY-VIS-001–005 and MATHLY-R-006–009, exclusions as HANDOVER Scope. No approval received for this exact packet yet. All later approval/checkpoint records stay outside the packet.
