@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pip Push</title>
+<!-- Pip Push — Game Studio, night 1. A Sokoban with dice: every push rolls the die. -->
+<style>
+  :root {
+    --bg: #f3eee4; --panel: #fffaf1; --ink: #23263a; --muted: #6c6a76; --edge: #ddd3c2;
+    --floor: #fbf6ec; --floor2: #f5eee2; --wall: #cbc0ad; --wall-top: #b3a791;
+    --die: #fffdf8; --die-side: #e8e1d4; --die-edge: #b8ad9a; --pip: #23263a; --side-num: #6d6455;
+    --player: #e2574c; --player-ink: #fff; --goal: #a8977a; --ok: #23966a; --bad: #d0703a;
+    --btn: #ffffff; --btn-ink: #23263a; --accent: #23263a; --accent-ink: #fffaf1;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15161d; --panel: #1f212b; --ink: #ecebf2; --muted: #a2a1b0; --edge: #343748;
+      --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50;
+      --die: #f6f1e6; --die-side: #d9d0bf; --die-edge: #8f8572; --pip: #23263a; --side-num: #5d5546;
+      --player: #f06a5e; --player-ink: #fff; --goal: #8e8370; --ok: #4cc28f; --bad: #e08a55;
+      --btn: #2a2d3a; --btn-ink: #ecebf2; --accent: #ecebf2; --accent-ink: #15161d; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15161d; --panel: #1f212b; --ink: #ecebf2; --muted: #a2a1b0; --edge: #343748;
+    --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50;
+    --die: #f6f1e6; --die-side: #d9d0bf; --die-edge: #8f8572; --pip: #23263a; --side-num: #5d5546;
+    --player: #f06a5e; --player-ink: #fff; --goal: #8e8370; --ok: #4cc28f; --bad: #e08a55;
+    --btn: #2a2d3a; --btn-ink: #ecebf2; --accent: #ecebf2; --accent-ink: #15161d; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); -webkit-tap-highlight-color: transparent;
+    padding: env(safe-area-inset-top, 0px) max(12px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(12px, env(safe-area-inset-left, 0px)); }
+  main { width: min(100%, 540px); margin: 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: 10px; padding: 10px 0 16px; }
+  header { display: flex; align-items: center; gap: 8px; min-height: 48px; }
+  .brand { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+  h1 { margin: 0; font-size: 22px; line-height: 1.1; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+  h1 .logo { width: 22px; height: 22px; border-radius: 6px; background: var(--die); border: 1.5px solid var(--die-edge); display: inline-grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); padding: 3px; }
+  h1 .logo i { width: 4px; height: 4px; border-radius: 50%; background: var(--pip); place-self: center; }
+  #lvlName { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .icon { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--edge); background: var(--btn); color: var(--btn-ink);
+    display: grid; place-items: center; cursor: pointer; padding: 0; font: 600 14px var(--font); }
+  .icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .icon[aria-pressed="true"] { opacity: .55; }
+  button:focus-visible { outline: 3px solid var(--player); outline-offset: 2px; }
+  .status { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 22px; }
+  .status b { color: var(--ink); font-weight: 650; }
+  #goalsMet.done { color: var(--ok); }
+  .stage { position: relative; display: grid; place-items: center; }
+  canvas { display: block; touch-action: none; border-radius: 16px; cursor: pointer; max-width: 100%; }
+  .tip { text-align: center; font-size: 14px; color: var(--muted); min-height: 2.8em; margin: 0; padding: 0 8px; }
+  .tip b { color: var(--ink); }
+  .controls { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; }
+  .controls .big { width: 100%; max-width: 130px; padding: 0 8px; }
+  .pad { display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(2, 48px); gap: 6px; }
+  .pad button { border-radius: 12px; border: 1px solid var(--edge); background: var(--btn); color: var(--btn-ink); cursor: pointer; display: grid; place-items: center; padding: 0; touch-action: manipulation; }
+  .pad button svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .pad button:active, .big:active { transform: translateY(1px); filter: brightness(.96); }
+  #pU { grid-column: 2; grid-row: 1; } #pL { grid-column: 1; grid-row: 2; } #pD { grid-column: 2; grid-row: 2; } #pR { grid-column: 3; grid-row: 2; }
+  .big { min-height: 48px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--edge); background: var(--btn); color: var(--btn-ink); font: 600 15px var(--font);
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; touch-action: manipulation; }
+  .big svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .big:disabled { opacity: .45; cursor: default; }
+  #undoBtn { justify-self: end; } #restartBtn { justify-self: start; }
+  .primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .keys { text-align: center; font-size: 12px; color: var(--muted); margin: 0; }
+  /* overlays */
+  .sheet { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 70%, transparent); display: grid; place-items: center; padding: 16px; z-index: 5; }
+  .sheet[hidden] { display: none; }
+  .card { width: min(100%, 420px); max-height: calc(100vh - 32px); overflow: auto; background: var(--panel); border: 1px solid var(--edge); border-radius: 20px; padding: 20px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.18); display: grid; gap: 14px; text-align: center; }
+  .card h2 { margin: 0; font-size: 22px; }
+  .card p { margin: 0; color: var(--muted); }
+  .card .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .stats { display: flex; justify-content: center; gap: 22px; font-variant-numeric: tabular-nums; }
+  .stats div { display: grid; } .stats b { font-size: 24px; } .stats span { font-size: 12px; color: var(--muted); }
+  .levels { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; text-align: left; }
+  .levels button { min-height: 56px; border-radius: 12px; border: 1px solid var(--edge); background: var(--btn); color: var(--btn-ink); padding: 8px 10px; cursor: pointer; font: 14px var(--font); display: grid; gap: 2px; }
+  .levels button b { font-size: 13px; color: var(--muted); font-weight: 600; display: flex; justify-content: space-between; }
+  .levels button.cur { border-color: var(--player); box-shadow: inset 0 0 0 1px var(--player); }
+  .levels .ok { color: var(--ok); }
+  .help-list { text-align: left; margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+  .help-list li { color: var(--ink); }
+  .toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; min-height: 44px; }
+  .toggle input { width: 22px; height: 22px; accent-color: var(--player); }
+  @media (max-width: 374px) { .controls .lbl { display: none; } }
+  @media (max-height: 700px) { .keys { display: none; } .tip { min-height: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">
+      <h1><span class="logo" aria-hidden="true"><i></i><i style="grid-area:2/2"></i><i style="grid-area:3/3"></i></span>Pip Push</h1>
+      <span id="lvlName">Level 1 · First roll</span>
+    </div>
+    <button class="icon" id="levelsBtn" aria-label="Levels" title="Levels"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg></button>
+    <button class="icon" id="helpBtn" aria-label="How to play" title="How to play"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg></button>
+    <button class="icon" id="muteBtn" aria-label="Sound" aria-pressed="false" title="Sound (M)"><svg viewBox="0 0 24 24"><path d="M5 10v4h3l4 3V7L8 10z"/><path id="waves" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/></svg></button>
+  </header>
+  <div class="status" aria-live="polite">
+    <span>Goals <b id="goalsMet">0/1</b></span>
+    <span><b id="moves">0</b> moves · <b id="pushes">0</b> pushes <span id="par"></span></span>
+  </div>
+  <div class="stage"><canvas id="board" aria-label="Puzzle board" role="img"></canvas></div>
+  <p class="tip" id="tip"></p>
+  <div class="controls">
+    <button class="big" id="undoBtn" aria-label="Undo (Z)"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span class="lbl">Undo</span></button>
+    <div class="pad" aria-label="Move">
+      <button id="pU" aria-label="Up"><svg viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></svg></button>
+      <button id="pL" aria-label="Left"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+      <button id="pD" aria-label="Down"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+      <button id="pR" aria-label="Right"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+    <button class="big" id="restartBtn" aria-label="Restart (R)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Restart</span></button>
+  </div>
+  <p class="keys">Arrows / WASD move · Z undo · R restart · swipe or tap on the board</p>
+</main>
+
+<div class="sheet" id="winSheet" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+    <h2 id="winTitle">Solved!</h2>
+    <div class="stats"><div><b id="wMoves">0</b><span>moves</span></div><div><b id="wPushes">0</b><span>pushes</span></div><div><b id="wPar">0</b><span>par pushes</span></div></div>
+    <p id="wNote"></p>
+    <div class="row"><button class="big" id="wUndo">Undo last move</button><button class="big primary" id="wNext">Next level</button></div>
+  </div>
+</div>
+<div class="sheet" id="levelSheet" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="lvTitle">
+    <h2 id="lvTitle">Levels</h2>
+    <div class="levels" id="levelList"></div>
+    <div class="row"><button class="big" data-close>Close</button></div>
+  </div>
+</div>
+<div class="sheet" id="helpSheet" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <h2 id="helpTitle">How to play</h2>
+    <ol class="help-list">
+      <li>Walk into a die to push it one square. You can't pull, and you can't push two at once.</li>
+      <li>The die tips over as it moves: <b>the side you push against becomes the top.</b></li>
+      <li>The small numbers around a die are its side faces. Opposite faces add up to 7.</li>
+      <li>Get every die onto a goal showing that goal's number on top.</li>
+      <li>Stuck? Undo as often as you like, or Restart.</li>
+    </ol>
+    <label class="toggle"><span>Show side faces on dice</span><input type="checkbox" id="sidesToggle" checked></label>
+    <div class="row"><button class="big primary" data-close>Play</button></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+// ================= constants & levels =================
+// Each level: map rows ('#' wall, '.' floor, '@' player), dice [x,y,top,north,east], goals [x,y,number],
+// sol = shortest solution (BFS by steps, from lab/build-levels.mjs), par = pushes in that solution.
+const LEVELS = /*LEVELS*/[
+  {"name":"First roll","map":["#######","#@....#","#######"],"dice":[[2,1,1,2,3]],"goals":[[5,1,3]],"sol":"RRR","par":3},
+  {"name":"Side step","map":["######","#....#","#@...#","#....#","######"],"dice":[[3,2,4,1,5]],"goals":[[4,3,6]],"sol":"URRRDLULDLDRR","par":4},
+  {"name":"Nook","map":["######","#.#.@#","#....#","#....#","######"],"dice":[[2,2,4,2,1]],"goals":[[4,3,3]],"sol":"DDLLLURDRRUULDLDR","par":3},
+  {"name":"Corner three","map":["######","#....#","#....#","##...#","#.@..#","######"],"dice":[[2,3,5,6,4]],"goals":[[4,1,3]],"sol":"URUULLDRURDRDLDLURUULLDRURDLDRDRUU","par":10},
+  {"name":"Two dice","map":["######","#@...#","#....#","#....#","#....#","######"],"dice":[[2,3,3,5,1],[3,4,4,6,2]],"goals":[[1,4,3],[2,1,6]],"sol":"DDDRULURURDRDLRDLLULURDRURUL","par":10},
+  {"name":"Long way round","map":["#######","#..@..#","#....##","#.#...#","#.....#","#######"],"dice":[[3,3,4,2,1]],"goals":[[1,1,6]],"sol":"DRDDLUDLLUURRURDLDDRRULDLUDLLUURRURDLDDRRULDLUURULL","par":12},
+  {"name":"Tight shelf","map":["#######","##....#","#....##","#.#...#","#.@...#","#######"],"dice":[[4,1,2,3,1],[3,2,3,6,5]],"goals":[[5,1,6],[4,2,3]],"sol":"LUURRURDLDDRRULDLUDLLUURRURDLDDRRULDLUDLLUURR","par":10},
+  {"name":"Pillar","map":["#######","#.....#","#.#@..#","#.....#","#.....#","#######"],"dice":[[4,2,1,3,5],[2,3,1,5,4]],"goals":[[3,3,5],[1,3,1]],"sol":"URDRDLDLUDLLURRDRURUULLDULLDDRRUURRDLULDRRDDLULLRUURDRDL","par":15},
+  {"name":"Twin twos","map":["#######","#..@.##","#.....#","##....#","##...##","#######"],"dice":[[4,3,6,4,5],[3,3,5,4,1]],"goals":[[3,2,2],[2,4,2]],"sol":"DLDDRRULDLURUULLDRURDLDDRRULDLURRRULULDRDLUULLDRDURURDRDLDLU","par":16},
+  {"name":"Cellar","map":["#######","#..#..#","##.#..#","#.....#","#.@...#","#.#...#","#######"],"dice":[[3,3,2,6,3],[3,4,5,3,6]],"goals":[[1,5,1],[2,3,6]],"sol":"URLDRDRRULRUULDRDDLLULURDDRRULRUULDRDDLLULURDDRRULULLDRDRURULRUULDDRDLLLULDRRRUL","par":22}
+];
+const TIPS = {
+  0: "Walk into the die to push it. Watch the top number change.",
+  1: "<b>The side you push against becomes the top.</b> The small numbers are the sides.",
+  2: "Sometimes you have to walk around a die to push it from another side.",
+  4: "Two dice, two goals. Each goal wants its own number.",
+};
+const DIRS = { U: [0, -1], D: [0, 1], L: [-1, 0], R: [1, 0] };
+const SAVE_KEY = "pippush.v1";
+
+// ================= core (pure) =================
+// orientation = [top, north, east]; opposite faces sum to 7
+function roll(o, d) {
+  const [t, n, e] = o;
+  if (d === "R") return [7 - e, n, t];
+  if (d === "L") return [e, n, 7 - t];
+  if (d === "U") return [7 - n, t, e];
+  return [n, 7 - t, e];
+}
+function parseLevel(i) {
+  const L = LEVELS[i], h = L.map.length, w = L.map[0].length;
+  const walls = []; let player = [0, 0];
+  L.map.forEach((row, y) => [...row].forEach((c, x) => { if (c === "#") walls.push(y * w + x); if (c === "@") player = [x, y]; }));
+  return { w, h, walls: new Set(walls), goals: L.goals.map(([x, y, n]) => ({ x, y, n })), start: { player, dice: L.dice.map(([x, y, t, n, e]) => ({ x, y, o: [t, n, e] })) } };
+}
+function newGame(level) {
+  const lv = parseLevel(level);
+  return { level, lv, player: lv.start.player.slice(), dice: lv.start.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: 0, pushes: 0, screen: "playing", history: [] };
+}
+const isWall = (g, x, y) => x < 0 || y < 0 || x >= g.lv.w || y >= g.lv.h || g.lv.walls.has(y * g.lv.w + x);
+const dieAt = (g, x, y) => g.dice.findIndex((d) => d.x === x && d.y === y);
+function goalStatus(g) {
+  return g.lv.goals.map((q) => { const i = dieAt(g, q.x, q.y); return i >= 0 && g.dice[i].o[0] === q.n; });
+}
+// returns {ok, push, dieIndex} without changing g
+function tryMove(g, d) {
+  if (g.screen !== "playing") return { ok: false };
+  const [dx, dy] = DIRS[d], nx = g.player[0] + dx, ny = g.player[1] + dy;
+  if (isWall(g, nx, ny)) return { ok: false, reason: "wall" };
+  const di = dieAt(g, nx, ny);
+  if (di < 0) return { ok: true, push: false };
+  const bx = nx + dx, by = ny + dy;
+  if (isWall(g, bx, by) || dieAt(g, bx, by) >= 0) return { ok: false, reason: "blocked", dieIndex: di };
+  return { ok: true, push: true, dieIndex: di };
+}
+const snapshot = (g) => ({ player: g.player.slice(), dice: g.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: g.moves, pushes: g.pushes, screen: g.screen });
+function applyMove(g, d) {
+  const r = tryMove(g, d);
+  if (!r.ok) return { g, r };
+  const [dx, dy] = DIRS[d];
+  const ng = { ...g, history: g.history.concat([snapshot(g)]), player: [g.player[0] + dx, g.player[1] + dy], moves: g.moves + 1, dice: g.dice.map((x) => ({ ...x, o: x.o.slice() })) };
+  if (r.push) {
+    const die = ng.dice[r.dieIndex];
+    die.x += dx; die.y += dy; die.o = roll(die.o, d); ng.pushes = g.pushes + 1;
+  }
+  ng.screen = goalStatus(ng).every(Boolean) ? "won" : "playing";
+  return { g: ng, r };
+}
+function undo(g) {
+  if (!g.history.length) return g;
+  const s = g.history[g.history.length - 1];
+  return { ...g, ...snapshot(s), history: g.history.slice(0, -1) };
+}
+function restart(g) {
+  const fresh = newGame(g.level);
+  if (g.moves === 0 && g.history.length === 0) return fresh;
+  return { ...fresh, history: g.history.concat([snapshot(g)]) }; // restart is undoable
+}
+function legalActions(g) {
+  const out = g.screen === "playing" ? Object.keys(DIRS).filter((d) => tryMove(g, d).ok) : [];
+  if (g.history.length) out.push("undo");
+  if (g.moves > 0 || g.history.length) out.push("restart");
+  return out;
+}
+
+// ================= persistence =================
+let save = { solved: {}, level: 0, sides: true, muted: false };
+try { const s = JSON.parse(localStorage.getItem(SAVE_KEY) || "null"); if (s && typeof s === "object") save = { ...save, ...s, solved: s.solved || {} }; } catch (e) { /* storage blocked: play in memory */ }
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* ignore */ } }
+
+// ================= sound =================
+let actx = null;
+function audio() { if (save.muted) return null; try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume(); } catch (e) { actx = null; } return actx; }
+function tone(freq, dur = 0.06, type = "sine", vol = 0.08, delay = 0) {
+  const a = audio(); if (!a) return;
+  const t = a.currentTime + delay, o = a.createOscillator(), gn = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t); gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(gn).connect(a.destination); o.start(t); o.stop(t + dur + 0.02);
+}
+const sfx = {
+  step: () => tone(520, 0.035, "triangle", 0.035),
+  push: () => { tone(180, 0.09, "square", 0.04); tone(330, 0.05, "triangle", 0.04, 0.03); },
+  bump: () => tone(110, 0.12, "sawtooth", 0.035),
+  goal: () => { tone(660, 0.1, "sine", 0.07); tone(990, 0.12, "sine", 0.05, 0.06); },
+  win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.18, "triangle", 0.07, i * 0.09)),
+};
+
+// ================= rendering =================
+const $ = (id) => document.getElementById(id);
+const canvas = $("board"), ctx = canvas.getContext("2d");
+let game = newGame(Math.min(save.level | 0, LEVELS.length - 1));
+let cell = 48, dpr = 1;
+let anim = null; // {t0, dur, from: snapshot, d, push, dieIndex}
+let shake = null; // {t0, d}
+let burst = null; // win particles
+const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+let C = {};
+function readColors() { for (const k of ["floor", "floor2", "wall", "wall-top", "die", "die-side", "die-edge", "pip", "side-num", "player", "player-ink", "goal", "ok", "bad", "ink", "muted", "panel"]) C[k] = css("--" + k); }
+
+function layout() {
+  const main = document.querySelector("main");
+  const availW = Math.min(main.clientWidth, 540);
+  const used = document.querySelector("header").offsetHeight + document.querySelector(".status").offsetHeight + $("tip").offsetHeight + document.querySelector(".controls").offsetHeight + document.querySelector(".keys").offsetHeight + 70;
+  const availH = Math.max(220, window.innerHeight - used);
+  // the outer wall ring is cropped to half a cell, so the room gets the space
+  cell = 2 * Math.floor(Math.max(30, Math.min(80, availW / (game.lv.w - 1), availH / (game.lv.h - 1))) / 2); // even, so the half-cell crop stays on whole pixels
+  dpr = Math.min(3, window.devicePixelRatio || 1);
+  canvas.width = Math.round(cell * (game.lv.w - 1) * dpr); canvas.height = Math.round(cell * (game.lv.h - 1) * dpr);
+  canvas.style.width = cell * (game.lv.w - 1) + "px"; canvas.style.height = cell * (game.lv.h - 1) + "px";
+  readColors();
+}
+function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+const PIPS = { 1: [[1, 1]], 2: [[0, 0], [2, 2]], 3: [[0, 0], [1, 1], [2, 2]], 4: [[0, 0], [2, 0], [0, 2], [2, 2]], 5: [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]], 6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]] };
+function drawPips(cx, cy, size, n, color) {
+  const s = size / 3.4, r = size * 0.085; ctx.fillStyle = color;
+  for (const [a, b] of PIPS[n]) { ctx.beginPath(); ctx.arc(cx + (a - 1) * s, cy + (b - 1) * s, r, 0, Math.PI * 2); ctx.fill(); }
+}
+function drawDie(px, py, o, opts = {}) {
+  // a cube seen from above: inner top face with pips, four bevels showing the side faces
+  const { sx = 1, sy = 1, met = false, onGoal = false } = opts;
+  const size = cell * 0.86, inner = size * 0.62, cx = px + cell / 2, cy = py + cell / 2;
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(sx, sy);
+  // shadow
+  ctx.fillStyle = "rgba(0,0,0,.18)"; rr(-size / 2 + 1, -size / 2 + 3, size, size, size * 0.2); ctx.fill();
+  // body (bevels)
+  ctx.fillStyle = C["die-side"]; rr(-size / 2, -size / 2, size, size, size * 0.2); ctx.fill();
+  ctx.lineWidth = Math.max(1.5, cell * 0.035); ctx.strokeStyle = met ? C.ok : onGoal ? C.bad : C["die-edge"]; ctx.stroke();
+  // bevel diagonals
+  ctx.strokeStyle = "rgba(0,0,0,.08)"; ctx.lineWidth = 1;
+  const a = size / 2 - size * 0.06, b = inner / 2;
+  ctx.beginPath(); for (const [ux, uy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { ctx.moveTo(ux * a, uy * a); ctx.lineTo(ux * b, uy * b); } ctx.stroke();
+  // top face
+  ctx.fillStyle = C.die; rr(-inner / 2, -inner / 2, inner, inner, inner * 0.18); ctx.fill();
+  drawPips(0, 0, inner, o[0], met ? C.ok : C.pip);
+  // side numbers: north, south, east, west
+  if (save.sides) {
+    const fs = Math.max(9, Math.round(cell * 0.15)), off = (size + inner) / 4;
+    ctx.fillStyle = C["side-num"]; ctx.font = `700 ${fs}px system-ui, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(o[1], 0, -off + 0.5); ctx.fillText(7 - o[1], 0, off + 0.5); ctx.fillText(o[2], off, 0.5); ctx.fillText(7 - o[2], -off, 0.5);
+  }
+  ctx.restore();
+}
+function drawGoal(x, y, n, covered, met) {
+  const px = x * cell, py = y * cell, m = cell * 0.1;
+  ctx.save();
+  ctx.setLineDash([cell * 0.09, cell * 0.07]); ctx.lineWidth = Math.max(1.5, cell * 0.04);
+  ctx.strokeStyle = met ? C.ok : C.goal; rr(px + m, py + m, cell - 2 * m, cell - 2 * m, cell * 0.18); ctx.stroke();
+  ctx.setLineDash([]);
+  if (!covered) { ctx.globalAlpha = 0.75; drawPips(px + cell / 2, py + cell / 2, cell * 0.62, n, C.goal); }
+  ctx.restore();
+}
+function drawBadge(x, y, n, met) {
+  // goal number badge on a covered goal (top-left corner)
+  const r = Math.max(8, cell * 0.16), cx = x * cell + r * 0.95, cy = y * cell + r * 0.95;
+  ctx.fillStyle = met ? C.ok : C.bad; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#fff"; ctx.font = `800 ${Math.round(r * 1.25)}px system-ui, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText(met ? "✓" : n, cx, cy + 0.5);
+}
+function drawPlayer(px, py, facing) {
+  const cx = px + cell / 2, cy = py + cell / 2, r = cell * 0.32;
+  ctx.fillStyle = "rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(cx, cy + r * 0.85, r * 0.85, r * 0.3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = C.player; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+  const [fx, fy] = DIRS[facing] || [0, 1];
+  ctx.fillStyle = C["player-ink"];
+  const ex = cx + fx * r * 0.35, ey = cy + fy * r * 0.35, sp = r * 0.32;
+  const px2 = -fy, py2 = fx; // perpendicular
+  for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(ex + px2 * sp * s, ey + py2 * sp * s, r * 0.15, 0, Math.PI * 2); ctx.fill(); }
+}
+let facing = "D";
+function draw(now) {
+  const g = game, w = g.lv.w, h = g.lv.h;
+  ctx.setTransform(dpr, 0, 0, dpr, -dpr * cell / 2, -dpr * cell / 2);
+  ctx.clearRect(0, 0, w * cell, h * cell);
+  // floor & walls
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const px = x * cell, py = y * cell;
+    if (g.lv.walls.has(y * w + x)) {
+      ctx.fillStyle = C.wall; ctx.fillRect(px, py, cell, cell);
+      if (!isWall(g, x, y + 1)) { ctx.fillStyle = C["wall-top"]; ctx.fillRect(px, py + cell * 0.78, cell, cell * 0.22); }
+    } else { ctx.fillStyle = (x + y) % 2 ? C.floor2 : C.floor; ctx.fillRect(px, py, cell, cell); }
+  }
+  const status = goalStatus(g);
+  g.lv.goals.forEach((q, i) => drawGoal(q.x, q.y, q.n, dieAt(g, q.x, q.y) >= 0, status[i]));
+  // animation interpolation
+  let t = 1;
+  if (anim) { t = Math.min(1, (now - anim.t0) / anim.dur); if (t >= 1) anim = null; }
+  const ease = (u) => 1 - Math.pow(1 - u, 3);
+  const k = ease(t);
+  g.dice.forEach((d, i) => {
+    let px = d.x * cell, py = d.y * cell, o = d.o, sx = 1, sy = 1;
+    if (anim && anim.push && anim.dieIndex === i) {
+      const f = anim.from.dice[i], [dx, dy] = DIRS[anim.d];
+      px = (f.x + dx * k) * cell; py = (f.y + dy * k) * cell;
+      if (t < 0.5) o = f.o;
+      const squash = 1 - 0.28 * Math.sin(Math.PI * t);
+      if (dx) sx = squash; else sy = squash;
+    }
+    const gi = g.lv.goals.findIndex((q) => q.x === d.x && q.y === d.y);
+    const settled = !(anim && anim.push && anim.dieIndex === i);
+    let ox = 0, oy = 0;
+    if (shake && shake.dieIndex === i) { const st = (now - shake.t0) / 220; if (st < 1) { const amp = Math.sin(st * Math.PI * 6) * (1 - st) * cell * 0.06; ox = DIRS[shake.d][0] * amp; oy = DIRS[shake.d][1] * amp; } }
+    drawDie(px + ox, py + oy, o, { sx, sy, met: settled && gi >= 0 && status[gi], onGoal: settled && gi >= 0 && !status[gi] });
+  });
+  g.lv.goals.forEach((q, i) => { const di = dieAt(g, q.x, q.y); if (di >= 0 && !(anim && anim.push && anim.dieIndex === di)) drawBadge(q.x, q.y, q.n, status[i]); });
+  // player
+  let ppx = g.player[0] * cell, ppy = g.player[1] * cell;
+  if (anim) { const f = anim.from.player, [dx, dy] = DIRS[anim.d]; ppx = (f[0] + dx * k) * cell; ppy = (f[1] + dy * k) * cell; }
+  if (shake && !shake.dieIndex && shake.dieIndex !== 0) { const st = (now - shake.t0) / 220; if (st < 1) { const amp = Math.sin(st * Math.PI * 6) * (1 - st) * cell * 0.05; ppx += DIRS[shake.d][0] * amp; ppy += DIRS[shake.d][1] * amp; } }
+  if (shake && now - shake.t0 > 220) shake = null;
+  drawPlayer(ppx, ppy, facing);
+  // win burst
+  if (burst) {
+    const bt = (now - burst.t0) / 900;
+    if (bt >= 1) burst = null; else for (const p of burst.parts) {
+      ctx.globalAlpha = 1 - bt; ctx.fillStyle = p.c; ctx.beginPath();
+      ctx.arc(p.x + p.vx * bt * cell, p.y + p.vy * bt * cell + bt * bt * cell * 0.8, cell * 0.06, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  if (anim || shake || burst) requestAnimationFrame(draw);
+}
+function requestDraw() { requestAnimationFrame(draw); }
+
+function renderUI() {
+  const g = game, L = LEVELS[g.level], st = goalStatus(g), met = st.filter(Boolean).length;
+  $("lvlName").textContent = `Level ${g.level + 1} of ${LEVELS.length} · ${L.name}`;
+  $("goalsMet").textContent = `${met}/${st.length}`;
+  $("goalsMet").classList.toggle("done", met === st.length);
+  $("moves").textContent = g.moves; $("pushes").textContent = g.pushes;
+  $("par").textContent = `(par ${L.par})`;
+  $("tip").innerHTML = TIPS[g.level] || "";
+  $("undoBtn").disabled = !g.history.length;
+  $("restartBtn").disabled = !(g.moves > 0 || g.history.length);
+  canvas.setAttribute("aria-label", describe());
+  const won = g.screen === "won";
+  $("winSheet").hidden = !won;
+  if (won) {
+    const last = g.level === LEVELS.length - 1;
+    $("wMoves").textContent = g.moves; $("wPushes").textContent = g.pushes; $("wPar").textContent = L.par;
+    $("winTitle").textContent = last ? "All levels solved!" : "Solved!";
+    $("wNote").textContent = g.pushes <= L.par ? "At or under par. Neat." : "Can you do it in fewer pushes?";
+    $("wNext").textContent = last ? "Pick a level" : "Next level";
+  }
+  document.documentElement.style.setProperty("--dummy", "0");
+  $("muteBtn").setAttribute("aria-pressed", String(!!save.muted));
+  $("waves").style.display = save.muted ? "none" : "";
+  $("sidesToggle").checked = !!save.sides;
+}
+function describe() {
+  const g = game, parts = [`You are at column ${g.player[0]}, row ${g.player[1]}.`];
+  g.dice.forEach((d, i) => parts.push(`Die ${i + 1} at column ${d.x}, row ${d.y}, ${d.o[0]} on top.`));
+  g.lv.goals.forEach((q) => parts.push(`Goal at column ${q.x}, row ${q.y} wants ${q.n}.`));
+  return parts.join(" ");
+}
+function sync() { renderUI(); requestDraw(); }
+
+// ================= actions =================
+function doAction(a) {
+  if (a === "undo") { game = undo(game); anim = null; sync(); return; }
+  if (a === "restart") { game = restart(game); anim = null; sync(); return; }
+  if (!DIRS[a]) return;
+  facing = a;
+  const before = game, beforeMet = goalStatus(before).filter(Boolean).length;
+  const { g, r } = applyMove(game, a);
+  if (!r.ok) {
+    if (before.screen === "playing") { sfx.bump(); if (!reduceMotion) { shake = { t0: performance.now(), d: a, dieIndex: r.dieIndex }; } }
+    requestDraw(); return;
+  }
+  game = g;
+  anim = reduceMotion ? null : { t0: performance.now(), dur: r.push ? 130 : 95, from: before, d: a, push: r.push, dieIndex: r.dieIndex };
+  if (r.push) sfx.push(); else sfx.step();
+  const met = goalStatus(game).filter(Boolean).length;
+  if (game.screen === "won") {
+    sfx.win();
+    const prev = save.solved[game.level];
+    save.solved[game.level] = prev == null ? game.pushes : Math.min(prev, game.pushes);
+    persist();
+    if (!reduceMotion) {
+      const parts = [];
+      for (const q of game.lv.goals) for (let i = 0; i < 14; i++) { const an = Math.random() * Math.PI * 2, sp = 0.6 + Math.random() * 1.2; parts.push({ x: (q.x + 0.5) * cell, y: (q.y + 0.5) * cell, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp - 0.6, c: i % 2 ? C.ok : C.player }); }
+      burst = { t0: performance.now(), parts };
+    }
+  } else if (met > beforeMet) sfx.goal();
+  sync();
+}
+function loadLevel(i) {
+  game = newGame(Math.max(0, Math.min(LEVELS.length - 1, i)));
+  save.level = game.level; persist();
+  anim = null; facing = "D"; layout(); sync();
+}
+
+// ================= input =================
+const KEYMAP = { ArrowUp: "U", ArrowDown: "D", ArrowLeft: "L", ArrowRight: "R", w: "U", s: "D", a: "L", d: "R", W: "U", S: "D", A: "L", D: "R" };
+function anySheetOpen() { return [...document.querySelectorAll(".sheet")].some((s) => !s.hidden); }
+document.addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const levelOrHelp = !$("levelSheet").hidden || !$("helpSheet").hidden;
+  if (e.key === "Escape") { closeSheets(); return; }
+  if (levelOrHelp) return;
+  if (game.screen === "won") {
+    if (e.key === "n" || e.key === "N" || e.key === "Enter") { e.preventDefault(); nextLevel(); }
+    else if (e.key === "z" || e.key === "Z" || e.key === "Backspace" || e.key === "u") { e.preventDefault(); doAction("undo"); }
+    else if (e.key === "r" || e.key === "R") { e.preventDefault(); doAction("restart"); }
+    return;
+  }
+  if (KEYMAP[e.key]) { e.preventDefault(); doAction(KEYMAP[e.key]); }
+  else if (e.key === "z" || e.key === "Z" || e.key === "Backspace" || e.key === "u") { e.preventDefault(); doAction("undo"); }
+  else if (e.key === "r" || e.key === "R") { e.preventDefault(); doAction("restart"); }
+  else if (e.key === "m" || e.key === "M") toggleMute();
+});
+// swipe or tap on the board
+let pdown = null;
+canvas.addEventListener("pointerdown", (e) => { pdown = { x: e.clientX, y: e.clientY, id: e.pointerId }; try { canvas.setPointerCapture(e.pointerId); } catch (_) {} e.preventDefault(); });
+canvas.addEventListener("pointerup", (e) => {
+  if (!pdown || pdown.id !== e.pointerId) return;
+  const dx = e.clientX - pdown.x, dy = e.clientY - pdown.y; pdown = null;
+  if (game.screen !== "playing") return;
+  if (Math.hypot(dx, dy) > Math.max(18, cell * 0.35)) { doAction(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "R" : "L") : (dy > 0 ? "D" : "U")); return; }
+  const rect = canvas.getBoundingClientRect();
+  const cx = Math.floor((e.clientX - rect.left) / cell + 0.5), cy = Math.floor((e.clientY - rect.top) / cell + 0.5);
+  const [px, py] = game.player;
+  if (cx === px && cy !== py) doAction(cy < py ? "U" : "D");
+  else if (cy === py && cx !== px) doAction(cx < px ? "L" : "R");
+  else if (cx !== px || cy !== py) { // diagonal tap: step along the longer axis
+    const ax = cx - px, ay = cy - py; doAction(Math.abs(ax) >= Math.abs(ay) ? (ax > 0 ? "R" : "L") : (ay > 0 ? "D" : "U"));
+  }
+});
+canvas.addEventListener("pointercancel", () => { pdown = null; });
+// on-screen pad with hold-to-repeat
+for (const [id, d] of [["pU", "U"], ["pD", "D"], ["pL", "L"], ["pR", "R"]]) {
+  const b = $(id); let timer = null;
+  const stop = () => { clearTimeout(timer); clearInterval(timer); timer = null; };
+  b.addEventListener("pointerdown", (e) => { e.preventDefault(); stop(); doAction(d); timer = setTimeout(() => { timer = setInterval(() => doAction(d), 140); }, 380); });
+  for (const ev of ["pointerup", "pointerleave", "pointercancel"]) b.addEventListener(ev, stop);
+  b.addEventListener("click", (e) => { if (e.detail === 0) doAction(d); }); // keyboard activation only
+}
+$("undoBtn").onclick = () => doAction("undo");
+$("restartBtn").onclick = () => doAction("restart");
+$("wUndo").onclick = () => doAction("undo");
+function nextLevel() { if (game.level === LEVELS.length - 1) { openLevels(); } else loadLevel(game.level + 1); }
+$("wNext").onclick = nextLevel;
+function closeSheets() { $("levelSheet").hidden = true; $("helpSheet").hidden = true; }
+document.querySelectorAll("[data-close]").forEach((b) => (b.onclick = () => { closeSheets(); canvas.focus && canvas.focus(); }));
+for (const id of ["levelSheet", "helpSheet"]) $(id).addEventListener("pointerdown", (e) => { if (e.target.id === id) closeSheets(); });
+function openLevels() {
+  $("winSheet").hidden = true;
+  const list = $("levelList");
+  list.replaceChildren(...LEVELS.map((L, i) => {
+    const b = document.createElement("button"), best = save.solved[i];
+    b.className = i === game.level ? "cur" : "";
+    b.innerHTML = `<b><span>${i + 1}</span>${best != null ? `<span class="ok">✓ ${best}</span>` : `<span>par ${L.par}</span>`}</b>${L.name}`;
+    b.setAttribute("aria-label", `Level ${i + 1}, ${L.name}${best != null ? ", solved in " + best + " pushes" : ""}`);
+    b.onclick = () => { closeSheets(); loadLevel(i); };
+    return b;
+  }));
+  $("levelSheet").hidden = false;
+  (list.querySelector(".cur") || list.firstChild).focus();
+}
+$("levelsBtn").onclick = openLevels;
+$("helpBtn").onclick = () => { $("helpSheet").hidden = false; $("helpSheet").querySelector(".primary").focus(); };
+$("sidesToggle").onchange = (e) => { save.sides = e.target.checked; persist(); sync(); };
+function toggleMute() { save.muted = !save.muted; persist(); renderUI(); }
+$("muteBtn").onclick = toggleMute;
+window.addEventListener("resize", () => { layout(); requestDraw(); });
+if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => { readColors(); requestDraw(); });
+
+layout(); sync();
+
+// ================= QA hook =================
+window.__qa = {
+  state: () => ({
+    screen: game.screen, level: game.level, moves: game.moves, pushes: game.pushes,
+    player: game.player.slice(), dice: game.dice.map((d) => [d.x, d.y, ...d.o]),
+    goals: game.lv.goals.map((q) => [q.x, q.y, q.n]), goalsMet: goalStatus(game).filter(Boolean).length, canUndo: game.history.length > 0,
+  }),
+  actions: () => legalActions(game),
+  act: (a) => { doAction(a); anim = null; },
+  reset: (level) => { closeSheets(); loadLevel(level ?? game.level); },
+  levels: () => LEVELS.length,
+  solve: () => { loadLevel(game.level); return LEVELS[game.level].sol.split(""); },
+};
+</script>
+</body>
+</html>
