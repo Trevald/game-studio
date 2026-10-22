@@ -1,11 +1,11 @@
 {
   "game": "games/math-crush/index.html",
-  "at": "2026-10-22T16:48:26.862Z",
+  "at": "2026-10-22T18:57:06.104Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "156 KB"
+      "detail": "108 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -45,17 +45,17 @@
     {
       "name": "[desktop] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
+      "detail": "{\"screen\":\"home\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
     },
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won, lost; resets: 85"
+      "detail": "screens seen: playing, lost, won; resets: 82"
     },
     {
-      "name": "every level completable via solve() (36 levels)",
+      "name": "every level completable via solve() (12 levels)",
       "ok": true,
-      "detail": "L1:3 L2:3 L3:3 L4:3 L5:4 L6:4 L7:4 L8:4 L9:5 L10:5 L11:5 L12:5 L13:12 L14:12 L15:12 L16:12 L17:12 L18:12 L19:12 L20:12 L21:16 L22:16 L23:12 L24:16 L25:24 L26:24 L27:24 L28:24 L29:16 L30:16 L31:16 L32:16 L33:20 L34:20 L35:20 L36:20"
+      "detail": "L1:3 L2:3 L3:3 L4:3 L5:4 L6:4 L7:4 L8:4 L9:5 L10:5 L11:5 L12:5"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -75,7 +75,7 @@
     {
       "name": "[phone] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"hub\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
+      "detail": "{\"screen\":\"home\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
     },
     {
       "name": "[phone] survives 60 random actions",
@@ -96,7 +96,7 @@
     "games/math-crush/qa/phone-02-after-play.png"
   ],
   "desktop_initialState": {
-    "screen": "hub",
+    "screen": "home",
     "mode": "match",
     "level": null,
     "qaLevel": null,
@@ -174,154 +174,10 @@
       "ok": true,
       "moves": 5,
       "screen": "won"
-    },
-    {
-      "lv": 12,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 13,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 14,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 15,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 16,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 17,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 18,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 19,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 20,
-      "ok": true,
-      "moves": 16,
-      "screen": "won"
-    },
-    {
-      "lv": 21,
-      "ok": true,
-      "moves": 16,
-      "screen": "won"
-    },
-    {
-      "lv": 22,
-      "ok": true,
-      "moves": 12,
-      "screen": "won"
-    },
-    {
-      "lv": 23,
-      "ok": true,
-      "moves": 16,
-      "screen": "won"
-    },
-    {
-      "lv": 24,
-      "ok": true,
-      "moves": 24,
-      "screen": "won"
-    },
-    {
-      "lv": 25,
-      "ok": true,
-      "moves": 24,
-      "screen": "won"
-    },
-    {
-      "lv": 26,
-      "ok": true,
-      "moves": 24,
-      "screen": "won"
-    },
-    {
-      "lv": 27,
-      "ok": true,
-      "moves": 24,
-      "screen": "won"
-    },
-    {
-      "lv": 28,
-      "ok": true,
-      "moves": 16,
-      "screen": "won"
-    },
-    {
-      "lv": 29,
-      "ok": true,
-      "moves": 16,
-      "screen": "won"
-    },
-    {
-      "lv": 30,
-      "ok": true,
-      "moves": 16,
-      "screen": "won"
-    },
-    {
-      "lv": 31,
-      "ok": true,
-      "moves": 16,
-      "screen": "won"
-    },
-    {
-      "lv": 32,
-      "ok": true,
-      "moves": 20,
-      "screen": "won"
-    },
-    {
-      "lv": 33,
-      "ok": true,
-      "moves": 20,
-      "screen": "won"
-    },
-    {
-      "lv": 34,
-      "ok": true,
-      "moves": 20,
-      "screen": "won"
-    },
-    {
-      "lv": 35,
-      "ok": true,
-      "moves": 20,
-      "screen": "won"
     }
   ],
   "phone_initialState": {
-    "screen": "hub",
+    "screen": "home",
     "mode": "match",
     "level": null,
     "qaLevel": null,

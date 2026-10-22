@@ -17,6 +17,12 @@ artifact: https://claude.ai/artifact/D5kYHgsZbouMh73g1VMLTj
 A candy-crush-feeling board where you make a target number instead of matching colours — built as three
 prototypes (Match, Equation, Clear) so Benji can feel which core loop he wants.
 
+**Owner decision, 22 Oct 2026:** Benji chose Candy Match as the game and asked to remove the other two
+concepts. Equation and Clear (mode picker, rules, levels, runtime art) are gone from `index.html` and
+`assets/`; the game opens on the Candy Match home. Old saves keep their Equation/Clear records untouched.
+This overrides H-001-v1 MC-001's "never remove Equation/Clear saves or access"; don't restore them. Recorded
+for the designer in `design-studio/games/math-crush/feedback/FB-002-match-only.md`.
+
 ## References
 - No links in the idea or notes. The design source is Benji's designer hand-over:
   `DESIGN.md` → `design/handover-v1/docs/Studio-Handoff.md` (rules, scoring, layout coordinates),

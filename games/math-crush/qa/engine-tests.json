@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-22T16:48:46.349Z",
+  "at": "2026-10-22T18:57:51.749Z",
   "passed": true,
   "results": [
     {
@@ -38,7 +38,7 @@
       "detail": "{\"dragChain\":[0,1,2],\"committed\":false}"
     },
     {
-      "name": "v1 data validation (36 level witnesses)",
+      "name": "v1 data validation (12 Match level witnesses)",
       "ok": true,
       "detail": ""
     },
@@ -236,6 +236,11 @@
       "name": "legacy best shown separately and never overwritten",
       "ok": true,
       "detail": "{\"txt\":true,\"v2\":400,\"legacy\":650}"
+    },
+    {
+      "name": "old Equation/Clear progress survives a save; no mode picker left",
+      "ok": true,
+      "detail": "{\"eq\":4,\"cl\":2,\"home\":true}"
     },
     {
       "name": "storage blocked: plays in memory with a non-blocking notice",

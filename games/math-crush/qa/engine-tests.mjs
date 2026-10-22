@@ -23,7 +23,7 @@ const ev = (f, a) => page.evaluate(f, a);
 const fx = await ev(() => __qa.fixtures());
 for (const c of fx.cases) t(`fixture ${c.id}`, c.ok, JSON.stringify(c.got));
 // 2. v1 witnesses
-const v = await ev(() => __qa.validate()); t("v1 data validation (36 level witnesses)", v.ok, v.errors.join(","));
+const v = await ev(() => __qa.validate()); t("v1 data validation (12 Match level witnesses)", v.ok, v.errors.join(","));
 // 3. scoring table MC-003
 const sc = await ev(() => [2, 3, 4, 5, 6, 7, 8].map((n) => M.chainPoints(n)));
 t("chain points 2..8 = 100,187,300,525,600,675,750", JSON.stringify(sc) === "[100,187,300,525,600,675,750]", JSON.stringify(sc));
@@ -138,7 +138,7 @@ t("active attempt saved after a committed move", ps.has && ps.moves === 4 && ps.
 await page.reload(); await page.waitForTimeout(300);
 const rs = await ev(() => { __qa.open("home"); const hasContinue = !!document.querySelector('[data-k="continue"]'); document.querySelector('[data-k="continue"]').click(); const s = __qa.state(); return { hasContinue, screen: s.screen, moves: s.movesLeft, level: s.level }; });
 t("reload → Continue resumes the committed state", rs.hasContinue && rs.screen === "playing" && rs.moves === 4 && rs.level === 1, JSON.stringify(rs));
-const leave = () => ev(() => { ui.modal = null; ui.mode = "equation"; ui.screen = "hub"; render(); }); // so the hide-time save doesn't overwrite our edit
+const leave = () => ev(() => { ui.modal = null; ui.screen = "home"; render(); }); // so the hide-time save doesn't overwrite our edit
 await leave();
 const cs = await ev(() => { const raw = JSON.parse(localStorage.getItem("mathcrush.v1")); raw.active.game.cells = "garbage"; raw.match.unlocked = 5; localStorage.setItem("mathcrush.v1", JSON.stringify(raw)); return true; });
 await page.reload(); await page.waitForTimeout(300);
@@ -150,6 +150,12 @@ const lg = await ev(() => { const raw = JSON.parse(localStorage.getItem("mathcru
 await page.reload(); await page.waitForTimeout(300);
 const lg2 = await ev(() => { __qa.open("intro", 0); return { txt: document.body.innerText.includes("Legacy best"), v2: __qa.saved().matchV2.best[0], legacy: __qa.saved().match.best[0] }; });
 t("legacy best shown separately and never overwritten", lg2.txt && lg2.legacy === 650 && lg2.v2 !== 650, JSON.stringify(lg2));
+// 17b. saves from the three-mode prototype keep their Equation/Clear records (modes removed 22 Oct)
+await leave();
+await ev(() => { const raw = JSON.parse(localStorage.getItem("mathcrush.v1")); raw.equation = { unlocked: 4, stars: [3,2,0,0,0,0,0,0,0,0,0,0], best: Array(12).fill(0) }; raw.clear = { unlocked: 2, stars: [1,0,0,0,0,0,0,0,0,0,0,0], best: Array(12).fill(0) }; localStorage.setItem("mathcrush.v1", JSON.stringify(raw)); return true; });
+await page.reload(); await page.waitForTimeout(300);
+const old = await ev(() => { __qa.reset(0); __qa.act({ chain: [0, 5] }); const raw = JSON.parse(localStorage.getItem("mathcrush.v1")); return { eq: raw.equation && raw.equation.unlocked, cl: raw.clear && raw.clear.unlocked, home: (__qa.open("home"), !document.querySelector('[data-k="hub"]') && !/Equation|Clear the Board|All modes/.test(document.body.innerText)) }; });
+t("old Equation/Clear progress survives a save; no mode picker left", old.eq === 4 && old.cl === 2 && old.home, JSON.stringify(old));
 // 18. storage blocked: game still works in memory
 const ctx2 = await browser.newContext({ viewport: { width: 390, height: 844 } });
 await ctx2.addInitScript(() => { Object.defineProperty(window, "localStorage", { get() { throw new Error("blocked"); } }); });
@@ -163,7 +169,7 @@ await ctx2.close();
 const p3 = await (await browser.newContext({ viewport: { width: 390, height: 844 } })).newPage();
 const err3 = []; p3.on("pageerror", (e) => err3.push(e.message));
 await p3.goto(url); await p3.waitForTimeout(300);
-for (const k of ["mode-match", "play", "lvl-0"]) { await p3.click(`[data-k="${k}"]`); await p3.waitForTimeout(150); }
+for (const k of ["play", "lvl-0"]) { await p3.click(`[data-k="${k}"]`); await p3.waitForTimeout(150); }
 if (await p3.$('[data-k="coach-ok"]')) await p3.click('[data-k="coach-ok"]');
 await p3.click('[data-k="intro-play"]'); await p3.waitForTimeout(250);
 const center = async (i) => { const b = await p3.$(`[data-cell="${i}"]`); const r = await b.boundingBox(); return [r.x + r.width / 2, r.y + r.height / 2]; };

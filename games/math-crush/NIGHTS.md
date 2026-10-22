@@ -1,5 +1,13 @@
 # Math Crush — night log
 
+## Daytime change — 2026-10-22 (Benji: "focus on only the first concept Candy Match and remove the other two")
+
+Removed Equation and Clear: their engines, renderers, levels, the scaled-stage UI they used, the "All modes"
+picker and their runtime art (`assets/{equation,clear}-*`). The game boots straight into the Candy Match home.
+Save key unchanged; Equation/Clear progress in old saves is left in storage, untouched (engine test 17b).
+`__qa.levels()` is now 12. index.html 160 KB → 108 KB. Checks: playtest all pass (12/12 levels solved),
+engine tests 54/54, `qa/screens.mjs phone` no layout problems. Designer told in FB-002.
+
 ## Night 2 follow-up — 2026-10-22 (Benji: "looks nothing like the design updates")
 
 The night-2 build followed HANDOVER.md/SCREENS.md text but the studio never opened the packet's reference images
