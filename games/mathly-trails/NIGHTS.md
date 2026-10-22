@@ -1,5 +1,34 @@
 # Mathly — night log
 
+## Night 3 — 2026-10-22
+
+**Job:** iteration on note: "Tonight, after Math Crush: build the approved hand-over design-studio/games/mathly/handovers/H-001-v1 (Playful Deck + Adaptive rows), scope MATHLY-VIS-001–005 and MATHLY-R-006–009 …"
+
+**Shipped:**
+- **Playful Deck look** from H-001-v1: jade felt (the new `felt-jade-v1.webp`, with a solid fallback), a yellow TARGET, a cream RESULT, cream number and mint operator tokens, coral operator keys, and cream Undo/Hint/Restart pills. The `Mathly` wordmark is live text. Home, collections, completion and the settings dialogs use the same look.
+- **Adaptive rows**: the exact six-band layout from SPEC §2. The expression is a fixed 44px grid: 7×3 on 375/390 phones, 6×2 on 320, 8×3 on desktop. It has a reserved status line and a reserved Before/After/Remove/Done strip, so the card tray never moves. Long expressions go on explicit pages ("Page 1 of 2 · 1–12") with arrows, PageUp/PageDown and drag-dwell on the arrows. When the selection is on another page you get "Go to selection" instead of edits to a token you can't see.
+- **Solve moment**: one check in RESULT, a yellow outline and a 600 ms hold, then completion. The completion screen now has Try another way next to Review. Review is read-only.
+- **Landscape and accessibility**: a two-column board on landscape phones (844×390), and an Expression / Cards / Controls tab layout when the board doesn't fit (568×320, or under 320 wide). High contrast drops the texture.
+- Puzzles, arithmetic, hints and saves are unchanged. A night-2 save still continues where it left off.
+
+**QA:** 17/17 studio checks passed · 4 rounds · all 12 boards completable via `solve()`. New `qa/interact.mjs` (~80 checklist checks: engine cases, UI fixtures, paging boundaries, drag/cancel/dwell, keyboard solve, saves, blocked texture, reduced motion) all pass. `qa/screens.mjs` ran 66 state × viewport captures with no horizontal scroll, clipping or under-44px targets. Known gaps (not run): a real-device screen reader, 200/400% text, real OS safe insets.
+
+**Reviewer:** ship with fixes. The hand-over is in and the solve beat reads well, but there is still nothing beyond 12 boards.
+- Fixed:
+  - Selection strip off-screen at 568×320 (new side-by-side section layout).
+  - Palette/Delete could edit a selected token on another page.
+  - Selecting then Done moved the caret.
+  - "Incomplete" cut off at 320.
+  - The FB report was missing.
+  - Also tidied the 1px live-region scroll and the duplicate idle hints.
+- Not fixed: Daily/practice and Starter variety. They are outside this hand-over.
+
+**Assumptions:** Desktop keeps the portrait canvas; two columns only when portrait would give fewer than 3 rows. Short landscape puts target/result in a left column. Icons render near-black through `<img>`, because CSS colouring fails offline. The board name sits under the wordmark. All are listed for the designer in `design-studio/games/mathly/feedback/FB-001-h001-v1-completion.md`.
+
+**Questions for Benji:** 1) Is the 568×320 layout (target/result on the left, tabs on the right) OK, or should the designer specify short landscape? 2) Next for Mathly: phase 2 (Daily + practice) or more authored boards? That needs a new designer hand-over either way.
+
+**Play:** https://claude.ai/artifact/3ouYeSyBQsbEQ46theZZck
+
 ## Night 2 — 2026-10-20
 
 **Job:** iteration on notes: "The designer's hand-over for Mathly is in … Next: phase 1 — new engine, play and completion screens in the Card Table look, Starter's 8 boards."
