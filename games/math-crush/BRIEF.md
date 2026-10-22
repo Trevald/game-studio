@@ -14,8 +14,9 @@ artifact: https://claude.ai/artifact/D5kYHgsZbouMh73g1VMLTj
 > you need to match numbers and operators on that board to make another number. As tiles are being consumed
 > they disappear and either new ones come or you should empty the board.
 
-A candy-crush-feeling board where you make a target number instead of matching colours — built as three
-prototypes (Match, Equation, Clear) so Benji can feel which core loop he wants.
+A candy-crush-feeling board where you drag chains of touching numbers that add up to the target; longer
+chains score more and leave striped and wrapped candies. (Started as three prototypes — Match, Equation,
+Clear — and Benji picked Candy Match.)
 
 **Owner decision, 22 Oct 2026:** Benji chose Candy Match as the game and asked to remove the other two
 concepts. Equation and Clear (mode picker, rules, levels, runtime art) are gone from `index.html` and

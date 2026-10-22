@@ -7,6 +7,9 @@ This repo is a small game studio run by Claude overnight for Benji.
 - Publishing for all Game Studio work: commit and push directly to `main` by default; create a PR only when Benji explicitly requests it. Preserve concurrent work and never force-push.
 - Ideas board (artifact database): `studio/BOARD.md`.
 - Build contract and reference game: `studio/roles/developer.md`, `games/_template/index.html`.
+- Games index: every push to `main` that touches `games/` republishes all games plus an index page to GitHub
+  Pages (`.github/workflows/pages.yml`, builder `tools/pages/build.mjs`). The card text is the summary line
+  in each `BRIEF.md` under "The idea"; keep it current. `pages: hidden` in a brief's front matter hides a game.
 - Automated playtest: `node tools/qa/playtest.mjs games/<slug>/index.html` (run `npm ci` in `tools/` first).
 
 ## Design comes from Benji's designer (since 20 Oct)
