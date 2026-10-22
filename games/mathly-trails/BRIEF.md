@@ -11,6 +11,37 @@ artifact: https://claude.ai/artifact/3ouYeSyBQsbEQ46theZZck
 > night-1 merge-tiles model. Where this brief and DESIGN.md disagree, DESIGN.md wins. The night-1 brief is kept
 > below under "Night 1 (superseded)".
 
+## Tonight (night 3) — from Benji's note "mathly-h001"
+Build the approved hand-over **H-001-v1** (Playful Deck + Adaptive rows), read in place from
+`design-studio/games/mathly/handovers/H-001-v1/`. Approved by Benji on 2026-10-21 at candidate `5b019c0`, scope
+**MATHLY-VIS-001–005 and MATHLY-R-006–009** (record: `design-studio/games/mathly/handovers/APPROVAL-H-001-v1.md`).
+It wins over DESIGN.md and the night-2 Card Table look inside that scope. Goals, in order:
+1. VIS-001 / R-006: Playful Deck palette and materials from `tokens.json`: jade felt (`felt-jade-v1.webp`, relative URL,
+   solid `#094C3C` fallback), yellow TARGET, cream RESULT, cream number tokens, mint operator tokens, coral palette,
+   quiet cream Undo/Hint/Restart, live `Mathly` wordmark in Georgia, rounded system numerals. No base64 art.
+2. VIS-005 / VIS-002: the exact six-section geometry of SPEC §2 (header 44, plaques 72/64, workspace = rest, tray 56/48,
+   palette 48/44, actions 44), workspace with a 44px page strip, a fixed 44px grid of cells (columns from width,
+   rows 3/2/1 from workspace height thresholds 300/240/192), a reserved 24px status line and a reserved 44px
+   selection strip. Explicit pages ("Page 1 of 2 · 1–12"), selection outline + "Selected: 3" text, "Go to selection".
+3. VIS-003: one check in RESULT + "Solved", yellow workspace outline, editing locked, 600 ms then completion; Review is
+   read-only and labelled.
+4. VIS-004: landscape two-column layout and the accessible section layout (Expression / Cards / Controls tabs) when
+   the workspace would fall under 192px, focus ring, 44px targets, high contrast without texture.
+5. R-008: Home, collections, collection detail, completion, settings and How to play restyled with the same tokens;
+   completion gets the existing "Try another way". No new features.
+6. R-007 / R-009: engine, 12 boards, saves (`mathly.v1`) untouched; run the checklist and write the completion report
+   in `design-studio/games/mathly/feedback/FB-001-*.md`.
+
+Out of scope (packet exclusions): new puzzles, Daily/practice, purchases, new audio, persisted undo, rule changes.
+
+### Assumptions (night 3)
+- The 44px header holds back, the `Mathly` wordmark and settings (as in the atlas). The board name ("Starter · 01")
+  moves to a small line under the wordmark inside the same 44px, so the player still knows where they are.
+- With a token selected the caret sits right after it (as the atlas draws it), so a tapped card goes after the
+  selected token, as before.
+- Old Card Table art (`felt.webp`, `logo.svg`, `table-mark.svg`) is no longer referenced and is removed from the game
+  folder (git keeps it).
+
 ## Tonight (night 2) — from Benji's note "mathly-design-v1"
 Goal: **phase 1** of the hand-over, in the Card Table look.
 1. New engine: five card instances with IDs, reusable + − × ÷ ( ), a real recursive-descent parser over tokens
