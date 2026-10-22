@@ -1,11 +1,11 @@
 {
   "game": "games/mathly-trails/index.html",
-  "at": "2026-10-22T02:02:56.982Z",
+  "at": "2026-10-22T02:10:51.014Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "89 KB"
+      "detail": "92 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing; resets: 0"
+      "detail": "screens seen: collections, collection, playing; resets: 0"
     },
     {
       "name": "[phone] no console errors or exceptions",

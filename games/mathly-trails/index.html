@@ -26,7 +26,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--ink);outline-offset:0;box-shadow:0 0 0 4px var(--cream)}
 [tabindex="-1"]:focus{outline:none;box-shadow:none}
 button:disabled{opacity:.45;cursor:default}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sr{position:fixed;left:0;top:0;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .probe{position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;padding:var(--sat) 0 var(--sab) 0}
 .ico{display:inline-block;width:20px;height:20px;flex:none;opacity:.86;pointer-events:none} /* icon SVGs use currentColor = black inside <img>; .86 reads as ink */
 /* canvas: safe insets once, then 12px padding */
@@ -93,7 +93,8 @@ button:disabled{opacity:.45;cursor:default}
 .value{display:flex;align-items:center;gap:6px;font:800 36px/1.1 var(--num);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0}
 .compact .value{font-size:32px}
 .value .txt{overflow:hidden;text-overflow:ellipsis;min-width:0}
-.value.word{font-size:23px}
+.value.word{font-size:23px;letter-spacing:-.3px}
+.compact .value.word{font-size:20px}
 .value .ico{width:26px;height:26px;color:var(--ink)}
 button.plaque{cursor:pointer}
 .hc .plaque{box-shadow:none;border:2px solid var(--ink);background:var(--cream)}.hc .plaque.target{background:var(--yellow)}
@@ -115,7 +116,7 @@ button.plaque{cursor:pointer}
 @keyframes snap{from{transform:scale(1.1)}to{transform:none}}
 .caret{position:absolute;width:3px;height:var(--cell);background:var(--caret);border:1px solid var(--cream);border-width:0 1px;z-index:2;pointer-events:none}
 .caret.preview{width:5px;box-shadow:0 0 0 2px #ff917766}
-.status{min-height:24px;flex:none;display:flex;align-items:center;gap:6px;padding:0 4px;font-size:12px;line-height:24px}
+.status{min-height:24px;flex:none;display:flex;align-items:center;gap:6px;padding:0 4px;font-size:14px;line-height:24px}
 .status .txt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .status.bad{color:var(--error)}
 .status .more{min-height:24px;padding:0 6px;font-weight:700;text-decoration:underline;flex:none;position:relative}
@@ -155,6 +156,7 @@ button.plaque{cursor:pointer}
 .sect body,.sect{overflow:auto}
 .sect .app{height:auto;min-height:100%}
 .sect #sPlay{grid-template-columns:minmax(0,1fr);grid-template-rows:44px var(--plh,72px) 44px auto;grid-template-areas:"nav" "plaques" "tabs" "work"}
+.sect #sPlay{align-content:start}.sect .actions{height:44px}
 .sect .plaques{position:sticky;top:0;z-index:5}
 .sect .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
 .tabs button{min-height:44px;border-radius:10px;background:var(--deep);box-shadow:inset 0 0 0 1px var(--border);font-weight:700;font-size:14px}
@@ -168,6 +170,11 @@ button.plaque{cursor:pointer}
 .sect[data-tab="controls"] #sPlay{grid-template-rows:44px var(--plh,72px) 44px auto auto;grid-template-areas:"nav" "plaques" "tabs" "palette" "actions"}
 .sect[data-tab="controls"] .palette{grid-area:palette;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));height:auto}.sect[data-tab="controls"] .palette button{height:48px}
 .sect[data-tab="controls"] .actions{grid-area:actions;height:auto}
+/* section layout on short landscape screens: plaques left, tabs + section right */
+.sectland .app{width:100%;max-width:none}
+.sect.sectland #sPlay,.sect.sectland[data-tab] #sPlay{grid-template-columns:minmax(0,4fr) minmax(0,6fr);column-gap:12px;grid-template-rows:44px 44px auto auto;grid-template-areas:"nav nav" "plaques tabs" "plaques work" "plaques work2"}
+.sectland .plaques{grid-template-columns:1fr;grid-template-rows:var(--plh,72px) var(--plh,72px);align-self:start;position:static}
+.sect.sectland[data-tab="controls"] .palette{grid-area:work}.sect.sectland[data-tab="controls"] .actions{grid-area:work2}
 /* completion */
 .medal{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:4px auto;flex:none;background:var(--yellow);color:var(--ink);box-shadow:0 3px 0 var(--yellow-e),0 0 0 6px #fff6e333}
 .medal .ico{width:36px;height:36px}
@@ -1310,7 +1317,7 @@ function evaluate(g) {
 function commit(g, tokens, caret) {
   if (g.solved) return false;
   g.hist.push({ tokens: g.tokens, caret: g.caret });
-  g.tokens = tokens; g.caret = Math.max(0, Math.min(caret, tokens.length)); g.sel = -1;
+  g.tokens = tokens; g.caret = Math.max(0, Math.min(caret, tokens.length)); g.sel = -1; g.caret0 = null;
   evaluate(g);
   return true;
 }
@@ -1416,7 +1423,7 @@ function show(screen) {
 function render() {
   ROOT.classList.toggle("hc", !!save.settings.contrast);
   viewportClasses();
-  if (ui.screen !== "play") { ROOT.classList.remove("land", "sect"); ROOT.removeAttribute("data-tab"); }
+  if (ui.screen !== "play") { ROOT.classList.remove("land", "sect", "sectland"); ROOT.removeAttribute("data-tab"); }
   if (ui.screen === "home") renderHome();
   if (ui.screen === "collections") renderCollections();
   if (ui.screen === "collection") renderCollection();
@@ -1475,6 +1482,7 @@ function rowsFor(h, canvasW) {
   return 0;
 }
 function setMode(mode) {
+  if (mode !== "sect") ROOT.classList.remove("sectland");
   ROOT.classList.toggle("land", mode === "land");
   ROOT.classList.toggle("sect", mode === "sect");
   if (mode === "sect") ROOT.dataset.tab = ui.tab; else ROOT.removeAttribute("data-tab");
@@ -1498,8 +1506,10 @@ function layoutPlay() {
     const cs = getComputedStyle(app), pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
     const gap = parseFloat(getComputedStyle($("sPlay")).rowGap) || 8;
     const plh = ROOT.classList.contains("compact") ? 64 : 72;
-    const rest = v.H - pad - 44 - plh - 44 - 3 * gap;
-    ROOT.style.setProperty("--sectH", Math.max(GEO.one, Math.floor(rest)) + "px");
+    const landSect = v.W > v.H;
+    ROOT.classList.toggle("sectland", landSect);
+    const rest = landSect ? v.H - pad - 44 - 44 - 2 * gap : v.H - pad - 44 - plh - 44 - 3 * gap;
+    ROOT.style.setProperty("--sectH", Math.max(186, Math.floor(rest)) + "px"); // 186 = one row; below that the page scrolls (escape hatch)
     wsH = well.clientHeight;
   }
   // a hint panel takes its real height before rows are counted; if that leaves no row, it becomes a dialog
@@ -1525,7 +1535,7 @@ function resultView(g) {
     if (g.solved) status = "Solved · all five cards used" + (g.assisted ? " · With hint" : "");
     else if (g.matched) status = "Use all " + n + " cards to finish";
     else if (g.used === n) status = "Target " + rFmt(b.target) + " · try another arrangement";
-    else status = "Tap a placed token to edit it";
+    else status = g.used + " of " + n + " cards placed";
   }
   return { value, word, status, bad, aria };
 }
@@ -1538,12 +1548,14 @@ function renderPlay() {
   $("pTargetBox").setAttribute("aria-label", "Target " + rFmt(b.target, true));
   // RESULT plaque: exact value; long values are shortened with an ellipsis and open a details dialog
   const rv = resultView(g);
-  const full = rv.value, long = !rv.word && full.length > 8;
+  const full = rv.value;
+  let long = !rv.word && full.length > 8;
   $("pResult").textContent = long ? full.slice(0, 6) + "…" : full;
   $("pResultV").classList.toggle("word", rv.word);
   const chk = $("pResultV").querySelector(".ico"); if (chk) chk.remove();
   if (g.solved) $("pResultV").insertAdjacentHTML("beforeend", ico("check"));
   const box = $("pResultBox");
+  if (!long && $("pResult").scrollWidth > $("pResult").clientWidth + 1) long = true; // CSS ellipsis kicked in
   box.setAttribute("aria-label", rv.aria || ("Result " + full.replace("−", "minus ") + (g.solved ? ", solved" : "") + (long ? ". Shortened, press for the full value" : "")));
   if (long) { box.tabIndex = 0; box.setAttribute("role", "button"); box.onclick = () => openDetail("Exact result", full); }
   else { box.removeAttribute("tabindex"); box.removeAttribute("role"); box.onclick = null; }
@@ -1591,6 +1603,7 @@ function renderPlay() {
   // status line (one line; longer text opens a details dialog)
   let status = rv.status, bad = rv.bad;
   if (review) { status = "Review · read only"; bad = false; }
+  else if (g.sel >= 0 && !g.solved && selOffPage(g)) status = "Selection on page " + (Math.floor(g.sel / per) + 1);
   else if (g.sel >= 0 && !g.solved) { const t = g.tokens[g.sel]; status = "Selected: " + (t.k === "n" ? b.cards.find((c) => c.id === t.id).value : SHOW[t.v]) + (t.k === "o" ? " · tap an operator to replace it" : ""); bad = false; }
   const st = $("status"); st.classList.toggle("bad", bad);
   $("statusTxt").textContent = status;
@@ -1611,11 +1624,11 @@ function renderPlay() {
     $("eGo").onclick = () => { ui.followCaret = true; render(); announce("Page " + sp + " of " + pages); };
   } else if (g.sel >= 0) {
     strip.innerHTML = `<button id="eBefore">Before</button><button id="eAfter">After</button><button id="eRemove">Remove</button><button id="eDone">Done</button>`;
-    $("eBefore").onclick = () => { g.caret = g.sel; g.sel = -1; ui.followCaret = true; render(); announce("Caret before position " + (g.caret + 1)); };
-    $("eAfter").onclick = () => { g.caret = g.sel + 1; g.sel = -1; ui.followCaret = true; render(); announce("Caret after position " + g.caret); };
+    $("eBefore").onclick = () => { g.caret = g.sel; g.sel = -1; g.caret0 = null; ui.followCaret = true; render(); announce("Caret before position " + (g.caret + 1)); };
+    $("eAfter").onclick = () => { g.caret = g.sel + 1; g.sel = -1; g.caret0 = null; ui.followCaret = true; render(); announce("Caret after position " + g.caret); };
     $("eRemove").onclick = () => doEdit(() => E.remove(g, g.sel), -1);
-    $("eDone").onclick = () => { g.sel = -1; render(); };
-  } else strip.innerHTML = `<span class="note">${total ? "Tap a placed token to select it" : "Place cards and operators at the caret"}</span>`;
+    $("eDone").onclick = () => { deselect(g); ui.followCaret = true; render(); };
+  } else strip.innerHTML = `<span class="note">${total ? "Tap a placed token to edit it" : "Place cards and operators at the caret"}</span>`;
   // caret: shown at the logical boundary when it is on this page
   placeCaret(g.solved ? -1 : g.caret, false);
   // source tray: five fixed slots
@@ -1630,7 +1643,7 @@ function renderPlay() {
     return el;
   }));
   // palette
-  const selOp = g.sel >= 0 && g.tokens[g.sel].k === "o";
+  const selOp = g.sel >= 0 && g.tokens[g.sel].k === "o" && !selOffPage(g);
   $("palette").classList.toggle("armed", selOp && !g.solved);
   $("palette").replaceChildren(...OPS.map((v) => {
     const el = document.createElement("button");
@@ -1741,21 +1754,29 @@ function onSolved() {
   clearTimeout(solveTimer);
   solveTimer = setTimeout(() => { if (ui.game === g && ui.screen === "play" && ui.view === "play") { show("done"); const s = $("dSeal"); s.classList.remove("pop"); void s.offsetWidth; s.classList.add("pop"); $("dHero").focus({ preventScroll: true }); } }, GEO.solveHoldMs);
 }
+// While a token is selected the caret is drawn right after it (atlas); Done / deselect puts the player's caret back.
+function select(g, i) { if (g.sel < 0) g.caret0 = g.caret; g.sel = i; g.caret = i + 1; }
+function deselect(g) { if (g.sel >= 0 && g.caret0 != null) g.caret = Math.min(g.caret0, g.tokens.length); g.sel = -1; g.caret0 = null; }
 function clickToken(i) {
   if (ui.dragged) { ui.dragged = false; return; }
   const g = ui.game; if (g.solved) return;
-  if (g.sel === i) g.sel = -1; else { g.sel = i; g.caret = i + 1; }
+  if (g.sel === i) deselect(g); else select(g, i);
   ui.followCaret = true; render();
   if (g.sel >= 0) announce($("statusTxt").textContent + ", position " + (i + 1));
 }
+// SPEC §4: while the selection is on another page, edits first bring it back into view instead of acting on a hidden token
+const selOffPage = (g) => g.sel >= 0 && Math.floor(g.sel / ui.geo.per) !== ui.page;
+function backToSelection(g) { ui.followCaret = true; render(); announce("Back to the selection on page " + (Math.floor(g.sel / ui.geo.per) + 1)); }
 function clickSource(id) {
   if (ui.dragged) { ui.dragged = false; return; }
   const g = ui.game; if (g.solved) return;
+  if (selOffPage(g)) return backToSelection(g);
   doEdit(() => E.card(g, id, g.caret));
 }
 function clickOp(v) {
   if (ui.dragged) { ui.dragged = false; return; }
   const g = ui.game; if (g.solved) return;
+  if (selOffPage(g)) return backToSelection(g);
   if (g.sel >= 0 && g.tokens[g.sel].k === "o") { const i = g.sel; doEdit(() => E.replace(g, i, v), i); return; }
   doEdit(() => E.op(g, v, g.caret));
 }
@@ -1857,7 +1878,7 @@ document.addEventListener("visibilitychange", () => { if (document.hidden && dra
 let digitBuf = "", digitT = 0;
 const anySheet = () => [...document.querySelectorAll(".sheet")].some((s) => !s.hidden);
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") { e.preventDefault(); if (!anySheet() && ui.screen === "play" && ui.game && ui.game.sel >= 0) { ui.game.sel = -1; render(); } else if (!anySheet() && ui.screen === "play" && ui.showHint) { ui.showHint = false; render(); } else goBack(); return; }
+  if (e.key === "Escape") { e.preventDefault(); if (!anySheet() && ui.screen === "play" && ui.game && ui.game.sel >= 0) { deselect(ui.game); ui.followCaret = true; render(); } else if (!anySheet() && ui.screen === "play" && ui.showHint) { ui.showHint = false; render(); } else goBack(); return; }
   if (anySheet()) return trapTab(e);
   if (ui.screen !== "play" || !ui.game) return;
   const g = ui.game, a = document.activeElement;
@@ -1880,10 +1901,11 @@ document.addEventListener("keydown", (e) => {
     else if (k === "Home") moveC(-len); else moveC(len);
     return;
   }
-  if (k === "Enter" && !onButton) { e.preventDefault(); if (g.sel >= 0) { g.caret = g.sel + 1; g.sel = -1; } else if (len) { g.sel = Math.max(0, Math.min(g.caret - 1, len - 1)); g.caret = g.sel + 1; } ui.followCaret = true; render(); if (g.sel >= 0) announce($("statusTxt").textContent); return; }
-  if (k === "Insert") { e.preventDefault(); if (g.sel >= 0) { g.caret = g.sel; g.sel = -1; render(); } return; }
+  if (k === "Enter" && !onButton) { e.preventDefault(); if (g.sel >= 0) { g.caret = g.sel + 1; g.sel = -1; g.caret0 = null; } else if (len) select(g, Math.max(0, Math.min(g.caret - 1, len - 1))); ui.followCaret = true; render(); if (g.sel >= 0) announce($("statusTxt").textContent); return; }
+  if (k === "Insert") { e.preventDefault(); if (g.sel >= 0) { g.caret = g.sel; g.sel = -1; g.caret0 = null; render(); } return; }
   if ((k === "Backspace" || k === "Delete") && !onButton) {
     e.preventDefault();
+    if (selOffPage(g)) return backToSelection(g);
     if (g.sel >= 0) doEdit(() => E.remove(g, g.sel), -1);
     else if (k === "Backspace" && g.caret > 0) doEdit(() => E.remove(g, g.caret - 1), -1);
     else if (k === "Delete" && g.caret < len) doEdit(() => E.remove(g, g.caret), -1);
@@ -1971,7 +1993,7 @@ for (const t of $("tabs").children) t.onclick = () => { ui.tab = t.dataset.tab; 
 $("pResultBox").addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && $("pResultBox").onclick) { e.preventDefault(); e.stopPropagation(); $("pResultBox").onclick(); } });
 $("well").addEventListener("click", (e) => { // tap empty space: deselect, or caret to the end of this page
   const g = ui.game; if (!g || g.solved || e.target.closest(".tok,button")) return;
-  if (g.sel >= 0) g.sel = -1; else g.caret = ui.pageEnd;
+  if (g.sel >= 0) deselect(g); else g.caret = ui.pageEnd;
   ui.followCaret = true; render();
 });
 let resizeT = 0;

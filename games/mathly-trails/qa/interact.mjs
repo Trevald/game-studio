@@ -123,6 +123,10 @@ const setToks = (page, li, toks) => page.evaluate(([li, toks]) => { __qa.reset(l
   await page.tap("#cells .tok[data-i='13']");
   await page.tap("#pgPrev");
   ok("browsing away from the selection shows Go to selection (no hidden delete)", await page.isVisible("#eGo") && !(await page.isVisible("#eRemove")));
+  { const b4 = (await st(page)).tokens.join(""); await page.tap("#palette button:nth-child(3)"); const s3 = await st(page);
+    ok("palette tap while the selection is off-page edits nothing and returns to it", s3.tokens.join("") === b4 && s3.layout.page === 1, s3.tokens.join(""));
+    await page.tap("#pgPrev"); await page.focus("#well"); await page.keyboard.press("Delete");
+    ok("Delete while the selection is off-page deletes nothing", (await st(page)).tokens.join("") === b4); await page.tap("#pgPrev"); }
   await page.tap("#eGo");
   s = await st(page);
   ok("Go to selection returns to page 2 with selection kept", s.layout.page === 1 && s.sel === 13);
@@ -199,6 +203,9 @@ const setToks = (page, li, toks) => page.evaluate(([li, toks]) => { __qa.reset(l
   await page.keyboard.press("Control+z");
   s = await st(page);
   ok("Ctrl+Z after restart restores the expression in one step", s.expression === "(4 + 3) * 3 + 3");
+  // selecting then Done keeps the player's caret (SPEC §4)
+  { const c0 = (await st(page)).caret; await page.click("#cells .tok[data-i='1']"); await page.click("#eDone"); const s4 = await st(page);
+    ok("select + Done leaves the caret where it was", s4.caret === c0 && s4.sel === -1, `${c0} → ${s4.caret}`); }
   // settings dialog does not get shortcuts
   await page.click("#sPlay [data-settings]");
   await page.keyboard.press("r"); await page.keyboard.press("+");
@@ -234,6 +241,29 @@ const setToks = (page, li, toks) => page.evaluate(([li, toks]) => { __qa.reset(l
   ok("hint opens inline without moving the tray or changing tokens", s.tokens.length === 0 && s.assisted && await page.isVisible("#hintPanel"));
   await page.screenshot({ path: path.join(shots, "390x844-hint.png") });
   ok("no JS errors (keyboard run)", errors.length === 0, errors.join(" | "));
+  await ctx.close();
+}
+
+// ---------- short landscape: section layout keeps the selection strip on screen ----------
+{
+  const { ctx, page, errors } = await open(568, 320, { touch: true });
+  await setToks(page, 8, ["n5", "+", "n2"]);
+  await page.tap("#cells .tok[data-i='0']");
+  const r = await page.evaluate(() => { const b = document.getElementById("eRemove").getBoundingClientRect(); return { bottom: b.bottom, h: innerHeight, mode: __qa.state().layout.mode, scroll: document.documentElement.scrollHeight - innerHeight }; });
+  ok("568×320: Before/After/Remove/Done visible without scrolling", r.bottom <= r.h && r.scroll <= 0, JSON.stringify(r));
+  await page.screenshot({ path: path.join(shots, "568x320-selected.png") });
+  await page.tap("#tabCards"); await page.screenshot({ path: path.join(shots, "568x320-cards.png") });
+  await page.tap("#tray > :nth-child(1)");
+  ok("568×320: tapping a card in Cards inserts it and returns to Expression", (await st(page)).layout.tab === "expr" && (await st(page)).tokens.length === 4);
+  await page.tap("#tabControls"); await page.screenshot({ path: path.join(shots, "568x320-controls.png") });
+  ok("no JS errors (568×320)", errors.length === 0, errors.join(" | "));
+  await ctx.close();
+}
+{
+  const { ctx, page } = await open(320, 568);
+  await setToks(page, 8, ["n5", "+"]);
+  const r = await page.evaluate(() => { const e = document.getElementById("pResult"); return { sw: e.scrollWidth, cw: e.clientWidth, t: e.textContent }; });
+  ok("320×568: RESULT word 'Incomplete' fits without truncation", r.sw <= r.cw + 1, JSON.stringify(r));
   await ctx.close();
 }
 
