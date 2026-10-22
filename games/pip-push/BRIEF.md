@@ -2,7 +2,7 @@
 title: Pip Push
 slug: pip-push
 idea_id: studio-pip-push
-artifact: <filled in after the first publish>
+artifact: https://claude.ai/artifact/VVo5tuwzGmbM7Qbq8sTsVQ
 ---
 
 # Pip Push
@@ -52,14 +52,15 @@ left, the left face comes up). Opposite faces add to 7. Four pushes in a straigh
 Getting the right number usually means a loop or sidestep, and walls limit which loops exist.
 
 ### Controls
-- Phone: swipe on the board (one step per swipe), tap any square in your row/column to step toward it, or use the
-  4-way pad under the board. Undo and Restart buttons always visible.
+- Phone: tap a free square to walk there (shortest path, never pushes, one Undo step), tap/swipe next to a die to
+  push it once, or use the 4-way pad under the board (hold to repeat). Undo and Restart buttons always visible.
 - Desktop: arrow keys / WASD, Z or Backspace = undo, R = restart, N = next level after a win. Mouse clicks work like taps.
 
 ### Progression
-10 hand-picked rooms from the generator (seeded random rooms; every reachable state explored; goal numbers chosen so
-the number matters). Order: 1 "First roll" (a corridor, three pushes, can't fail), 2-4 one die with growing detours,
-5 first two-dice level, then alternating 1-2 dice up to 80 steps / 22 pushes in level 10. All levels open from the
+10 hand-picked rooms from the generators in `lab/` (seeded random rooms; every reachable state explored; goal
+numbers chosen so the number matters; `gen2.mjs` also rejects solutions that repeat the same push loop). Order:
+1 "First roll" (a corridor, three pushes, can't fail), 2-5 one die (4, 3, 4, 9 pushes; level 4 teaches the
+"small loop turns a die" idea), 6 first two-dice level, then two dice up to 20 pushes / 77 steps in level 10. All levels open from the
 start (picker shows solved ones); progress saved in localStorage when available.
 
 ### Win / lose / restart
