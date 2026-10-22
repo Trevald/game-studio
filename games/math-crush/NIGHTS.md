@@ -1,5 +1,17 @@
 # Math Crush — night log
 
+## Night 2 follow-up — 2026-10-22 (Benji: "looks nothing like the design updates")
+
+The night-2 build followed HANDOVER.md/SCREENS.md text but the studio never opened the packet's reference images
+(`references/menus.jpg`, `references/gameplay-states.jpg`). Reworked every Match view against them: logo home with
+"A little maths. A lot of sweet." and 2 + 3 + 5 tiles, Candy trail drawn on the scenery (blue done nodes with stars,
+raspberry current, stone locked), compact Level card (Target box, Make N chains / Moves, Example, Let's play / Back),
+"Take a moment" pause with Restart|Levels and icon setting rows, "Sweet success!" with atlas stars and score box,
+"One more try?" with candy tiles, gameplay HUD + chains bar with hollow stars, pill sum card with ×N chip, status
+line, Hint/Undo pills, row-bonus popup. Kept the spec's corrections to the images (cream pause button, hollow stars
+in play, 1→12 order, Undo on Retry, no ambiguous X on Retry). Engine unchanged: playtest all pass, engine tests 53/53.
+Lesson for the runbook: look at every image in a hand-over before building.
+
 ## Night 2 — 2026-10-21
 
 **Job:** Benji's board note `math-crush-h001`: build the approved hand-over

@@ -26,6 +26,9 @@ Code commit / private playable URL: code at `c1621f4` on main (night-2 log commi
 ## Phone/desktop screenshots and interaction evidence
 `games/math-crush/qa/screens/` from `node games/math-crush/qa/screens.mjs`: phone 390×844, small 360×640, desktop 1280×800 and 150 % text (rem-scaled) for home, levels, intro, idle, selecting, exact chain with blast/reward preview, over target, after clear, wrong sum, pause, success, retry, confirm, tap mode, speed success. The script's audit found no targets under 44 px, no clipped labels, no horizontal overflow. Harness shots: `games/math-crush/qa/*.png`.
 
+## Correction 22 Oct — visual match to the references
+Benji reported the night-2 build did not look like the H-001-v1 references. Cause: the studio implemented from the written spec and did not open `references/menus.jpg` / `references/gameplay-states.jpg`. All six Match views and the gameplay states were redone against those images (see NIGHTS.md, "Night 2 follow-up"); the written corrections in SCREENS.md still win where the images differ. Engine, tests and data unchanged (playtest all pass, engine tests 53/53). New screenshots in `games/math-crush/qa/screens/`.
+
 ## Deviations, unresolved questions and proposed resolution
 1. **Question — MC-006 level 2 three stars are unreachable.** Level 2 (target 10, quota 3, moves 5) tops out at 687 points with any route (exhaustive search), against 900. All other levels reach 3★ (L1 1112, L3 1225, L4–12 1,725–3,300, about double the bar). Proposal: either set level 2's 3★ to 650 (and consider ~700 for L1/L3), or replace level 2's board under R2. Studio did not change data or thresholds.
 2. Deviation (layout): Match views use a flowing, scrollable page (max 480 px, centred on desktop) instead of the night-1 scaled 390×844 stage, so targets stay ≥44 px at 360×640 and text can grow 150 %. Geometry follows SCREENS.md proportions rather than exact pixel coordinates.

@@ -269,6 +269,125 @@
     .pbtn, .sbtn, .ibtn { transition: none; }
     .pbtn:active:not(:disabled), .sbtn:active:not(:disabled), .ibtn:active:not(:disabled) { transform: none; }
   }
+
+  /* ===== H-001-v1 look pass (references/menus.jpg + gameplay-states.jpg) ===== */
+  #flow { --sand: #F6E3C4; --inset: #F3E2C6; --blue: #2C7BE5; --blue2: #1557B0; }
+  .panel { border: 2px solid var(--edge); border-radius: 22px; box-shadow: 0 4px 0 rgba(176,120,70,.35), 0 8px 18px rgba(74,23,54,.18); }
+  .pbtn { border-radius: 999px; font-size: 1.375rem; letter-spacing: .2px; background: linear-gradient(#E43A78, #C81758 60%, #B0124D); text-shadow: 0 2px 0 rgba(110,10,45,.45); }
+  .sbtn { border-radius: 999px; border-width: 2px; }
+  .glow { text-shadow: 0 0 6px #FFF3DD, 0 0 12px #FFF3DD, 0 0 2px #FFF3DD; }
+  /* logo */
+  .logo2 { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 14px; }
+  .logo2 .w { display: block; font-size: 4.75rem; line-height: .92; font-weight: 900; letter-spacing: -1px; color: #FFD23F;
+    text-shadow: 6.0px 0.0px 0 var(--plum), 5.8px 1.6px 0 var(--plum), 5.2px 3.0px 0 var(--plum), 4.2px 4.2px 0 var(--plum), 3.0px 5.2px 0 var(--plum), 1.6px 5.8px 0 var(--plum), 0.0px 6.0px 0 var(--plum), -1.6px 5.8px 0 var(--plum), -3.0px 5.2px 0 var(--plum), -4.2px 4.2px 0 var(--plum), -5.2px 3.0px 0 var(--plum), -5.8px 1.6px 0 var(--plum), -6.0px 0.0px 0 var(--plum), -5.8px -1.6px 0 var(--plum), -5.2px -3.0px 0 var(--plum), -4.2px -4.2px 0 var(--plum), -3.0px -5.2px 0 var(--plum), -1.6px -5.8px 0 var(--plum), -0.0px -6.0px 0 var(--plum), 1.6px -5.8px 0 var(--plum), 3.0px -5.2px 0 var(--plum), 4.2px -4.2px 0 var(--plum), 5.2px -3.0px 0 var(--plum), 5.8px -1.6px 0 var(--plum), 0 10px 0 var(--plum), 0 16px 20px rgba(74,23,54,.35); }
+  .logo2 .w.b { color: #FF5FA2; margin-top: -2px; }
+  .ribbon { margin-top: 10px; padding: 6px 18px; border-radius: 14px; background: var(--cream); border: 2px solid var(--edge); font-weight: 900; font-size: 1.0625rem; box-shadow: 0 3px 0 rgba(176,120,70,.35); }
+  .eqrow { display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .eqrow .tile2 { width: 84px; height: 84px; font-size: 2.75rem; border-radius: 20px; box-shadow: 0 6px 12px rgba(74,23,54,.3); }
+  .eqrow .tile2:nth-child(1) { transform: rotate(-6deg); } .eqrow .tile2:nth-child(5) { transform: rotate(6deg); }
+  .opchip { width: 30px; height: 30px; border-radius: 50%; background: var(--rasp); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.25rem;
+    border: 2px solid #fff; box-shadow: 0 2px 0 #8F1647; flex: none; }
+  .opchip.eq { background: none; border: 0; box-shadow: none; color: var(--plum); font-size: 1.75rem; width: auto; }
+  .round { width: 48px; height: 48px; border-radius: 50%; }
+  /* trail on the scenery */
+  .trail2 { position: relative; width: 100%; height: 680px; }
+  .trail2 svg.road { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .node3 { position: absolute; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: #fff !important;
+    background: radial-gradient(circle at 35% 30%, #7FC0FF, var(--blue) 55%, var(--blue2)); border: 3px solid #fff; box-shadow: 0 4px 0 #0E3D80, 0 8px 14px rgba(20,40,90,.35);
+    text-shadow: 0 2px 0 rgba(10,40,100,.6); }
+  .node3.next { width: 68px; height: 68px; margin: -34px 0 0 -34px; font-size: 1.75rem; background: radial-gradient(circle at 35% 30%, #FF8DB8, var(--rasp) 55%, #96103F);
+    box-shadow: 0 5px 0 #7A0C33, 0 0 0 6px rgba(255,224,154,.85), 0 10px 18px rgba(74,23,54,.35); }
+  .node3.open { background: radial-gradient(circle at 35% 30%, #FFFFFF, #FFF3DD 60%, #E9BE8B); color: var(--plum) !important; text-shadow: none; box-shadow: 0 4px 0 #B0784A; }
+  .node3.locked { background: radial-gradient(circle at 35% 30%, #F2ECE6, #CFC3B8 60%, #A8998C); color: #6E5D52 !important; text-shadow: none; box-shadow: 0 4px 0 #85766A; border-color: #EFE7DF; }
+  .node3 .lock { position: absolute; left: 50%; bottom: -9px; margin-left: -11px; width: 22px; height: 22px; border-radius: 50%; background: #6E5D52; display: flex; align-items: center; justify-content: center; border: 2px solid #EFE7DF; }
+  .nstars { position: absolute; width: 72px; margin: 26px 0 0 -36px; display: flex; justify-content: center; gap: 0; pointer-events: none; }
+  .nstars svg { width: 20px; height: 20px; }
+  .nstars svg:nth-child(2) { margin-top: 4px; }
+  /* level card */
+  .lvcard { padding: 18px 18px 20px; gap: 12px; text-align: center; border-width: 3px; border-radius: 28px; }
+  .tbox { background: var(--inset); border-radius: 18px; padding: 8px; }
+  .tbox span { display: block; font-weight: 900; font-size: 1.125rem; }
+  .tbox b { display: block; font-size: 3.5rem; line-height: 1; font-weight: 900; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ibox { background: var(--inset); border-radius: 16px; padding: 8px 10px; display: flex; align-items: center; gap: 8px; justify-content: center; text-align: left; font-weight: 900; }
+  .ibox svg { width: 28px; height: 28px; flex: none; }
+  .ibox small { display: block; font-size: .875rem; color: var(--muted); font-weight: 800; }
+  .ibox b { font-size: 1.375rem; }
+  .ex .eqrow .tile2 { width: 48px; height: 48px; font-size: 1.625rem; border-radius: 12px; transform: none; box-shadow: none; }
+  .ex .opchip { width: auto; height: auto; background: none; border: 0; box-shadow: none; color: var(--plum); font-size: 1.5rem; }
+  .sline { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; font-weight: 900; font-size: .9375rem; }
+  /* gameplay */
+  .pz { width: 44px; height: 44px; border-radius: 14px; background: var(--cream); border: 2px solid var(--plum); color: var(--plum) !important; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 rgba(74,23,54,.45); padding: 0; }
+  .pz svg { width: 22px; height: 22px; }
+  .lvlname { text-align: center; font-weight: 900; font-size: 1.375rem; letter-spacing: 1px; text-transform: uppercase; display: flex; gap: 10px; align-items: center; justify-content: center; }
+  .hud { gap: 8px; grid-template-columns: 1fr 1.25fr 1fr; }
+  .hcard { min-height: 64px; padding: 2px 4px; border-radius: 16px; }
+  .hcard span { font-size: .9375rem; color: var(--plum); }
+  .hcard b { font-size: 1.875rem; }
+  .hcard.tgt b { font-size: 2.125rem; }
+  .qbar { min-height: 36px; display: flex; align-items: center; justify-content: space-between; padding: 2px 14px; border-radius: 999px; font-weight: 900; font-size: 1rem; }
+  .qbar .l { display: flex; align-items: center; gap: 8px; }
+  .qbar svg.chain { width: 22px; height: 22px; }
+  .qbar .stars svg { width: 22px; height: 22px; }
+  .qfill { width: 46px; height: 12px; border-radius: 6px; background: #EADBC6; overflow: hidden; }
+  .qfill i { display: block; height: 100%; background: var(--rasp); border-radius: 6px; }
+  #mboard { background: linear-gradient(#5A2440, #43162F); border: 3px solid #3A1028; box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 6px 14px rgba(74,23,54,.35); padding: 6px; gap: 6px; border-radius: 20px; }
+  .tile2 { border-radius: 14px; }
+  .tile2.sel::after { inset: -4px; border-width: 4px; border-color: #FFD23F; box-shadow: 0 0 12px 4px rgba(255,210,63,.9); }
+  .tile2 .badge2 { min-width: 18px; height: 18px; font-size: .6875rem; line-height: 14px; right: 2px; top: 2px; border-width: 1.5px; }
+  .sumrow { display: flex; align-items: center; gap: 8px; }
+  .sumrow .sumcard { flex: 1; min-height: 52px; border-radius: 999px; }
+  .sumcard .ex { font-size: 1.5rem; }
+  .mchip { flex: none; min-width: 54px; height: 44px; padding: 0 10px; border-radius: 999px; background: linear-gradient(#E43A78, #C81758); color: #fff; border: 2px solid #fff;
+    font-weight: 900; font-size: 1.375rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 #8F1647; }
+  .status { background: rgba(255,243,221,.82); border-radius: 18px; padding: 4px 14px; align-self: center; max-width: 100%; text-align: center; font-weight: 900; font-size: 1rem; line-height: 1.3; min-height: 42px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .status small { font-size: .8125rem; font-weight: 800; }
+  .status .earn { display: flex; align-items: center; gap: 8px; text-align: left; }
+  .candy-i { width: 30px; height: 30px; flex: none; }
+  .hintbar { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .pill { min-height: 48px; min-width: 132px; padding: 4px 20px; border-radius: 999px; background: var(--cream); border: 2px solid var(--edge); color: var(--plum) !important; font-weight: 900; font-size: 1.25rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 3px 0 rgba(176,120,70,.45); }
+  .pill svg { width: 24px; height: 24px; }
+  .pill:disabled { color: #A8919C !important; background: #F1E4D3; box-shadow: none; cursor: default; }
+  .pill.go { background: linear-gradient(#E43A78, #C81758); color: #fff !important; border-color: #8F1647; box-shadow: 0 3px 0 #8F1647; }
+  .pill.go:disabled { background: #E7D7C6; color: #8E7584 !important; border-color: #C9B3A3; box-shadow: none; }
+  .popup2 { position: absolute; left: 50%; top: var(--py, 8%); transform: translate(-50%, 0); z-index: 9; pointer-events: none; text-align: center; font-weight: 900; line-height: 1; white-space: nowrap;
+    animation: popup 1100ms ease-out forwards; }
+  .popup2 b { display: block; font-size: 2.75rem; color: #FFD23F; text-shadow: -3px 0 0 #4A1736, 3px 0 0 #4A1736, 0 -3px 0 #4A1736, 0 3px 0 #4A1736, -2px -2px 0 #4A1736, 2px -2px 0 #4A1736, -2px 2px 0 #4A1736, 2px 2px 0 #4A1736, 0 5px 0 #4A1736; }
+  .popup2 span { display: inline-block; margin-top: 4px; font-size: 1rem; color: #fff; background: var(--rasp); border: 2px solid #fff; border-radius: 999px; padding: 3px 10px; }
+  /* dialogs */
+  .mcm { background: rgba(74,23,54,.32); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+  .mcm .mcard { border-width: 3px; border-radius: 28px; text-align: center; position: relative; }
+  .mcm .h1 { font-size: 2rem; text-align: center; }
+  .xbtn { position: absolute; right: 10px; top: 10px; width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--edge); background: #fff; color: var(--plum) !important; padding: 0;
+    display: flex; align-items: center; justify-content: center; }
+  .xbtn svg { width: 18px; height: 18px; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .duo .sbtn { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 1.0625rem; padding: 6px 10px; }
+  .duo svg { width: 20px; height: 20px; flex: none; }
+  .setlist { display: flex; flex-direction: column; border-top: 2px solid #F0DCC0; border-bottom: 2px solid #F0DCC0; }
+  .setlist .switch { border: 0; border-radius: 0; background: none; padding: 6px 2px; }
+  .setlist .switch + .switch { border-top: 1px solid #F3E4CE; }
+  .setlist .switch .lab { display: flex; align-items: center; gap: 10px; }
+  .setlist .switch .lab svg { width: 24px; height: 24px; flex: none; }
+  .rowlink { display: flex; align-items: center; justify-content: space-between; min-height: 48px; width: 100%; border: 0; background: none; color: var(--plum) !important; font-weight: 800; font-size: 1rem; padding: 4px 2px; }
+  .rowlink .lab { display: flex; align-items: center; gap: 10px; }
+  .rowlink svg { width: 24px; height: 24px; }
+  .sweet { font-size: 2.25rem !important; color: var(--plum); letter-spacing: -.3px; }
+  .bigstars2 { display: flex; justify-content: center; align-items: flex-end; gap: 4px; }
+  .bigstars2 .st { width: 72px; height: 72px; background-repeat: no-repeat; }
+  .bigstars2 .st.mid { width: 92px; height: 92px; margin-bottom: 8px; }
+  .bigstars2 svg { width: 64px; height: 64px; } .bigstars2 svg.mid { width: 80px; height: 80px; margin-bottom: 8px; }
+  .scorebox { background: var(--inset); border-radius: 18px; padding: 6px; }
+  .scorebox span { font-weight: 900; font-size: 1.0625rem; } .scorebox b { display: block; font-size: 3rem; line-height: 1.05; font-weight: 900; }
+  .rows2 { background: var(--inset); border-radius: 16px; padding: 6px 14px; display: flex; flex-direction: column; font-weight: 800; }
+  .rows2 .row { justify-content: space-between; min-height: 30px; }
+  .rows2 .row + .row { border-top: 1px solid #E7D2B2; }
+  .trio { display: flex; justify-content: center; align-items: center; gap: 4px; padding: 10px 0 4px; }
+  .trio .tile2 { width: 66px; height: 66px; font-size: 2.25rem; border-radius: 16px; box-shadow: 0 6px 10px rgba(74,23,54,.3); }
+  .trio .tile2:nth-child(1) { transform: rotate(-8deg) translateY(4px); } .trio .tile2:nth-child(3) { transform: rotate(8deg) translateY(4px); }
+  @media (prefers-reduced-motion: reduce) { .popup2 { animation: fadeout 900ms steps(1, end) forwards; } }
+  @media (max-height: 700px) { .trail2 { height: 600px; } .logo2 .w { font-size: 3.5rem; } .eqrow .tile2 { width: 70px; height: 70px; font-size: 2.25rem; } }
 </style>
 </head>
 <body>
@@ -1092,63 +1211,96 @@ function mToast(t, ms = 2200) {
 }
 
 // ---------- views ----------
+const I2 = {
+  chain: `<svg class="chain" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="#C81758" stroke-width="2.8" stroke-linecap="round"/></svg>`,
+  cycle: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8a8 8 0 0 0-14-2M4 4v4h4M4 16a8 8 0 0 0 14 2M20 20v-4h-4" fill="none" stroke="#C81758" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  restart: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  list: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="4.5" cy="6" r="1.6" fill="currentColor"/><circle cx="4.5" cy="12" r="1.6" fill="currentColor"/><circle cx="4.5" cy="18" r="1.6" fill="currentColor"/></svg>`,
+  sound: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+  hand: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-5.5a1.5 1.5 0 0 1 3 0V12m0-3.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-5-2.7L4.2 14a1.6 1.6 0 0 1 2.6-1.8L8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  tap: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 7v9l-2-2M10 16l2 3h6l1-6-5-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  clock: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 9v4l3 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  help: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/></svg>`,
+  chev: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>`,
+  bulb: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.5.4.8 1 .8 1.7V17h6v-1c0-.7.3-1.3.8-1.7A6.5 6.5 0 0 0 12 2.5z" fill="#FFC21A" stroke="#B07800" stroke-width="1.4"/><path d="M9.5 19.5h5M10.5 22h3" stroke="#7A5A00" stroke-width="2" stroke-linecap="round"/></svg>`,
+  undo: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h10a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>`,
+  candy: (sp) => `<svg class="candy-i" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 16 2 11v10zM25 16l5-5v10z" fill="#FF5FA2" stroke="#4A1736" stroke-width="1.4" stroke-linejoin="round"/><circle cx="16" cy="16" r="9" fill="#fff" stroke="#4A1736" stroke-width="1.6"/>${sp === "wrapped" ? '<rect x="10" y="10" width="12" height="12" rx="2" fill="#C81758"/><path d="M10 16h12M16 10v12" stroke="#fff" stroke-width="2"/>' : '<path d="M9 12.5h14M8 16h16M9 19.5h14" stroke="#E3187A" stroke-width="2.4"/>'}</svg>`,
+};
+function atlasBg(name) {
+  const [x, y, w, h] = ATLAS.match[name], S = ATLAS_SIZE;
+  return `background-image:url(assets/match-atlas.webp);background-size:${(S / w * 100).toFixed(2)}% ${(S / h * 100).toFixed(2)}%;background-position:${(x / (S - w) * 100).toFixed(2)}% ${(y / (S - h) * 100).toFixed(2)}%;`;
+}
+function bigStar(on, mid) {
+  if (on && artState === "ok") return `<div class="st${mid ? " mid" : ""}" style="${atlasBg("star")}"></div>`;
+  return starSvg(on, mid ? "mid" : "");
+}
+function eqTiles(vals, target, ops = "+") {
+  let h = "";
+  vals.forEach((v, k) => { if (k) h += `<span class="opchip">${ops}</span>`; h += tileHtml(v, null); });
+  if (target !== undefined) h += `<span class="opchip eq">= ${target}</span>`;
+  return `<div class="eqrow">${h}</div>`;
+}
+
+// ---------- views ----------
 function mHome() {
   const act = activeAttempt(), st = progress.matchV2.stars.reduce((a, b) => a + b, 0);
-  let h = `<div class="mc-top"><button class="quiet" data-k="hub">‹ All modes</button><button class="ibtn" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
-  h += `<div class="logo"><div class="t" role="heading" aria-level="1">Math Crush</div><div class="m">Candy Match</div></div>`;
-  h += `<div class="panel vign"><div class="tiles" aria-hidden="true">${[[2, 1], [3, 2], [5, 3], [4], [6], [8, 0, "stripe"]].map((s) => tileHtml(s[0], s[2] || null, s[1] ? " sel" : "", s[1] ? `<span class="badge2">${s[1]}</span>` : "")).join("")}</div>
-    <p class="lede center-text">2 + 3 + 5 = 10</p><p class="small center-text" style="margin:0">Drag touching candies that add up to the target. Longer chains score more and leave special candies.</p></div>`;
-  h += `<div class="grow"></div>`;
+  let h = `<div class="mc-top"><button class="quiet" data-k="hub">‹ All modes</button><span class="panel small" style="padding:4px 12px;border-radius:999px">★ ${st} / 36</span></div>`;
+  h += `<div class="logo2"><h1 class="sr">Math Crush, Candy Match</h1><span class="w" aria-hidden="true"><span>Math</span></span><span class="w b" aria-hidden="true"><span>Crush</span></span>
+    <div class="ribbon">A little maths. A lot of sweet.</div></div>`;
+  h += `<div aria-label="Example: 2 plus 3 plus 5 makes 10" role="img" style="margin-top:22px">${eqTiles([2, 3, 5])}</div>`;
+  h += `<div style="height:28px"></div>`;
   if (act) {
     const g = act.g;
-    h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:15px;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} move${g.movesLeft === 1 ? "" : "s"} left` : "Saved attempt"}</span></button>`;
-    h += `<button class="sbtn" data-k="choose">Choose level</button>`;
+    h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:.9375rem;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} move${g.movesLeft === 1 ? "" : "s"} left` : "Saved attempt"}</span></button>`;
+    h += `<div class="row"><button class="sbtn grow" data-k="choose">Choose level</button><button class="ibtn round" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
   } else {
-    h += `<button class="pbtn" data-k="play">Play</button>`;
+    h += `<div class="row"><span style="width:48px"></span><button class="pbtn grow" data-k="play" style="min-height:64px;font-size:1.75rem">Play</button><button class="ibtn round" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
   }
-  h += `<div class="panel small center-text" style="padding:6px 12px;align-self:center">★ ${st} / 36 · 12 levels · No timer</div>`;
   return h;
 }
 function mLevels() {
   const P = progress.matchV2, U = progress.match.unlocked;
-  let h = `<div class="playtop"><button class="ibtn" data-k="home" aria-label="Back to home">${ICON.back}</button><h1 class="h1 lvl panel" style="font-size:24px">Candy trail</h1><span></span></div>`;
-  const xs = [18, 50, 82], pos = [];
-  for (let k = 0; k < 12; k++) { const r = Math.floor(k / 3), c = r % 2 ? 2 - (k % 3) : k % 3; pos.push([xs[c], 62 + r * 132]); }
-  h += `<div class="panel" style="padding:4px 8px"><div class="trail"><svg class="path" viewBox="0 0 100 540" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pos.map((p) => p.join(",")).join(" ")}" fill="none" stroke="#C81758" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity=".55"/></svg>`;
+  // a winding trail read in order 1→12 (SCREENS.md: correct the concept's 5–7 order)
+  const pos = [[18, 6], [44, 12], [70, 19], [84, 31], [60, 38], [34, 43], [14, 53], [36, 62], [62, 67], [84, 77], [60, 86], [32, 93]];
+  let h = `<div class="playtop"><button class="ibtn round" data-k="home" aria-label="Back to home">${ICON.back}</button><h1 class="h1 lvl panel" style="font-size:1.625rem;padding:4px 22px;border-radius:999px">Candy trail</h1><span></span></div>`;
+  const d = pos.map((p, k) => (k ? "L" : "M") + p[0] + " " + p[1] * 6.8).join(" ");
+  h += `<div class="trail2"><svg class="road" viewBox="0 0 100 680" preserveAspectRatio="none" aria-hidden="true">
+    <path d="${d}" fill="none" stroke="#B9875A" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".55"/>
+    <path d="${d}" fill="none" stroke="#F6E3C4" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    <path d="${d}" fill="none" stroke="#E2B98A" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
   for (let k = 0; k < 12; k++) {
-    const [x, y] = pos[k], locked = k + 1 > U, next = !locked && k + 1 === Math.min(U, 12) && !P.stars[k], st = P.stars[k];
+    const [x, yp] = pos[k], y = yp * 6.8, locked = k + 1 > U, next = !locked && k + 1 === Math.min(U, 12) && !P.stars[k], st = P.stars[k];
+    const cls = locked ? " locked" : next ? " next" : st ? "" : " open";
     const label = `Level ${k + 1}${locked ? ", locked. Complete level " + k + " to unlock" : st ? ", " + st + " of 3 stars" : next ? ", next level" : ", not completed with candy scoring yet"}`;
-    h += `<button class="node2${locked ? " locked" : ""}${next ? " next" : ""}" data-k="lvl-${k}" style="left:${x}%;top:${y}px" aria-label="${label}"${locked ? ' aria-disabled="true"' : ""}>${k + 1}${locked ? `<span class="lock">${ICON.lock}</span>` : ""}</button>`;
-    h += `<div class="nodecap" style="left:${x}%;top:${y}px" aria-hidden="true">${locked ? "Locked" : st ? "★".repeat(st) + "☆".repeat(3 - st) : next ? "Play" : "☆☆☆"}</div>`;
+    h += `<button class="node3${cls}" data-k="lvl-${k}" style="left:${x}%;top:${y}px" aria-label="${label}"${locked ? ' aria-disabled="true"' : ""}>${k + 1}${locked ? `<span class="lock">${ICON.lock}</span>` : ""}</button>`;
+    if (st) h += `<div class="nstars" style="left:${x}%;top:${y}px" aria-hidden="true">${[0, 1, 2].map((s) => starSvg(s < st)).join("")}</div>`;
   }
-  h += `</div></div>`;
+  h += `</div>`;
   return h;
 }
 function mIntro() {
   const li = ui.introLi, L = LEVELS.match[li], [t2, t3] = M.thresholds(L.quota), P = progress.matchV2;
   const ck = coachKey(li), showCoach = ck && !progress.coach2[ck];
   const ex = M.shortest(M.start(li)) || [0, 1];
-  let h = `<div class="playtop"><button class="ibtn" data-k="levels-back" aria-label="Back to levels">${ICON.back}</button><h1 class="h1 lvl panel mfocus" tabindex="-1" style="font-size:24px">Level ${li + 1}</h1><span></span></div>`;
-  h += `<div class="panel mcard">`;
-  h += `<div class="facts"><div class="fact"><b>${L.target}</b><span>Target</span></div><div class="fact"><b>${L.quota}</b><span>Chains</span></div><div class="fact"><b>${L.moves}</b><span>Moves</span></div></div>`;
-  h += `<p class="lede">Make ${L.quota} chains that add up to ${L.target} in ${L.moves} moves.</p>`;
-  h += `<div class="demo" aria-label="Example chain: ${ex.map((i) => L.values[i]).join(" plus ")} equals ${L.target}">${ex.map((i, k) => tileHtml(L.values[i], null, " sel", `<span class="badge2">${k + 1}</span>`)).join("")}</div>`;
-  h += `<div class="thresh"><div class="row"><span>${starRow(1)} Complete</span></div><div class="row"><span>${starRow(2)}</span><span>${t2} points</span></div><div class="row"><span>${starRow(3)}</span><span>${t3} points</span></div>
-    <div class="small" style="color:var(--muted)">Points: chains, blasts and 50 per unused move. Hints and Undo don't cost stars; the result just says Assisted.</div></div>`;
+  let h = `<div class="grow" style="max-height:24px"></div><div class="panel mcard lvcard">`;
+  h += `<h1 class="h1 mfocus" tabindex="-1" style="font-size:2.25rem">Level ${li + 1}</h1>`;
+  h += `<div class="tbox"><span>Target</span><b>${L.target}</b></div>`;
+  h += `<div class="pair"><div class="ibox">${I2.chain.replace('class="chain" ', "")}<span><small>Make</small><b>${L.quota} chains</b></span></div><div class="ibox">${I2.cycle}<span><small>Moves</small><b>${L.moves}</b></span></div></div>`;
+  h += `<div class="ex"><div class="small" style="font-weight:900;margin-bottom:6px">Example:</div><div role="img" aria-label="Example chain: ${ex.map((i) => L.values[i]).join(" plus ")} equals ${L.target}">${eqTiles(ex.map((i) => L.values[i]), L.target)}</div></div>`;
+  h += `<div class="sline"><span>${starRow(2)} ${t2}</span><span>${starRow(3)} ${t3}</span></div>`;
   const bits = [];
-  if (P.best[li]) bits.push(`Best: ${P.best[li]} ${starRow(P.stars[li])}${P.assisted[li] ? " (assisted)" : ""}`);
-  if (P.bestTimed[li]) bits.push(`Best with speed bonus: ${P.bestTimed[li]}`);
-  if (progress.match.best[li]) bits.push(`Legacy best (old scoring, not compared): ${progress.match.best[li]} · ${progress.match.stars[li]}★`);
-  if (bits.length) h += `<div class="small">${bits.join("<br>")}</div>`;
-  const sp = li < 3 ? "No special candies yet." : li < 6 ? "Chains of 4+ leave a striped candy." : "Chains of 4 leave a striped candy, 5+ a wrapped candy.";
-  h += `<p class="small" style="margin:0">Chains of 3 ×1.5 · 4 ×2 · 5–8 ×3. ${sp}</p>`;
+  if (P.best[li]) bits.push(`Best ${P.best[li]}${P.assisted[li] ? " (assisted)" : ""}`);
+  if (P.bestTimed[li]) bits.push(`with speed bonus ${P.bestTimed[li]}`);
+  if (progress.match.best[li]) bits.push(`Legacy best (old scoring, not compared): ${progress.match.best[li]}`);
+  if (bits.length) h += `<div class="small" style="color:var(--muted)">${bits.join(" · ")}</div>`;
   if (showCoach) {
     const C2 = COACH[ck];
-    h += `<div class="coachcard" role="note"><b style="font-size:18px">${C2.title}</b><span class="small">${C2.text}</span>
+    h += `<div class="coachcard" role="note" style="text-align:left"><b style="font-size:1.125rem">${C2.title}</b><span class="small">${C2.text}</span>
       <div class="demo" aria-hidden="true">${C2.demo.map((d, k) => tileHtml(d[0], d[1] || null, d[1] ? "" : " sel", d[1] ? "" : `<span class="badge2">${k + 1}</span>`)).join("")}</div>
       <span class="small center-text">${C2.foot}</span><div class="row"><button class="sbtn" data-k="coach-ok">Got it</button><button class="tbtn" data-k="coach-ok" aria-label="Skip tip">Skip</button></div></div>`;
   }
-  h += `</div><button class="pbtn" data-k="intro-play">Play</button><button class="sbtn" data-k="levels-back">Back to levels</button>`;
+  h += `<button class="pbtn" data-k="intro-play">Let’s play</button><button class="sbtn" data-k="levels-back">Back</button></div>`;
   return h;
 }
 function fmtClock(ms) { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
@@ -1160,40 +1312,38 @@ function mSumCard(g) {
     if (s === g.target && ch.length >= 2) status = tap ? "Submit to clear" : "Release to clear";
     else if (s === g.target) status = "Add one more candy";
     else if (s > g.target) status = tap ? "Too high · tap the last candy to step back" : "Too high · slide back to adjust";
-    else status = `${g.target - s} missing`;
+    else status = `${g.target - s} more to reach ${g.target}`;
     return { ex, status, over: s > g.target, exact: s === g.target && ch.length >= 2 };
   }
-  return { ex: `Make ${g.target}`, status: tap ? "Tap touching candies, then Submit" : "Drag through touching candies", over: false, exact: false };
-}
-function mFeedback(g, sc) {
-  const ch = ui.chain;
-  if (ch.length >= 2) {
-    const n = ch.length, pts = M.chainPoints(n), m = M.mult(n);
-    let h = `<span class="chip">${n} candies ×${m}</span>`;
-    if (sc.exact) {
-      const R = M.resolve(g, ch);
-      h += `<span>${M.base(n)}${m > 1 ? " ×" + m : ""} → ${pts} pts</span>`;
-      if (R.blastPts) h += `<span class="chip gold">+${R.blastPts} blast</span>`;
-      if (R.reward) h += `<span class="chip gold">Leaves a ${SPNAME[R.reward.type]} candy</span>`;
-    } else if (sc.over) h = `<span style="color:#9B1B1B">Wrong sum · releasing now costs 1 move</span>`;
-    else h += `<span>${pts} pts if it makes ${g.target}</span>`;
-    return h;
-  }
   const L = g.last;
+  if (L && L.type === "clear" && !ui.hintChain) return { ex: L.mult > 1 ? `Sweet chain! ×${L.mult}` : "Sweet!", status: "", over: false, exact: false, after: true };
+  if (L && L.type === "wrong" && !ui.hintChain) return { ex: `That makes ${L.sum}`, status: "", over: true, exact: false, after: true };
+  return { ex: `Make ${g.target}`, status: tap ? "Tap neighbouring candies, then Submit" : "Connect neighbouring candies", over: false, exact: false };
+}
+function mStatus(g, sc) {
+  const ch = ui.chain;
+  if (ch.length >= 2 && sc.exact) {
+    const R = M.resolve(g, ch);
+    const pts = `${M.base(ch.length)}${R.mult > 1 ? " × " + R.mult : ""} = ${R.chainPts} points${R.blastPts ? ` · +${R.blastPts} blast` : ""}`;
+    if (R.reward) return `<div class="earn">${I2.candy(R.reward.type)}<span>${R.reward.type === "stripe" ? "Striped" : "Wrapped"} candy earned<br><small>${pts}</small></span></div>`;
+    return `<span>${esc(sc.status)}</span><small>${R.blastPts ? "Specials blast extra candies · " : ""}${pts}</small>`;
+  }
+  if (ch.length >= 2 && sc.over) return `<span style="color:#9B1B1B">${esc(sc.status)}</span><small>Releasing now is a wrong sum and costs 1 move</small>`;
+  if (ch.length) return `<span>${esc(sc.status)}</span>${ch.length >= 2 ? `<small>${ch.length} candies ×${M.mult(ch.length)} if it makes ${g.target}</small>` : ""}`;
   if (ui.hintChain) return `<span>Hint: ${ui.hintChain.map((i) => g.cells[i].v).join(" + ")}</span>`;
-  if (L && L.type === "wrong") return `<span style="color:#9B1B1B">That makes ${L.sum} · 1 move used</span>`;
-  if (L && L.type === "clear") return `<span>+${L.chainPts} chain${L.blastPts ? ` · +${L.blastPts} blast` : ""}${L.reward ? ` · ${SPNAME[L.reward]} candy made` : ""}</span>`;
+  const L = g.last;
+  if (L && L.type === "wrong") return `<span style="color:#9B1B1B">1 move used</span><small>Try another way to make ${g.target}</small>`;
+  if (L && L.type === "clear") return `<span>+${L.chainPts} chain${L.blastPts ? ` · +${L.blastPts} blast` : ""}</span><small>${L.reward ? (L.reward === "stripe" ? "Striped" : "Wrapped") + " candy made · new candies incoming" : "New candies incoming"}</small>`;
   if (L && L.type === "undo") return `<span>Move undone</span>`;
   if (ui.refreshedNote) return `<span>Board refreshed</span>`;
-  return `<span>Chains of 3+ multiply your points</span>`;
+  return `<span>${esc(sc.status)}</span>`;
 }
 function mPlay() {
   const g = ui.game, sc = mSumCard(g), ch = ui.chain, tap = progress.settings.tap || ui.kbd;
-  let h = `<div class="playtop"><button class="ibtn" data-k="pause" aria-label="Pause">${ICON.pause}</button>
-    <div class="lvl panel" role="heading" aria-level="1">Level ${g.li + 1}${g.speed ? `<span class="clock" id="mclock" aria-label="Active time">${fmtClock(g.elapsed)}</span>` : ""}</div><span></span></div>`;
+  let h = `<div class="playtop"><button class="pz" data-k="pause" aria-label="Pause">${ICON.pause}</button>
+    <div class="lvlname glow" role="heading" aria-level="1">Level ${g.li + 1}${g.speed ? `<span class="clock" id="mclock" aria-label="Active time">${fmtClock(g.elapsed)}</span>` : ""}</div><span></span></div>`;
   h += `<div class="hud"><div class="hcard panel"><span>Moves</span><b>${g.movesLeft}</b></div><div class="hcard panel tgt"><span>Target</span><b>${g.target}</b></div><div class="hcard panel"><span>Score</span><b>${M.score(g)}</b></div></div>`;
-  h += `<div class="quota panel" aria-label="${g.made} of ${g.quota} chains made">${Array.from({ length: g.quota }, (_, k) => `<i class="qdot${k < g.made ? " on" : ""}"></i>`).join("")}<span>Chains ${g.made} / ${g.quota}</span></div>`;
-  // board
+  h += `<div class="qbar panel" aria-label="${g.made} of ${g.quota} chains made. Stars are awarded at the end."><span class="l">${g.made ? `<span class="qfill"><i style="width:${Math.round(100 * g.made / g.quota)}%"></i></span>` : I2.chain}${g.made} / ${g.quota} chains</span><span class="stars" aria-hidden="true">${[0, 1, 2].map(() => starSvg(false)).join("")}</span></div>`;
   const exact = sc.exact, prev = exact ? M.resolve(g, ch) : null, blastSet = new Set(prev ? prev.blastOnly : []);
   const from = ui.dropFrom, freshCol = {};
   if (from) g.cells.forEach((c, i) => { if (!(c.id in from)) freshCol[i % g.cols] = (freshCol[i % g.cols] || 0) + 1; });
@@ -1220,7 +1370,7 @@ function mPlay() {
     const cxy = (i) => [(i % g.cols) * 70 + 31, Math.floor(i / g.cols) * 70 + 31];
     let segs = "";
     for (let k = 1; k < ch.length; k++) { const [ax, ay] = cxy(ch[k - 1]), [bx, by] = cxy(ch[k]); segs += `M${ax + (bx - ax) * 0.32} ${ay + (by - ay) * 0.32}L${ax + (bx - ax) * 0.68} ${ay + (by - ay) * 0.68}`; }
-    trace = `<svg class="trace" viewBox="0 0 342 342" preserveAspectRatio="none" aria-hidden="true"><path d="${segs}" fill="none" stroke="#4A1736" stroke-width="14" stroke-linecap="round"/><path d="${segs}" fill="none" stroke="${sc.over ? "#E8890C" : "#FFE09A"}" stroke-width="8" stroke-linecap="round"/></svg>`;
+    trace = `<svg class="trace" viewBox="0 0 342 342" preserveAspectRatio="none" aria-hidden="true"><path d="${segs}" fill="none" stroke="#B07800" stroke-width="14" stroke-linecap="round"/><path d="${segs}" fill="none" stroke="${sc.over ? "#E8890C" : "#FFD23F"}" stroke-width="9" stroke-linecap="round"/></svg>`;
   }
   let ghosts = "";
   if (ui.ghosts) {
@@ -1228,53 +1378,64 @@ function mPlay() {
     ui.ghosts = null;
   }
   let popup = "";
-  if (ui.popup) { popup = `<div class="popup" aria-hidden="true">+${ui.popup.chainPts}${ui.popup.blastPts ? ` <small>chain · +${ui.popup.blastPts} blast</small>` : ""}</div>`; ui.popup = null; }
+  if (ui.popup) {
+    const p = ui.popup, py = Math.max(2, Math.min(70, p.row * 20 - 4));
+    popup = `<div class="popup2" style="--py:${py}%" aria-hidden="true"><b>${p.chainPts + p.blastPts}</b>${p.blastPts ? `<span>+${p.blastPts} blast bonus</span>` : ""}</div>`;
+    ui.popup = null;
+  }
   h += `<div class="boardwrap"><div id="mboard" tabindex="0" role="grid" aria-label="Candy board, 5 by 5. Target ${g.target}.">${cells}${trace}</div>${ghosts}${popup}</div>`;
-  h += `<div class="sumcard panel${sc.over ? " over" : ""}" aria-hidden="true"><div class="ex">${esc(sc.ex)}</div><div class="small" style="color:${sc.over ? "#9B1B1B" : sc.exact ? "#1E6B2E" : "var(--muted)"}">${esc(sc.status)}</div></div>`;
-  h += `<div class="feedback panel">${mFeedback(g, sc)}</div>`;
-  h += `<div class="footer"><button class="sbtn" data-k="hint">Hint</button><button class="sbtn" data-k="undo"${g.hist.length && g.status === "playing" ? "" : " disabled"}>Undo</button>`;
-  if (tap) h += `<button class="sbtn" data-k="clearsel"${ch.length ? "" : " disabled"}>Clear</button><button class="pbtn" data-k="submit"${ch.length >= 2 ? "" : " disabled"}>Submit</button>`;
+  const multNow = ch.length >= 2 ? M.mult(ch.length) : 1;
+  h += `<div class="sumrow" aria-hidden="true"><div class="sumcard panel${sc.over && ch.length ? " over" : ""}"><div class="ex">${esc(sc.ex)}</div></div>${multNow > 1 ? `<span class="mchip">×${multNow}</span>` : ""}</div>`;
+  h += `<div class="status glow">${mStatus(g, sc)}</div>`;
+  h += `<div class="hintbar"><button class="pill" data-k="hint">${I2.bulb}Hint</button><button class="pill" data-k="undo"${g.hist.length && g.status === "playing" ? "" : " disabled"} aria-label="Undo last move">${I2.undo}Undo</button>`;
+  if (tap) h += `<button class="pill" data-k="clearsel"${ch.length ? "" : " disabled"}>Clear</button><button class="pill go" data-k="submit"${ch.length >= 2 ? "" : " disabled"}>Submit</button>`;
   h += `</div>`;
   if (saveFailed || !storageOk) h += `<div class="banner panel small" role="status">Progress could not be saved on this device. Play continues.</div>`;
   return h;
 }
-function switchBtn(k, label, on, note) {
-  return `<button class="switch" role="switch" data-k="${k}" aria-checked="${on}"><span>${label}${note ? `<small>${note}</small>` : ""}</span><span class="kn" aria-hidden="true"></span></button>`;
+function switchBtn(k, label, on, note, icon) {
+  return `<button class="switch" role="switch" data-k="${k}" aria-checked="${on}"><span class="lab">${icon || ""}<span>${label}${note ? `<small>${note}</small>` : ""}</span></span><span class="kn" aria-hidden="true"></span></button>`;
 }
 function settingsRows() {
   const S = progress.settings;
-  return switchBtn("snd", "Sound", !!S.sound) + switchBtn("hap", "Haptics", !!S.haptics) +
-    switchBtn("tap", "Tap to select", !!S.tap, "Tap touching candies, then Submit") +
-    switchBtn("speed", "Speed bonus (experimental)", !!S.speed, "No countdown. Applies from your next attempt.");
+  return `<div class="setlist">` + switchBtn("snd", "Sound", !!S.sound, "", I2.sound) + switchBtn("hap", "Haptics", !!S.haptics, "", I2.hand) +
+    switchBtn("tap", "Tap to select", !!S.tap, "Tap candies, then Submit", I2.tap) +
+    switchBtn("speed", "Speed bonus (experimental)", !!S.speed, "No countdown · next attempt", I2.clock) + `</div>` +
+    `<button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button>`;
 }
 function mModal() {
   const g = ui.game, mod = ui.modal;
-  const head = (t) => `<h2 class="h1 mfocus${ui.screen === "play" && g && g.status !== "playing" && !mod ? " center-text" : ""}" tabindex="-1" id="mhead">${t}</h2>`;
+  const head = (t, cls = "") => `<h2 class="h1 mfocus ${cls}" tabindex="-1" id="mhead">${t}</h2>`;
   let body = null;
-  if (mod === "pause") body = head("Paused") + `<button class="pbtn" data-k="resume">Resume</button><button class="sbtn" data-k="restart">Restart</button><button class="sbtn" data-k="levels">Levels</button>${settingsRows()}<button class="tbtn" data-k="help">How to play</button>`;
-  else if (mod === "settings") body = head("Settings") + settingsRows() + `<button class="tbtn" data-k="help">How to play</button><button class="pbtn" data-k="closeset">Done</button>`;
+  if (mod === "pause") body = `<button class="xbtn" data-k="resume" aria-label="Close and resume">${I2.x}</button>` + head("Take a moment") + `<button class="pbtn" data-k="resume">Resume</button>
+    <div class="duo"><button class="sbtn" data-k="restart">${I2.restart}Restart</button><button class="sbtn" data-k="levels">${I2.list}Levels</button></div>${settingsRows()}`;
+  else if (mod === "settings") body = `<button class="xbtn" data-k="closeset" aria-label="Close settings">${I2.x}</button>` + head("Settings") + settingsRows() + `<button class="pbtn" data-k="closeset">Done</button>`;
   else if (mod === "confirm-restart" || mod === "confirm-levels") body = head(mod === "confirm-restart" ? "Restart this level?" : "Leave this level?") +
     `<p class="lede">This attempt's chains and moves will be lost.</p><button class="pbtn" data-k="confirm">${mod === "confirm-restart" ? "Restart level" : "Leave level"}</button><button class="sbtn" data-k="cancel">Cancel</button>`;
-  else if (mod === "help") body = head("How to play") + `<p class="lede">Drag through touching candies (no diagonals) so the numbers add up to the target, then let go. Slide back onto the previous candy to undo a step.</p>
-    <p class="small" style="margin:0">A wrong sum uses a move. Lifting on one candy is free. Chains of 3 score ×1.5, 4 ×2, 5–8 ×3. Striped candies clear their row, wrapped candies their 3×3 square, for +25 per extra candy. Undo and Hint are always free; the result marks them Assisted.</p>
-    <p class="small" style="margin:0">Keys: arrows move, Space adds (or steps back), Enter submits, Backspace removes the last, U undo, H hint, Esc pause.</p><button class="pbtn" data-k="closehelp">Back</button>`;
+  else if (mod === "help") body = head("How to play") + `<div role="img" aria-label="2 plus 3 plus 5 makes 10">${eqTiles([2, 3, 5], 10)}</div><p class="lede" style="text-align:left">Drag through neighbouring candies (no diagonals) so the numbers add up to the target, then let go. Slide back onto the previous candy to undo a step.</p>
+    <p class="small" style="margin:0;text-align:left">A wrong sum uses a move; lifting on one candy is free. Chains of 3 score ×1.5, 4 ×2, 5–8 ×3. Striped candies clear their row, wrapped candies their 3×3 square, +25 per extra candy. Undo and Hint are free; the result marks them Assisted.</p>
+    <p class="small" style="margin:0;text-align:left">Keys: arrows move, Space adds (or steps back), Enter submits, Backspace removes the last, U undo, H hint, Esc pause.</p><button class="pbtn" data-k="closehelp">Back</button>`;
   else if (mod === "restore-error") body = head("Could not restore this attempt") + `<p class="lede">The saved game was damaged. Your unlocked levels and stars are safe.</p><button class="pbtn" data-k="restore-start">Start level ${(ui.restoreLi || 0) + 1}</button><button class="sbtn" data-k="restore-levels">Levels</button>`;
   else if (ui.screen === "play" && g && g.status === "won") {
     const st = M.stars(g), [t2, t3] = M.thresholds(g.quota), core = M.core(g);
-    body = `<div class="bigstars" aria-hidden="true">${[0, 1, 2].map((k) => starSvg(k < st, k === 1 ? "mid" : "")).join("")}</div>` + head(g.li === 11 ? "All 12 levels done!" : "Level complete!") +
-      `<p class="small center-text" style="margin:0">${st} of 3 stars${g.assisted ? ' · <span class="chip">Assisted</span>' : ""}</p>
-      <div class="scorerows"><div class="row"><span>Chain points</span><span>${g.chainPts}</span></div><div class="row"><span>Blast points</span><span>${g.blastPts}</span></div>
-      <div class="row"><span>Moves bonus</span><span>${g.finish}</span></div><div class="row tot"><span>Score</span><span>${core}</span></div>
+    body = head("Sweet success!", "sweet") + `<div class="bigstars2" aria-hidden="true">${[0, 1, 2].map((k) => bigStar(k < st, k === 1)).join("")}</div>
+      <div style="font-weight:900;font-size:1.25rem">${g.li === 11 ? "All 12 levels complete" : `Level ${g.li + 1} complete`}</div>
+      <p class="sr">${st} of 3 stars</p>${g.assisted ? '<div><span class="chip">Assisted</span></div>' : ""}
+      <div class="scorebox"><span>Score</span><b>${core}</b></div>
+      <div class="rows2"><div class="row"><span>Chain points</span><span>${g.chainPts}</span></div>${g.blastPts ? `<div class="row"><span>Blast points</span><span>${g.blastPts}</span></div>` : ""}<div class="row"><span>Moves bonus</span><span>${g.finish}</span></div>
       ${g.speed ? `<div class="row"><span>Speed bonus <small>(${fmtClock(g.elapsed)}, not in stars)</small></span><span>+${g.speedBonus}</span></div>` : ""}</div>
-      <p class="small center-text" style="margin:0">${core >= t3 ? "Three-star score reached!" : core >= t2 ? `${t3 - core} more for ★★★ (${t3})` : `${t2 - core} more for ★★ (${t2}) · ★★★ at ${t3}`}</p>` +
+      <p class="small" style="margin:0">${core >= t3 ? "Three-star score!" : core >= t2 ? `${t3 - core} more for ★★★ (${t3})` : `★★ at ${t2} · ★★★ at ${t3}`}</p>` +
       (g.li === 11 ? `<button class="pbtn" data-k="levels2">Back to levels</button><button class="sbtn" data-k="retry">Play again</button>` : `<button class="pbtn" data-k="next">Next level</button><button class="sbtn" data-k="levels2">Levels</button>`);
   } else if (ui.screen === "play" && g && g.status === "lost") {
-    body = head("One more try?") + `<p class="lede">You made ${g.made} of ${g.quota} chains before the moves ran out.</p><button class="pbtn" data-k="retry">Try again</button>
-      ${g.hist.length ? `<button class="sbtn" data-k="undo2">Undo last move</button>` : ""}<button class="tbtn" data-k="levels2">Levels</button>`;
+    const trio = (g.last && g.last.chain ? g.last.chain.map((i) => g.cells[i].v) : []).concat([6, 3, 5]).slice(0, 3);
+    body = head("One more try?") + `<p class="lede">You made ${g.made} of ${g.quota} chains.</p><div class="trio" aria-hidden="true">${trio.map((v) => tileHtml(v, null)).join("")}</div>
+      <p class="lede">Find another way to make ${g.target}.</p><button class="pbtn" data-k="retry">Try again</button>
+      ${g.hist.length ? `<button class="sbtn" data-k="undo2">Undo last move</button>` : ""}<button class="sbtn" data-k="levels2">Levels</button>`;
   }
   if (!body) return "";
   return `<div class="mcm" role="dialog" aria-modal="true" aria-labelledby="mhead"><div class="panel mcard">${body}</div></div>`;
 }
+
 function renderFlow() {
   const focusKey = document.activeElement && flowEl.contains(document.activeElement) && document.activeElement.dataset ? document.activeElement.dataset.k : null;
   let h = `<div class="mc">`;
@@ -1348,7 +1509,7 @@ function mCommit(chain) {
     sfx.good(); buzz(15);
     if (ev.blastPts) setTimeout(() => tone(330, 0.18, "square", 0.05), 60);
     ui.ghosts = ev.removed;
-    ui.popup = { chainPts: ev.chainPts, blastPts: ev.blastPts };
+    ui.popup = { chainPts: ev.chainPts, blastPts: ev.blastPts, mult: ev.mult, row: Math.min(...ev.removed.map((t) => Math.floor(t.i / 5))) };
     if (g.status === "playing") {
       ui.dropFrom = {}; before.cells.forEach((c, i) => { ui.dropFrom[c.id] = i; });
       if (ev.reward) ui.rewardId = g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId) ? g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId).id : null;
