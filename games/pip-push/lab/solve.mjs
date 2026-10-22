@@ -28,4 +28,4 @@ export function pushes(lv, path) {
   for (const d of path) { const r = step(L, pl, dice, d); if (r.push) n++; pl = r.player; dice = r.dice; }
   return n;
 }
-if (process.argv[2]) { const lv = JSON.parse(process.argv[2]); const p = solve(lv); console.log(JSON.stringify({ sol: p, moves: p && p.length, pushes: p && pushes(lv, p) })); }
+if (import.meta.url === `file://${process.argv[1]}` && process.argv[2]) { const lv = JSON.parse(process.argv[2]); const p = solve(lv); console.log(JSON.stringify({ sol: p, moves: p && p.length, pushes: p && pushes(lv, p) })); }

@@ -1,11 +1,11 @@
 {
   "game": "games/pip-push/index.html",
-  "at": "2026-10-22T20:54:18.742Z",
+  "at": "2026-10-22T21:01:14.035Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "36 KB"
+      "detail": "38 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -50,12 +50,12 @@
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 8"
+      "detail": "screens seen: playing, won; resets: 12"
     },
     {
       "name": "every level completable via solve() (10 levels)",
       "ok": true,
-      "detail": "L1:3 L2:13 L3:17 L4:34 L5:28 L6:51 L7:45 L8:56 L9:60 L10:80"
+      "detail": "L1:3 L2:13 L3:17 L4:13 L5:33 L6:28 L7:48 L8:39 L9:64 L10:77"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 1"
+      "detail": "screens seen: playing, won; resets: 4"
     },
     {
       "name": "[phone] no console errors or exceptions",
@@ -145,43 +145,43 @@
     {
       "lv": 3,
       "ok": true,
-      "moves": 34,
+      "moves": 13,
       "screen": "won"
     },
     {
       "lv": 4,
       "ok": true,
-      "moves": 28,
+      "moves": 33,
       "screen": "won"
     },
     {
       "lv": 5,
       "ok": true,
-      "moves": 51,
+      "moves": 28,
       "screen": "won"
     },
     {
       "lv": 6,
       "ok": true,
-      "moves": 45,
+      "moves": 48,
       "screen": "won"
     },
     {
       "lv": 7,
       "ok": true,
-      "moves": 56,
+      "moves": 39,
       "screen": "won"
     },
     {
       "lv": 8,
       "ok": true,
-      "moves": 60,
+      "moves": 64,
       "screen": "won"
     },
     {
       "lv": 9,
       "ok": true,
-      "moves": 80,
+      "moves": 77,
       "screen": "won"
     }
   ],
