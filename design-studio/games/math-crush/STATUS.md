@@ -3,6 +3,8 @@ Updated: 2026-10-23. **Sweet play v1 is a draft design exploration for owner rev
 
 ## Current design review
 
+**Publication: local only.** Design package committed as `f08c18f` on main. Push to `origin/main` was rejected by automatic approval review because destination-specific user authorization was not established by that review. Remote publication awaits explicit user authorization; no workaround attempted.
+
 - Review: `explorations/sweet-play-v1/index.html` (seven interactive scenes), `overview.html`, `DESIGN.md` (MC-010–019), and `VALIDATION.md`.
 - Captures: `explorations/sweet-play-v1/previews/`. Related playtest: root `games/math-crush/qa/playtest-2026-10-22.md`.
 - Decision record: `decisions/ADR-002-play-first.md`. Owner requested learn-through-play and designs covering tips, special blocks, tools, temporary bonuses, achievements and speed/star changes. Exact chat wording and approval boundary are recorded there. Individual mechanics and constants remain proposed.
