@@ -3,7 +3,7 @@ Updated: 2026-10-23. **Sweet play v1 is a draft design exploration for owner rev
 
 ## Current design review
 
-**Publication: local only.** Design package committed as `f08c18f` on main. Push to `origin/main` was rejected by automatic approval review because destination-specific user authorization was not established by that review. Remote publication awaits explicit user authorization; no workaround attempted.
+**Publication authorized.** Design package: `f08c18f` on main. After the initial automatic approval rejection, Benji explicitly replied “Push” in Codex chat `01a16481-97fa-7390-92c7-f627ee7ecc0a` on 23 October 2026 to the request to publish these designs and playtest evidence to `Trevald/game-studio → main`. This authorizes remote publication of the package and checkpoint; it does not approve implementation of the draft mechanics.
 
 - Review: `explorations/sweet-play-v1/index.html` (seven interactive scenes), `overview.html`, `DESIGN.md` (MC-010–019), and `VALIDATION.md`.
 - Captures: `explorations/sweet-play-v1/previews/`. Related playtest: root `games/math-crush/qa/playtest-2026-10-22.md`.
