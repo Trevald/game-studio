@@ -56,6 +56,8 @@
   .tip b { color: var(--ink); }
   .tip.hint { color: var(--ink); }
   .tip.hint b { color: var(--player); }
+  .tipbtn { margin-left: 6px; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--player); background: var(--btn); color: var(--btn-ink); font: 600 14px var(--font); cursor: pointer; }
+  @media (pointer: coarse) { .keys { display: none; } }
   .controls { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; }
   .controls .big { width: 100%; max-width: 130px; padding: 0 8px; }
   .pad { display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(2, 48px); gap: 6px; }
@@ -206,7 +208,7 @@ function parseLevel(i) {
 }
 function newGame(level) {
   const lv = parseLevel(level);
-  return { level, lv, player: lv.start.player.slice(), dice: lv.start.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: 0, pushes: 0, hints: 0, screen: "playing", history: [] };
+  return { level, lv, player: lv.start.player.slice(), dice: lv.start.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: 0, pushes: 0, hints: 0, screen: "playing", dead: false, deadAt: -1, history: [] };
 }
 const isWall = (g, x, y) => x < 0 || y < 0 || x >= g.lv.w || y >= g.lv.h || g.lv.walls.has(y * g.lv.w + x);
 const dieAt = (g, x, y) => g.dice.findIndex((d) => d.x === x && d.y === y);
@@ -224,7 +226,7 @@ function tryMove(g, d) {
   if (isWall(g, bx, by) || dieAt(g, bx, by) >= 0) return { ok: false, reason: "blocked", dieIndex: di };
   return { ok: true, push: true, dieIndex: di };
 }
-const snapshot = (g) => ({ player: g.player.slice(), dice: g.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: g.moves, pushes: g.pushes, screen: g.screen });
+const snapshot = (g) => ({ player: g.player.slice(), dice: g.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: g.moves, pushes: g.pushes, screen: g.screen, dead: !!g.dead, deadAt: g.deadAt ?? -1 });
 function applyMove(g, d) {
   const r = tryMove(g, d);
   if (!r.ok) return { g, r };
@@ -247,9 +249,16 @@ function restart(g) {
   if (g.moves === 0 && g.history.length === 0) return { ...fresh, hints: g.hints };
   return { ...fresh, hints: g.hints, history: g.history.concat([snapshot(g)]) }; // restart is undoable; hint count stays
 }
+// back to the position just before the push that made the level unfinishable (one step, undoable like any undo)
+function rewind(g) {
+  if (!g.dead || g.deadAt < 0 || g.deadAt >= g.history.length) return g;
+  const s = g.history[g.deadAt];
+  return { ...g, ...snapshot(s), history: g.history.slice(0, g.deadAt) };
+}
 function legalActions(g) {
   const out = g.screen === "playing" ? Object.keys(DIRS).filter((d) => tryMove(g, d).ok) : [];
   if (g.history.length) out.push("undo");
+  if (g.dead && g.deadAt >= 0) out.push("rewind");
   if (g.moves > 0 || g.history.length) out.push("restart");
   return out;
 }
@@ -321,21 +330,32 @@ function planFrom(g, moves) {
   }
   return plan;
 }
-function findHint(g, plan) {
-  if (g.screen !== "playing") return { hint: null, plan };
-  if (plan) {
-    const sig = diceSig(g.dice), i = plan.findIndex((q) => q.sig === sig);
-    if (i >= 0) { const q = plan[i]; const here = g.player[0] === q.stand[0] && g.player[1] === q.stand[1];
-      if (here || walkPath(g, q.stand[0], q.stand[1])) return { hint: { stand: q.stand.slice(), d: q.d, die: q.die, left: plan.length - i }, plan }; }
+const solverInput = (g, cap) => { const w = g.lv.w; return { w, h: g.lv.h, walls: g.lv.walls, goals: g.lv.goals.map((q) => ({ p: q.y * w + q.x, n: q.n })),
+  player: g.player[1] * w + g.player[0], dice: g.dice.map((d) => ({ p: d.y * w + d.x, o: d.o.slice() })), cap }; };
+// a hint from a known minimum-push plan, without searching (null if the position isn't on any plan)
+function planHint(g, plans) {
+  const sig = diceSig(g.dice);
+  for (const plan of plans) {
+    if (!plan) continue;
+    const i = plan.findIndex((q) => q.sig === sig); if (i < 0) continue;
+    const q = plan[i], here = g.player[0] === q.stand[0] && g.player[1] === q.stand[1];
+    if (here || walkPath(g, q.stand[0], q.stand[1])) return { hint: { stand: q.stand.slice(), d: q.d, die: q.die, left: plan.length - i }, plan };
   }
-  const w = g.lv.w;
-  const r = pushSolve({ w, h: g.lv.h, walls: g.lv.walls, goals: g.lv.goals.map((q) => ({ p: q.y * w + q.x, n: q.n })),
-    player: g.player[1] * w + g.player[0], dice: g.dice.map((d) => ({ p: d.y * w + d.x, o: d.o })) }, 250000);
+  return null;
+}
+function hintFromResult(g, r) {
   if (!r) return { hint: { stuck: true }, plan: null };
   if (r.capped) return { hint: { unknown: true }, plan: null };
   const np = planFrom(g, r.moves), q = np[0];
   return { hint: { stand: q.stand.slice(), d: q.d, die: q.die, left: np.length }, plan: np };
 }
+function findHint(g, plans) { // synchronous (QA and fallback)
+  if (g.screen !== "playing") return { hint: null, plan: null };
+  if (g.dead) return { hint: { stuck: true }, plan: null };
+  return planHint(g, plans) || hintFromResult(g, pushSolve(solverInput(g), 250000));
+}
+// quick dead-end check after a push: null = provably unfinishable; capped = don't know (say nothing)
+function isDead(g) { const r = pushSolve(solverInput(g), 15000); return r === null; }
 
 // ================= persistence =================
 let save = { solved: {}, level: 0, sides: true, muted: false };
@@ -452,13 +472,13 @@ function drawHint(now) {
   const [sx, sy] = hint.stand, die = game.dice[hint.die], [dx, dy] = DIRS[hint.d];
   const pulse = reduceMotion ? 0 : Math.sin(now / 220) * 0.04;
   ctx.save();
-  ctx.strokeStyle = C.player; ctx.lineWidth = Math.max(2, cell * 0.06); ctx.setLineDash([cell * 0.1, cell * 0.07]);
-  ctx.beginPath(); ctx.arc((sx + 0.5) * cell, (sy + 0.5) * cell, cell * (0.43 + pulse), 0, Math.PI * 2); ctx.stroke();
-  ctx.setLineDash([]);
+  ctx.strokeStyle = C.player; ctx.lineWidth = Math.max(2.5, cell * 0.07);
+  ctx.beginPath(); ctx.arc((sx + 0.5) * cell, (sy + 0.5) * cell, cell * (0.42 + pulse), 0, Math.PI * 2);
+  ctx.globalAlpha = 0.16; ctx.fillStyle = C.player; ctx.fill(); ctx.globalAlpha = 1; ctx.stroke();
   // arrow from the die's centre to the next square
   const ax = (die.x + 0.5) * cell, ay = (die.y + 0.5) * cell, bx = ax + dx * cell * 0.95, by = ay + dy * cell * 0.95;
   ctx.lineWidth = Math.max(3, cell * 0.09); ctx.lineCap = "round"; ctx.globalAlpha = 0.9;
-  ctx.beginPath(); ctx.moveTo(ax + dx * cell * 0.3, ay + dy * cell * 0.3); ctx.lineTo(bx, by); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ax + dx * cell * 0.5, ay + dy * cell * 0.5); ctx.lineTo(bx, by); ctx.stroke(); // starts at the die's edge, clear of its side number
   const hw = cell * 0.17; ctx.fillStyle = C.player; ctx.beginPath();
   ctx.moveTo(bx + dx * hw, by + dy * hw); ctx.lineTo(bx - dx * hw + dy * hw, by - dy * hw + dx * hw); ctx.lineTo(bx - dx * hw - dy * hw, by - dy * hw - dx * hw); ctx.closePath(); ctx.fill();
   ctx.restore();
@@ -531,11 +551,13 @@ function renderUI() {
   $("par").textContent = `(par ${L.par})`;
   const tip = $("tip"); tip.classList.toggle("hint", !!hint && g.screen === "playing");
   if (hint && g.screen === "playing") {
-    if (hint.stuck) tip.innerHTML = "<b>No way to finish from here.</b> Undo a few moves, or Restart.";
+    if (hint.stuck) tip.innerHTML = deadLine(g);
     else if (hint.unknown) tip.innerHTML = "<b>Too many ways to look ahead from here.</b> Try Undo or Restart.";
     else { const here = g.player[0] === hint.stand[0] && g.player[1] === hint.stand[1];
-      tip.innerHTML = `<b>Hint:</b> ${here ? "push" : "walk to the ring and push"} the die <b>${DIRNAME[hint.d]}</b>. Best finish from here: ${hint.left} push${hint.left === 1 ? "" : "es"}.`; }
-  } else tip.innerHTML = TIPS[g.level] || "";
+      const up = roll(g.dice[hint.die].o, hint.d)[0];
+      tip.innerHTML = `<b>Hint:</b> ${here ? "push" : "walk to the ring and push"} the die <b>${DIRNAME[hint.d]}</b>: ${up} comes up. Best finish from here: ${hint.left} push${hint.left === 1 ? "" : "es"}.`; }
+  } else if (g.dead && g.screen === "playing") { tip.classList.add("hint"); tip.innerHTML = deadLine(g); }
+  else tip.innerHTML = TIPS[g.level] || "";
   $("hintBtn").disabled = g.screen !== "playing";
   $("undoBtn").disabled = !g.history.length;
   $("restartBtn").disabled = !(g.moves > 0 || g.history.length);
@@ -548,13 +570,18 @@ function renderUI() {
     const last = g.level === LEVELS.length - 1;
     $("wMoves").textContent = g.moves; $("wPushes").textContent = g.pushes; $("wPar").textContent = L.par;
     $("winTitle").textContent = last ? "All levels solved!" : "Solved!";
-    $("wNote").textContent = (g.pushes <= L.par ? "At par: the fewest pushes possible." : "Par is the fewest pushes possible. Can you get there?") + (g.hints ? ` Used ${g.hints} hint${g.hints === 1 ? "" : "s"}.` : "");
+    $("wNote").textContent = (g.pushes <= L.par ? "At par: the fewest pushes possible." : "Par is the fewest pushes possible. Can you get there?") + (g.hints ? ` Used ${g.hints} hint${g.hints === 1 ? "" : "s"}.` : " No hints used.");
     $("wNext").textContent = last ? "Pick a level" : "Next level";
   }
   document.documentElement.style.setProperty("--dummy", "0");
   $("muteBtn").setAttribute("aria-pressed", String(!!save.muted));
   $("waves").style.display = save.muted ? "none" : "";
   $("sidesToggle").checked = !!save.sides;
+}
+function deadLine(g) {
+  const back = g.dead && g.deadAt >= 0 ? g.history.length - g.deadAt : 0;
+  return back ? `<b>This can't be finished any more.</b> <button class="tipbtn" data-rewind>Undo ${back} move${back === 1 ? "" : "s"}</button>`
+    : "<b>This can't be finished from here.</b> Undo, or Restart.";
 }
 function describe() {
   const g = game, parts = [`You are at column ${g.player[0]}, row ${g.player[1]}.`];
@@ -580,7 +607,7 @@ function walkTo(tx, ty) {
   const path = walkPath(game, tx, ty);
   if (!path || !path.length) { sfx.bump(); return; }
   const keepHint = hint && hint.d && hint.stand[0] === tx && hint.stand[1] === ty ? hint : null; // walking onto the ring keeps the arrow
-  hint = keepHint;
+  hint = keepHint; hintBusy = 0;
   const before = game, pts = [before.player.slice()];
   let g = game;
   for (const d of path) { g = applyMove(g, d).g; pts.push(g.player.slice()); }
@@ -591,23 +618,52 @@ function walkTo(tx, ty) {
 }
 
 // ================= actions =================
-let hintPlan = null, hintBusy = false;
+let hintPlan = null, basePlan = null, hintBusy = 0;
+// search in a worker so the page never freezes; falls back to searching on the page if workers are unavailable
+let solver = null, solverSeq = 0;
+try {
+  const src = pushSolve.toString() + "\nonmessage = (e) => { const S = e.data; S.walls = new Set(S.walls); postMessage({ id: S.id, r: pushSolve(S, S.cap) }); };";
+  solver = new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })));
+  solver.onerror = () => { solver = null; if (hintBusy) { hintBusy = 0; showHint(true); } };
+  solver.onmessage = (e) => {
+    if (typeof e.data.id === "string") { const f = pendingDead.get(e.data.id); pendingDead.delete(e.data.id); if (f && e.data.r === null) f(); return; }
+    if (e.data.id !== hintBusy) return; // the player moved on; drop it
+    hintBusy = 0; if (game.screen !== "playing") return;
+    finishHint(hintFromResult(game, e.data.r));
+  };
+} catch (e) { solver = null; }
+function finishHint(r) {
+  const fresh = !hint || !hint.d;
+  hint = r.hint; hintPlan = r.plan || hintPlan;
+  if (hint && hint.d) { if (fresh) game = { ...game, hints: game.hints + 1 }; sfx.goal(); } else sfx.bump();
+  sync();
+}
 function showHint(now) {
   if (game.screen !== "playing" || hintBusy) return;
-  const run = () => {
-    hintBusy = false; if (game.screen !== "playing") return;
-    const r = findHint(game, hintPlan); hint = r.hint; hintPlan = r.plan;
-    if (hint && hint.d) { game = { ...game, hints: game.hints + 1 }; sfx.goal(); } else sfx.bump();
-    sync();
-  };
-  if (now) return run();
-  // let "Thinking…" paint before a long search (the busiest rooms take up to about a second)
-  hintBusy = true; $("tip").classList.add("hint"); $("tip").innerHTML = "<b>Thinking…</b>";
-  setTimeout(() => requestAnimationFrame(() => setTimeout(run, 0)), 0);
+  if (now || game.dead) return finishHint(findHint(game, [basePlan, hintPlan]));
+  const quick = planHint(game, [basePlan, hintPlan]);
+  if (quick) return finishHint(quick);
+  if (!solver) return finishHint(findHint(game, [basePlan, hintPlan]));
+  hintBusy = ++solverSeq;
+  const S = solverInput(game, 250000); S.walls = [...S.walls]; S.id = hintBusy;
+  $("tip").classList.add("hint"); $("tip").innerHTML = "<b>Thinking…</b>";
+  solver.postMessage(S);
 }
+// after a push: is the level still finishable? Runs in the worker; marks the game dead only if the answer
+// comes back for the same position. syncCheck (QA) does it on the page.
+let syncCheck = false, deadSeq = 0;
+function checkDead(sync) {
+  const at = game.history.length, sig = diceSig(game.dice) + "@" + at;
+  const mark = () => { if (game.screen === "playing" && !game.dead && diceSig(game.dice) + "@" + game.history.length === sig) { game = { ...game, dead: true, deadAt: at - 1 }; sync || renderUI(); } };
+  if (sync || !solver) { if (isDead(game)) mark(); return; }
+  const S = solverInput(game, 15000); S.walls = [...S.walls]; S.id = "d" + (++deadSeq); S.sig = sig;
+  pendingDead.set(S.id, mark); solver.postMessage(S);
+}
+const pendingDead = new Map();
 function doAction(a) {
   if (a === "hint") { showHint(true); return; }
-  if (DIRS[a] || a === "undo" || a === "restart") hint = null;
+  if (DIRS[a] || a === "undo" || a === "restart" || a === "rewind") { hint = null; hintBusy = 0; }
+  if (a === "rewind") { game = rewind(game); anim = null; burst = null; sync(); return; }
   if (a === "undo") { game = undo(game); anim = null; burst = null; sync(); return; }
   if (a === "restart") { game = restart(game); anim = null; sync(); return; }
   if (!DIRS[a]) return;
@@ -619,6 +675,7 @@ function doAction(a) {
     requestDraw(); return;
   }
   game = g;
+  if (r.push && game.screen === "playing" && !game.dead && !planHint(game, [basePlan, hintPlan])) checkDead(syncCheck);
   anim = reduceMotion ? null : { t0: performance.now(), dur: r.push ? 130 : 95, from: before, d: a, push: r.push, dieIndex: r.dieIndex };
   if (r.push) sfx.push(); else sfx.step();
   const met = goalStatus(game).filter(Boolean).length;
@@ -638,7 +695,9 @@ function doAction(a) {
 function loadLevel(i) {
   game = newGame(Math.max(0, Math.min(LEVELS.length - 1, i)));
   save.level = game.level; persist();
-  anim = null; burst = null; shake = null; hint = null; hintPlan = null; facing = "D"; layout(); sync();
+  anim = null; burst = null; shake = null; hint = null; hintPlan = null; hintBusy = 0; facing = "D";
+  basePlan = planFrom(game, LEVELS[game.level].sol); // the stored solution is a minimum-push plan: instant hints along it
+  layout(); sync();
 }
 
 // ================= input =================
@@ -711,6 +770,7 @@ function openLevels() {
 }
 $("levelsBtn").onclick = openLevels;
 $("hintBtn").onclick = () => showHint();
+$("tip").addEventListener("click", (e) => { if (e.target.closest("[data-rewind]")) doAction("rewind"); });
 $("helpBtn").onclick = () => { $("helpSheet").hidden = false; $("helpSheet").querySelector(".primary").focus(); };
 $("sidesToggle").onchange = (e) => { save.sides = e.target.checked; persist(); sync(); };
 function toggleMute() { save.muted = !save.muted; persist(); renderUI(); }
@@ -718,6 +778,7 @@ $("muteBtn").onclick = toggleMute;
 window.addEventListener("resize", () => { layout(); requestDraw(); });
 if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => { readColors(); requestDraw(); });
 
+basePlan = planFrom(game, LEVELS[game.level].sol);
 layout(); sync();
 
 // ================= QA hook =================
@@ -726,10 +787,10 @@ window.__qa = {
     screen: game.screen, level: game.level, moves: game.moves, pushes: game.pushes,
     player: game.player.slice(), dice: game.dice.map((d) => [d.x, d.y, ...d.o]),
     goals: game.lv.goals.map((q) => [q.x, q.y, q.n]), goalsMet: goalStatus(game).filter(Boolean).length, canUndo: game.history.length > 0,
-    hints: game.hints, hint: hint ? (hint.d ? { stand: hint.stand.slice(), d: hint.d, die: hint.die, left: hint.left } : hint.stuck ? "stuck" : "unknown") : null,
+    dead: !!game.dead, hints: game.hints, hint: hint ? (hint.d ? { stand: hint.stand.slice(), d: hint.d, die: hint.die, left: hint.left } : hint.stuck ? "stuck" : "unknown") : null,
   }),
   actions: () => legalActions(game),
-  act: (a) => { doAction(a); anim = null; },
+  act: (a) => { syncCheck = true; try { doAction(a); } finally { syncCheck = false; } anim = null; },
   reset: (level) => { closeSheets(); loadLevel(level ?? game.level); },
   levels: () => LEVELS.length,
   solve: () => { loadLevel(game.level); return LEVELS[game.level].sol.split(""); },
