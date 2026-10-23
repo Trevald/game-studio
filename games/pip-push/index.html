@@ -41,7 +41,7 @@
   h1 { margin: 0; font-size: 22px; line-height: 1.1; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
   h1 .logo { width: 22px; height: 22px; border-radius: 6px; background: var(--die); border: 1.5px solid var(--die-edge); display: inline-grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); padding: 3px; }
   h1 .logo i { width: 4px; height: 4px; border-radius: 50%; background: var(--pip); place-self: center; }
-  #lvlName { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #lvlName { color: var(--muted); font-size: 13px; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .icon { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--edge); background: var(--btn); color: var(--btn-ink);
     display: grid; place-items: center; cursor: pointer; padding: 0; font: 600 14px var(--font); }
   .icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -524,7 +524,7 @@ function requestDraw() { if (rafPending) return; rafPending = true; requestAnima
 
 function renderUI() {
   const g = game, L = LEVELS[g.level], st = goalStatus(g), met = st.filter(Boolean).length;
-  $("lvlName").textContent = `Level ${g.level + 1} of ${LEVELS.length} · ${L.name}`;
+  $("lvlName").textContent = `Level ${g.level + 1} of ${LEVELS.length} · ${L.name}`; $("lvlName").title = $("lvlName").textContent;
   $("goalsMet").textContent = `${met}/${st.length}`;
   $("goalsMet").classList.toggle("done", met === st.length);
   $("moves").textContent = g.moves; $("pushes").textContent = g.pushes;

@@ -1,6 +1,6 @@
 {
   "game": "games/pip-push/index.html",
-  "at": "2026-10-23T02:00:51.548Z",
+  "at": "2026-10-23T02:01:46.156Z",
   "checks": [
     {
       "name": "file under 2 MB",
@@ -50,7 +50,7 @@
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 11"
+      "detail": "screens seen: playing, won; resets: 10"
     },
     {
       "name": "every level completable via solve() (15 levels)",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing; resets: 0"
+      "detail": "screens seen: playing, won; resets: 1"
     },
     {
       "name": "[phone] no console errors or exceptions",
