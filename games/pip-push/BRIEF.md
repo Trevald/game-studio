@@ -30,6 +30,22 @@ goes *and* which way it arrives), it needs no timer, and it fits one night with 
 4. Phone and desktop controls: swipe, tap a square in line with you, an on-screen pad, keyboard.
 5. Unlimited Undo, instant Restart, level picker with progress, mute.
 
+## Tonight (night 2)
+No notes from Benji yet (his two night-1 questions are unanswered), so per the runbook the studio continues its own
+game from the night-1 review's leftovers and the "Later" list. Goals, in order:
+1. **Par = the true minimum pushes.** A push-level solver (player position collapsed to its reachable area) finds the
+   fewest pushes for each level; `sol` becomes that minimum-push solution, so `solve()` lands exactly on par.
+2. **Hint button.** Solves from the *current* position (not from the start) and shows the next push: where to stand
+   and which way to push. If the position can't be finished any more, it says so and suggests Undo. Hints are
+   unlimited; the win card notes when a level was solved without one.
+3. **Five more levels (11–15)** including the first three-dice rooms, from a new push-level generator that rejects
+   repeated push loops. Total 15.
+
+## Assumptions (night 2)
+- More levels and a hint are the cheapest, least committal next step; daily rooms and new tile types wait for
+  Benji's answer to night 1's question 1.
+- Hints show only the next push, never the whole solution.
+
 ## Assumptions
 - Dice can only be pushed, never pulled, and only one at a time (Sokoban rules).
 - A goal is met only when a die sits on it with the right number on top; level is won when all goals are met.
@@ -37,8 +53,8 @@ goes *and* which way it arrives), it needs no timer, and it fits one night with 
 - "Par" on the level card is the push count of the BFS-shortest solution (by steps). It's shown, never required.
 
 ## Later
-- More levels (and 3-dice levels), a daily generated puzzle, goals that accept "any odd"/"any even", ice/conveyor tiles.
-- Solution replay / hint button.
+- More levels beyond 15.
+- Solution replay. A daily generated room. New tiles (ice, conveyors) and "any odd/even" goals.
 
 ## Design
 ### Core loop
