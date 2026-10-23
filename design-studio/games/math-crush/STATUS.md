@@ -1,5 +1,18 @@
 # Math Crush — status
-Updated: 2026-10-21. Approved for overnight prototype implementation; not implemented or owner-accepted yet.
+Updated: 2026-10-23. **Sweet play v1 is a draft design exploration for owner review; not an implementation handover.**
+
+## Current design review
+
+- Review: `explorations/sweet-play-v1/index.html` (seven interactive scenes), `overview.html`, `DESIGN.md` (MC-010–019), and `VALIDATION.md`.
+- Captures: `explorations/sweet-play-v1/previews/`. Related playtest: root `games/math-crush/qa/playtest-2026-10-22.md`.
+- Decision record: `decisions/ADR-002-play-first.md`. Owner requested learn-through-play and designs covering tips, special blocks, tools, temporary bonuses, achievements and speed/star changes. Exact chat wording and approval boundary are recorded there. Individual mechanics and constants remain proposed.
+- Current runtime is Match-only, per owner direction recorded in `feedback/FB-002-match-only.md`; do not restore the removed modes. FB-001 reports the H-001-v1 implementation and the unresolved Level 2 star ceiling (687 versus 900). The old status below is retained as historical authorization, not current implementation status.
+- Work based on b3bab94; publishing from main after d636a14, preserving the intervening Pip Push work. This package is identified by the commit adding `sweet-play-v1`; publication follows the standing direct-main preference. It changes design material and saves playtest evidence, not the game runtime or frozen packet.
+- Checks: all seven prototype scenes at 360, 390 and 1280 widths; no horizontal overflow or enabled button below 44×44; key interactions and JavaScript syntax checked. Not child-tested or balanced; see VALIDATION.md.
+- Unresolved: first-release scope, final naming, authored tutorial boards and star tuning. Caramel, linked gummies and Licorice Split need further rules before implementation. No approval or implementation dispatch is implied by publishing the draft.
+- **Next action:** owner reviews the design study and selects scope; then prepare a new bounded handover, preserving H-001-v1.
+
+## Historical H-001-v1 authorization (21 October 2026)
 
 Approved handover: `handovers/H-001-v1/HANDOVER.md`, scope MC-001–009 with the phase priorities and prototype defaults recorded there. Publication target: main, direct push, no PR. Packet hash manifest: handovers/H-001-v1/SHA256SUMS.txt. Delivered revision is the commit adding this packet on main; verify the manifest before implementation.
 
