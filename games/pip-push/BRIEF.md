@@ -53,7 +53,7 @@ game from the night-1 review's leftovers and the "Later" list. Goals, in order:
 - "Par" on the level card is the push count of the BFS-shortest solution (by steps). It's shown, never required.
 
 ## Later
-- More levels beyond 15.
+- More levels beyond 15. Let the phone board use the empty space below the controls.
 - Solution replay. A daily generated room. New tiles (ice, conveyors) and "any odd/even" goals.
 
 ## Design
@@ -89,8 +89,17 @@ Undo (unlimited) or Restart (instant, itself undoable).
   a push is blocked.
 - Win chime and a small pip burst; WebAudio blips per step/push, mute toggle.
 
+### Hints and dead ends (night 2)
+Hint = the next push of a minimum-push plan from the current position (ring on the stand square, arrow on the die,
+"n comes up", pushes left). Plans are cached: the level's stored solution and the last hint's plan answer instantly;
+anything else is searched in a Web Worker (page fallback). After each push a capped search (15 000 states) checks
+whether the level can still be finished; only a complete search marks it dead, and the tip offers "Undo N moves".
+
 ### QA plan
 - `state()`: `{screen: "playing"|"won", level, moves, pushes, player:[x,y], dice:[[x,y,top,north,east]], goalsMet, goals}`
+- night 2 adds `dead`, `hints`, `hint` (`{stand, d, die, left}` | `"stuck"` | `"unknown"` | null) to `state()`,
+  actions `"hint"` and `"rewind"` (when dead), and test helpers `walk(x, y)` and `par(level)`. `act()` runs the
+  dead-end check synchronously.
 - actions: `"U" | "D" | "L" | "R" | "undo" | "restart"`; `actions()` lists the legal moves (+ undo when possible).
 - `act(a)` applies synchronously (animation is cosmetic and doesn't block state).
 - `reset(level?)`, `levels()` = 10, `solve()` resets the level and returns its stored BFS solution
