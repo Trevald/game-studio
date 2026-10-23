@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pip Push</title>
-<!-- Pip Push — Game Studio, night 1. A Sokoban with dice: every push rolls the die. -->
+<!-- Pip Push — Game Studio, night 2. A Sokoban with dice: every push rolls the die. -->
 <style>
   :root {
     --bg: #f3eee4; --panel: #fffaf1; --ink: #23263a; --muted: #6c6a76; --edge: #ddd3c2;
@@ -54,6 +54,8 @@
   canvas { display: block; touch-action: none; border-radius: 16px; cursor: pointer; max-width: 100%; }
   .tip { text-align: center; font-size: 14px; color: var(--muted); min-height: 2.8em; margin: 0; padding: 0 8px; }
   .tip b { color: var(--ink); }
+  .tip.hint { color: var(--ink); }
+  .tip.hint b { color: var(--player); }
   .controls { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; }
   .controls .big { width: 100%; max-width: 130px; padding: 0 8px; }
   .pad { display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(2, 48px); gap: 6px; }
@@ -98,6 +100,7 @@
       <h1><span class="logo" aria-hidden="true"><i></i><i style="grid-area:2/2"></i><i style="grid-area:3/3"></i></span>Pip Push</h1>
       <span id="lvlName">Level 1 · First roll</span>
     </div>
+    <button class="icon" id="hintBtn" aria-label="Hint (H)" title="Hint (H)"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg></button>
     <button class="icon" id="levelsBtn" aria-label="Levels" title="Levels"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg></button>
     <button class="icon" id="helpBtn" aria-label="How to play" title="How to play"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg></button>
     <button class="icon" id="muteBtn" aria-label="Sound" aria-pressed="false" title="Sound (M)"><svg viewBox="0 0 24 24"><path d="M5 10v4h3l4 3V7L8 10z"/><path id="waves" d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/></svg></button>
@@ -118,7 +121,7 @@
     </div>
     <button class="big" id="restartBtn" aria-label="Restart (R)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Restart</span></button>
   </div>
-  <p class="keys">Arrows / WASD move · Z undo · R restart · tap a square to walk, swipe to step</p>
+  <p class="keys">Arrows / WASD move · Z undo · R restart · H hint · tap a square to walk, swipe to step</p>
 </main>
 
 <div class="sheet" id="winSheet" hidden>
@@ -145,7 +148,7 @@
       <li>The small numbers around a die are its side faces. Opposite faces add up to 7.</li>
       <li>Get every die onto a goal showing that goal's number on top.</li>
       <li>Tap a free square to walk there (it never pushes). Tap or swipe next to a die to push it.</li>
-      <li>Stuck? Undo as often as you like, or Restart.</li>
+      <li>Stuck? Undo as often as you like, or Restart. <b>Hint</b> (H) shows the next push from where you are now.</li>
     </ol>
     <label class="toggle"><span>Show side faces on dice</span><input type="checkbox" id="sidesToggle" checked></label>
     <div class="row"><button class="big primary" data-close>Play</button></div>
@@ -156,7 +159,7 @@
 "use strict";
 // ================= constants & levels =================
 // Each level: map rows ('#' wall, '.' floor, '@' player), dice [x,y,top,north,east], goals [x,y,number],
-// sol = shortest solution (BFS by steps, from lab/build-levels.mjs), par = pushes in that solution.
+// sol = a solution with the fewest pushes (lab/build-levels.mjs), par = the true minimum pushes (lab/push.mjs).
 const LEVELS = /*LEVELS*/[
   {"name":"First roll","map":["#######","#@....#","#######"],"dice":[[2,1,1,2,3]],"goals":[[5,1,3]],"sol":"RRR","par":3},
   {"name":"Side step","map":["######","#....#","#@...#","#....#","######"],"dice":[[3,2,4,1,5]],"goals":[[4,3,6]],"sol":"URRRDLULDLDRR","par":4},
@@ -167,7 +170,12 @@ const LEVELS = /*LEVELS*/[
   {"name":"Crossing","map":["######","#....#","#@...#","#....#","##..##","######"],"dice":[[2,2,4,6,2],[2,3,5,3,6]],"goals":[[1,1,4],[4,3,3]],"sol":"RURRDDLDLULUURRDULLDRURRDDLDLULUURRDULLDRDRURULL","par":12},
   {"name":"Open floor","map":["#######","##....#","#.....#","#.....#","#...@.#","#######"],"dice":[[4,2,1,3,5],[4,3,5,6,4]],"goals":[[2,4,4],[5,3,1]],"sol":"RULDLULUURRDRDLUULLDRDUURDRDLDLULURRURD","par":13},
   {"name":"Post","map":["#######","#.....#","#.....#","#.#...#","#...@##","#######"],"dice":[[3,2,5,6,4],[4,2,4,5,6]],"goals":[[1,2,4],[5,2,2]],"sol":"URUULDULLDRURRDDLDLURRUULDULLDRURRDDLDLURRUULDLLRRRDLDLURUULLDRR","par":15},
-  {"name":"Cellar","map":["#######","#.#...#","#...@.#","#.#..##","#.....#","#...#.#","#######"],"dice":[[2,2,4,1,5],[3,4,4,1,5]],"goals":[[3,1,6],[5,4,4]],"sol":"DDLDLLUUURRURDLLLDDRDRUUDLLUURRURRDLLDDRULUURRDLULDRDDLLLUURRURDDULLLDDRRRLUU","par":20}
+  {"name":"Cellar","map":["#######","#.#...#","#...@.#","#.#..##","#.....#","#...#.#","#######"],"dice":[[2,2,4,1,5],[3,4,4,1,5]],"goals":[[3,1,6],[5,4,4]],"sol":"DDLDLLUUURRURDLLLDDRDRUUDLLUURRURRDLLDDRULUURRDLULDRDDLLLUURRURDDULLLDDRRRLUU","par":20},
+  {"name":"Three's company","map":["######","#.@..#","#....#","#....#","#....#","######"],"dice":[[1,2,2,3,1],[4,2,3,6,5],[2,3,6,3,2]],"goals":[[1,4,6],[1,1,4],[4,1,1]],"sol":"DRDDLLUURRDRULLLDRDRURULULDLDRURDRDLL","par":10},
+  {"name":"Pillar walk","map":["#######","#..@..#","#.#...#","#.....#","#.....#","#######"],"dice":[[4,3,3,1,2],[3,3,6,3,2]],"goals":[[4,2,4],[1,1,4]],"sol":"DRRDDLURULDDLLURLLUURRDRRDDLULUURDRDLDLUDLLURRDRUURULLLRDRDDLLURDRU","par":19},
+  {"name":"Notch","map":["######","#....#","#...##","#....#","#..@.#","######"],"dice":[[3,3,6,4,5],[2,1,3,1,2],[2,2,1,2,3]],"goals":[[1,2,6],[4,3,6],[4,1,4]],"sol":"RULDLLUUURRLLDRLDDRULUURRDULLDRDDRRULDLLUUURRDLLDDRUDRRULLDLURRUULDRDDLLURR","par":16},
+  {"name":"Dock","map":["#######","#.....#","#....@#","#.....#","#..#..#","#######"],"dice":[[2,2,5,1,3],[5,3,3,2,6],[3,3,6,2,4]],"goals":[[4,4,6],[4,1,5],[5,4,2]],"sol":"ULLLLDRURRDRDLLRUULDLLDDRULUURRDRDLUULLDRLDDRUUDRRUULDLLURDRRDLULLDDRULURRDRRUULDLLURDRD","par":18},
+  {"name":"Three ways","map":["#######","#.....#","#.@...#","#.....#","#..#..#","#######"],"dice":[[4,3,6,3,2],[3,2,2,6,3],[4,1,4,1,5]],"goals":[[3,1,5],[2,3,4],[5,3,2]],"sol":"URDRRDDLURULLULLDRDRLUURDRRDDLURULLULLDDRRURRDDLURULDLLLUURRDULLDDRRURRDDLULUULDRDRRUULRDDLLURURD","par":20}
 ];
 const TIPS = {
   0: "Walk into the die to push it. Watch the top number change.",
@@ -175,6 +183,8 @@ const TIPS = {
   2: "Sometimes you have to walk around a die to push it from another side.",
   3: "A small loop turns a die: push it one way, then around and back. Tap a square to walk there.",
   5: "Two dice, two goals. Each goal wants its own number.",
+  6: "Stuck? <b>Hint</b> (H) shows the next push from where you are now.",
+  10: "Three dice. Any die can fill any goal: pick the one that is easiest to turn.",
 };
 const DIRS = { U: [0, -1], D: [0, 1], L: [-1, 0], R: [1, 0] };
 const SAVE_KEY = "pippush.v1";
@@ -196,7 +206,7 @@ function parseLevel(i) {
 }
 function newGame(level) {
   const lv = parseLevel(level);
-  return { level, lv, player: lv.start.player.slice(), dice: lv.start.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: 0, pushes: 0, screen: "playing", history: [] };
+  return { level, lv, player: lv.start.player.slice(), dice: lv.start.dice.map((d) => ({ ...d, o: d.o.slice() })), moves: 0, pushes: 0, hints: 0, screen: "playing", history: [] };
 }
 const isWall = (g, x, y) => x < 0 || y < 0 || x >= g.lv.w || y >= g.lv.h || g.lv.walls.has(y * g.lv.w + x);
 const dieAt = (g, x, y) => g.dice.findIndex((d) => d.x === x && d.y === y);
@@ -234,14 +244,97 @@ function undo(g) {
 }
 function restart(g) {
   const fresh = newGame(g.level);
-  if (g.moves === 0 && g.history.length === 0) return fresh;
-  return { ...fresh, history: g.history.concat([snapshot(g)]) }; // restart is undoable
+  if (g.moves === 0 && g.history.length === 0) return { ...fresh, hints: g.hints };
+  return { ...fresh, hints: g.hints, history: g.history.concat([snapshot(g)]) }; // restart is undoable; hint count stays
 }
 function legalActions(g) {
   const out = g.screen === "playing" ? Object.keys(DIRS).filter((d) => tryMove(g, d).ok) : [];
   if (g.history.length) out.push("undo");
   if (g.moves > 0 || g.history.length) out.push("restart");
   return out;
+}
+
+// ---- push-level solver (copy of lab/push.mjs; keep in sync) ----
+function pushSolve(S, cap = 400000) {
+  const { w, h, walls, goals } = S, N = w * h;
+  const DV = { U: -w, D: w, L: -1, R: 1 };
+  const inb = (p, d) => !(d === "L" && p % w === 0) && !(d === "R" && p % w === w - 1) && p + DV[d] >= 0 && p + DV[d] < N;
+  const roll = ([t, n, e], d) => d === "R" ? [7 - e, n, t] : d === "L" ? [e, n, 7 - t] : d === "U" ? [7 - n, t, e] : [n, 7 - t, e];
+  const won = (dice) => goals.every((g) => dice.some((q) => q.p === g.p && q.o[0] === g.n));
+  function area(player, dice) { // flood fill, returns {seen: Int32Array prev-dir map, min}
+    const occ = new Set(dice.map((q) => q.p)), prev = new Int8Array(N).fill(-1), q = [player]; prev[player] = 4; let min = player;
+    for (let i = 0; i < q.length; i++) { const c = q[i]; if (c < min) min = c;
+      for (let k = 0; k < 4; k++) { const d = "UDLR"[k]; if (!inb(c, d)) continue; const n = c + DV[d];
+        if (walls.has(n) || occ.has(n) || prev[n] >= 0) continue; prev[n] = k; q.push(n); } }
+    return { prev, min };
+  }
+  function walk(prev, to) { let s = ""; let c = to; while (prev[c] !== 4) { const d = "UDLR"[prev[c]]; s = d + s; c -= DV[d]; } return s; }
+  // numeric keys (much faster Map lookups); each die = pos*216 + orientation code < 2^14 on boards up to 75 cells
+  const code = (q) => q.p * 216 + (q.o[0] - 1) * 36 + (q.o[1] - 1) * 6 + (q.o[2] - 1);
+  const numeric = N <= 75 && S.dice.length <= 3;
+  const key = (min, dice) => { const c = dice.map(code).sort((a, b) => a - b);
+    if (!numeric) return min + "|" + c.join(","); let k = min; for (const v of c) k = k * 16384 + v; return k; };
+  const start = { player: S.player, dice: S.dice.map((q) => ({ p: q.p, o: q.o.slice() })) };
+  const a0 = area(start.player, start.dice);
+  const seen = new Map([[key(a0.min, start.dice), null]]);
+  let frontier = [{ ...start, k: key(a0.min, start.dice), ar: a0 }];
+  if (won(start.dice)) return { moves: "", pushes: 0, firstPush: null };
+  let depth = 0;
+  while (frontier.length) {
+    depth++; const next = [];
+    for (const st of frontier) {
+      const occ = new Set(st.dice.map((q) => q.p));
+      for (let i = 0; i < st.dice.length; i++) {
+        const b = st.dice[i].p;
+        for (const d of "UDLR") {
+          if (!inb(b, d)) continue; const to = b + DV[d];
+          if (walls.has(to) || occ.has(to)) continue;
+          const opp = { U: "D", D: "U", L: "R", R: "L" }[d]; if (!inb(b, opp)) continue;
+          const stand = b - DV[d]; if (st.ar.prev[stand] < 0) continue;
+          const dice = st.dice.slice(); dice[i] = { p: to, o: roll(st.dice[i].o, d) };
+          const ar = area(b, dice), k = key(ar.min, dice);
+          if (seen.has(k)) continue;
+          seen.set(k, { pk: st.k, walk: walk(st.ar.prev, stand) + d, stand, d, die: i });
+          if (won(dice)) {
+            let moves = "", kk = k, first = null; while (seen.get(kk)) { const e = seen.get(kk); moves = e.walk + moves; first = e; kk = e.pk; }
+            return { moves, pushes: depth, firstPush: { stand: first.stand, d: first.d, die: first.die } };
+          }
+          next.push({ player: b, dice, k, ar });
+          if (seen.size > cap) return { capped: true };
+        }
+      }
+    }
+    frontier = next;
+  }
+  return null;
+}
+// Hint from the current position: the next push (where to stand, which way). Pure.
+// The whole minimum-push plan is kept, so following hints doesn't re-solve: if the dice are exactly as the plan
+// expects before one of its pushes (and you can reach the stand square), that push is the hint.
+const diceSig = (dice) => dice.map((d) => [d.x, d.y, ...d.o].join("")).join("|");
+function planFrom(g, moves) {
+  const plan = []; let s = g;
+  for (const d of moves) {
+    const r = tryMove(s, d);
+    if (r.push) plan.push({ sig: diceSig(s.dice), stand: s.player.slice(), d, die: r.dieIndex });
+    s = applyMove(s, d).g;
+  }
+  return plan;
+}
+function findHint(g, plan) {
+  if (g.screen !== "playing") return { hint: null, plan };
+  if (plan) {
+    const sig = diceSig(g.dice), i = plan.findIndex((q) => q.sig === sig);
+    if (i >= 0) { const q = plan[i]; const here = g.player[0] === q.stand[0] && g.player[1] === q.stand[1];
+      if (here || walkPath(g, q.stand[0], q.stand[1])) return { hint: { stand: q.stand.slice(), d: q.d, die: q.die, left: plan.length - i }, plan }; }
+  }
+  const w = g.lv.w;
+  const r = pushSolve({ w, h: g.lv.h, walls: g.lv.walls, goals: g.lv.goals.map((q) => ({ p: q.y * w + q.x, n: q.n })),
+    player: g.player[1] * w + g.player[0], dice: g.dice.map((d) => ({ p: d.y * w + d.x, o: d.o })) }, 250000);
+  if (!r) return { hint: { stuck: true }, plan: null };
+  if (r.capped) return { hint: { unknown: true }, plan: null };
+  const np = planFrom(g, r.moves), q = np[0];
+  return { hint: { stand: q.stand.slice(), d: q.d, die: q.die, left: np.length }, plan: np };
 }
 
 // ================= persistence =================
@@ -352,6 +445,25 @@ function drawPlayer(px, py, facing) {
   for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(ex + px2 * sp * s, ey + py2 * sp * s, r * 0.15, 0, Math.PI * 2); ctx.fill(); }
 }
 let facing = "D";
+let hint = null; // {stand, d, die, left} | {stuck} | {unknown}; cleared on every move
+const DIRNAME = { U: "up", D: "down", L: "left", R: "right" };
+function drawHint(now) {
+  if (!hint || !hint.d || game.screen !== "playing") return;
+  const [sx, sy] = hint.stand, die = game.dice[hint.die], [dx, dy] = DIRS[hint.d];
+  const pulse = reduceMotion ? 0 : Math.sin(now / 220) * 0.04;
+  ctx.save();
+  ctx.strokeStyle = C.player; ctx.lineWidth = Math.max(2, cell * 0.06); ctx.setLineDash([cell * 0.1, cell * 0.07]);
+  ctx.beginPath(); ctx.arc((sx + 0.5) * cell, (sy + 0.5) * cell, cell * (0.43 + pulse), 0, Math.PI * 2); ctx.stroke();
+  ctx.setLineDash([]);
+  // arrow from the die's centre to the next square
+  const ax = (die.x + 0.5) * cell, ay = (die.y + 0.5) * cell, bx = ax + dx * cell * 0.95, by = ay + dy * cell * 0.95;
+  ctx.lineWidth = Math.max(3, cell * 0.09); ctx.lineCap = "round"; ctx.globalAlpha = 0.9;
+  ctx.beginPath(); ctx.moveTo(ax + dx * cell * 0.3, ay + dy * cell * 0.3); ctx.lineTo(bx, by); ctx.stroke();
+  const hw = cell * 0.17; ctx.fillStyle = C.player; ctx.beginPath();
+  ctx.moveTo(bx + dx * hw, by + dy * hw); ctx.lineTo(bx - dx * hw + dy * hw, by - dy * hw + dx * hw); ctx.lineTo(bx - dx * hw - dy * hw, by - dy * hw - dx * hw); ctx.closePath(); ctx.fill();
+  ctx.restore();
+  if (!reduceMotion) requestDraw();
+}
 function draw(now) {
   const g = game, w = g.lv.w, h = g.lv.h;
   ctx.setTransform(dpr, 0, 0, dpr, -dpr * cell / 2, -dpr * cell / 2);
@@ -395,6 +507,7 @@ function draw(now) {
   if (shake && !shake.dieIndex && shake.dieIndex !== 0) { const st = (now - shake.t0) / 220; if (st < 1) { const amp = Math.sin(st * Math.PI * 6) * (1 - st) * cell * 0.05; ppx += DIRS[shake.d][0] * amp; ppy += DIRS[shake.d][1] * amp; } }
   if (shake && now - shake.t0 > 220) shake = null;
   drawPlayer(ppx, ppy, facing);
+  if (!anim) drawHint(now);
   // win burst
   if (burst) {
     const bt = (now - burst.t0) / 900;
@@ -404,9 +517,10 @@ function draw(now) {
     }
     ctx.globalAlpha = 1;
   }
-  if (anim || shake || burst) requestAnimationFrame(draw);
+  if (anim || shake || burst) requestDraw();
 }
-function requestDraw() { requestAnimationFrame(draw); }
+let rafPending = false; // one frame chain at a time
+function requestDraw() { if (rafPending) return; rafPending = true; requestAnimationFrame((t) => { rafPending = false; draw(t); }); }
 
 function renderUI() {
   const g = game, L = LEVELS[g.level], st = goalStatus(g), met = st.filter(Boolean).length;
@@ -415,7 +529,14 @@ function renderUI() {
   $("goalsMet").classList.toggle("done", met === st.length);
   $("moves").textContent = g.moves; $("pushes").textContent = g.pushes;
   $("par").textContent = `(par ${L.par})`;
-  $("tip").innerHTML = TIPS[g.level] || "";
+  const tip = $("tip"); tip.classList.toggle("hint", !!hint && g.screen === "playing");
+  if (hint && g.screen === "playing") {
+    if (hint.stuck) tip.innerHTML = "<b>No way to finish from here.</b> Undo a few moves, or Restart.";
+    else if (hint.unknown) tip.innerHTML = "<b>Too many ways to look ahead from here.</b> Try Undo or Restart.";
+    else { const here = g.player[0] === hint.stand[0] && g.player[1] === hint.stand[1];
+      tip.innerHTML = `<b>Hint:</b> ${here ? "push" : "walk to the ring and push"} the die <b>${DIRNAME[hint.d]}</b>. Best finish from here: ${hint.left} push${hint.left === 1 ? "" : "es"}.`; }
+  } else tip.innerHTML = TIPS[g.level] || "";
+  $("hintBtn").disabled = g.screen !== "playing";
   $("undoBtn").disabled = !g.history.length;
   $("restartBtn").disabled = !(g.moves > 0 || g.history.length);
   canvas.setAttribute("aria-label", describe());
@@ -427,7 +548,7 @@ function renderUI() {
     const last = g.level === LEVELS.length - 1;
     $("wMoves").textContent = g.moves; $("wPushes").textContent = g.pushes; $("wPar").textContent = L.par;
     $("winTitle").textContent = last ? "All levels solved!" : "Solved!";
-    $("wNote").textContent = g.pushes <= L.par ? "At or under par. Neat." : "Can you do it in fewer pushes?";
+    $("wNote").textContent = (g.pushes <= L.par ? "At par: the fewest pushes possible." : "Par is the fewest pushes possible. Can you get there?") + (g.hints ? ` Used ${g.hints} hint${g.hints === 1 ? "" : "s"}.` : "");
     $("wNext").textContent = last ? "Pick a level" : "Next level";
   }
   document.documentElement.style.setProperty("--dummy", "0");
@@ -458,6 +579,8 @@ function walkPath(g, tx, ty) {
 function walkTo(tx, ty) {
   const path = walkPath(game, tx, ty);
   if (!path || !path.length) { sfx.bump(); return; }
+  const keepHint = hint && hint.d && hint.stand[0] === tx && hint.stand[1] === ty ? hint : null; // walking onto the ring keeps the arrow
+  hint = keepHint;
   const before = game, pts = [before.player.slice()];
   let g = game;
   for (const d of path) { g = applyMove(g, d).g; pts.push(g.player.slice()); }
@@ -468,7 +591,23 @@ function walkTo(tx, ty) {
 }
 
 // ================= actions =================
+let hintPlan = null, hintBusy = false;
+function showHint(now) {
+  if (game.screen !== "playing" || hintBusy) return;
+  const run = () => {
+    hintBusy = false; if (game.screen !== "playing") return;
+    const r = findHint(game, hintPlan); hint = r.hint; hintPlan = r.plan;
+    if (hint && hint.d) { game = { ...game, hints: game.hints + 1 }; sfx.goal(); } else sfx.bump();
+    sync();
+  };
+  if (now) return run();
+  // let "Thinking…" paint before a long search (the busiest rooms take up to about a second)
+  hintBusy = true; $("tip").classList.add("hint"); $("tip").innerHTML = "<b>Thinking…</b>";
+  setTimeout(() => requestAnimationFrame(() => setTimeout(run, 0)), 0);
+}
 function doAction(a) {
+  if (a === "hint") { showHint(true); return; }
+  if (DIRS[a] || a === "undo" || a === "restart") hint = null;
   if (a === "undo") { game = undo(game); anim = null; burst = null; sync(); return; }
   if (a === "restart") { game = restart(game); anim = null; sync(); return; }
   if (!DIRS[a]) return;
@@ -499,7 +638,7 @@ function doAction(a) {
 function loadLevel(i) {
   game = newGame(Math.max(0, Math.min(LEVELS.length - 1, i)));
   save.level = game.level; persist();
-  anim = null; burst = null; shake = null; facing = "D"; layout(); sync();
+  anim = null; burst = null; shake = null; hint = null; hintPlan = null; facing = "D"; layout(); sync();
 }
 
 // ================= input =================
@@ -520,6 +659,7 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "z" || e.key === "Z" || e.key === "Backspace" || e.key === "u") { e.preventDefault(); doAction("undo"); }
   else if (e.key === "r" || e.key === "R") { e.preventDefault(); doAction("restart"); }
   else if (e.key === "m" || e.key === "M") toggleMute();
+  else if (e.key === "h" || e.key === "H") { e.preventDefault(); showHint(); }
 });
 // swipe or tap on the board
 let pdown = null;
@@ -570,6 +710,7 @@ function openLevels() {
   (list.querySelector(".cur") || list.firstChild).focus();
 }
 $("levelsBtn").onclick = openLevels;
+$("hintBtn").onclick = () => showHint();
 $("helpBtn").onclick = () => { $("helpSheet").hidden = false; $("helpSheet").querySelector(".primary").focus(); };
 $("sidesToggle").onchange = (e) => { save.sides = e.target.checked; persist(); sync(); };
 function toggleMute() { save.muted = !save.muted; persist(); renderUI(); }
@@ -585,12 +726,16 @@ window.__qa = {
     screen: game.screen, level: game.level, moves: game.moves, pushes: game.pushes,
     player: game.player.slice(), dice: game.dice.map((d) => [d.x, d.y, ...d.o]),
     goals: game.lv.goals.map((q) => [q.x, q.y, q.n]), goalsMet: goalStatus(game).filter(Boolean).length, canUndo: game.history.length > 0,
+    hints: game.hints, hint: hint ? (hint.d ? { stand: hint.stand.slice(), d: hint.d, die: hint.die, left: hint.left } : hint.stuck ? "stuck" : "unknown") : null,
   }),
   actions: () => legalActions(game),
   act: (a) => { doAction(a); anim = null; },
   reset: (level) => { closeSheets(); loadLevel(level ?? game.level); },
   levels: () => LEVELS.length,
   solve: () => { loadLevel(game.level); return LEVELS[game.level].sol.split(""); },
+  // test helpers (night 2): "hint" is also an action for act()
+  walk: (x, y) => walkPath(game, x, y),
+  par: (level) => LEVELS[level ?? game.level].par,
 };
 </script>
 </body>
