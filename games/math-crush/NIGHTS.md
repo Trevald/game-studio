@@ -1,5 +1,35 @@
 # Math Crush — night log
 
+## Night 3 — 2026-10-25
+
+**Job:** approved hand-over not yet built — `design-studio/games/math-crush/handovers/H-002-v1` ("play first, sweet rewards"),
+phases A, B and C. No pending board notes; packet checksums verified.
+
+**Shipped:**
+- No more intro screens: Play, the trail, Next and Retry open the board. On-board cues teach L1, L2, L4, L7, the L6 hammer
+  (after 8 s idle) and L8 Sugar Rush, once each. L1–3 wrong sums are free.
+- New schema-2 levels with explicit star thresholds and a live score meter (hollow completion star until the win).
+- Special combos (stripe+stripe, stripe+wrapped, wrapped+wrapped) with exact previews; a one-use hammer on L6–12.
+- Sugar Rush on L8–12 (3 charges → next three chains ×2) and a six-sticker book with a Home badge.
+- New results (Next / Play again / Try speed challenge), a separate timed speed challenge with best times, `matchV3`
+  saves; old saves kept and an old attempt offered as "Start this level".
+
+**QA:** playtest all checks passed · engine tests 95/95 · real-engine ★★★ route on all 12 levels · 34 states × 4 sizes
+screenshot audit clean · 3 rounds. Known issues: none open in code; balance questions below.
+
+**Reviewer:** ship with fixes — the idea's core (mental addition chains) holds and combos during Sugar Rush are the best
+moment, but there's no tension and the hammer has no job. Fixed: tap-mode Submit pushed off-screen on phones (now
+Clear/Submit replace the toolbar while selecting), Hint pointing at the weakest chain, sticker toast following into the
+next attempt. Not fixed (designer, in FB-003): two spare moves everywhere, three targets only, hammer purpose, Perfect
+Batch automatic on L1–5, same colour for different values.
+
+**Assumptions:** Play opens the highest unlocked level; L1/L2 lessons complete on any clear, L4/L7 on activating a special;
+book opens as a dialog; Hint now prefers special/3+ chains.
+
+**Questions for Benji:** see the board report.
+
+**Play:** https://claude.ai/artifact/D5kYHgsZbouMh73g1VMLTj
+
 ## Daytime change — 2026-10-22 (Benji: "focus on only the first concept Candy Match and remove the other two")
 
 Removed Equation and Clear: their engines, renderers, levels, the scaled-stage UI they used, the "All modes"
