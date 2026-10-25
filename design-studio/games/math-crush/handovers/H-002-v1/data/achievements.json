@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "achievements": [
+    {
+      "id": "sweet-start",
+      "name": "Sweet Start",
+      "condition": "Finish level 1",
+      "asset": "assets/stickers/sweet-start.svg"
+    },
+    {
+      "id": "first-spark",
+      "name": "First Spark",
+      "condition": "Activate a special and finish the level",
+      "asset": "assets/stickers/first-spark.svg"
+    },
+    {
+      "id": "mix-master",
+      "name": "Mix Master",
+      "condition": "Combine two specials and finish the level",
+      "asset": "assets/stickers/mix-master.svg"
+    },
+    {
+      "id": "perfect-batch",
+      "name": "Perfect Batch",
+      "condition": "Finish without using a tool",
+      "asset": "assets/stickers/perfect-batch.svg"
+    },
+    {
+      "id": "sugar-rush",
+      "name": "Sugar Rush",
+      "condition": "Activate Sugar Rush and finish the level",
+      "asset": "assets/stickers/sugar-rush.svg"
+    },
+    {
+      "id": "lucky-seven",
+      "name": "Lucky Seven",
+      "condition": "Make a seven-candy chain and finish the level",
+      "asset": "assets/stickers/lucky-seven.svg"
+    }
+  ]
+}

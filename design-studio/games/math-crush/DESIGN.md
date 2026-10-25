@@ -1,7 +1,5 @@
-# Design index
-Current authorized overnight iteration: handovers/H-001-v1/HANDOVER.md (MC-001–009). Historical baseline: games/math-crush/design/handover-v1 in repo root. See STATUS for authorization boundary. New campaign, final balance, mandatory timers and operators on the candy board are excluded.
+# Math Crush — design index
 
+Current requested implementation iteration: [H-002-v1](handovers/H-002-v1/HANDOVER.md). See [STATUS](STATUS.md) for owner direction and delivery state. Scope MC-010–013, hammer MC-014, MC-015–017 and MC-019; later mechanics excluded explicitly. All required assets/data/checks are bundled.
 
-## New draft exploration — 23 October 2026
-
-[Sweet play v1](explorations/sweet-play-v1/README.md) explores MC-010–019: direct-to-board learning, visible star progress, candy combinations, level-granted tools, move-based Sugar Rush, achievement stickers, and independent speed records. Seven interactive scenes and a special/tool catalog are available in [index.html](explorations/sweet-play-v1/index.html). This is not an approved handover; the old packet remains frozen. See [ADR-002](decisions/ADR-002-play-first.md) for owner direction and scope boundaries.
+Historical: [H-001-v1](handovers/H-001-v1/HANDOVER.md), unchanged. Visual exploration: [Sweet play v1](explorations/sweet-play-v1/README.md); H-002 rules supersede its proposals and mockup shortcuts for included behavior. Runtime is Candy Match only. Final naming remains open.

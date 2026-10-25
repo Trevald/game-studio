@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "combos": [
+    {
+      "id": "two-stripes",
+      "target": 10,
+      "values": [
+        4,
+        6,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "specials": {
+        "0": "stripe",
+        "1": "stripe"
+      },
+      "chain": [
+        0,
+        1
+      ],
+      "expectedRemoval": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11,
+        15,
+        16,
+        20,
+        21
+      ],
+      "expectedChainPoints": 100,
+      "expectedBlastPoints": 275,
+      "quotaDelta": 1,
+      "movesUsed": 1
+    },
+    {
+      "id": "stripe-wrapped",
+      "target": 10,
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        4,
+        6,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "specials": {
+        "12": "stripe",
+        "13": "wrapped"
+      },
+      "chain": [
+        12,
+        13
+      ],
+      "expectedRemoval": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "expectedChainPoints": 100,
+      "expectedBlastPoints": 325,
+      "quotaDelta": 1,
+      "movesUsed": 1
+    },
+    {
+      "id": "two-wrapped",
+      "target": 10,
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        4,
+        6,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "specials": {
+        "12": "wrapped",
+        "13": "wrapped"
+      },
+      "chain": [
+        12,
+        13
+      ],
+      "expectedRemoval": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        19,
+        21,
+        22,
+        23,
+        24
+      ],
+      "expectedChainPoints": 100,
+      "expectedBlastPoints": 450,
+      "quotaDelta": 1,
+      "movesUsed": 1
+    }
+  ],
+  "rush": [
+    {
+      "charge": 2,
+      "uses": 0,
+      "chainLength": 3,
+      "expectedPoints": 187,
+      "nextCharge": 0,
+      "nextUses": 3
+    },
+    {
+      "charge": 0,
+      "uses": 3,
+      "chainLength": 3,
+      "expectedPoints": 374,
+      "nextCharge": 0,
+      "nextUses": 2
+    },
+    {
+      "charge": 0,
+      "uses": 1,
+      "chainLength": 2,
+      "expectedPoints": 200,
+      "nextCharge": 0,
+      "nextUses": 0
+    }
+  ]
+}

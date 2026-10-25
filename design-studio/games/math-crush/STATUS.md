@@ -1,4 +1,23 @@
 # Math Crush — status
+Updated: 2026-10-25. **H-002-v1 prepared for the requested implementation iteration; publication pending.**
+
+Current packet: `handovers/H-002-v1/HANDOVER.md`. Scope MC-010–013, hammer subset MC-014, MC-015–017 and MC-019. Phase A foundations, B reactions/hammer, C Rush/stickers. MC-018 and other experimental tools/bonuses excluded in BACKLOG.md. H-001-v1 remains frozen. Runtime remains unchanged; shipped-result acceptance is pending.
+
+## Owner direction and handover authority
+
+Benji, Codex chat `01a16481-97fa-7390-92c7-f627ee7ecc0a`, 25 October 2026: “Create the hand-over with all needed assets”. This follows the published seven-scene study and the explanation that the next step is a versioned implementation handover. Treat this as authorization to deliver the bounded prototype iteration, not proof of owner review of each numeric constant. Included defaults are selected and documented by the designer; final balance is subject to implementation testing and owner playtest. Earlier direct “Push” authorized publication to Trevald/game-studio main; same destination and standing main-first preference apply.
+
+## Contents and readiness
+
+Self-contained rules, complete 12-level data, baseline solution routes, combo/Rush fixtures, achievement definitions, 18 new SVG assets plus existing controls/art, seven screen references, asset inventory/destination hashes, screen corrections and QA coverage. All 12 baseline witnesses passed; SVG/JSON parse and asset render checks passed. No new-engine testing claimed. Prior reports identify L2's old unattainable900 threshold; packet replaces starter values and explicit thresholds and supplies attainable baseline routes.
+
+Baseline inspected:5dcac8e on main. Packet checksum inventory pins included files; the publishing commit is recorded below after delivery. The game runtime pointer now selects H-002-v1 for the requested next iteration. This does not dispatch a message or change a scheduler.
+
+Next action: night studio verifies the frozen packet, implements phases in order, and reports per requirement in `feedback/FB-003-sweet-play.md`. Open later-mechanic design questions are explicitly out of scope.
+
+---
+
+# Historical status through 23 October 2026
 Updated: 2026-10-23. **Sweet play v1 is a draft design exploration for owner review; not an implementation handover.**
 
 ## Current design review

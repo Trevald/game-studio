@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "runtimeBytes": 533454,
+  "files": [
+    {
+      "source": "assets/controls.svg",
+      "destination": "games/math-crush/assets/controls.svg",
+      "sha256": "d3d17d90627e983ee46db58c6ab257cf72dfc6cc2aa50565e2bb5c4634c86071",
+      "bytes": 1489,
+      "role": "runtime",
+      "provenance": "Existing repository asset at 5dcac8e; reused unchanged, no new rights claim",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/book.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/book.svg",
+      "sha256": "9507239cc7091226ee7811f26b2fb0491a6b7a2e4f8b3c6eaf5edb26421aa2c7",
+      "bytes": 333,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/chain.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/chain.svg",
+      "sha256": "29d074f6e788ff54373cebfb09771315f02424ed589dd75e5a5328d4359539b1",
+      "bytes": 277,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/cherry.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/cherry.svg",
+      "sha256": "559051318ccb2e9e13b7e620d221018d8dc6007b7441e34e711d783f49e568c0",
+      "bytes": 356,
+      "role": "optional future art",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/clock.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/clock.svg",
+      "sha256": "bf6e6a0f55a6ef43e3681be339f7f4c1099e81aee28c9c7f10a22959090245c5",
+      "bytes": 262,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/hammer.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/hammer.svg",
+      "sha256": "31f2fd4e091e21d0e4bbb28456cf48b25bae3d0d24d2f942acb4efc12d26b8d2",
+      "bytes": 349,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/hand.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/hand.svg",
+      "sha256": "c0bb678f8693a149757e15283ea397f21b6f58b58c72ac1e88d264d1eb80c437",
+      "bytes": 300,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/rush.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/rush.svg",
+      "sha256": "236e2eea0c325b31a7981def280ef216d6026b8e45ad8046fad6067cba8ec123",
+      "bytes": 212,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/shuffle.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/shuffle.svg",
+      "sha256": "28ebdc1e840d3962c37998adefd48475f22749dd7f7fef601b13530beec28c1e",
+      "bytes": 286,
+      "role": "optional future art",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/star.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/star.svg",
+      "sha256": "676b77d66e7c5201cdf6528b8becd90d49e07653001e48295629ad3fa4c5643b",
+      "bytes": 234,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/icons/swap.svg",
+      "destination": "games/math-crush/assets/sweet-v1/icons/swap.svg",
+      "sha256": "314ea7bfb8be37d72c63fb804590f8bf52120060e7f79c3d936d3da39ec9adf5",
+      "bytes": 220,
+      "role": "optional future art",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/match-atlas.json",
+      "destination": "games/math-crush/assets/match-atlas.json",
+      "sha256": "0b967b8496ed3c6bf5ac0eeb3fb69f59f1a712f5fa1540830b4bca0397a41f01",
+      "bytes": 1470,
+      "role": "runtime",
+      "provenance": "Existing repository asset at 5dcac8e; reused unchanged, no new rights claim",
+      "format": "json"
+    },
+    {
+      "source": "assets/match-atlas.webp",
+      "destination": "games/math-crush/assets/match-atlas.webp",
+      "sha256": "bf55aaf8c4b3ee9eb0e774f9f0a0e1026343a5ac9e1123614b70c38dadfded77",
+      "bytes": 307958,
+      "role": "runtime",
+      "provenance": "Existing repository asset at 5dcac8e; reused unchanged, no new rights claim",
+      "format": "webp"
+    },
+    {
+      "source": "assets/match-bg.webp",
+      "destination": "games/math-crush/assets/match-bg.webp",
+      "sha256": "dcfcaa0452430f76ed728df8a5725f8cb137fedcecb64642c85b1a8f8377aca6",
+      "bytes": 218086,
+      "role": "runtime",
+      "provenance": "Existing repository asset at 5dcac8e; reused unchanged, no new rights claim",
+      "format": "webp"
+    },
+    {
+      "source": "assets/stickers/first-spark.svg",
+      "destination": "games/math-crush/assets/sweet-v1/stickers/first-spark.svg",
+      "sha256": "913f25f0ae12f851b1d6016382946337e6014c620e6d64621d2459953fe532c0",
+      "bytes": 272,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/stickers/lucky-seven.svg",
+      "destination": "games/math-crush/assets/sweet-v1/stickers/lucky-seven.svg",
+      "sha256": "df8e16b1b387734108c2bbfb29f51b1b43bd02e2f0d3c67a4efdcc5af6ad5254",
+      "bytes": 311,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/stickers/mix-master.svg",
+      "destination": "games/math-crush/assets/sweet-v1/stickers/mix-master.svg",
+      "sha256": "c9f6dca8db5ffbab5f895ac2e2e6d0c1233483d5cf86669e91a301c46e6afa0c",
+      "bytes": 291,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/stickers/perfect-batch.svg",
+      "destination": "games/math-crush/assets/sweet-v1/stickers/perfect-batch.svg",
+      "sha256": "42bfbbc7653765fa817bfe0fb8175ed32adf8276294dff6e2fdbc4887179d88b",
+      "bytes": 272,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/stickers/sugar-rush.svg",
+      "destination": "games/math-crush/assets/sweet-v1/stickers/sugar-rush.svg",
+      "sha256": "a8821a6f7b4f99d81ca3c385e027298afc28c9776122807f2942a21d9bdd14aa",
+      "bytes": 317,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/stickers/sweet-start.svg",
+      "destination": "games/math-crush/assets/sweet-v1/stickers/sweet-start.svg",
+      "sha256": "8792f2527b12451c04ed0b9629986cddea70f3793a16acaffafd709600f67c61",
+      "bytes": 313,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/stripe-overlay.svg",
+      "destination": "games/math-crush/assets/sweet-v1/stripe-overlay.svg",
+      "sha256": "08262f8d16bbdceb73aea57d30e00d57b4a634eacc99d7097d8131541667c980",
+      "bytes": 246,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    },
+    {
+      "source": "assets/tokens.css",
+      "destination": "games/math-crush/assets/sweet-v1/tokens.css",
+      "sha256": "5daf4089d6ea388a5cbe347bb17644538b40dc66c40ead8e543beb4b768117ed",
+      "bytes": 186,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "css"
+    },
+    {
+      "source": "assets/wrapped-overlay.svg",
+      "destination": "games/math-crush/assets/sweet-v1/wrapped-overlay.svg",
+      "sha256": "e9a443c758293267e7766f6f1bf78ff402595b9e961b01d579b528e06f64f519",
+      "bytes": 276,
+      "role": "runtime",
+      "provenance": "Original SVG/CSS authored for this handover; no third-party asset dependency",
+      "format": "svg"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+# Explicit exclusions / later exploration
+
+These are NOT instructions for this implementation and require a separate packet: Rainbow Drop, Fizz, Caramel, Gummy Twins, Mystery Sweet; Swap, Shuffle, Cherry on Top, Licorice Split; Golden Batch, Rainbow Round, streak systems; candy companion and shop decoration; new title/logo; expanded campaign or restored removed modes. See the frozen exploration in references/EXPLORATION.md for ideas. Vector icons for swap/shuffle/cherry are included as optional future art only, not authorization to add those tools. Open caramel objective semantics, gummy generation/orphan rules and split placement remain design work. These do not block the first release.
