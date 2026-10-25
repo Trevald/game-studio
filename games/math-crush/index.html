@@ -731,7 +731,16 @@ const M = {
   hint(g0) {
     if (g0.status !== "playing") return { g: g0, chain: null };
     const g = { ...g0, hints: g0.hints + 1 };
-    return { g, chain: M.shortest(g) };
+    return { g, chain: M.hintChain(g) };
+  },
+  // Hint: prefer a chain through a special candy, then the shortest chain of 3+ (scores more, charges Rush), then any
+  hintChain(g) {
+    const all = M.allChains(g, 600);
+    if (!all.length) return M.shortest(g);
+    const sp = all.filter((c) => c.some((i) => g.cells[i].sp)).sort((a, b) => a.length - b.length);
+    if (sp.length) return sp[0];
+    const three = all.filter((c) => c.length >= 3).sort((a, b) => a.length - b.length);
+    return three.length ? three[0] : all.sort((a, b) => a.length - b.length)[0];
   },
   assisted(g) { return g.hints > 0 || g.undos > 0 || g.toolsUsed > 0; },
   // MC-011: completion 1, explicit per-level two/three-star thresholds on the final core score
@@ -1139,11 +1148,12 @@ function mPlay() {
   h += `<div class="status glow">${mStatus(g, sc, cue)}</div>`;
   if (ui.tool) {
     h += `<div class="hintbar"><button class="pill go" data-k="smash"${ui.tool.target === null ? " disabled" : ""}>${img("icons/hammer.svg")}Smash candy</button><button class="pill" data-k="tool-cancel">Cancel</button></div>`;
+  } else if (tap && ch.length) { // tap/keyboard selection: Clear + Submit replace the toolbar so Submit never wraps off-screen
+    h += `<div class="hintbar"><button class="pill" data-k="clearsel">Clear</button><button class="pill go" data-k="submit"${ch.length >= 2 ? "" : " disabled"}>Submit</button></div>`;
   } else {
     const hasHammer = LEVELS.match[g.li].tools.hammer > 0, hammerCue = cue && cue.kind === "hammer";
     h += `<div class="hintbar"><button class="pill" data-k="hint">${I2.bulb}Hint</button><button class="pill" data-k="undo"${g.hist.length && g.status === "playing" ? "" : " disabled"} aria-label="Undo last move">${I2.undo}Undo</button>`;
     if (hasHammer) h += `<button class="pill${hammerCue ? " cuebtn" : ""}" data-k="hammer"${g.hammer > 0 ? "" : " disabled"} aria-label="Hammer, ${g.hammer} left">${img("icons/hammer.svg")}Hammer · ${g.hammer}</button>`;
-    if (tap) h += `<button class="pill" data-k="clearsel"${ch.length ? "" : " disabled"}>Clear</button><button class="pill go" data-k="submit"${ch.length >= 2 ? "" : " disabled"}>Submit</button>`;
     h += `</div>`;
   }
   if (saveFailed || !storageOk) h += `<div class="banner panel small" role="status">Progress could not be saved on this device. Play continues.</div>`;
@@ -1244,6 +1254,7 @@ function renderFlow() {
 function mStart(li, opts = {}) { // MC-010: always straight onto the board
   ui.game = M.start(li, { timed: !!opts.timed });
   ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.dropFrom = null; ui.ghosts = null; ui.popup = null; ui.tool = null;
+  clearTimeout(stickerTimer); ui.stickerQueue = []; ui.stickerNow = null; // last result's sticker toast doesn't follow into a new attempt
   ui.refreshedNote = false; ui.resultSeq = -1; ui.cursor = 0; ui.idleMs = 0; ui.rushCue = false; ui.timeResult = null; ui.newBest = false; drag = null;
   ui.focusNext = "#mboard"; announce("");
   persistActive();
