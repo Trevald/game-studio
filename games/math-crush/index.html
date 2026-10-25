@@ -6,8 +6,8 @@
 <title>Math Crush</title>
 <!--
   Math Crush — Candy Match: chain touching numbers that add up to the target (Equation and Clear prototypes removed 22 Oct).
-  Rules, scoring and layout: design/handover-v1/docs/Studio-Handoff.md (designer). Art: assets/ (designer).
-  Phone-width flowing layout (#flow), per design-studio/games/math-crush/handovers/H-001-v1.
+  Design source: design-studio/games/math-crush/handovers/H-002-v1 (play first, sweet rewards), on top of H-001-v1.
+  Art: assets/ and assets/sweet-v1/ (designer). Phone-width flowing layout (#flow).
   Sections: data, core (pure), persistence, sound, rendering, input, QA hook.
 -->
 <style>
@@ -388,6 +388,72 @@
   .trio .tile2:nth-child(1) { transform: rotate(-8deg) translateY(4px); } .trio .tile2:nth-child(3) { transform: rotate(8deg) translateY(4px); }
   @media (prefers-reduced-motion: reduce) { .popup2 { animation: fadeout 900ms steps(1, end) forwards; } }
   @media (max-height: 700px) { .trail2 { height: 600px; } .logo2 .w { font-size: 3.5rem; } .eqrow .tile2 { width: 70px; height: 70px; font-size: 2.25rem; } }
+
+  /* ===== H-002-v1 sweet play (MC-010..MC-019) ===== */
+  #flow { --rush: #783D89; }
+  .ico { width: 24px; height: 24px; flex: none; display: inline-block; vertical-align: middle; }
+  .ico.sm { width: 18px; height: 18px; }
+  .sbtn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .sbtn svg { width: 22px; height: 22px; flex: none; }
+  .tile2 .ov { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: center / 100% 100% no-repeat; }
+  .tile2 .ov.stripe { background-image: url(assets/sweet-v1/stripe-overlay.svg); }
+  .tile2 .ov.wrapped { background-image: url(assets/sweet-v1/wrapped-overlay.svg); }
+  .tile2.noart .ov { filter: drop-shadow(0 0 1px #4A1736); }
+  .tile2.cue::after { content: ""; position: absolute; inset: -4px; border-radius: 18px; border: 4px dashed #fff; box-shadow: 0 0 0 2px var(--plum); z-index: 4; pointer-events: none; animation: hintpulse 1s ease-in-out infinite alternate; }
+  .tile2.smash::after { content: ""; position: absolute; inset: -4px; border-radius: 18px; border: 4px solid #fff; box-shadow: 0 0 0 3px var(--rasp), 0 0 14px 4px rgba(200,23,88,.75); z-index: 4; pointer-events: none; }
+  .tile2.pickable { cursor: crosshair; }
+  .cuehand { position: absolute; width: 13%; aspect-ratio: 1; z-index: 8; pointer-events: none; background: url(assets/sweet-v1/icons/hand.svg) center / contain no-repeat;
+    filter: drop-shadow(0 2px 2px rgba(74,23,54,.45)); animation: handnudge 900ms ease-in-out infinite alternate; }
+  @keyframes handnudge { to { transform: translate(-5px, -5px); } }
+  .cuecap { display: inline-flex; align-items: center; gap: 8px; }
+  .rewardmark { position: absolute; left: 2px; bottom: 2px; z-index: 6; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; background: var(--rasp) center / 90% 90% no-repeat; box-shadow: 0 1px 0 var(--plum); }
+  .rewardmark.stripe { background-image: url(assets/sweet-v1/stripe-overlay.svg); }
+  .rewardmark.wrapped { background-image: url(assets/sweet-v1/wrapped-overlay.svg); }
+  .qbar { gap: 12px; flex-wrap: wrap; padding: 4px 14px; }
+  .qbar .l { white-space: nowrap; }
+  .meter { position: relative; flex: 1 1 120px; min-width: 120px; height: 12px; border-radius: 6px; background: #EADBC6; margin: 10px 12px 10px 10px; }
+  .meter > i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: linear-gradient(90deg, #FF8DB8, var(--rasp)); }
+  .meter .tk { position: absolute; top: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; z-index: 1; }
+  .meter .tk svg { width: 24px; height: 24px; display: block; }
+  .meter .tk.done { margin-left: -14px; }
+  .rushbar { min-height: 44px; border-radius: 999px; display: flex; align-items: center; gap: 10px; padding: 4px 14px; font-weight: 900; }
+  .rushbar > span:nth-child(2) { flex: 1; }
+  .rushbar small { font-weight: 800; color: var(--muted); }
+  .rushbar.on { background: linear-gradient(#8E4FA0, var(--rush)); color: #fff; border: 2px solid #fff; box-shadow: 0 3px 0 #4E2259; }
+  .rushbar.on b { flex: 1; letter-spacing: .3px; }
+  .pips { display: inline-flex; gap: 6px; }
+  .pip { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--rush); background: #fff; }
+  .pip.on { background: var(--rush); }
+  .rushbar.on .pip { border-color: #fff; background: transparent; }
+  .rushbar.on .pip.on { background: #FFE09A; }
+  .pill .ico { width: 24px; height: 24px; }
+  .pill { min-width: 112px; padding: 4px 16px; }
+  .pill.cuebtn { box-shadow: 0 0 0 4px #FFD23F, 0 3px 0 rgba(176,120,70,.45); animation: hintpulse 1s ease-in-out infinite alternate; }
+  .clock { display: inline-flex; align-items: center; gap: 4px; }
+  .scorebox small { display: block; font-weight: 800; color: var(--muted); }
+  .rows2 .row b small { font-weight: 800; color: var(--muted); }
+  .rows2 .row span { display: inline-flex; align-items: center; gap: 6px; }
+  .badgeimg { width: 40px; height: 40px; }
+  .sgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stk { min-height: 112px; border-radius: 18px; background: #fff; border: 2px solid var(--edge); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    padding: 8px 4px; font-weight: 900; font-size: .8125rem; color: var(--plum) !important; position: relative; }
+  .stk img { width: 64px; height: 64px; }
+  .stk.locked { border-style: dashed; border-color: #B79C8D; background: #FBF4EA; color: var(--muted) !important; }
+  .stk.locked img { filter: grayscale(1) opacity(.4); }
+  .stk[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--rasp); }
+  .stk .chip { position: absolute; top: 4px; right: 4px; padding: 0 6px; font-size: .6875rem; }
+  .binfo { display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--inset); border-radius: 16px; padding: 10px 12px; font-weight: 800; }
+  .binfo b { font-size: 1.125rem; }
+  .stoast { position: fixed; left: 50%; top: max(12px, env(safe-area-inset-top)); transform: translateX(-50%); z-index: 92; display: flex; align-items: center; gap: 10px;
+    background: var(--cream); color: var(--plum); border: 2px solid var(--edge); border-radius: 20px; padding: 6px 6px 6px 10px; box-shadow: 0 6px 16px rgba(74,23,54,.3);
+    max-width: calc(100% - 32px); animation: fade 150ms ease-out; }
+  .stoast img { width: 44px; height: 44px; flex: none; }
+  .stoast span { display: flex; flex-direction: column; font-weight: 900; line-height: 1.2; }
+  .stoast small { font-size: .8125rem; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) {
+    .cuehand, .tile2.cue::after, .pill.cuebtn { animation: none; }
+    .stoast { animation: fadeout 0s; animation: none; }
+  }
 </style>
 </head>
 <body>
@@ -397,13 +463,15 @@
 <script>
 "use strict";
 // ======================================================================
-// DATA — designer's starter levels and atlas regions, inlined verbatim
-// (design/handover-v1/data/starter-levels.json, assets/*-atlas.json)
+// DATA — H-002-v1 data/levels.json (schema 2), inlined verbatim; atlas regions from assets/match-atlas.json
 // ======================================================================
-const LEVELS = {"schemaVersion":1,"match":[{"id":1,"seed":1,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[1,9,5,2,8,8,8,7,4,2,8,1,7,7,1,8,5,4,2,6,1,1,1,9,1],"witness":[0,1]},{"id":2,"seed":2,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[1,9,2,6,3,5,5,4,1,3,7,7,9,6,9,8,9,5,1,1,6,8,6,7,7],"witness":[0,1]},{"id":3,"seed":3,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[1,9,3,6,8,2,1,8,5,9,4,4,8,9,9,8,7,3,4,3,9,7,1,2,3],"witness":[0,1]},{"id":4,"seed":4,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[1,9,2,7,8,3,2,2,1,7,9,5,1,4,9,9,6,5,3,2,5,4,1,5,5],"witness":[0,1]},{"id":5,"seed":5,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,9,1,8,4,1,3,2,6,8,4,7,9,2,4,1,4,7,5,3,7,3,2,3],"witness":[0,1]},{"id":6,"seed":6,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,5,1,1,3,8,6,6,1,5,8,4,7,9,9,2,4,9,5,2,7,6,2,6],"witness":[0,1]},{"id":7,"seed":7,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,7,1,2,9,2,6,1,9,4,1,2,7,7,2,4,2,9,7,1,2,4,1,7],"witness":[0,1]},{"id":8,"seed":8,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,7,3,4,1,2,3,4,9,4,7,1,8,8,8,7,8,4,7,2,8,4,1,5],"witness":[0,1]},{"id":9,"seed":9,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,5,3,3,1,6,9,8,2,6,9,1,7,3,8,7,3,3,4,1,2,3,9,2],"witness":[0,1]},{"id":10,"seed":10,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,8,1,4,8,8,5,3,1,9,8,6,2,4,6,1,7,3,6,7,7,5,5,8],"witness":[0,1]},{"id":11,"seed":11,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,8,8,9,4,3,9,8,3,2,8,5,3,2,9,1,7,8,3,1,9,2,1,1],"witness":[0,1]},{"id":12,"seed":12,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,9,6,3,7,1,6,8,5,8,4,9,1,3,8,6,3,6,4,1,4,2,9,6],"witness":[0,1]}]};
+const LEVELS = {"schemaVersion":2,"match":[{"id":1,"seed":1,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[4,6,5,2,8,8,8,7,4,2,8,1,7,7,1,8,5,4,2,6,1,1,1,9,1],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[300,400],"tools":{"hammer":0},"rushEnabled":false,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":true},{"id":2,"seed":2,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[2,3,5,6,3,5,5,4,1,3,7,7,9,6,9,8,9,5,1,1,6,8,6,7,7],"witness":[0,1,2],"contentVersion":"sweet-v1","starThresholds":[400,600],"tools":{"hammer":0},"rushEnabled":false,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":true},{"id":3,"seed":3,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[1,9,3,6,8,2,1,8,5,9,4,4,8,9,9,8,7,3,4,3,9,7,1,2,3],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[450,750],"tools":{"hammer":0},"rushEnabled":false,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":true},{"id":4,"seed":4,"rows":5,"cols":5,"target":10,"quota":3,"moves":5,"values":[1,9,2,7,8,3,2,2,1,7,9,5,4,6,9,9,6,5,3,2,5,4,1,5,5],"witness":[12,13],"contentVersion":"sweet-v1","starThresholds":[600,900],"tools":{"hammer":0},"rushEnabled":false,"rushInitialCharge":0,"initialSpecials":[{"cell":12,"type":"stripe"}],"freeInvalid":false},{"id":5,"seed":5,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,9,1,8,4,1,3,2,6,8,4,7,9,2,4,1,4,7,5,3,7,3,2,3],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[800,1200],"tools":{"hammer":0},"rushEnabled":false,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":false},{"id":6,"seed":6,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,5,1,1,3,8,6,6,1,5,8,4,7,9,9,2,4,9,5,2,7,6,2,6],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[800,1200],"tools":{"hammer":1},"rushEnabled":false,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":false},{"id":7,"seed":7,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,7,1,2,9,2,6,1,9,4,1,5,7,7,2,4,2,9,7,1,2,4,1,7],"witness":[12,13],"contentVersion":"sweet-v1","starThresholds":[800,1200],"tools":{"hammer":1},"rushEnabled":false,"rushInitialCharge":0,"initialSpecials":[{"cell":12,"type":"wrapped"}],"freeInvalid":false},{"id":8,"seed":8,"rows":5,"cols":5,"target":12,"quota":4,"moves":6,"values":[3,9,7,3,4,1,2,3,4,9,4,7,1,8,8,8,7,8,4,7,2,8,4,1,5],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[800,1200],"tools":{"hammer":1},"rushEnabled":true,"rushInitialCharge":2,"initialSpecials":[],"freeInvalid":false},{"id":9,"seed":9,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,5,3,3,1,6,9,8,2,6,9,1,7,3,8,7,3,3,4,1,2,3,9,2],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[1000,1500],"tools":{"hammer":1},"rushEnabled":true,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":false},{"id":10,"seed":10,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,8,1,4,8,8,5,3,1,9,8,6,2,4,6,1,7,3,6,7,7,5,5,8],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[1000,1500],"tools":{"hammer":1},"rushEnabled":true,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":false},{"id":11,"seed":11,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,8,8,9,4,3,9,8,3,2,8,5,3,2,9,1,7,8,3,1,9,2,1,1],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[1000,1500],"tools":{"hammer":1},"rushEnabled":true,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":false},{"id":12,"seed":12,"rows":5,"cols":5,"target":15,"quota":5,"moves":7,"values":[6,9,9,6,3,7,1,6,8,5,8,4,9,1,3,8,6,3,6,4,1,4,2,9,6],"witness":[0,1],"contentVersion":"sweet-v1","starThresholds":[1000,1500],"tools":{"hammer":1},"rushEnabled":true,"rushInitialCharge":0,"initialSpecials":[],"freeInvalid":false}]};
 const ATLAS = {"match":{"tile_0":[34,38,250,252],"tile_1":[346,38,252,253],"tile_2":[659,38,252,252],"tile_3":[972,38,251,252],"tile_4":[32,349,254,252],"tile_5":[344,349,253,252],"hud":[631,401,304,145],"button":[946,399,297,149],"hint":[27,653,262,261],"undo":[338,654,263,261],"star":[643,651,282,267],"selection":[963,653,271,264],"modal":[23,948,271,261],"badge":[314,1019,310,122],"check":[659,956,256,255],"back":[967,955,256,255]}};
+const ACHIEVEMENTS = {"schemaVersion":1,"achievements":[{"id":"sweet-start","name":"Sweet Start","condition":"Finish level 1"},{"id":"first-spark","name":"First Spark","condition":"Activate a special and finish the level"},{"id":"mix-master","name":"Mix Master","condition":"Combine two specials and finish the level"},{"id":"perfect-batch","name":"Perfect Batch","condition":"Finish without using a tool"},{"id":"sugar-rush","name":"Sugar Rush","condition":"Activate Sugar Rush and finish the level"},{"id":"lucky-seven","name":"Lucky Seven","condition":"Make a seven-candy chain and finish the level"}]};
 const MODES = ["match"]; // Equation and Clear were removed 22 Oct (Benji); their saved progress is left untouched in storage
 const ATLAS_SIZE = 1254;
+const CONTENT = "sweet-v1";
+const A2 = "assets/sweet-v1/"; // H-002-v1 runtime SVGs (ASSETS.json destinations)
 
 // ======================================================================
 // CORE — pure functions, no DOM.
@@ -415,19 +483,26 @@ function mulberry32(s) { // returns [value in [0,1), next state]
   return [((t ^ (t >>> 14)) >>> 0) / 4294967296, s];
 }
 
-// ---------- Match to Make Target — candy-v2 (H-001-v1: MC-002..MC-008) ----------
-// Pure model. Every committed move returns a new state; the previous committed state is kept in g.hist
-// (full snapshot: board, IDs, specials, RNG, counters, score) so Undo is exact.
-const MATCH_VERSION = "candy-v2";
+// ---------- Candy Match — sweet-v1 (H-002-v1: MC-010..MC-019 on top of the H-001-v1 core) ----------
+// Pure model. Every committed action returns a new state; the previous committed state is kept in g.hist
+// (full snapshot: board, IDs, specials, RNG, counters, score, Rush, hammer, staged sticker events) so Undo is exact.
+// Monotonic counters (hints, undos, toolsUsed) and active time never rewind.
+const MATCH_VERSION = CONTENT;
 const M = {
   start(li, opts = {}) {
     const L = LEVELS.match[li];
+    const cells = L.values.map((v, i) => ({ id: i, v, sp: null }));
+    for (const s of L.initialSpecials || []) cells[s.cell].sp = s.type;
     return { mode: "match", version: MATCH_VERSION, li, rows: L.rows, cols: L.cols, target: L.target, quota: L.quota, moves: L.moves,
-      movesLeft: L.moves, made: 0, chainPts: 0, blastPts: 0, finish: 0, speedBonus: 0,
-      cells: L.values.map((v, i) => ({ id: i, v, sp: null })), nextId: L.values.length, rng: L.seed, refills: 0,
-      assisted: false, hints: 0, undos: 0, status: "playing", last: null, seq: 0,
-      speed: !!opts.speed, timing: false, elapsed: 0, hist: [] };
+      movesLeft: L.moves, made: 0, chainPts: 0, blastPts: 0, finish: 0,
+      cells, nextId: L.values.length, rng: L.seed, refills: 0,
+      hammer: (L.tools && L.tools.hammer) || 0,
+      rush: L.rushEnabled ? { charge: L.rushInitialCharge || 0, uses: 0 } : null,
+      ev: { spark: false, mix: false, rush: false, seven: false }, // staged sticker eligibility (undoable)
+      hints: 0, undos: 0, toolsUsed: 0, status: "playing", last: null, seq: 0,
+      timed: !!opts.timed, timing: false, elapsed: 0, hist: [] };
   },
+  level(g) { return LEVELS.match[g.li]; },
   adjacent(g, a, b) {
     const ra = Math.floor(a / g.cols), ca = a % g.cols, rb = Math.floor(b / g.cols), cb = b % g.cols;
     return Math.abs(ra - rb) + Math.abs(ca - cb) === 1;
@@ -452,30 +527,56 @@ const M = {
     return true;
   },
   sum(g, chain) { return chain.reduce((s, i) => s + g.cells[i].v, 0); },
-  // MC-003
   mult(n) { return n <= 2 ? 1 : n === 3 ? 1.5 : n === 4 ? 2 : 3; },
   base(n) { return 100 + 25 * (n - 2); },
   chainPoints(n) { return Math.floor(M.base(n) * M.mult(n)); },
-  // MC-004: level 1-3 none; 4-6 n>=4 stripe; 7-12 n==4 stripe, n>=5 wrapped
+  // MC-012: L1-3 none; L4-6 n>=4 stripe; L7-12 n==4 stripe, n>=5 wrapped
   rewardFor(li, n) {
     const lv = li + 1;
     if (lv <= 3 || n < 4) return null;
     if (lv <= 6) return "stripe";
     return n === 4 ? "stripe" : "wrapped";
   },
-  // MC-005: blast area of one special on the pre-gravity board
-  area(g, i, sp) {
-    const r = Math.floor(i / g.cols), c = i % g.cols, out = [];
-    if (sp === "stripe") { for (let cc = 0; cc < g.cols; cc++) out.push(r * g.cols + cc); }
-    else if (sp === "wrapped") {
-      for (let rr = r - 1; rr <= r + 1; rr++) for (let cc = c - 1; cc <= c + 1; cc++)
-        if (rr >= 0 && rr < g.rows && cc >= 0 && cc < g.cols) out.push(rr * g.cols + cc);
-    }
+  rc(g, i) { return [Math.floor(i / g.cols), i % g.cols]; },
+  rect(g, r0, r1, c0, c1) {
+    const out = [];
+    for (let r = Math.max(0, r0); r <= Math.min(g.rows - 1, r1); r++) for (let c = Math.max(0, c0); c <= Math.min(g.cols - 1, c1); c++) out.push(r * g.cols + c);
     return out;
   },
-  // closure: activate specials in row-major order, each once, until nothing new is hit
+  // single special blast area on the pre-gravity board
+  area(g, i, sp) {
+    const [r, c] = M.rc(g, i);
+    if (sp === "stripe") return M.rect(g, r, r, 0, g.cols - 1);
+    if (sp === "wrapped") return M.rect(g, r - 1, r + 1, c - 1, c + 1);
+    return [];
+  },
+  // MC-013: choose exactly one selected pair: wrapped+wrapped, then stripe+wrapped, then stripe+stripe;
+  // within a type the lexicographically earliest pair of selection positions.
+  pickCombo(g, chain) {
+    const sel = chain.map((c, pos) => ({ c, pos, sp: g.cells[c].sp })).filter((x) => x.sp);
+    if (sel.length < 2) return null;
+    for (const [a, b] of [["wrapped", "wrapped"], ["stripe", "wrapped"], ["stripe", "stripe"]]) {
+      for (let x = 0; x < sel.length; x++) for (let y = x + 1; y < sel.length; y++) {
+        const p = sel[x], q = sel[y];
+        if ((p.sp === a && q.sp === b) || (p.sp === b && q.sp === a)) return { type: a + "+" + b, cells: [p.c, q.c] };
+      }
+    }
+    return null;
+  },
+  comboArea(g, combo) {
+    const [p, q] = combo.cells; // p selected before q
+    if (combo.type === "stripe+stripe") {
+      const set = new Set();
+      for (const i of [p, q]) { const [r, c] = M.rc(g, i); M.rect(g, r, r, 0, g.cols - 1).forEach((j) => set.add(j)); M.rect(g, 0, g.rows - 1, c, c).forEach((j) => set.add(j)); }
+      return [...set];
+    }
+    if (combo.type === "stripe+wrapped") { const w = g.cells[p].sp === "wrapped" ? p : q, [r] = M.rc(g, w); return M.rect(g, r - 1, r + 1, 0, g.cols - 1); }
+    const [r, c] = M.rc(g, q); return M.rect(g, r - 2, r + 2, c - 2, c + 2); // wrapped+wrapped: 5x5 on the later-selected member
+  },
+  // closure: combo first (both members consumed), then other hit specials individually in row-major order, each once
   closure(g, chain) {
-    const removal = new Set(chain), done = new Set();
+    const removal = new Set(chain), done = new Set(), combo = M.pickCombo(g, chain);
+    if (combo) { combo.cells.forEach((i) => done.add(i)); M.comboArea(g, combo).forEach((j) => removal.add(j)); }
     for (;;) {
       const pending = [...removal].filter((i) => g.cells[i].sp && !done.has(i)).sort((a, b) => a - b);
       if (!pending.length) break;
@@ -483,13 +584,15 @@ const M = {
       for (const j of M.area(g, i, g.cells[i].sp)) removal.add(j);
     }
     const all = [...removal].sort((a, b) => a - b);
-    return { removal: all, activated: [...done].sort((a, b) => a - b), blastOnly: all.filter((i) => !chain.includes(i)) };
+    return { removal: all, activated: [...done].sort((a, b) => a - b), blastOnly: all.filter((i) => !chain.includes(i)), combo };
   },
-  // what an exact chain would do (used for the live preview and by release)
+  rushActive(g) { return !!(g.rush && g.rush.uses > 0); },
+  // what an exact chain would do (the live preview and release both use this)
   resolve(g, chain) {
-    const n = chain.length, cl = M.closure(g, chain), type = M.rewardFor(g.li, n);
-    return { n, base: M.base(n), mult: M.mult(n), chainPts: M.chainPoints(n), blastPts: 25 * cl.blastOnly.length,
-      removal: cl.removal, blastOnly: cl.blastOnly, activated: cl.activated,
+    const n = chain.length, cl = M.closure(g, chain), type = M.rewardFor(g.li, n), rush = M.rushActive(g);
+    const plain = M.chainPoints(n);
+    return { n, base: M.base(n), mult: M.mult(n), rush, chainPts: rush ? plain * 2 : plain, plainPts: plain, blastPts: 25 * cl.blastOnly.length,
+      removal: cl.removal, blastOnly: cl.blastOnly, activated: cl.activated, combo: cl.combo,
       reward: type ? { cell: chain[n - 1], value: g.cells[chain[n - 1]].v, type } : null };
   },
   shortest(g) { // shortest legal chain, row-major lexicographic tie-break
@@ -534,40 +637,12 @@ const M = {
   },
   draw(g) { const [r, s] = mulberry32(g.rng); g.rng = s; return 1 + Math.floor(r * 9); },
   snap(g) { const { hist, ...rest } = g; return JSON.parse(JSON.stringify(rest)); },
+  commitBase(g0) { const g = M.snap(g0); g.hist = g0.hist.concat([M.snap(g0)]); g.seq++; return g; },
   core(g) { return g.chainPts + g.blastPts + g.finish; },
   score(g) { return g.chainPts + g.blastPts + g.finish; },
-  thresholds(quota) { return [200 * quota, 300 * quota]; },
-  // Release a chain. Returns {g, ev}. Atomic: g is the next stable committed state.
-  release(g0, chain) {
-    if (g0.status !== "playing") return { g: g0, ev: null };
-    if (!Array.isArray(chain) || chain.length < 2) return { g: g0, ev: { type: "cancel" } }; // single tile: free
-    if (!M.validChain(g0, chain)) return { g: g0, ev: { type: "cancel" } };
-    const g = M.snap(g0);
-    g.hist = g0.hist.concat([M.snap(g0)]);
-    g.seq++;
-    if (g.speed) g.timing = true;
-    const sum = M.sum(g, chain);
-    if (sum !== g.target) { // wrong sum: one move, nothing activates
-      g.movesLeft--; g.last = { type: "wrong", sum, chain: chain.slice() };
-      if (g.movesLeft <= 0) { g.status = "lost"; g.timing = false; }
-      return { g, ev: { type: "wrong", sum, chain } };
-    }
-    const R = M.resolve(g, chain);
-    const removed = R.removal.map((i) => ({ i, v: g.cells[i].v, sp: g.cells[i].sp, chain: chain.includes(i) }));
-    // points before quota, quota before zero-moves failure
-    g.chainPts += R.chainPts; g.blastPts += R.blastPts; g.movesLeft--; g.made++;
-    g.last = { type: "clear", chain: chain.slice(), chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, reward: R.reward ? R.reward.type : null };
-    const ev = { type: "clear", chain: chain.slice(), removed, blastOnly: R.blastOnly, chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, base: R.base, reward: R.reward };
-    if (g.made >= g.quota) {
-      g.status = "won"; g.timing = false; g.finish = 50 * g.movesLeft;
-      if (g.speed) g.speedBonus = M.speedBonus(g.elapsed, g.quota);
-      ev.won = true; return { g, ev };
-    }
-    if (g.movesLeft <= 0) { g.status = "lost"; g.timing = false; return { g, ev }; }
-    // remove union, place reward on the last selected cell, collapse, refill
-    const cur = g.cells.slice();
-    for (const i of R.removal) cur[i] = null;
-    if (R.reward) cur[R.reward.cell] = { id: g.nextId++, v: R.reward.value, sp: R.reward.type, fresh: true };
+  thresholds(li) { return LEVELS.match[li].starThresholds.slice(); },
+  // seeded gravity + refill (+ deterministic solvability repair). cur: cells with nulls for removed tiles.
+  settle(g, cur) {
     const next = new Array(cur.length);
     for (let c = 0; c < g.cols; c++) {
       const col = [];
@@ -580,63 +655,141 @@ const M = {
     g.cells = next.map((t) => ({ id: t.id, v: t.v, sp: t.sp || null }));
     g.refills++;
     if (!M.shortest(g)) { // replacement board (specials are lost), guaranteed pair in row 1
-      ev.refreshed = true;
       g.cells = g.cells.map(() => ({ id: g.nextId++, v: M.draw(g), sp: null }));
       const a = Math.max(1, g.target - 9), b = g.target - a;
       g.cells[0].v = a; g.cells[1].v = b;
+      return true;
     }
+    return false;
+  },
+  // Release a chain. Returns {g, ev}. Atomic: g is the next stable committed state.
+  release(g0, chain) {
+    if (g0.status !== "playing") return { g: g0, ev: null };
+    if (!Array.isArray(chain) || chain.length < 2) return { g: g0, ev: { type: "cancel" } }; // single tile: free
+    if (!M.validChain(g0, chain)) return { g: g0, ev: { type: "cancel" } };
+    const sum = M.sum(g0, chain), L = M.level(g0);
+    if (sum !== g0.target) {
+      if (L.freeInvalid) { // MC-010: L1-3 wrong sums cost nothing (not an Undo step: nothing changed)
+        const g = { ...g0, seq: g0.seq + 1, last: { type: "wrong", sum, chain: chain.slice(), free: true } };
+        return { g, ev: { type: "wrong", sum, chain, free: true } };
+      }
+      const g = M.commitBase(g0);
+      g.movesLeft--; g.last = { type: "wrong", sum, chain: chain.slice() };
+      if (g.movesLeft <= 0) { g.status = "lost"; g.timing = false; }
+      return { g, ev: { type: "wrong", sum, chain } };
+    }
+    const g = M.commitBase(g0);
+    const R = M.resolve(g, chain), n = chain.length;
+    const removed = R.removal.map((i) => ({ i, v: g.cells[i].v, sp: g.cells[i].sp, chain: chain.includes(i) }));
+    // points, then quota, then success, then zero-moves failure
+    g.chainPts += R.chainPts; g.blastPts += R.blastPts; g.movesLeft--; g.made++;
+    // MC-015 Sugar Rush: an active Rush spends one use per valid chain; otherwise a 3+ chain charges it
+    let rushEv = null;
+    if (g.rush) {
+      if (g.rush.uses > 0) { g.rush.uses--; rushEv = g.rush.uses ? "used" : "ended"; }
+      else if (n >= 3) { g.rush.charge++; rushEv = "charged"; if (g.rush.charge >= 3) { g.rush.charge = 0; g.rush.uses = 3; g.ev.rush = true; rushEv = "activated"; } }
+    }
+    if (R.activated.length) g.ev.spark = true;
+    if (R.combo) g.ev.mix = true;
+    if (n === 7) g.ev.seven = true;
+    g.last = { type: "clear", chain: chain.slice(), chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, rush: R.rush, combo: R.combo ? R.combo.type : null, reward: R.reward ? R.reward.type : null, rushEv };
+    const ev = { type: "clear", chain: chain.slice(), removed, blastOnly: R.blastOnly, chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, base: R.base,
+      rush: R.rush, rushEv, combo: R.combo, activated: R.activated, reward: R.reward };
+    if (g.made >= g.quota) { g.status = "won"; g.timing = false; g.finish = 50 * g.movesLeft; ev.won = true; return { g, ev }; }
+    if (g.movesLeft <= 0) { g.status = "lost"; g.timing = false; return { g, ev }; }
+    const cur = g.cells.slice();
+    for (const i of R.removal) cur[i] = null;
+    if (R.reward) cur[R.reward.cell] = { id: g.nextId++, v: R.reward.value, sp: R.reward.type };
+    if (M.settle(g, cur)) ev.refreshed = true;
     return { g, ev };
+  },
+  // MC-014: one level-granted hammer. Clears exactly one tile: no points, quota or move; never triggers its special.
+  hammer(g0, i) {
+    if (g0.status !== "playing" || !(g0.hammer > 0) || !Number.isInteger(i) || i < 0 || i >= g0.cells.length) return { g: g0, ev: null };
+    const g = M.commitBase(g0);
+    const t = g.cells[i];
+    g.hammer--; g.toolsUsed++;
+    const cur = g.cells.slice(); cur[i] = null;
+    const refreshed = M.settle(g, cur);
+    g.last = { type: "hammer", cell: i };
+    return { g, ev: { type: "hammer", i, removed: [{ i, v: t.v, sp: t.sp, chain: true }], refreshed } };
   },
   undo(g0) {
     if (!g0.hist.length || g0.status === "won") return { g: g0, ev: null };
     const prev = g0.hist[g0.hist.length - 1];
     const g = JSON.parse(JSON.stringify(prev));
     g.hist = g0.hist.slice(0, -1);
-    g.assisted = true; g.undos = g0.undos + 1; g.hints = g0.hints;
-    g.elapsed = g0.elapsed; g.timing = !!g.speed; // a move was committed: clock keeps running, never rewinds
+    // monotonic: usage counters and active time never rewind; a running clock keeps running
+    g.undos = g0.undos + 1; g.hints = g0.hints; g.toolsUsed = g0.toolsUsed;
+    g.elapsed = g0.elapsed; g.timing = !!g0.timed && (g0.timing || g0.status === "lost");
     g.seq = g0.seq + 1; g.status = "playing"; g.last = { type: "undo" };
     return { g, ev: { type: "undo" } };
   },
   hint(g0) {
     if (g0.status !== "playing") return { g: g0, chain: null };
-    const g = { ...g0, assisted: true, hints: g0.hints + 1 };
+    const g = { ...g0, hints: g0.hints + 1 };
     return { g, chain: M.shortest(g) };
   },
-  speedBonus(ms, quota) { return Math.floor(100 * Math.max(0, 1 - ms / 1000 / (30 * quota))); },
-  // MC-006: completion 1, core >= 200*quota 2, >= 300*quota 3
-  stars(g) { if (g.status !== "won") return 0; const [t2, t3] = M.thresholds(g.quota), c = M.core(g); return c >= t3 ? 3 : c >= t2 ? 2 : 1; },
-  hasProgress(g) { return g.hist.length > 0 || g.hints > 0; },
-  // structural check for a restored save
+  assisted(g) { return g.hints > 0 || g.undos > 0 || g.toolsUsed > 0; },
+  // MC-011: completion 1, explicit per-level two/three-star thresholds on the final core score
+  starsFor(li, core) { const [t2, t3] = M.thresholds(li); return core >= t3 ? 3 : core >= t2 ? 2 : 1; },
+  stars(g) { return g.status === "won" ? M.starsFor(g.li, M.core(g)) : 0; },
+  // MC-016: sticker IDs a committed win unlocks (eligibility staged in g.ev; Perfect Batch uses the monotonic tool counter)
+  stickersFor(g) {
+    if (g.status !== "won") return [];
+    const out = [];
+    if (g.li === 0) out.push("sweet-start");
+    if (g.ev.spark) out.push("first-spark");
+    if (g.ev.mix) out.push("mix-master");
+    if (g.toolsUsed === 0) out.push("perfect-batch");
+    if (g.ev.rush) out.push("sugar-rush");
+    if (g.ev.seven) out.push("lucky-seven");
+    return out;
+  },
+  hasProgress(g) { return g.hist.length > 0 || g.hints > 0 || g.toolsUsed > 0; },
+  // structural check for a restored v3 save
   validSave(g) {
     try {
       if (!g || g.mode !== "match" || g.version !== MATCH_VERSION) return false;
       const L = LEVELS.match[g.li]; if (!L) return false;
       if (!Array.isArray(g.cells) || g.cells.length !== L.rows * L.cols) return false;
       if (!g.cells.every((c) => c && Number.isInteger(c.v) && c.v >= 1 && c.v <= 9 && Number.isInteger(c.id) && (c.sp === null || c.sp === "stripe" || c.sp === "wrapped"))) return false;
-      for (const k of ["movesLeft", "made", "chainPts", "blastPts", "rng", "nextId", "seq", "elapsed"]) if (!Number.isFinite(g[k])) return false;
+      for (const k of ["movesLeft", "made", "chainPts", "blastPts", "rng", "nextId", "seq", "elapsed", "hammer", "toolsUsed", "hints", "undos"]) if (!Number.isFinite(g[k])) return false;
+      if (!g.ev || typeof g.ev !== "object") return false;
+      if (L.rushEnabled ? !(g.rush && Number.isInteger(g.rush.charge) && Number.isInteger(g.rush.uses)) : g.rush !== null) return false;
       if (!["playing", "lost"].includes(g.status) || !Array.isArray(g.hist)) return false;
-      return g.movesLeft >= 0 && g.movesLeft <= L.moves && g.made < L.quota;
+      return g.movesLeft >= 0 && g.movesLeft <= L.moves && g.made < L.quota && g.hammer >= 0 && g.hammer <= L.tools.hammer;
     } catch (e) { return false; }
   },
 };
 
-
-// Data validation against the designer's witnesses (exposed as __qa.validate)
+// Data validation (schema 2): witnesses, initial specials, thresholds, solvability (exposed as __qa.validate)
 function validateData() {
   const errs = [];
-  LEVELS.match.forEach((L, k) => { const g = M.start(k); if (!M.validChain(g, L.witness) || M.sum(g, L.witness) !== L.target) errs.push("match " + L.id); if (!M.shortest(g)) errs.push("match no chain " + L.id); });
+  if (LEVELS.schemaVersion !== 2 || LEVELS.match.length !== 12) errs.push("schema");
+  LEVELS.match.forEach((L, k) => {
+    const g = M.start(k);
+    if (L.contentVersion !== CONTENT) errs.push("content " + L.id);
+    if (L.values.length !== L.rows * L.cols || !L.values.every((v) => v >= 1 && v <= 9)) errs.push("values " + L.id);
+    if (!M.validChain(g, L.witness) || M.sum(g, L.witness) !== L.target) errs.push("witness " + L.id);
+    if (!(L.starThresholds.length === 2 && L.starThresholds[0] < L.starThresholds[1])) errs.push("thresholds " + L.id);
+    if (new Set((L.initialSpecials || []).map((s) => s.cell)).size !== (L.initialSpecials || []).length) errs.push("specials " + L.id);
+    if (!M.shortest(g)) errs.push("no chain " + L.id);
+  });
   return { ok: errs.length === 0, errors: errs };
 }
 
 // ======================================================================
-// PERSISTENCE (localStorage in try/catch; the game works without it)
+// PERSISTENCE (localStorage in try/catch; the game works without it) — MC-019
+// Same key as night 1. Legacy `match` (v1) and `matchV2` (candy-v2) records, Equation/Clear data and old
+// settings are kept verbatim. New sweet-v1 records live in `matchV3`, keyed by contentVersion + level ID.
 // ======================================================================
-const SAVE_KEY = "mathcrush.v1"; // same key as night 1: unlocks, Equation/Clear and legacy Match bests stay put
+const SAVE_KEY = "mathcrush.v1";
 function blankProgress() {
   const p = { schemaVersion: 1, settings: { sound: true, haptics: true, speed: false, tap: false }, coach: {}, coach2: {}, active: null };
   for (const m of MODES) p[m] = { unlocked: 1, stars: Array(12).fill(0), best: Array(12).fill(0) };
-  // candy-v2 Match scoring (H-001-v1). progress.match.stars/best stay as the legacy (v1) record, never compared.
   p.matchV2 = { version: "candy-v2", stars: Array(12).fill(0), best: Array(12).fill(0), bestTimed: Array(12).fill(0), assisted: Array(12).fill(false) };
+  p.matchV3 = { contentVersion: CONTENT, records: {}, lessons: {}, stickers: {}, badge: null, active: null, archivedActive: [], offerStart: null };
   return p;
 }
 let progress = blankProgress(), storageOk = true, saveFailed = false;
@@ -650,7 +803,19 @@ try {
       progress.settings = Object.assign(blankProgress().settings, p.settings || {});
       progress.coach2 = p.coach2 || {};
       progress.matchV2 = Object.assign(blankProgress().matchV2, p.matchV2 || {});
+      const v3 = Object.assign(blankProgress().matchV3, p.matchV3 || {});
+      for (const k of ["records", "lessons", "stickers"]) if (!v3[k] || typeof v3[k] !== "object" || Array.isArray(v3[k])) v3[k] = {};
+      if (!Array.isArray(v3.archivedActive)) v3.archivedActive = [];
+      progress.matchV3 = v3;
       for (const m of MODES) if (!progress[m] || !Array.isArray(progress[m].stars)) progress[m] = blankProgress()[m];
+      // an attempt saved under the old rules (candy-v2) is archived verbatim, never deserialized as v3
+      if (p.active) {
+        const li = p.active.game && Number.isInteger(p.active.game.li) && p.active.game.li >= 0 && p.active.game.li < 12 ? p.active.game.li : 0;
+        v3.archivedActive.push({ archivedOn: new Date().toISOString(), from: p.active.version || "unknown", data: p.active });
+        v3.offerStart = li;
+        progress.active = null;
+        try { localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); } catch (e) { /* kept in memory */ }
+      }
     }
   }
 } catch (e) { storageOk = false; /* storage blocked or unreadable: play in memory */ }
@@ -658,9 +823,17 @@ function save() {
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(progress)); return true; }
   catch (e) { if (!saveFailed) { saveFailed = true; if (typeof onSaveError === "function") onSaveError(); } return false; }
 }
+const V3 = () => progress.matchV3;
+function recKey(li) { return `${CONTENT}:${LEVELS.match[li].id}`; }
+function rec(li) { return V3().records[recKey(li)] || { stars: 0, best: 0, bestTimeMs: 0, timeDetails: null, wins: 0 }; }
+function setRec(li, r) { V3().records[recKey(li)] = r; }
+// completed under any version (speed challenge unlock is retained from older versions)
+function completedEver(li) {
+  return rec(li).stars > 0 || (progress.matchV2.stars[li] || 0) > 0 || (progress.match.stars[li] || 0) > 0 || progress.match.unlocked > li + 1;
+}
 
 // ======================================================================
-// SOUND (WebAudio, starts after a gesture) + haptics
+// SOUND (WebAudio, starts after a gesture) + haptics — optional, never the only feedback
 // ======================================================================
 let actx = null;
 function tone(freq, dur = 0.09, type = "sine", vol = 0.08, delay = 0) {
@@ -680,6 +853,8 @@ const sfx = {
   bad: () => tone(196, 0.16, "sine", 0.07),
   win: () => [523, 659, 784, 1047].forEach((f, k) => tone(f, 0.16, "triangle", 0.08, k * 0.09)),
   tap: () => tone(520, 0.05, "sine", 0.05),
+  rush: () => [660, 880, 1175].forEach((f, k) => tone(f, 0.12, "square", 0.04, k * 0.07)),
+  smash: () => tone(150, 0.14, "square", 0.06),
 };
 function buzz(ms) { if (progress.settings.haptics && navigator.vibrate) try { navigator.vibrate(ms); } catch (e) { /* ignore */ } }
 
@@ -688,65 +863,79 @@ function buzz(ms) { if (progress.settings.haptics && navigator.vibrate) try { na
 // ======================================================================
 const bgEl = document.getElementById("bg"), srEl = document.getElementById("sr");
 const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const ui = { screen: "home", mode: "match", modal: null, game: null, chain: [], hintChain: null, busyUntil: 0, cursor: 0, kbd: false, prevPos: null, showCoach: false };
+const ui = { screen: "home", mode: "match", modal: null, game: null, chain: [], hintChain: null, busyUntil: 0, cursor: 0, kbd: false,
+  tool: null, idleMs: 0, stickerQueue: [], stickerNow: null };
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-function box(x, y, w, h) { return `left:${x}px;top:${y}px;width:${w}px;height:${h}px;`; }
 function announce(t) { srEl.textContent = t; }
+function render() { bgEl.style.backgroundImage = "url(assets/match-bg.webp)"; renderFlow(); }
 
-function render() {
-  bgEl.style.backgroundImage = "url(assets/match-bg.webp)";
-  renderFlow();
-}
-
-// ======================================================================
-// CANDY MATCH UI (H-001-v1 MC-001/002/006/007/008) — flowing phone-width layout in #flow.
-// ======================================================================
 const flowEl = document.getElementById("flow");
 const TILE_FALLBACK = ["#E8414E", "#FF42AC", "#2777EE", "#FF961C", "#7147DB", "#65C748"];
-let artState = "idle"; // idle | loading | ok | failed (MC-001 loading / art failure states)
+let artState = "idle"; // idle | loading | ok | failed
 function loadArt() {
   if (artState === "ok" || artState === "loading") return;
   artState = "loading";
   const im = new Image();
-  im.onload = () => { artState = "ok"; if (ui.mode === "match") render(); };
-  im.onerror = () => { artState = "failed"; if (ui.mode === "match") render(); };
+  im.onload = () => { artState = "ok"; render(); };
+  im.onerror = () => { artState = "failed"; render(); };
   im.src = "assets/match-atlas.webp";
 }
-function tileBg(v) {
-  if (artState !== "ok") return `background:${TILE_FALLBACK[v % 6]};`;
-  const [x, y, w, h] = ATLAS.match["tile_" + (v % 6)], S = ATLAS_SIZE;
+function atlasBg(name) {
+  const [x, y, w, h] = ATLAS.match[name], S = ATLAS_SIZE;
   return `background-image:url(assets/match-atlas.webp);background-size:${(S / w * 100).toFixed(2)}% ${(S / h * 100).toFixed(2)}%;background-position:${(x / (S - w) * 100).toFixed(2)}% ${(y / (S - h) * 100).toFixed(2)}%;`;
 }
+function tileBg(v) { return artState !== "ok" ? `background:${TILE_FALLBACK[v % 6]};` : atlasBg("tile_" + (v % 6)); }
 const STAR_PATH = "M12 2.2l2.9 6.4 7 .7-5.3 4.7 1.6 6.9L12 17.3l-6.2 3.6 1.6-6.9L2.1 9.3l7-.7z";
 function starSvg(on, cls = "") { return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${STAR_PATH}" fill="${on ? "#FFC83A" : "rgba(255,255,255,.6)"}" stroke="#4A1736" stroke-width="1.6" stroke-linejoin="round"/></svg>`; }
-function starRow(n) { return `<span class="stars" aria-label="${n} of 3 stars">${[0, 1, 2].map((k) => starSvg(k < n)).join("")}</span>`; }
+const img = (name, cls = "ico") => `<img class="${cls}" src="${A2}${name}" alt="" aria-hidden="true">`;
 const ICON = {
   pause: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
   back: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   gear: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
   lock: `<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" fill="#FFF3DD"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF3DD" stroke-width="2.6"/></svg>`,
+  map: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2z M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
 };
 const SPNAME = { stripe: "striped", wrapped: "wrapped" };
-const COACH = {
-  mult: { title: "Longer chains score more", text: "2 candies score 100. Chains of 3 score ×1.5, 4 score ×2 and 5–8 score ×3.", demo: [[3], [3], [4]], foot: "3 + 3 + 4 = 10 → 125 ×1.5 = 187" },
-  stripe: { title: "New: striped candy", text: "A chain of 4 or more leaves a striped candy where it ends. Use it in a later chain and it clears its whole row (+25 per extra candy).", demo: [[2], [3], [1], [4, "stripe"]], foot: "The last candy of the chain turns striped." },
-  wrapped: { title: "New: wrapped candy", text: "From here, chains of exactly 4 leave a striped candy and chains of 5 or more leave a wrapped candy. A wrapped candy clears the 3×3 square around it.", demo: [[1], [2], [3], [1], [3, "wrapped"]], foot: "Specials keep their number and still count when you select them." },
+const I2 = {
+  restart: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  list: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="4.5" cy="6" r="1.6" fill="currentColor"/><circle cx="4.5" cy="12" r="1.6" fill="currentColor"/><circle cx="4.5" cy="18" r="1.6" fill="currentColor"/></svg>`,
+  sound: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+  vib: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M3 8v8M21 8v8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+  tap: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 7v9l-2-2M10 16l2 3h6l1-6-5-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  help: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/></svg>`,
+  chev: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>`,
+  bulb: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.5.4.8 1 .8 1.7V17h6v-1c0-.7.3-1.3.8-1.7A6.5 6.5 0 0 0 12 2.5z" fill="#FFC21A" stroke="#B07800" stroke-width="1.4"/><path d="M9.5 19.5h5M10.5 22h3" stroke="#7A5A00" stroke-width="2" stroke-linecap="round"/></svg>`,
+  undo: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h10a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>`,
 };
-function coachKey(li) { return li === 0 ? "mult" : li === 3 ? "stripe" : li === 6 ? "wrapped" : null; }
-
-function tileHtml(v, sp, extra = "", inner = "") {
-  return `<div class="tile2${artState !== "ok" ? " noart" : ""}${extra}" style="${tileBg(v)}">${sp === "stripe" ? '<i class="sp-stripe"></i>' : sp === "wrapped" ? '<i class="sp-wrap"></i>' : ""}<span class="d">${v}</span>${inner}</div>`;
+function bigStar(on, mid) {
+  if (on && artState === "ok") return `<div class="st${mid ? " mid" : ""}" style="${atlasBg("star")}"></div>`;
+  return starSvg(on, mid ? "mid" : "");
 }
-function activeAttempt() { // {ok, g} | null
-  const a = progress.active;
+function tileHtml(v, sp, extra = "", inner = "") {
+  return `<div class="tile2${artState !== "ok" ? " noart" : ""}${extra}" style="${tileBg(v)}">${sp ? `<i class="ov ${sp}"></i>` : ""}<span class="d">${v}</span>${inner}</div>`;
+}
+function eqTiles(vals, target, ops = "+") {
+  let h = "";
+  vals.forEach((v, k) => { if (k) h += `<span class="opchip">${ops}</span>`; h += tileHtml(v, null); });
+  if (target !== undefined) h += `<span class="opchip eq">= ${target}</span>`;
+  return `<div class="eqrow">${h}</div>`;
+}
+function fmtClock(ms) { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
+const ACH = Object.fromEntries(ACHIEVEMENTS.achievements.map((a) => [a.id, a]));
+const stickerSrc = (id) => `${A2}stickers/${id}.svg`;
+
+// ---------- active attempt (sweet-v1) ----------
+function activeAttempt() { // {ok, g} | {ok:false, li} | null
+  const a = V3().active;
   if (!a) return null;
   if (a.version === MATCH_VERSION && M.validSave(a.game)) return { ok: true, g: a.game };
   return { ok: false, li: a && a.game && Number.isInteger(a.game.li) && a.game.li >= 0 && a.game.li < 12 ? a.game.li : 0 };
 }
 function persistActive() {
   const g = ui.game;
-  progress.active = g && g.mode === "match" && (g.status === "playing" || g.status === "lost") ? { version: MATCH_VERSION, game: g } : null;
+  V3().active = g && (g.status === "playing" || g.status === "lost") ? { version: MATCH_VERSION, game: g } : null;
   save();
 }
 function onSaveError() { mToast("Progress could not be saved. You can keep playing."); }
@@ -756,59 +945,71 @@ function mToast(t, ms = 2200) {
   const el = document.getElementById("mtoast"); if (el) { el.textContent = t; el.style.opacity = 1; }
   toastTimer = setTimeout(() => { ui.mtoast = null; const e2 = document.getElementById("mtoast"); if (e2) e2.style.opacity = 0; }, ms);
 }
+// MC-016 sticker toasts: after the committed result, one at a time, 3 s each, dismissible, never blocking
+let stickerTimer = 0;
+function nextSticker() {
+  clearTimeout(stickerTimer);
+  ui.stickerNow = ui.stickerQueue.shift() || null;
+  if (ui.stickerNow) stickerTimer = setTimeout(nextSticker, 3000);
+  const host = document.getElementById("stoasthost"); if (host) host.innerHTML = stickerToastHtml();
+}
+function stickerToastHtml() {
+  const id = ui.stickerNow; if (!id) return "";
+  const a = ACH[id];
+  return `<div class="stoast" role="status"><img src="${stickerSrc(id)}" alt=""><span><small>New sticker</small><b>${esc(a.name)}</b></span><button class="ibtn" data-k="stoast-x" aria-label="Dismiss">${I2.x}</button></div>`;
+}
 
-// ---------- views ----------
-const I2 = {
-  chain: `<svg class="chain" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="#C81758" stroke-width="2.8" stroke-linecap="round"/></svg>`,
-  cycle: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8a8 8 0 0 0-14-2M4 4v4h4M4 16a8 8 0 0 0 14 2M20 20v-4h-4" fill="none" stroke="#C81758" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  restart: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  list: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="4.5" cy="6" r="1.6" fill="currentColor"/><circle cx="4.5" cy="12" r="1.6" fill="currentColor"/><circle cx="4.5" cy="18" r="1.6" fill="currentColor"/></svg>`,
-  sound: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
-  hand: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-5.5a1.5 1.5 0 0 1 3 0V12m0-3.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-5-2.7L4.2 14a1.6 1.6 0 0 1 2.6-1.8L8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  tap: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 7v9l-2-2M10 16l2 3h6l1-6-5-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  clock: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 9v4l3 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
-  help: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/></svg>`,
-  chev: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  x: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>`,
-  bulb: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.5.4.8 1 .8 1.7V17h6v-1c0-.7.3-1.3.8-1.7A6.5 6.5 0 0 0 12 2.5z" fill="#FFC21A" stroke="#B07800" stroke-width="1.4"/><path d="M9.5 19.5h5M10.5 22h3" stroke="#7A5A00" stroke-width="2" stroke-linecap="round"/></svg>`,
-  undo: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h10a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>`,
-  candy: (sp) => `<svg class="candy-i" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 16 2 11v10zM25 16l5-5v10z" fill="#FF5FA2" stroke="#4A1736" stroke-width="1.4" stroke-linejoin="round"/><circle cx="16" cy="16" r="9" fill="#fff" stroke="#4A1736" stroke-width="1.6"/>${sp === "wrapped" ? '<rect x="10" y="10" width="12" height="12" rx="2" fill="#C81758"/><path d="M10 16h12M16 10v12" stroke="#fff" stroke-width="2"/>' : '<path d="M9 12.5h14M8 16h16M9 19.5h14" stroke="#E3187A" stroke-width="2.4"/>'}</svg>`,
+// ---------- MC-010 on-board lessons ----------
+// One cue at a time; persisted separately from scoring (V3().lessons); completed lessons never replay.
+const LESSONS = {
+  0: { id: "l1-pair", text: "Connect these two", kind: "witness" },
+  1: { id: "l2-longer", text: "Try a longer chain", kind: "witness" },
+  3: { id: "l4-stripe", text: "Light up a whole row", kind: "witness" },
+  6: { id: "l7-wrapped", text: "Pop the candies around it", kind: "witness" },
+  5: { id: "l6-hammer", text: "A little help?", kind: "hammer" },
+  7: { id: "l8-rush", text: "Three moves of extra sweet", kind: "rush" },
 };
-function atlasBg(name) {
-  const [x, y, w, h] = ATLAS.match[name], S = ATLAS_SIZE;
-  return `background-image:url(assets/match-atlas.webp);background-size:${(S / w * 100).toFixed(2)}% ${(S / h * 100).toFixed(2)}%;background-position:${(x / (S - w) * 100).toFixed(2)}% ${(y / (S - h) * 100).toFixed(2)}%;`;
-}
-function bigStar(on, mid) {
-  if (on && artState === "ok") return `<div class="st${mid ? " mid" : ""}" style="${atlasBg("star")}"></div>`;
-  return starSvg(on, mid ? "mid" : "");
-}
-function eqTiles(vals, target, ops = "+") {
-  let h = "";
-  vals.forEach((v, k) => { if (k) h += `<span class="opchip">${ops}</span>`; h += tileHtml(v, null); });
-  if (target !== undefined) h += `<span class="opchip eq">= ${target}</span>`;
-  return `<div class="eqrow">${h}</div>`;
+function lessonDone(id) { return !!V3().lessons[id]; }
+function completeLesson(id) { if (!lessonDone(id)) { V3().lessons[id] = true; save(); } }
+function currentCue(g) {
+  if (!g || g.status !== "playing" || ui.modal || ui.chain.length || ui.tool || ui.hintChain) return null;
+  const ls = LESSONS[g.li]; if (!ls) return null;
+  if (ls.kind === "witness") {
+    if (lessonDone(ls.id)) return null;
+    const w = LEVELS.match[g.li].witness;
+    if (!w.every((i) => g.cells[i].id === i)) return null; // opening board changed: another route was taken
+    return { ...ls, cells: w };
+  }
+  if (ls.kind === "hammer") return !lessonDone(ls.id) && g.hammer > 0 && ui.idleMs >= 8000 ? ls : null;
+  if (ls.kind === "rush") return ui.rushCue && M.rushActive(g) ? ls : null;
+  return null;
 }
 
 // ---------- views ----------
+function badgeHtml() { const b = V3().badge; return b && V3().stickers[b] ? `<img class="badgeimg" src="${stickerSrc(b)}" alt="Your badge: ${esc(ACH[b].name)}">` : ""; }
+function totalStars() { let s = 0; for (let k = 0; k < 12; k++) s += rec(k).stars; return s; }
+function playLevel() { return Math.min(progress.match.unlocked, 12) - 1; }
 function mHome() {
-  const act = activeAttempt(), st = progress.matchV2.stars.reduce((a, b) => a + b, 0);
-  let h = `<div class="mc-top"><span></span><span class="panel small" style="padding:4px 12px;border-radius:999px">★ ${st} / 36</span></div>`;
+  const act = activeAttempt(), v3 = V3();
+  let h = `<div class="mc-top"><span class="row" style="gap:8px">${badgeHtml()}</span><span class="panel small" style="padding:4px 12px;border-radius:999px">★ ${totalStars()} / 36</span></div>`;
   h += `<div class="logo2"><h1 class="sr">Math Crush, Candy Match</h1><span class="w" aria-hidden="true"><span>Math</span></span><span class="w b" aria-hidden="true"><span>Crush</span></span>
     <div class="ribbon">A little maths. A lot of sweet.</div></div>`;
   h += `<div aria-label="Example: 2 plus 3 plus 5 makes 10" role="img" style="margin-top:22px">${eqTiles([2, 3, 5])}</div>`;
-  h += `<div style="height:28px"></div>`;
+  h += `<div style="height:20px"></div>`;
   if (act) {
     const g = act.g;
     h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:.9375rem;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} move${g.movesLeft === 1 ? "" : "s"} left` : "Saved attempt"}</span></button>`;
-    h += `<div class="row"><button class="sbtn grow" data-k="choose">Choose level</button><button class="ibtn round" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
+  } else if (v3.offerStart !== null && v3.offerStart !== undefined) {
+    h += `<div class="banner panel small" role="note">Your unfinished game was saved under the old rules. It is kept, but can't continue.</div>`;
+    h += `<button class="pbtn" data-k="offer-start">Start this level · Level ${v3.offerStart + 1}</button>`;
   } else {
-    h += `<div class="row"><span style="width:48px"></span><button class="pbtn grow" data-k="play" style="min-height:64px;font-size:1.75rem">Play</button><button class="ibtn round" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
+    h += `<button class="pbtn" data-k="play" style="min-height:64px;font-size:1.75rem">Play · Level ${playLevel() + 1}</button>`;
   }
+  h += `<div class="row"><button class="sbtn grow" data-k="choose">${ICON.map}Levels</button><button class="sbtn grow" data-k="book">${img("icons/book.svg")}Stickers</button><button class="ibtn round" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
   return h;
 }
 function mLevels() {
-  const P = progress.matchV2, U = progress.match.unlocked;
-  // a winding trail read in order 1→12 (SCREENS.md: correct the concept's 5–7 order)
+  const U = progress.match.unlocked;
   const pos = [[18, 6], [44, 12], [70, 19], [84, 31], [60, 38], [34, 43], [14, 53], [36, 62], [62, 67], [84, 77], [60, 86], [32, 93]];
   let h = `<div class="playtop"><button class="ibtn round" data-k="home" aria-label="Back to home">${ICON.back}</button><h1 class="h1 lvl panel" style="font-size:1.625rem;padding:4px 22px;border-radius:999px">Candy trail</h1><span></span></div>`;
   const d = pos.map((p, k) => (k ? "L" : "M") + p[0] + " " + p[1] * 6.8).join(" ");
@@ -817,40 +1018,15 @@ function mLevels() {
     <path d="${d}" fill="none" stroke="#F6E3C4" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     <path d="${d}" fill="none" stroke="#E2B98A" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
   for (let k = 0; k < 12; k++) {
-    const [x, yp] = pos[k], y = yp * 6.8, locked = k + 1 > U, next = !locked && k + 1 === Math.min(U, 12) && !P.stars[k], st = P.stars[k];
+    const [x, yp] = pos[k], y = yp * 6.8, locked = k + 1 > U, st = rec(k).stars, next = !locked && k + 1 === Math.min(U, 12) && !st;
     const cls = locked ? " locked" : next ? " next" : st ? "" : " open";
-    const label = `Level ${k + 1}${locked ? ", locked. Complete level " + k + " to unlock" : st ? ", " + st + " of 3 stars" : next ? ", next level" : ", not completed with candy scoring yet"}`;
+    const label = `Level ${k + 1}${locked ? ", locked. Complete level " + k + " to unlock" : st ? ", " + st + " of 3 stars" : next ? ", next level" : ", not completed yet"}`;
     h += `<button class="node3${cls}" data-k="lvl-${k}" style="left:${x}%;top:${y}px" aria-label="${label}"${locked ? ' aria-disabled="true"' : ""}>${k + 1}${locked ? `<span class="lock">${ICON.lock}</span>` : ""}</button>`;
     if (st) h += `<div class="nstars" style="left:${x}%;top:${y}px" aria-hidden="true">${[0, 1, 2].map((s) => starSvg(s < st)).join("")}</div>`;
   }
   h += `</div>`;
   return h;
 }
-function mIntro() {
-  const li = ui.introLi, L = LEVELS.match[li], [t2, t3] = M.thresholds(L.quota), P = progress.matchV2;
-  const ck = coachKey(li), showCoach = ck && !progress.coach2[ck];
-  const ex = M.shortest(M.start(li)) || [0, 1];
-  let h = `<div class="grow" style="max-height:24px"></div><div class="panel mcard lvcard">`;
-  h += `<h1 class="h1 mfocus" tabindex="-1" style="font-size:2.25rem">Level ${li + 1}</h1>`;
-  h += `<div class="tbox"><span>Target</span><b>${L.target}</b></div>`;
-  h += `<div class="pair"><div class="ibox">${I2.chain.replace('class="chain" ', "")}<span><small>Make</small><b>${L.quota} chains</b></span></div><div class="ibox">${I2.cycle}<span><small>Moves</small><b>${L.moves}</b></span></div></div>`;
-  h += `<div class="ex"><div class="small" style="font-weight:900;margin-bottom:6px">Example:</div><div role="img" aria-label="Example chain: ${ex.map((i) => L.values[i]).join(" plus ")} equals ${L.target}">${eqTiles(ex.map((i) => L.values[i]), L.target)}</div></div>`;
-  h += `<div class="sline"><span>${starRow(2)} ${t2}</span><span>${starRow(3)} ${t3}</span></div>`;
-  const bits = [];
-  if (P.best[li]) bits.push(`Best ${P.best[li]}${P.assisted[li] ? " (assisted)" : ""}`);
-  if (P.bestTimed[li]) bits.push(`with speed bonus ${P.bestTimed[li]}`);
-  if (progress.match.best[li]) bits.push(`Legacy best (old scoring, not compared): ${progress.match.best[li]}`);
-  if (bits.length) h += `<div class="small" style="color:var(--muted)">${bits.join(" · ")}</div>`;
-  if (showCoach) {
-    const C2 = COACH[ck];
-    h += `<div class="coachcard" role="note" style="text-align:left"><b style="font-size:1.125rem">${C2.title}</b><span class="small">${C2.text}</span>
-      <div class="demo" aria-hidden="true">${C2.demo.map((d, k) => tileHtml(d[0], d[1] || null, d[1] ? "" : " sel", d[1] ? "" : `<span class="badge2">${k + 1}</span>`)).join("")}</div>
-      <span class="small center-text">${C2.foot}</span><div class="row"><button class="sbtn" data-k="coach-ok">Got it</button><button class="tbtn" data-k="coach-ok" aria-label="Skip tip">Skip</button></div></div>`;
-  }
-  h += `<button class="pbtn" data-k="intro-play">Let’s play</button><button class="sbtn" data-k="levels-back">Back</button></div>`;
-  return h;
-}
-function fmtClock(ms) { const s = Math.floor(ms / 1000); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }
 function mSumCard(g) {
   const ch = ui.chain, tap = progress.settings.tap || ui.kbd;
   if (ch.length) {
@@ -858,40 +1034,55 @@ function mSumCard(g) {
     let status;
     if (s === g.target && ch.length >= 2) status = tap ? "Submit to clear" : "Release to clear";
     else if (s === g.target) status = "Add one more candy";
-    else if (s > g.target) status = tap ? "Too high · tap the last candy to step back" : "Too high · slide back to adjust";
-    else status = `${g.target - s} more to reach ${g.target}`;
+    else if (s > g.target) status = tap ? "Too high · Tap the last candy to adjust" : "Too high · slide back";
+    else status = `${g.target - s} more to make ${g.target}`;
     return { ex, status, over: s > g.target, exact: s === g.target && ch.length >= 2 };
   }
-  const L = g.last;
-  if (L && L.type === "clear" && !ui.hintChain) return { ex: L.mult > 1 ? `Sweet chain! ×${L.mult}` : "Sweet!", status: "", over: false, exact: false, after: true };
-  if (L && L.type === "wrong" && !ui.hintChain) return { ex: `That makes ${L.sum}`, status: "", over: true, exact: false, after: true };
   return { ex: `Make ${g.target}`, status: tap ? "Tap neighbouring candies, then Submit" : "Connect neighbouring candies", over: false, exact: false };
 }
-function mStatus(g, sc) {
+function mStatus(g, sc, cue) {
   const ch = ui.chain;
+  if (ui.tool) return ui.tool.target === null ? `<span>Pick a candy to smash</span>` : `<span>Smash this candy?</span><small>No points, no move used</small>`;
   if (ch.length >= 2 && sc.exact) {
     const R = M.resolve(g, ch);
-    const pts = `${M.base(ch.length)}${R.mult > 1 ? " × " + R.mult : ""} = ${R.chainPts} points${R.blastPts ? ` · +${R.blastPts} blast` : ""}`;
-    if (R.reward) return `<div class="earn">${I2.candy(R.reward.type)}<span>${R.reward.type === "stripe" ? "Striped" : "Wrapped"} candy earned<br><small>${pts}</small></span></div>`;
-    return `<span>${esc(sc.status)}</span><small>${R.blastPts ? "Specials blast extra candies · " : ""}${pts}</small>`;
+    const pts = `${R.chainPts} points${R.rush ? " (Sugar Rush ×2)" : ""}${R.blastPts ? ` · +${R.blastPts} blast` : ""}`;
+    const what = R.combo ? "Special mix!" : R.reward ? `${R.reward.type === "stripe" ? "Striped" : "Wrapped"} candy earned` : esc(sc.status);
+    return `<span>${what}</span><small>${pts}</small>`;
   }
-  if (ch.length >= 2 && sc.over) return `<span style="color:#9B1B1B">${esc(sc.status)}</span><small>Releasing now is a wrong sum and costs 1 move</small>`;
-  if (ch.length) return `<span>${esc(sc.status)}</span>${ch.length >= 2 ? `<small>${ch.length} candies ×${M.mult(ch.length)} if it makes ${g.target}</small>` : ""}`;
+  if (ch.length) return `<span${sc.over ? ' style="color:#9B1B1B"' : ""}>${esc(sc.status)}</span>`;
   if (ui.hintChain) return `<span>Hint: ${ui.hintChain.map((i) => g.cells[i].v).join(" + ")}</span>`;
+  if (cue) return `<span class="cuecap">${img("icons/hand.svg", "ico")}${esc(cue.text)}</span>`;
   const L = g.last;
-  if (L && L.type === "wrong") return `<span style="color:#9B1B1B">1 move used</span><small>Try another way to make ${g.target}</small>`;
-  if (L && L.type === "clear") return `<span>+${L.chainPts} chain${L.blastPts ? ` · +${L.blastPts} blast` : ""}</span><small>${L.reward ? (L.reward === "stripe" ? "Striped" : "Wrapped") + " candy made · new candies incoming" : "New candies incoming"}</small>`;
+  if (L && L.type === "wrong") return `<span style="color:#9B1B1B">${L.free ? "Try again" : "Try again · 1 move used"}</span>`;
+  if (L && L.type === "clear") return `<span>+${L.chainPts}${L.rush ? " · Sugar Rush ×2" : ""}${L.blastPts ? ` · +${L.blastPts} blast` : ""}</span>${L.rushEv === "activated" ? "<small>Sugar Rush!</small>" : ""}`;
   if (L && L.type === "undo") return `<span>Move undone</span>`;
+  if (L && L.type === "hammer") return `<span>Smashed!</span>`;
   if (ui.refreshedNote) return `<span>Board refreshed</span>`;
   return `<span>${esc(sc.status)}</span>`;
 }
+// MC-011 score meter: real per-level ticks; the completion star stays hollow until success
+function meterHtml(g) {
+  const [t2, t3] = M.thresholds(g.li), core = M.core(g), max = Math.round(t3 * 1.15);
+  const pct = (v) => Math.min(100, (100 * v) / max);
+  return `<div class="meter" role="img" aria-label="Score ${core}. Two stars at ${t2}, three stars at ${t3}. The first star comes with finishing the level.">
+    <span class="tk done" style="left:0">${starSvg(g.status === "won")}</span><i style="width:${pct(core)}%"></i>
+    <span class="tk" style="left:${pct(t2)}%">${starSvg(core >= t2)}</span><span class="tk" style="left:${pct(t3)}%">${starSvg(core >= t3)}</span></div>`;
+}
+function rushHtml(g) {
+  if (!g.rush) return "";
+  const R = g.rush;
+  if (R.uses > 0) return `<div class="rushbar on" role="status" aria-label="Sugar Rush times 2, ${R.uses} chains left">${img("icons/rush.svg")}<b>Sugar Rush ×2</b><span class="pips">${[0, 1, 2].map((k) => `<i class="pip${k < R.uses ? " on" : ""}"></i>`).join("")}</span></div>`;
+  return `<div class="rushbar panel" aria-label="Sugar Rush charge ${R.charge} of 3. Chains of 3 or more charge it.">${img("icons/rush.svg")}<span><b>Sugar Rush</b> <small>3+ candy chains charge it</small></span><span class="pips">${[0, 1, 2].map((k) => `<i class="pip${k < R.charge ? " on" : ""}"></i>`).join("")}</span></div>`;
+}
 function mPlay() {
-  const g = ui.game, sc = mSumCard(g), ch = ui.chain, tap = progress.settings.tap || ui.kbd;
+  const g = ui.game, sc = mSumCard(g), ch = ui.chain, tap = progress.settings.tap || ui.kbd, cue = currentCue(g);
   let h = `<div class="playtop"><button class="pz" data-k="pause" aria-label="Pause">${ICON.pause}</button>
-    <div class="lvlname glow" role="heading" aria-level="1">Level ${g.li + 1}${g.speed ? `<span class="clock" id="mclock" aria-label="Active time">${fmtClock(g.elapsed)}</span>` : ""}</div><span></span></div>`;
-  h += `<div class="hud"><div class="hcard panel"><span>Moves</span><b>${g.movesLeft}</b></div><div class="hcard panel tgt"><span>Target</span><b>${g.target}</b></div><div class="hcard panel"><span>Score</span><b>${M.score(g)}</b></div></div>`;
-  h += `<div class="qbar panel" aria-label="${g.made} of ${g.quota} chains made. Stars are awarded at the end."><span class="l">${g.made ? `<span class="qfill"><i style="width:${Math.round(100 * g.made / g.quota)}%"></i></span>` : I2.chain}${g.made} / ${g.quota} chains</span><span class="stars" aria-hidden="true">${[0, 1, 2].map(() => starSvg(false)).join("")}</span></div>`;
+    <div class="lvlname glow" role="heading" aria-level="1">Level ${g.li + 1}${g.timed ? `<span class="clock" id="mclock" aria-label="Active time">${img("icons/clock.svg", "ico sm")}${fmtClock(g.elapsed)}</span>` : ""}</div><span></span></div>`;
+  h += `<div class="hud"><div class="hcard panel"><span>Moves</span><b>${g.movesLeft}</b></div><div class="hcard panel tgt"><span>Make</span><b>${g.target}</b></div><div class="hcard panel"><span>Score</span><b>${M.score(g)}</b></div></div>`;
+  h += `<div class="qbar panel"><span class="l" aria-label="${g.made} of ${g.quota} chains made">${img("icons/chain.svg", "ico")}${g.made} / ${g.quota} chains</span>${meterHtml(g)}</div>`;
+  h += rushHtml(g);
   const exact = sc.exact, prev = exact ? M.resolve(g, ch) : null, blastSet = new Set(prev ? prev.blastOnly : []);
+  const cueSet = new Set(cue && cue.cells ? cue.cells : []);
   const from = ui.dropFrom, freshCol = {};
   if (from) g.cells.forEach((c, i) => { if (!(c.id in from)) freshCol[i % g.cols] = (freshCol[i % g.cols] || 0) + 1; });
   let cells = "";
@@ -903,11 +1094,14 @@ function mPlay() {
     if (k >= 0) cls += " sel" + (sc.over ? " over" : "");
     if (blastSet.has(i)) cls += " blast";
     if (hk >= 0) cls += " hint";
+    if (cueSet.has(i)) cls += " cue";
+    if (ui.tool && ui.tool.target === i) cls += " smash";
+    if (ui.tool) cls += " pickable";
     if (dr > 0) cls += " drop2";
     if (ui.kbd && ui.cursor === i) cls += " kcur";
     if (ui.rewardId === c.id && !reduced) cls += " fresh-reward";
     let inner = k >= 0 ? `<span class="badge2">${k + 1}</span>` : "";
-    if (prev && prev.reward && i === prev.reward.cell) inner += `<span class="badge2" style="right:auto;left:2px;top:auto;bottom:2px;background:#fff">→${prev.reward.type === "stripe" ? "≡" : "▣"}</span>`;
+    if (prev && prev.reward && i === prev.reward.cell) inner += `<span class="rewardmark ${prev.reward.type}" title="${SPNAME[prev.reward.type]} candy"></span>`;
     const lab = `Row ${r + 1}, column ${col + 1}, ${c.v}${c.sp ? ", " + SPNAME[c.sp] + " candy" : ""}${k >= 0 ? ", selected " + (k + 1) : ""}${blastSet.has(i) ? ", will be blasted" : ""}`;
     cells += tileHtml(c.v, c.sp, cls, inner).replace('<div class="tile2', `<div role="gridcell" aria-label="${lab}" data-cell="${i}" class="tile2`).replace('style="', `style="${dr > 0 ? `--dr:${dr};` : ""}`);
   });
@@ -919,6 +1113,12 @@ function mPlay() {
     for (let k = 1; k < ch.length; k++) { const [ax, ay] = cxy(ch[k - 1]), [bx, by] = cxy(ch[k]); segs += `M${ax + (bx - ax) * 0.32} ${ay + (by - ay) * 0.32}L${ax + (bx - ax) * 0.68} ${ay + (by - ay) * 0.68}`; }
     trace = `<svg class="trace" viewBox="0 0 342 342" preserveAspectRatio="none" aria-hidden="true"><path d="${segs}" fill="none" stroke="#B07800" stroke-width="14" stroke-linecap="round"/><path d="${segs}" fill="none" stroke="${sc.over ? "#E8890C" : "#FFD23F"}" stroke-width="9" stroke-linecap="round"/></svg>`;
   }
+  let hand = "";
+  if (cue && cue.cells) { // hand beside the last cue cell, toward the board centre, never over a number
+    const last = cue.cells[cue.cells.length - 1], r = Math.floor(last / g.cols), c = last % g.cols;
+    const x = (c + (c < 3 ? 0.78 : -0.05)) * 20, y = (r + (r < 3 ? 0.62 : -0.25)) * 20;
+    hand = `<span class="cuehand" style="left:${x}%;top:${y}%" aria-hidden="true"></span>`;
+  }
   let ghosts = "";
   if (ui.ghosts) {
     ghosts = `<div class="ghosts" aria-hidden="true">${ui.ghosts.map((t) => tileHtml(t.v, t.sp, t.chain ? "" : " bl").replace('style="', `style="grid-row:${Math.floor(t.i / 5) + 1};grid-column:${(t.i % 5) + 1};`)).join("")}</div>`;
@@ -927,57 +1127,83 @@ function mPlay() {
   let popup = "";
   if (ui.popup) {
     const p = ui.popup, py = Math.max(2, Math.min(70, p.row * 20 - 4));
-    popup = `<div class="popup2" style="--py:${py}%" aria-hidden="true"><b>${p.chainPts + p.blastPts}</b>${p.blastPts ? `<span>+${p.blastPts} blast bonus</span>` : ""}</div>`;
+    popup = `<div class="popup2" style="--py:${py}%" aria-hidden="true"><b>${p.chainPts + p.blastPts}</b>${p.combo ? `<span>Special mix!</span>` : p.blastPts ? `<span>+${p.blastPts} blast bonus</span>` : p.rush ? `<span>Sugar Rush ×2</span>` : ""}</div>`;
     ui.popup = null;
   }
-  h += `<div class="boardwrap"><div id="mboard" tabindex="0" role="grid" aria-label="Candy board, 5 by 5. Target ${g.target}.">${cells}${trace}</div>${ghosts}${popup}</div>`;
+  h += `<div class="boardwrap"><div id="mboard" tabindex="0" role="grid" aria-label="Candy board, 5 by 5. Make ${g.target}.">${cells}${trace}</div>${hand}${ghosts}${popup}</div>`;
   const multNow = ch.length >= 2 ? M.mult(ch.length) : 1;
   h += `<div class="sumrow" aria-hidden="true"><div class="sumcard panel${sc.over && ch.length ? " over" : ""}"><div class="ex">${esc(sc.ex)}</div></div>${multNow > 1 ? `<span class="mchip">×${multNow}</span>` : ""}</div>`;
-  h += `<div class="status glow">${mStatus(g, sc)}</div>`;
-  h += `<div class="hintbar"><button class="pill" data-k="hint">${I2.bulb}Hint</button><button class="pill" data-k="undo"${g.hist.length && g.status === "playing" ? "" : " disabled"} aria-label="Undo last move">${I2.undo}Undo</button>`;
-  if (tap) h += `<button class="pill" data-k="clearsel"${ch.length ? "" : " disabled"}>Clear</button><button class="pill go" data-k="submit"${ch.length >= 2 ? "" : " disabled"}>Submit</button>`;
-  h += `</div>`;
+  h += `<div class="status glow">${mStatus(g, sc, cue)}</div>`;
+  if (ui.tool) {
+    h += `<div class="hintbar"><button class="pill go" data-k="smash"${ui.tool.target === null ? " disabled" : ""}>${img("icons/hammer.svg")}Smash candy</button><button class="pill" data-k="tool-cancel">Cancel</button></div>`;
+  } else {
+    const hasHammer = LEVELS.match[g.li].tools.hammer > 0, hammerCue = cue && cue.kind === "hammer";
+    h += `<div class="hintbar"><button class="pill" data-k="hint">${I2.bulb}Hint</button><button class="pill" data-k="undo"${g.hist.length && g.status === "playing" ? "" : " disabled"} aria-label="Undo last move">${I2.undo}Undo</button>`;
+    if (hasHammer) h += `<button class="pill${hammerCue ? " cuebtn" : ""}" data-k="hammer"${g.hammer > 0 ? "" : " disabled"} aria-label="Hammer, ${g.hammer} left">${img("icons/hammer.svg")}Hammer · ${g.hammer}</button>`;
+    if (tap) h += `<button class="pill" data-k="clearsel"${ch.length ? "" : " disabled"}>Clear</button><button class="pill go" data-k="submit"${ch.length >= 2 ? "" : " disabled"}>Submit</button>`;
+    h += `</div>`;
+  }
   if (saveFailed || !storageOk) h += `<div class="banner panel small" role="status">Progress could not be saved on this device. Play continues.</div>`;
   return h;
 }
 function switchBtn(k, label, on, note, icon) {
   return `<button class="switch" role="switch" data-k="${k}" aria-checked="${on}"><span class="lab">${icon || ""}<span>${label}${note ? `<small>${note}</small>` : ""}</span></span><span class="kn" aria-hidden="true"></span></button>`;
 }
-function settingsRows() {
+function settingsRows() { // MC-017: the experimental speed-bonus switch is gone (old setting kept in storage as legacy data)
   const S = progress.settings;
-  return `<div class="setlist">` + switchBtn("snd", "Sound", !!S.sound, "", I2.sound) + switchBtn("hap", "Haptics", !!S.haptics, "", I2.hand) +
-    switchBtn("tap", "Tap to select", !!S.tap, "Tap candies, then Submit", I2.tap) +
-    switchBtn("speed", "Speed bonus (experimental)", !!S.speed, "No countdown · next attempt", I2.clock) + `</div>` +
-    `<button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button>`;
+  return `<div class="setlist">` + switchBtn("snd", "Sound", !!S.sound, "", I2.sound) + switchBtn("hap", "Haptics", !!S.haptics, "", I2.vib) +
+    switchBtn("tap", "Tap to select", !!S.tap, "Tap candies, then Submit", I2.tap) + `</div>`;
+}
+function timeRow(g) {
+  const t = ui.timeResult; if (!g.timed || !t) return "";
+  if (t.kind === "first") return `<div class="row"><span>${img("icons/clock.svg", "ico sm")}First time</span><b>${fmtClock(t.ms)}</b></div>`;
+  if (t.kind === "best") return `<div class="row"><span>${img("icons/clock.svg", "ico sm")}Personal best</span><b>${fmtClock(t.ms)} <small>(${t.diff}s faster)</small></b></div>`;
+  return `<div class="row"><span>${img("icons/clock.svg", "ico sm")}Your time</span><b>${fmtClock(t.ms)}</b></div><div class="row"><span>Best</span><span>${fmtClock(t.best)}</span></div>`;
+}
+function bookHtml() {
+  const v3 = V3(), sel = ui.bookSel, n = ACHIEVEMENTS.achievements.filter((a) => v3.stickers[a.id]).length;
+  let h = `<button class="xbtn" data-k="book-back" aria-label="Back">${ICON.back}</button><h2 class="h1 mfocus" tabindex="-1" id="mhead" style="font-size:1.625rem">Your sweet collection</h2>
+    <p class="small" style="margin:0">Little wins. Tap a sticker you've earned to make it your badge.</p><div class="sgrid">`;
+  for (const a of ACHIEVEMENTS.achievements) {
+    const got = !!v3.stickers[a.id];
+    h += `<button class="stk${got ? "" : " locked"}" data-k="stk-${a.id}" aria-pressed="${sel === a.id}" aria-label="${esc(a.name)}, ${got ? "earned" + (v3.badge === a.id ? ", your badge" : "") : "locked"}"><img src="${stickerSrc(a.id)}" alt=""><span>${esc(a.name)}</span>${v3.badge === a.id ? '<span class="chip gold">Badge</span>' : ""}</button>`;
+  }
+  h += `</div><div class="small">${n} of 6 discovered</div>`;
+  if (sel) {
+    const a = ACH[sel], got = !!v3.stickers[sel];
+    h += `<div class="binfo" role="status"><b>${esc(a.name)}</b><span>${esc(a.condition)}</span>${got ? (v3.badge === sel ? `<span class="chip">Your badge</span>` : `<button class="sbtn" data-k="set-badge">Use as my badge</button>`) : `<small>Not earned yet</small>`}</div>`;
+  }
+  h += `<button class="pbtn" data-k="book-back">Back</button>`;
+  return h;
 }
 function mModal() {
   const g = ui.game, mod = ui.modal;
   const head = (t, cls = "") => `<h2 class="h1 mfocus ${cls}" tabindex="-1" id="mhead">${t}</h2>`;
   let body = null;
   if (mod === "pause") body = `<button class="xbtn" data-k="resume" aria-label="Close and resume">${I2.x}</button>` + head("Take a moment") + `<button class="pbtn" data-k="resume">Resume</button>
-    <div class="duo"><button class="sbtn" data-k="restart">${I2.restart}Restart</button><button class="sbtn" data-k="levels">${I2.list}Levels</button></div>${settingsRows()}`;
-  else if (mod === "settings") body = `<button class="xbtn" data-k="closeset" aria-label="Close settings">${I2.x}</button>` + head("Settings") + settingsRows() + `<button class="pbtn" data-k="closeset">Done</button>`;
+    <div class="duo"><button class="sbtn" data-k="restart">${I2.restart}Restart</button><button class="sbtn" data-k="levels">${I2.list}Levels</button></div>${settingsRows()}
+    <button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button><button class="rowlink" data-k="book"><span class="lab">${img("icons/book.svg")}Sticker book</span>${I2.chev}</button>`;
+  else if (mod === "settings") body = `<button class="xbtn" data-k="closeset" aria-label="Close settings">${I2.x}</button>` + head("Settings") + settingsRows() + `<button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button><button class="pbtn" data-k="closeset">Done</button>`;
+  else if (mod === "book") body = bookHtml();
   else if (mod === "confirm-restart" || mod === "confirm-levels") body = head(mod === "confirm-restart" ? "Restart this level?" : "Leave this level?") +
     `<p class="lede">This attempt's chains and moves will be lost.</p><button class="pbtn" data-k="confirm">${mod === "confirm-restart" ? "Restart level" : "Leave level"}</button><button class="sbtn" data-k="cancel">Cancel</button>`;
-  else if (mod === "help") body = head("How to play") + `<div role="img" aria-label="2 plus 3 plus 5 makes 10">${eqTiles([2, 3, 5], 10)}</div><p class="lede" style="text-align:left">Drag through neighbouring candies (no diagonals) so the numbers add up to the target, then let go. Slide back onto the previous candy to undo a step.</p>
-    <p class="small" style="margin:0;text-align:left">A wrong sum uses a move; lifting on one candy is free. Chains of 3 score ×1.5, 4 ×2, 5–8 ×3. Striped candies clear their row, wrapped candies their 3×3 square, +25 per extra candy. Undo and Hint are free; the result marks them Assisted.</p>
+  else if (mod === "help") body = head("How to play") + `<div role="img" aria-label="2 plus 3 plus 5 makes 10">${eqTiles([2, 3, 5], 10)}</div><p class="lede" style="text-align:left">Drag through neighbouring candies (no diagonals) so the numbers add up to the target, then let go. Slide back onto the previous candy to step back.</p>
+    <p class="small" style="margin:0;text-align:left">Longer chains score more. Chains of 4+ leave special candies: striped clears its row, wrapped its 3×3 square. Put two specials in one chain to mix them. Sugar Rush doubles your next three chains. The hammer smashes one candy without using a move. Hint and Undo are always free.</p>
     <p class="small" style="margin:0;text-align:left">Keys: arrows move, Space adds (or steps back), Enter submits, Backspace removes the last, U undo, H hint, Esc pause.</p><button class="pbtn" data-k="closehelp">Back</button>`;
-  else if (mod === "restore-error") body = head("Could not restore this attempt") + `<p class="lede">The saved game was damaged. Your unlocked levels and stars are safe.</p><button class="pbtn" data-k="restore-start">Start level ${(ui.restoreLi || 0) + 1}</button><button class="sbtn" data-k="restore-levels">Levels</button>`;
+  else if (mod === "restore-error") body = head("Could not restore this attempt") + `<p class="lede">The saved game was damaged. Your unlocked levels, stars and stickers are safe.</p><button class="pbtn" data-k="restore-start">Start level ${(ui.restoreLi || 0) + 1}</button><button class="sbtn" data-k="restore-levels">Levels</button>`;
   else if (ui.screen === "play" && g && g.status === "won") {
-    const st = M.stars(g), [t2, t3] = M.thresholds(g.quota), core = M.core(g);
+    const st = M.stars(g), core = M.core(g), R = rec(g.li);
     body = head("Sweet success!", "sweet") + `<div class="bigstars2" aria-hidden="true">${[0, 1, 2].map((k) => bigStar(k < st, k === 1)).join("")}</div>
-      <div style="font-weight:900;font-size:1.25rem">${g.li === 11 ? "All 12 levels complete" : `Level ${g.li + 1} complete`}</div>
-      <p class="sr">${st} of 3 stars</p>${g.assisted ? '<div><span class="chip">Assisted</span></div>' : ""}
-      <div class="scorebox"><span>Score</span><b>${core}</b></div>
-      <div class="rows2"><div class="row"><span>Chain points</span><span>${g.chainPts}</span></div>${g.blastPts ? `<div class="row"><span>Blast points</span><span>${g.blastPts}</span></div>` : ""}<div class="row"><span>Moves bonus</span><span>${g.finish}</span></div>
-      ${g.speed ? `<div class="row"><span>Speed bonus <small>(${fmtClock(g.elapsed)}, not in stars)</small></span><span>+${g.speedBonus}</span></div>` : ""}</div>
-      <p class="small" style="margin:0">${core >= t3 ? "Three-star score!" : core >= t2 ? `${t3 - core} more for ★★★ (${t3})` : `★★ at ${t2} · ★★★ at ${t3}`}</p>` +
-      (g.li === 11 ? `<button class="pbtn" data-k="levels2">Back to levels</button><button class="sbtn" data-k="retry">Play again</button>` : `<button class="pbtn" data-k="next">Next level</button><button class="sbtn" data-k="levels2">Levels</button>`);
+      <div style="font-weight:900;font-size:1.25rem">${g.li === 11 ? "All 12 levels complete" : `Level ${g.li + 1} complete`}</div><p class="sr">${st} of 3 stars</p>
+      <div class="scorebox"><span>${ui.newBest ? "New best score" : "Score"}</span><b>${core}</b>${!ui.newBest && R.best ? `<small>Best ${R.best}</small>` : ""}</div>
+      <div class="rows2"><div class="row"><span>Chain points</span><span>${g.chainPts}</span></div>${g.blastPts ? `<div class="row"><span>Blast points</span><span>${g.blastPts}</span></div>` : ""}<div class="row"><span>Moves bonus</span><span>${g.finish}</span></div>${timeRow(g)}</div>` +
+      `<button class="pbtn" data-k="${g.li === 11 ? "levels2" : "next"}">${g.li === 11 ? "Candy trail" : "Next level"}</button><button class="sbtn" data-k="retry">${I2.restart}Play again</button>` +
+      (completedEver(g.li) ? `<button class="sbtn" data-k="speed">${img("icons/clock.svg", "ico sm")}${g.timed ? "Try for a faster time" : "Try speed challenge"}</button>` : "");
   } else if (ui.screen === "play" && g && g.status === "lost") {
     const trio = (g.last && g.last.chain ? g.last.chain.map((i) => g.cells[i].v) : []).concat([6, 3, 5]).slice(0, 3);
     body = head("One more try?") + `<p class="lede">You made ${g.made} of ${g.quota} chains.</p><div class="trio" aria-hidden="true">${trio.map((v) => tileHtml(v, null)).join("")}</div>
-      <p class="lede">Find another way to make ${g.target}.</p><button class="pbtn" data-k="retry">Try again</button>
-      ${g.hist.length ? `<button class="sbtn" data-k="undo2">Undo last move</button>` : ""}<button class="sbtn" data-k="levels2">Levels</button>`;
+      <button class="pbtn" data-k="retry">Retry</button>
+      ${g.hist.length ? `<button class="sbtn" data-k="undo2">${I2.undo}Undo last move</button>` : ""}<button class="sbtn" data-k="levels2">Levels</button>`;
   }
   if (!body) return "";
   return `<div class="mcm" role="dialog" aria-modal="true" aria-labelledby="mhead"><div class="panel mcard">${body}</div></div>`;
@@ -988,7 +1214,6 @@ function renderFlow() {
   let h = `<div class="mc">`;
   if (ui.screen === "home") h += mHome();
   else if (ui.screen === "levels") h += mLevels();
-  else if (ui.screen === "intro") h += mIntro();
   else if (ui.screen === "play" && ui.game) h += mPlay();
   h += `</div>`;
   const modal = mModal();
@@ -996,12 +1221,13 @@ function renderFlow() {
   if (artState === "loading") h += `<div class="loading" role="status"><div class="panel mcard" style="width:auto"><b>Loading candies…</b></div></div>`;
   else if (artState === "failed") h += `<div class="banner panel" role="alert" style="position:fixed;left:16px;right:16px;top:max(64px,env(safe-area-inset-top));z-index:70;max-width:448px;margin:0 auto"><span class="grow">Art could not load. The game still works.</span><button class="sbtn" style="width:auto" data-k="retryart">Retry art</button></div>`;
   h += `<div id="mtoast" class="toast2" role="status" style="opacity:${ui.mtoast ? 1 : 0}">${esc(ui.mtoast || "")}</div>`;
+  h += `<div id="stoasthost">${stickerToastHtml()}</div>`;
   const scrollTop = flowEl.scrollTop;
   flowEl.innerHTML = h;
   flowEl.scrollTop = scrollTop;
-  const modalOpen = !!modal;
-  if (modalOpen && ui.modalShown !== (ui.modal || "result")) { // a new dialog: focus its heading
-    ui.modalShown = ui.modal || "result";
+  const modalOpen = !!modal, mkey = ui.modal || "result";
+  if (modalOpen && ui.modalShown !== mkey) { // a new dialog: focus its heading
+    ui.modalShown = mkey;
     const f = flowEl.querySelector(".mcm .mfocus"); if (f) f.focus({ preventScroll: true });
     return;
   }
@@ -1012,10 +1238,11 @@ function renderFlow() {
 }
 
 // ---------- controller ----------
-function mStart(li) {
-  ui.game = M.start(li, { speed: !!progress.settings.speed });
-  ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.dropFrom = null; ui.ghosts = null; ui.popup = null;
-  ui.refreshedNote = false; ui.resultSeq = -1; ui.cursor = 0; drag = null; ui.focusNext = "#mboard"; announce("");
+function mStart(li, opts = {}) { // MC-010: always straight onto the board
+  ui.game = M.start(li, { timed: !!opts.timed });
+  ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.dropFrom = null; ui.ghosts = null; ui.popup = null; ui.tool = null;
+  ui.refreshedNote = false; ui.resultSeq = -1; ui.cursor = 0; ui.idleMs = 0; ui.rushCue = false; ui.timeResult = null; ui.newBest = false; drag = null;
+  ui.focusNext = "#mboard"; announce("");
   persistActive();
 }
 function mFx(kind) {
@@ -1028,19 +1255,39 @@ function mFx(kind) {
     }
   }
 }
+// Commit a result once (idempotent per attempt seq). Wins: records, unlocks, stickers and time in one save.
 function mResult(g) {
-  if (ui.resultSeq === g.seq) return; // never record the same result twice
+  if (ui.resultSeq === g.seq) return;
   ui.resultSeq = g.seq;
   if (g.status === "won") {
-    const P = progress.matchV2, st = M.stars(g), core = M.core(g);
-    P.stars[g.li] = Math.max(P.stars[g.li], st);
-    if (core > P.best[g.li]) { P.best[g.li] = core; P.assisted[g.li] = !!g.assisted; }
-    if (g.speed) P.bestTimed[g.li] = Math.max(P.bestTimed[g.li], core + g.speedBonus);
+    const st = M.stars(g), core = M.core(g), R0 = rec(g.li), R = { ...R0 };
+    ui.newBest = core > R0.best;
+    R.stars = Math.max(R0.stars, st); R.best = Math.max(R0.best, core); R.wins = (R0.wins || 0) + 1;
+    ui.timeResult = null;
+    if (g.timed) { // MC-017: lower is better (whole seconds); a tie keeps the previous record
+      const ms = g.elapsed, sec = Math.floor(ms / 1000), bsec = Math.floor((R0.bestTimeMs || 0) / 1000);
+      if (!R0.bestTimeMs) { R.bestTimeMs = ms; ui.timeResult = { kind: "first", ms }; }
+      else if (sec < bsec) { R.bestTimeMs = ms; ui.timeResult = { kind: "best", ms, diff: bsec - sec }; }
+      else ui.timeResult = { kind: "slower", ms, best: R0.bestTimeMs };
+      if (R.bestTimeMs === ms) R.timeDetails = { hints: g.hints, undos: g.undos, toolsUsed: g.toolsUsed };
+    }
+    setRec(g.li, R);
     progress.match.unlocked = Math.max(progress.match.unlocked, Math.min(12, g.li + 2));
-    progress.active = null; save();
+    const fresh = M.stickersFor(g).filter((id) => !V3().stickers[id]);
+    for (const id of fresh) V3().stickers[id] = new Date().toISOString().slice(0, 10);
+    if (g.li === 0) completeLesson("l1-pair");
+    V3().active = null; save();
     sfx.win(); buzz([20, 40, 20]); mFx("confetti");
-    announce(`Level complete. ${st} of 3 stars. Score ${core}.${g.assisted ? " Assisted." : ""}`);
-  } else if (g.status === "lost") { persistActive(); sfx.bad(); buzz(60); announce(`Out of moves. ${g.made} of ${g.quota} chains. Try again or undo the last move.`); }
+    announce(`Level complete. ${st} of 3 stars. Score ${core}.${ui.timeResult ? " Time " + fmtClock(g.elapsed) + "." : ""}${fresh.length ? " New sticker: " + fresh.map((id) => ACH[id].name).join(", ") + "." : ""}`);
+    if (fresh.length) { ui.stickerQueue.push(...fresh); if (!ui.stickerNow) setTimeout(nextSticker, reduced ? 0 : 600); }
+  } else if (g.status === "lost") { persistActive(); sfx.bad(); buzz(60); announce(`Out of moves. ${g.made} of ${g.quota} chains. Retry or undo the last move.`); }
+}
+function lessonsAfterClear(g, ev) {
+  if (g.li === 0) completeLesson("l1-pair");
+  if (g.li === 1) completeLesson("l2-longer");
+  if (g.li === 3 && ev.activated.length) completeLesson("l4-stripe");
+  if (g.li === 6 && ev.activated.length) completeLesson("l7-wrapped");
+  if (ev.rushEv === "activated" && g.li === 7 && !lessonDone("l8-rush")) { completeLesson("l8-rush"); ui.rushCue = true; }
 }
 function mCommit(chain) {
   const before = ui.game;
@@ -1048,81 +1295,106 @@ function mCommit(chain) {
   ui.chain = []; ui.hintChain = null;
   if (!ev) return;
   if (ev.type === "cancel") { render(); return; }
-  // stable model first, saved before any animation
-  ui.game = g; ui.refreshedNote = false;
-  persistActive();
-  if (ev.type === "wrong") { sfx.bad(); buzz(30); announce(`That makes ${ev.sum}. One move used. ${g.movesLeft} moves left.`); }
+  ui.game = g; ui.refreshedNote = false; ui.idleMs = 0;
+  persistActive(); // stable model saved before any animation
+  if (ev.type === "wrong") { sfx.bad(); buzz(30); announce(ev.free ? `That makes ${ev.sum}. Try again.` : `That makes ${ev.sum}. Try again. One move used, ${g.movesLeft} left.`); }
   else {
-    sfx.good(); buzz(15);
+    lessonsAfterClear(g, ev);
+    if (ev.rushEv === "activated") { sfx.rush(); buzz([15, 30, 15]); } else sfx.good();
+    buzz(15);
     if (ev.blastPts) setTimeout(() => tone(330, 0.18, "square", 0.05), 60);
     ui.ghosts = ev.removed;
-    ui.popup = { chainPts: ev.chainPts, blastPts: ev.blastPts, mult: ev.mult, row: Math.min(...ev.removed.map((t) => Math.floor(t.i / 5))) };
+    ui.popup = { chainPts: ev.chainPts, blastPts: ev.blastPts, rush: ev.rush, combo: !!ev.combo, row: Math.min(...ev.removed.map((t) => Math.floor(t.i / 5))) };
     if (g.status === "playing") {
       ui.dropFrom = {}; before.cells.forEach((c, i) => { ui.dropFrom[c.id] = i; });
-      if (ev.reward) ui.rewardId = g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId) ? g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId).id : null;
-      ui.busyUntil = performance.now() + (reduced ? 80 : 200);
+      if (ev.reward) { const f = g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId); ui.rewardId = f ? f.id : null; }
+      ui.busyUntil = performance.now() + (reduced ? 80 : ev.combo ? 350 : 200);
     }
     if (ev.refreshed) { ui.refreshedNote = true; mToast("Board refreshed"); }
-    announce(`Cleared. ${ev.chainPts} points${ev.blastPts ? ", blast " + ev.blastPts : ""}${ev.reward && !ev.won ? ", made a " + SPNAME[ev.reward.type] + " candy" : ""}. ${g.made} of ${g.quota} chains.`);
+    announce(`Cleared. ${ev.chainPts} points${ev.rush ? " with Sugar Rush" : ""}${ev.blastPts ? ", blast " + ev.blastPts : ""}${ev.combo ? ", special mix" : ""}${ev.reward && !ev.won ? ", made a " + SPNAME[ev.reward.type] + " candy" : ""}.${ev.rushEv === "activated" ? " Sugar Rush! Next three chains score double." : ""} ${g.made} of ${g.quota} chains.`);
   }
   mResult(g);
   render();
 }
 function mUndo() {
   const r = M.undo(ui.game); if (!r.ev) return;
-  ui.game = r.g; ui.chain = []; ui.hintChain = null; ui.modal = null; ui.resultSeq = -1;
+  ui.game = r.g; ui.chain = []; ui.hintChain = null; ui.tool = null; ui.modal = null; ui.resultSeq = -1; ui.idleMs = 0;
   persistActive(); sfx.tap(); announce(`Move undone. ${r.g.movesLeft} moves left. ${r.g.made} of ${r.g.quota} chains.`);
   render();
 }
 function mHint() {
   const r = M.hint(ui.game); if (!r.chain && r.g === ui.game) return;
-  ui.game = r.g; ui.hintChain = r.chain; ui.chain = []; persistActive(); sfx.tap();
+  ui.game = r.g; ui.hintChain = r.chain; ui.chain = []; ui.tool = null; ui.idleMs = 0; persistActive(); sfx.tap();
   if (r.chain) announce("Hint: " + r.chain.map((i) => ui.game.cells[i].v).join(" plus "));
   render();
 }
+// MC-014 hammer: select → target → confirm. The charge is spent with the model commit; Cancel spends nothing.
+function mHammerConfirm() {
+  if (!ui.tool || ui.tool.target === null || performance.now() < ui.busyUntil) return;
+  const before = ui.game, r = M.hammer(before, ui.tool.target);
+  ui.tool = null; if (!r.ev) { render(); return; }
+  ui.game = r.g; ui.idleMs = 0; ui.hintChain = null;
+  persistActive();
+  if (before.li === 5) completeLesson("l6-hammer"); // tool tutorial completes on confirmed use
+  sfx.smash(); buzz(25);
+  ui.ghosts = r.ev.removed; ui.dropFrom = {}; before.cells.forEach((c, i) => { ui.dropFrom[c.id] = i; });
+  ui.busyUntil = performance.now() + (reduced ? 80 : 200);
+  if (r.ev.refreshed) { ui.refreshedNote = true; mToast("Board refreshed"); }
+  announce(`Smashed the ${before.cells[r.ev.i].v}. No move used. ${r.g.hammer} hammer left.`);
+  ui.focusNext = "#mboard";
+  render();
+}
+function startClock() { const g = ui.game; if (g && g.timed && !g.timing && g.status === "playing") { g.timing = true; } }
 function mCancelGesture() { drag = null; ui.chain = []; }
 function mOpenModal(name, trigger) { mCancelGesture(); if (!ui.modal && trigger) ui.modalReturn = trigger; ui.modal = name; }
-function chainAnnounce() {
-  const g = ui.game; if (!ui.chain.length) return;
-  const sc = mSumCard(g); announce(`${sc.ex}. ${sc.status}.`);
-}
+function chainAnnounce() { const g = ui.game; if (!ui.chain.length) return; const sc = mSumCard(g); announce(`${sc.ex}. ${sc.status}.`); }
+function leaveToLevels() { V3().active = null; save(); ui.modal = null; ui.screen = "levels"; ui.tool = null; }
 function mButton(k) {
   sfx.tap();
   const g = ui.game;
+  ui.idleMs = 0;
   if (k === "settings") mOpenModal("settings", "settings");
   else if (k === "closeset") ui.modal = null;
-  else if (k === "play" || k === "choose" || k === "levels2" || k === "levels-back") { ui.modal = null; ui.screen = "levels"; }
+  else if (k === "choose" || k === "levels2") { ui.modal = null; ui.screen = "levels"; }
+  else if (k === "play") mStart(playLevel());
+  else if (k === "offer-start") { const li = V3().offerStart; V3().offerStart = null; save(); mStart(li); }
   else if (k === "home") ui.screen = "home";
   else if (k === "continue") {
     const a = activeAttempt();
-    if (a && a.ok) { ui.game = JSON.parse(JSON.stringify(a.g)); ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.resultSeq = ui.game.status === "lost" ? ui.game.seq : -1; ui.focusNext = "#mboard"; }
+    if (a && a.ok) { ui.game = JSON.parse(JSON.stringify(a.g)); ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.tool = null; ui.idleMs = 0; ui.rushCue = false; ui.resultSeq = ui.game.status === "lost" ? ui.game.seq : -1; ui.focusNext = "#mboard"; }
     else { ui.restoreLi = a ? a.li : 0; ui.modal = "restore-error"; }
   }
   else if (k === "restore-start") { mStart(ui.restoreLi || 0); }
-  else if (k === "restore-levels") { progress.active = null; save(); ui.modal = null; ui.screen = "levels"; }
+  else if (k === "restore-levels") { V3().active = null; save(); ui.modal = null; ui.screen = "levels"; }
   else if (k.startsWith("lvl-")) {
     const li = +k.slice(4);
     if (li + 1 > progress.match.unlocked) { mToast(`Complete level ${li} to unlock level ${li + 1}`); return; }
-    ui.introLi = li; ui.screen = "intro"; ui.focusNext = ".mfocus";
+    mStart(li);
   }
-  else if (k === "coach-ok") { const ck = coachKey(ui.introLi); if (ck) { progress.coach2[ck] = true; save(); } ui.focusNext = '[data-k="intro-play"]'; }
-  else if (k === "intro-play") mStart(ui.introLi);
   else if (k === "pause") mOpenModal("pause", "pause");
   else if (k === "resume") ui.modal = null;
   else if (k === "cancel") ui.modal = "pause";
-  else if (k === "restart") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-restart"; else mStart(g.li); }
-  else if (k === "levels") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-levels"; else { progress.active = null; save(); ui.modal = null; ui.screen = "levels"; } }
-  else if (k === "confirm") { if (ui.modal === "confirm-restart") mStart(g.li); else { progress.active = null; save(); ui.modal = null; ui.screen = "levels"; } }
+  else if (k === "restart") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-restart"; else mStart(g.li, { timed: g.timed }); }
+  else if (k === "levels") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-levels"; else leaveToLevels(); }
+  else if (k === "confirm") { if (ui.modal === "confirm-restart") mStart(g.li, { timed: g.timed }); else leaveToLevels(); }
   else if (k === "snd") { progress.settings.sound = !progress.settings.sound; save(); }
   else if (k === "hap") { progress.settings.haptics = !progress.settings.haptics; save(); if (progress.settings.haptics) buzz(20); }
   else if (k === "tap") { progress.settings.tap = !progress.settings.tap; save(); }
-  else if (k === "speed") { progress.settings.speed = !progress.settings.speed; save(); mToast(`Speed bonus ${progress.settings.speed ? "on" : "off"} from your next attempt`); }
   else if (k === "help") { ui.helpFrom = ui.modal; ui.modal = "help"; }
   else if (k === "closehelp") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; }
-  else if (k === "next") { ui.modal = null; ui.introLi = g.li + 1; ui.screen = "intro"; ui.focusNext = ".mfocus"; }
-  else if (k === "retry") mStart(g.li);
+  else if (k === "book") { ui.bookFrom = ui.modal; ui.bookSel = null; if (!ui.modal) ui.modalReturn = "book"; mCancelGesture(); ui.modal = "book"; }
+  else if (k === "book-back") { ui.modal = ui.bookFrom || null; ui.bookFrom = null; ui.bookSel = null; if (ui.modal) ui.modalShown = null; }
+  else if (k.startsWith("stk-")) { ui.bookSel = k.slice(4); ui.focusNext = `[data-k="${k}"]`; }
+  else if (k === "set-badge") { if (V3().stickers[ui.bookSel]) { V3().badge = ui.bookSel; save(); announce(`${ACH[ui.bookSel].name} is your badge.`); } ui.focusNext = `[data-k="stk-${ui.bookSel}"]`; }
+  else if (k === "stoast-x") { nextSticker(); return; }
+  else if (k === "next") mStart(g.li + 1);
+  else if (k === "retry") mStart(g.li, { timed: g.timed });
+  else if (k === "speed") mStart(g.li, { timed: true });
   else if (k === "undo" || k === "undo2") { mUndo(); return; }
   else if (k === "hint") { mHint(); return; }
+  else if (k === "hammer") { if (g.hammer > 0 && g.status === "playing") { ui.tool = { kind: "hammer", target: null }; ui.chain = []; ui.hintChain = null; announce("Hammer: pick a candy to smash."); ui.focusNext = "#mboard"; } }
+  else if (k === "tool-cancel") { ui.tool = null; announce("Hammer cancelled."); ui.focusNext = '[data-k="hammer"]'; }
+  else if (k === "smash") { mHammerConfirm(); return; }
   else if (k === "submit") { mCommit(ui.chain.slice()); return; }
   else if (k === "clearsel") { ui.chain = []; }
   else if (k === "retryart") { artState = "idle"; loadArt(); }
@@ -1131,17 +1403,18 @@ function mButton(k) {
 flowEl.addEventListener("click", (e) => {
   const b = e.target.closest("button[data-k]");
   if (!b || b.disabled || b.getAttribute("aria-disabled") === "true" && !b.dataset.k.startsWith("lvl-")) return;
-  if (ui.screen === "play" && !ui.modal && performance.now() < ui.busyUntil && ["hint", "undo", "submit"].includes(b.dataset.k)) return;
+  if (ui.screen === "play" && !ui.modal && performance.now() < ui.busyUntil && ["hint", "undo", "submit", "smash", "hammer"].includes(b.dataset.k)) return;
   if (e.detail !== 0) ui.kbd = false;
   mButton(b.dataset.k);
 });
 
-// ---------- pointer: drag chains (one pointer owns the gesture), or tap mode ----------
+// ---------- pointer: drag chains (one pointer owns the gesture), tap mode, hammer targeting ----------
 let drag = null;
 function mCellAt(e) {
   const board = document.getElementById("mboard"); if (!board) return -1;
-  const g = ui.game, rect = board.getBoundingClientRect();
-  const pad = 4 * rect.width / board.offsetWidth, gap = 8 * rect.width / board.offsetWidth;
+  const g = ui.game, rect = board.getBoundingClientRect(), cs = getComputedStyle(board);
+  const sc = rect.width / board.offsetWidth, bw = parseFloat(cs.borderLeftWidth) || 0;
+  const pad = (parseFloat(cs.paddingLeft) + bw) * sc, gap = (parseFloat(cs.columnGap) || 0) * sc;
   const inner = rect.width - 2 * pad, t = (inner - (g.cols - 1) * gap) / g.cols;
   const x = e.clientX - rect.left - pad, y = e.clientY - rect.top - pad;
   const c = Math.floor(x / (t + gap)), r = Math.floor(y / (t + gap));
@@ -1150,13 +1423,17 @@ function mCellAt(e) {
   if (fx < 0.1 || fx > 0.9 || fy < 0.1 || fy > 0.9) return -1;
   return r * g.cols + c;
 }
-function mPlayable() { return ui.mode === "match" && ui.screen === "play" && !ui.modal && ui.game && ui.game.status === "playing"; }
+function mPlayable() { return ui.screen === "play" && !ui.modal && ui.game && ui.game.status === "playing"; }
+function pickTarget(i) { ui.tool.target = i; startClock(); sfx.tap(); announce(`Smash the ${ui.game.cells[i].v}? Press Smash candy to confirm or Cancel.`); }
 flowEl.addEventListener("pointerdown", (e) => {
+  ui.idleMs = 0;
   if (!mPlayable() || drag || performance.now() < ui.busyUntil) return;
   const i = mCellAt(e); if (i < 0) return;
   e.preventDefault();
   ui.kbd = false; ui.hintChain = null;
-  if (progress.settings.tap) { // tap mode: append / step back
+  if (ui.tool) { pickTarget(i); render(); return; }
+  startClock(); // MC-017: the first deliberate board touch starts a timed attempt's clock
+  if (progress.settings.tap) {
     const ch = ui.chain, last = ch[ch.length - 1];
     ui.chain = i === last ? ch.slice(0, -1) : M.extend(ui.game, ch, i);
     if (ui.chain === ch && !ch.includes(i) && ch.length) mToast(ch.length >= 8 ? "Chains are at most 8 candies" : "Pick a candy next to the last one", 1400);
@@ -1168,6 +1445,7 @@ flowEl.addEventListener("pointerdown", (e) => {
 });
 flowEl.addEventListener("pointermove", (e) => {
   if (!drag || e.pointerId !== drag.pid) return;
+  ui.idleMs = 0;
   const i = mCellAt(e); if (i < 0) return;
   const before = ui.chain, next = M.extend(ui.game, before, i);
   if (next === before) return;
@@ -1188,8 +1466,17 @@ flowEl.addEventListener("pointercancel", (e) => mEndDrag(e, true));
 // ---------- keyboard ----------
 function mKey(e) {
   const k = e.key;
+  ui.idleMs = 0;
   if (ui.modal || (ui.screen === "play" && ui.game && ui.game.status !== "playing")) {
-    if (k === "Escape") { e.preventDefault(); if (ui.modal === "help") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; } else if (ui.modal === "pause" || ui.modal === "settings") ui.modal = null; else if (ui.modal && ui.modal.startsWith("confirm")) ui.modal = "pause"; else if (!ui.modal) return; render(); return; }
+    if (k === "Escape") {
+      e.preventDefault();
+      if (ui.modal === "help") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; }
+      else if (ui.modal === "book") { mButton("book-back"); return; }
+      else if (ui.modal === "pause" || ui.modal === "settings") ui.modal = null;
+      else if (ui.modal && ui.modal.startsWith("confirm")) ui.modal = "pause";
+      else if (!ui.modal) return;
+      render(); return;
+    }
     if (k === "Tab") { // focus trap
       const f = [...flowEl.querySelectorAll(".mcm button:not(:disabled), .mcm [tabindex]")]; if (!f.length) return;
       const i = f.indexOf(document.activeElement);
@@ -1197,11 +1484,17 @@ function mKey(e) {
     }
     return;
   }
-  if (k === "Escape") { e.preventDefault(); if (ui.screen === "play") mOpenModal("pause", "pause"); else if (ui.screen === "intro") ui.screen = "levels"; else if (ui.screen === "levels") ui.screen = "home"; else return; render(); return; }
+  if (k === "Escape") {
+    e.preventDefault();
+    if (ui.screen === "play" && ui.tool) { ui.tool = null; }
+    else if (ui.screen === "play") mOpenModal("pause", "pause");
+    else if (ui.screen === "levels") ui.screen = "home"; else return;
+    render(); return;
+  }
   if (ui.screen !== "play" || !mPlayable()) return;
   const g = ui.game, onBtn = document.activeElement && document.activeElement.tagName === "BUTTON";
-  if (k === "h" || k === "H") { mHint(); return; }
-  if (k === "u" || k === "U" || (k === "z" && (e.ctrlKey || e.metaKey))) { e.preventDefault(); mUndo(); return; }
+  if ((k === "h" || k === "H") && !ui.tool) { mHint(); return; }
+  if ((k === "u" || k === "U" || (k === "z" && (e.ctrlKey || e.metaKey))) && !ui.tool) { e.preventDefault(); mUndo(); return; }
   const mv = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -g.cols, ArrowDown: g.cols }[k];
   if (mv !== undefined) {
     e.preventDefault();
@@ -1212,35 +1505,47 @@ function mKey(e) {
   }
   if ((k === " " || k === "Spacebar") && !onBtn) {
     e.preventDefault(); ui.kbd = true; ui.hintChain = null;
+    if (ui.tool) { pickTarget(ui.cursor); render(); return; }
+    startClock();
     const ch = ui.chain, i = ui.cursor;
     if (ch.length && i === ch[ch.length - 1]) ui.chain = ch.slice(0, -1);
     else { ui.chain = M.extend(g, ch, i); if (ui.chain === ch) mToast(ch.includes(i) ? "Already in the chain" : ch.length >= 8 ? "Chains are at most 8 candies" : "Pick a candy next to the last one", 1400); }
     sfx.pick(ui.chain.length); render(); chainAnnounce(); return;
   }
   if (k === "Backspace" && ui.chain.length) { e.preventDefault(); ui.chain = ui.chain.slice(0, -1); render(); chainAnnounce(); return; }
-  if (k === "Enter" && !onBtn) { e.preventDefault(); mCommit(ui.chain.slice()); }
+  if (k === "Enter" && !onBtn) {
+    e.preventDefault();
+    if (ui.tool) { if (ui.tool.target === null) { ui.kbd = true; pickTarget(ui.cursor); render(); } else mHammerConfirm(); return; }
+    mCommit(ui.chain.slice());
+  }
 }
 
-// ---------- MC-007 active-time clock (count-up, no loss from time) ----------
+// ---------- active-time clock (MC-017) and lesson inactivity (MC-010): 250 ms ticks, never wall-clock accrual ----------
 let lastTick = null;
-function mTimingActive() {
-  const g = ui.game;
-  return !!(g && g.mode === "match" && g.speed && g.timing && g.status === "playing" && ui.mode === "match" && ui.screen === "play" && !ui.modal && !document.hidden && performance.now() >= ui.busyUntil);
+function quietPlay() { return mPlayable() && !document.hidden && performance.now() >= ui.busyUntil; }
+function mTimingActive() { const g = ui.game; return !!(g && g.timed && g.timing && quietPlay()); }
+function accrue(ms) { if (!mTimingActive()) return false; ui.game.elapsed += ms; const c = document.getElementById("mclock"); if (c) c.lastChild.textContent = fmtClock(ui.game.elapsed); return true; }
+function idleTick(ms) {
+  if (!quietPlay() || drag) return;
+  const before = currentCue(ui.game);
+  ui.idleMs += ms;
+  const after = currentCue(ui.game);
+  if ((before && before.id) !== (after && after.id)) render();
 }
-function accrue(ms) { if (!mTimingActive()) return false; ui.game.elapsed += ms; const c = document.getElementById("mclock"); if (c) c.textContent = fmtClock(ui.game.elapsed); return true; }
 setInterval(() => {
-  const now = performance.now();
-  if (!mTimingActive()) { lastTick = null; return; }
-  if (lastTick !== null) accrue(Math.min(1000, now - lastTick));
+  const now = performance.now(), dt = lastTick === null ? 0 : Math.min(1000, now - lastTick);
   lastTick = now;
-  if (Math.floor(ui.game.elapsed / 5000) !== Math.floor((ui.game.elapsed - 250) / 5000)) persistActive();
+  idleTick(dt);
+  if (!mTimingActive()) return;
+  accrue(dt);
+  if (Math.floor(ui.game.elapsed / 5000) !== Math.floor((ui.game.elapsed - dt) / 5000)) persistActive();
 }, 250);
 
 // ======================================================================
-// INPUT — OS interruption, keyboard (pointer handlers are with the views above)
+// INPUT — OS interruption
 // ======================================================================
 document.addEventListener("visibilitychange", () => { // OS interruption: cancel gesture, pause
-  if (document.hidden && ui.screen === "play" && ui.game && ui.game.status === "playing") { mOpenModal(ui.modal || "pause", "pause"); persistActive(); render(); }
+  if (document.hidden && ui.screen === "play" && ui.game && ui.game.status === "playing") { if (!ui.modal) mOpenModal("pause", "pause"); else mCancelGesture(); persistActive(); render(); }
 });
 document.addEventListener("keydown", mKey);
 
@@ -1248,25 +1553,27 @@ loadArt();
 render();
 
 // ======================================================================
-// QA HOOK — levels() = 12 Candy Match levels
+// QA HOOK — levels() = 12 Candy Match levels (sweet-v1)
 // ======================================================================
 function qaScreen() {
-  if (ui.screen !== "play") return ui.screen; // home | levels | intro
+  if (ui.screen !== "play") return ui.screen; // home | levels
   if (ui.modal) return "paused";
-  return ui.game.status; // playing | won | lost | stuck
+  return ui.game.status; // playing | won | lost
 }
-// MC-009: run the designer's mechanics fixtures through the real engine (M.resolve / M.release / M.extend)
+// Designer fixtures through the real engine: H-001-v1 special fixtures (retained rules) + H-002-v1 combos and Rush.
 const FIXTURES = {"schemaVersion":1,"indexing":"row-major 0..24","board":[2,3,1,4,7,4,1,6,2,8,5,3,2,9,1,7,2,4,3,6,1,5,2,4,8],"target":10,"cases":[{"id":"ordinary-four","level":4,"chain":[0,1,2,3],"specials":{},"sum":10,"chainPoints":300,"blastPoints":0,"removed":[0,1,2,3],"reward":{"cell":3,"value":4,"type":"stripe"}},{"id":"stripe","level":4,"chain":[0,1,2,3],"specials":{"2":"stripe"},"sum":10,"chainPoints":300,"blastPoints":25,"removed":[0,1,2,3,4],"reward":{"cell":3,"value":4,"type":"stripe"}},{"id":"wrapped-edge","level":7,"chain":[0,1,2,3],"specials":{"0":"wrapped"},"sum":10,"chainPoints":300,"blastPoints":50,"removed":[0,1,2,3,5,6]},{"id":"recursive","level":7,"chain":[0,1,2,3],"specials":{"0":"wrapped","5":"stripe"},"sum":10,"chainPoints":300,"blastPoints":125,"removed":[0,1,2,3,5,6,7,8,9]},{"id":"wrong-sum","level":4,"chain":[0,1,6,7],"specials":{"1":"stripe"},"sum":12,"chainPoints":0,"blastPoints":0,"removed":[]},{"id":"diagonal-invalid","chain":[0,6],"reject":"non-orthogonal selection; ignore second tile, no committed move"},{"id":"repeated-nontail","chain":[0,1,2,0],"reject":"ignore repeated non-tail entry"}]};
+const FIXTURES2 = {"schemaVersion":1,"combos":[{"id":"two-stripes","target":10,"values":[4,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"specials":{"0":"stripe","1":"stripe"},"chain":[0,1],"expectedRemoval":[0,1,2,3,4,5,6,10,11,15,16,20,21],"expectedChainPoints":100,"expectedBlastPoints":275,"quotaDelta":1,"movesUsed":1},{"id":"stripe-wrapped","target":10,"values":[1,1,1,1,1,1,1,1,1,1,1,1,4,6,1,1,1,1,1,1,1,1,1,1,1],"specials":{"12":"stripe","13":"wrapped"},"chain":[12,13],"expectedRemoval":[5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],"expectedChainPoints":100,"expectedBlastPoints":325,"quotaDelta":1,"movesUsed":1},{"id":"two-wrapped","target":10,"values":[1,1,1,1,1,1,1,1,1,1,1,1,4,6,1,1,1,1,1,1,1,1,1,1,1],"specials":{"12":"wrapped","13":"wrapped"},"chain":[12,13],"expectedRemoval":[1,2,3,4,6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24],"expectedChainPoints":100,"expectedBlastPoints":450,"quotaDelta":1,"movesUsed":1}],"rush":[{"charge":2,"uses":0,"chainLength":3,"expectedPoints":187,"nextCharge":0,"nextUses":3},{"charge":0,"uses":3,"chainLength":3,"expectedPoints":374,"nextCharge":0,"nextUses":2},{"charge":0,"uses":1,"chainLength":2,"expectedPoints":200,"nextCharge":0,"nextUses":0}]};
+function fixtureGame(li, target, values, specials) {
+  const g = M.start(li); g.target = target; g.cells = values.map((v, i) => ({ id: i, v, sp: (specials || {})[i] || null })); g.rush = null; return g;
+}
 function runFixtures() {
   const out = [];
   for (const c of FIXTURES.cases) {
-    const li = (c.level || 4) - 1, g = M.start(li);
-    g.target = FIXTURES.target; g.cells = FIXTURES.board.map((v, i) => ({ id: i, v, sp: (c.specials || {})[i] || null }));
+    const g = fixtureGame((c.level || 4) - 1, FIXTURES.target, FIXTURES.board, c.specials);
     if (c.reject) {
       let ch = []; for (const i of c.chain) ch = M.extend(g, ch, i);
       const r = M.release(g, c.chain);
-      const ok = ch.length < c.chain.length && r.g === g && r.ev && r.ev.type === "cancel";
-      out.push({ id: c.id, ok, got: { dragChain: ch, committed: r.g !== g } });
+      out.push({ id: c.id, ok: ch.length < c.chain.length && r.g === g && r.ev && r.ev.type === "cancel", got: { dragChain: ch, committed: r.g !== g } });
       continue;
     }
     const sum = M.sum(g, c.chain), r = M.release(g, c.chain);
@@ -1275,15 +1582,49 @@ function runFixtures() {
     else { const R = M.resolve(g, c.chain); got = { sum, chainPoints: R.chainPts, blastPoints: R.blastPts, removed: R.removal, reward: R.reward, committedPts: r.g.chainPts + r.g.blastPts, made: r.g.made, movesUsed: g.movesLeft - r.g.movesLeft }; }
     let ok = got.sum === c.sum && got.chainPoints === c.chainPoints && got.blastPoints === c.blastPoints && JSON.stringify(got.removed) === JSON.stringify(c.removed) && got.movesUsed === 1;
     if (c.reward) ok = ok && got.reward && got.reward.cell === c.reward.cell && got.reward.value === c.reward.value && got.reward.type === c.reward.type;
-    if (sum === g.target) ok = ok && got.committedPts === c.chainPoints + c.blastPoints && got.made === 1;
-    else ok = ok && got.made === 0 && r.ev.type === "wrong";
-    out.push({ id: c.id, ok, got });
+    if (sum === g.target) ok = ok && got.committedPts === c.chainPoints + c.blastPoints && got.made === 1; else ok = ok && got.made === 0 && r.ev.type === "wrong";
+    out.push({ id: "h001-" + c.id, ok, got });
+  }
+  // H-002-v1 combos (level 7 rules so no reward interferes with a 2-chain), with the invalid-sum boundary and edge clipping
+  for (const c of FIXTURES2.combos) {
+    const g = fixtureGame(6, c.target, c.values, c.specials);
+    const pre = M.resolve(g, c.chain), r = M.release(g, c.chain);
+    const got = { removal: pre.removal, chainPts: pre.chainPts, blastPts: pre.blastPts, quota: r.g.made - g.made, moves: g.movesLeft - r.g.movesLeft, committed: r.g.chainPts + r.g.blastPts, combo: pre.combo && pre.combo.type };
+    const ok = JSON.stringify(got.removal) === JSON.stringify(c.expectedRemoval) && got.chainPts === c.expectedChainPoints && got.blastPts === c.expectedBlastPoints &&
+      got.quota === c.quotaDelta && got.moves === c.movesUsed && got.committed === c.expectedChainPoints + c.expectedBlastPoints && r.g.ev.mix && r.g.ev.spark;
+    out.push({ id: "combo-" + c.id, ok, got });
+    // invalid sum: both selected values -> 4+7: no removal, no points, no quota; ordinary L7 cost (1 move)
+    const bad = c.values.slice(); bad[c.chain[0]] = 4; bad[c.chain[1]] = 7;
+    const gb = fixtureGame(6, c.target, bad, c.specials), rb = M.release(gb, c.chain);
+    out.push({ id: "combo-" + c.id + "-invalid", ok: rb.ev.type === "wrong" && rb.g.made === 0 && rb.g.chainPts + rb.g.blastPts === 0 && gb.movesLeft - rb.g.movesLeft === 1 && JSON.stringify(rb.g.cells.map((x) => x.v)) === JSON.stringify(bad) && !rb.g.ev.mix, got: { type: rb.ev.type } });
+  }
+  { // wrapped+wrapped at the bottom-right edge: 5x5 clipped
+    const v = Array(25).fill(1); v[23] = 4; v[24] = 6;
+    const g = fixtureGame(6, 10, v, { 23: "wrapped", 24: "wrapped" }), R = M.resolve(g, [23, 24]);
+    const exp = M.rect(g, 2, 4, 2, 4);
+    out.push({ id: "combo-edge-clip", ok: JSON.stringify(R.removal) === JSON.stringify(exp) && R.removal.every((i) => i >= 0 && i < 25), got: R.removal });
+  }
+  { // priority: wrapped+wrapped beats stripe+wrapped and stripe+stripe; third selected special fires individually
+    const v = [1, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; // chain 0..4 = 1+1+1+1+6
+    const g = fixtureGame(6, 10, v, { 0: "stripe", 1: "wrapped", 3: "wrapped", 4: "stripe" });
+    const R = M.resolve(g, [0, 1, 2, 3, 4]);
+    out.push({ id: "combo-priority", ok: R.combo && R.combo.type === "wrapped+wrapped" && JSON.stringify(R.combo.cells) === "[1,3]" && R.activated.includes(0) && R.activated.includes(4), got: R.combo });
+    const g2 = fixtureGame(6, 10, v, { 0: "stripe", 1: "stripe", 4: "stripe" }), R2 = M.resolve(g2, [0, 1, 2, 3, 4]);
+    out.push({ id: "combo-tie-order", ok: R2.combo && JSON.stringify(R2.combo.cells) === "[0,1]", got: R2.combo });
+  }
+  // Rush fixtures (L8 rules), points and next state
+  for (const [k, c] of FIXTURES2.rush.entries()) {
+    const n = c.chainLength, v = Array(25).fill(9); const vals = n === 3 ? [3, 3, 6] : [4, 8]; vals.forEach((x, i) => { v[i] = x; });
+    const g = fixtureGame(7, 12, v, {}); g.rush = { charge: c.charge, uses: c.uses };
+    const ch = [...Array(n).keys()], r = M.release(g, ch);
+    const ok = r.ev.chainPts === c.expectedPoints && r.g.rush.charge === c.nextCharge && r.g.rush.uses === c.nextUses;
+    out.push({ id: "rush-" + k, ok, got: { pts: r.ev.chainPts, rush: r.g.rush } });
   }
   return { ok: out.every((x) => x.ok), cases: out };
 }
-// MC-006 evidence: beam search for a no-speed three-star route with the real engine (no hints/undo)
+// MC-011 evidence: beam search for a no-tool, no-speed three-star route with the real engine (no hints/undo)
 function threeStar(li, width = 60) {
-  const L = LEVELS.match[li], [, t3] = M.thresholds(L.quota);
+  const [, t3] = M.thresholds(li), L = LEVELS.match[li];
   let beam = [{ g: M.start(li), path: [] }], best = null;
   for (let step = 0; step < L.quota; step++) {
     const next = [];
@@ -1294,32 +1635,39 @@ function threeStar(li, width = 60) {
     }
     next.sort((a, b) => (b.g.chainPts + b.g.blastPts) - (a.g.chainPts + a.g.blastPts));
     const seen = new Set(); beam = [];
-    for (const n of next) { const key = n.g.cells.map((c) => c.v + (c.sp ? c.sp[0] : "")).join(""); if (seen.has(key)) continue; seen.add(key); beam.push(n); if (beam.length >= width) break; }
+    for (const n of next) { const key = n.g.cells.map((c) => c.v + (c.sp ? c.sp[0] : "")).join("") + (n.g.rush ? n.g.rush.charge + "/" + n.g.rush.uses : ""); if (seen.has(key)) continue; seen.add(key); beam.push(n); if (beam.length >= width) break; }
   }
   return best ? { level: li + 1, core: M.core(best.g), threeStar: t3, stars: M.stars(best.g), reached: M.core(best.g) >= t3, route: best.path } : { level: li + 1, reached: false };
 }
 window.__qa = {
   state: () => {
-    const g = ui.game, base = { screen: qaScreen(), mode: "match", level: ui.screen === "intro" ? ui.introLi : g ? g.li : null, qaLevel: g ? g.li : null, modal: ui.modal || null };
+    const g = ui.game, base = { screen: qaScreen(), mode: "match", level: g ? g.li : null, qaLevel: g ? g.li : null, modal: ui.modal || null };
     if (!g || ui.screen !== "play") return base;
+    const cue = currentCue(g);
     return { ...base, version: g.version, target: g.target, movesLeft: g.movesLeft, made: g.made, quota: g.quota, score: M.score(g), coreScore: M.core(g),
-      chainPts: g.chainPts, blastPts: g.blastPts, finish: g.finish, speedBonus: g.speedBonus, stars: M.stars(g), assisted: g.assisted, hints: g.hints, undoCount: g.undos, undoAvailable: g.hist.length,
-      board: g.cells.map((c) => c.v), specials: g.cells.map((c) => c.sp), ids: g.cells.map((c) => c.id), rng: g.rng, chain: ui.chain.slice(), speed: g.speed, timing: g.timing, elapsedMs: g.elapsed, seq: g.seq };
+      chainPts: g.chainPts, blastPts: g.blastPts, finish: g.finish, stars: M.stars(g), thresholds: M.thresholds(g.li), hints: g.hints, undoCount: g.undos, toolsUsed: g.toolsUsed,
+      undoAvailable: g.hist.length, hammer: g.hammer, rush: g.rush ? { ...g.rush } : null, staged: { ...g.ev }, tool: ui.tool ? { ...ui.tool } : null,
+      cue: cue ? { id: cue.id, text: cue.text, cells: cue.cells || null } : null, last: g.last,
+      board: g.cells.map((c) => c.v), specials: g.cells.map((c) => c.sp), ids: g.cells.map((c) => c.id), rng: g.rng, chain: ui.chain.slice(),
+      timed: g.timed, timing: g.timing, elapsedMs: g.elapsed, seq: g.seq };
   },
   actions: () => {
     const g = ui.game;
     if (ui.screen !== "play" || ui.modal || !g || g.status !== "playing") return [];
     const out = [];
     for (let i = 0; i < g.cells.length; i++) { if ((i + 1) % g.cols) out.push({ chain: [i, i + 1] }); if (i + g.cols < g.cells.length) out.push({ chain: [i, i + g.cols] }); }
-    return out.concat(M.allChains(g, 40).map((c) => ({ chain: c })), ["hint"], g.hist.length ? ["undo"] : []);
+    const ham = g.hammer > 0 ? [0, 6, 12, 18, 24].map((i) => ({ hammer: i })) : [];
+    return out.concat(M.allChains(g, 40).map((c) => ({ chain: c })), ham, ["hint"], g.hist.length ? ["undo"] : []);
   },
   act: (a) => {
     const g = ui.game; if (!g || ui.screen !== "play") return;
     if (ui.modal) ui.modal = null;
     ui.busyUntil = 0;
-    if (a === "hint") mHint(); else if (a === "undo") mUndo(); else if (a && a.chain) mCommit(a.chain);
+    if (a === "hint") mHint(); else if (a === "undo") mUndo();
+    else if (a && a.chain) { startClock(); mCommit(a.chain); }
+    else if (a && Number.isInteger(a.hammer)) { ui.tool = { kind: "hammer", target: null }; pickTarget(a.hammer); mHammerConfirm(); }
   },
-  reset: (n) => { mStart(n === undefined || n === null ? (ui.game ? ui.game.li : 0) : n); render(); },
+  reset: (n, opts) => { mStart(n === undefined || n === null ? (ui.game ? ui.game.li : 0) : n, opts || {}); render(); },
   levels: () => LEVELS.match.length,
   solve: () => { // simulate seeded refills on a copy
     const g0 = ui.game; if (!g0) return [];
@@ -1328,14 +1676,15 @@ window.__qa = {
     return seq;
   },
   validate: validateData,
-  // H-001-v1 extensions (MC-009); not used by normal play
   fixtures: runFixtures,
   threeStar,
-  tick: (ms) => accrue(ms),           // deterministic active-time advance (only counts when the clock would run)
+  tick: (ms) => accrue(ms),            // deterministic active-time advance (only counts when the clock would run)
+  idle: (ms) => { ui.idleMs += ms; render(); return currentCue(ui.game); },
   timingActive: () => mTimingActive(),
   setSetting: (k, v) => { progress.settings[k] = v; save(); render(); },
-  open: (screen, li) => { ui.mode = "match"; ui.modal = null; if (screen === "intro") { ui.introLi = li || 0; } ui.screen = screen; if (screen === "home") loadArt(); render(); },
-  modal: (name) => { ui.modal = name; render(); },
+  open: (screen) => { ui.modal = null; ui.screen = screen; render(); },
+  modal: (name) => { if (name === "book") { mButton("book"); return; } ui.modal = name; render(); },
+  button: (k) => mButton(k),
   dragChain: (cells) => { let ch = []; for (const i of cells) ch = M.extend(ui.game, ch, i); return ch; },
   saved: () => JSON.parse(JSON.stringify(progress)),
 };

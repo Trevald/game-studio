@@ -173,4 +173,5 @@ Rules, constants and screens are the designer's (HANDOVER.md MC-001–009, SCREE
   Rush first activates. L6's hammer cue appears after 8 active idle seconds while a charge is left.
 - A free wrong sum (L1–3) is not an Undo step (nothing changed).
 - Book opens as a dialog (from Home or Pause); Back returns to where it was opened. Time is paused while open.
-- Speed challenge is offered on the win card and on Pause → no; only on results (never converts a running game).
+- Speed challenge is offered only on the win card of a completed level (never converts a running game); a
+  timed attempt's Retry/Restart stays timed.
