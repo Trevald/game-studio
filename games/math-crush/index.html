@@ -427,8 +427,9 @@
   .rushbar.on .pip { border-color: #fff; background: transparent; }
   .rushbar.on .pip.on { background: #FFE09A; }
   .pill .ico { width: 24px; height: 24px; }
-  .pill { min-width: 112px; padding: 4px 16px; }
-  .pill.cuebtn { box-shadow: 0 0 0 4px #FFD23F, 0 3px 0 rgba(176,120,70,.45); animation: hintpulse 1s ease-in-out infinite alternate; }
+  .pill { min-width: 100px; padding: 4px 14px; gap: 6px; }
+  .hintbar { gap: 10px; }
+  .pill.cuebtn { box-shadow: 0 0 0 4px #FFD23F, 0 0 14px 4px rgba(255,210,63,.8), 0 3px 0 rgba(176,120,70,.45); }
   .clock { display: inline-flex; align-items: center; gap: 4px; }
   .scorebox small { display: block; font-weight: 800; color: var(--muted); }
   .rows2 .row b small { font-weight: 800; color: var(--muted); }
@@ -444,15 +445,17 @@
   .stk .chip { position: absolute; top: 4px; right: 4px; padding: 0 6px; font-size: .6875rem; }
   .binfo { display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--inset); border-radius: 16px; padding: 10px 12px; font-weight: 800; }
   .binfo b { font-size: 1.125rem; }
-  .stoast { position: fixed; left: 50%; top: max(12px, env(safe-area-inset-top)); transform: translateX(-50%); z-index: 92; display: flex; align-items: center; gap: 10px;
+  .stoast { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 92; display: flex; align-items: center; gap: 10px;
     background: var(--cream); color: var(--plum); border: 2px solid var(--edge); border-radius: 20px; padding: 6px 6px 6px 10px; box-shadow: 0 6px 16px rgba(74,23,54,.3);
     max-width: calc(100% - 32px); animation: fade 150ms ease-out; }
   .stoast img { width: 44px; height: 44px; flex: none; }
-  .stoast span { display: flex; flex-direction: column; font-weight: 900; line-height: 1.2; }
+  .stoast span { display: flex; flex-direction: column; font-weight: 900; line-height: 1.2; white-space: nowrap; }
+  .mcm .xbtn.left { right: auto; left: 10px; }
+  .mcm .h1.padx { padding: 0 40px; }
   .stoast small { font-size: .8125rem; color: var(--muted); }
   @media (prefers-reduced-motion: reduce) {
     .cuehand, .tile2.cue::after, .pill.cuebtn { animation: none; }
-    .stoast { animation: fadeout 0s; animation: none; }
+    .stoast { animation: none; }
   }
 </style>
 </head>
@@ -1051,9 +1054,9 @@ function mStatus(g, sc, cue) {
   }
   if (ch.length) return `<span${sc.over ? ' style="color:#9B1B1B"' : ""}>${esc(sc.status)}</span>`;
   if (ui.hintChain) return `<span>Hint: ${ui.hintChain.map((i) => g.cells[i].v).join(" + ")}</span>`;
-  if (cue) return `<span class="cuecap">${img("icons/hand.svg", "ico")}${esc(cue.text)}</span>`;
   const L = g.last;
   if (L && L.type === "wrong") return `<span style="color:#9B1B1B">${L.free ? "Try again" : "Try again · 1 move used"}</span>`;
+  if (cue) return `<span class="cuecap">${img("icons/hand.svg", "ico")}${esc(cue.text)}</span>`;
   if (L && L.type === "clear") return `<span>+${L.chainPts}${L.rush ? " · Sugar Rush ×2" : ""}${L.blastPts ? ` · +${L.blastPts} blast` : ""}</span>${L.rushEv === "activated" ? "<small>Sugar Rush!</small>" : ""}`;
   if (L && L.type === "undo") return `<span>Move undone</span>`;
   if (L && L.type === "hammer") return `<span>Smashed!</span>`;
@@ -1162,7 +1165,7 @@ function timeRow(g) {
 }
 function bookHtml() {
   const v3 = V3(), sel = ui.bookSel, n = ACHIEVEMENTS.achievements.filter((a) => v3.stickers[a.id]).length;
-  let h = `<button class="xbtn" data-k="book-back" aria-label="Back">${ICON.back}</button><h2 class="h1 mfocus" tabindex="-1" id="mhead" style="font-size:1.625rem">Your sweet collection</h2>
+  let h = `<button class="xbtn left" data-k="book-back" aria-label="Back">${ICON.back}</button><h2 class="h1 mfocus padx" tabindex="-1" id="mhead" style="font-size:1.625rem">Your sweet collection</h2>
     <p class="small" style="margin:0">Little wins. Tap a sticker you've earned to make it your badge.</p><div class="sgrid">`;
   for (const a of ACHIEVEMENTS.achievements) {
     const got = !!v3.stickers[a.id];
@@ -1180,10 +1183,10 @@ function mModal() {
   const g = ui.game, mod = ui.modal;
   const head = (t, cls = "") => `<h2 class="h1 mfocus ${cls}" tabindex="-1" id="mhead">${t}</h2>`;
   let body = null;
-  if (mod === "pause") body = `<button class="xbtn" data-k="resume" aria-label="Close and resume">${I2.x}</button>` + head("Take a moment") + `<button class="pbtn" data-k="resume">Resume</button>
+  if (mod === "pause") body = `<button class="xbtn" data-k="resume" aria-label="Close and resume">${I2.x}</button>` + head("Take a moment", "padx") + `<button class="pbtn" data-k="resume">Resume</button>
     <div class="duo"><button class="sbtn" data-k="restart">${I2.restart}Restart</button><button class="sbtn" data-k="levels">${I2.list}Levels</button></div>${settingsRows()}
     <button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button><button class="rowlink" data-k="book"><span class="lab">${img("icons/book.svg")}Sticker book</span>${I2.chev}</button>`;
-  else if (mod === "settings") body = `<button class="xbtn" data-k="closeset" aria-label="Close settings">${I2.x}</button>` + head("Settings") + settingsRows() + `<button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button><button class="pbtn" data-k="closeset">Done</button>`;
+  else if (mod === "settings") body = `<button class="xbtn" data-k="closeset" aria-label="Close settings">${I2.x}</button>` + head("Settings", "padx") + settingsRows() + `<button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button><button class="pbtn" data-k="closeset">Done</button>`;
   else if (mod === "book") body = bookHtml();
   else if (mod === "confirm-restart" || mod === "confirm-levels") body = head(mod === "confirm-restart" ? "Restart this level?" : "Leave this level?") +
     `<p class="lede">This attempt's chains and moves will be lost.</p><button class="pbtn" data-k="confirm">${mod === "confirm-restart" ? "Restart level" : "Leave level"}</button><button class="sbtn" data-k="cancel">Cancel</button>`;
@@ -1678,7 +1681,7 @@ window.__qa = {
   validate: validateData,
   fixtures: runFixtures,
   threeStar,
-  tick: (ms) => accrue(ms),            // deterministic active-time advance (only counts when the clock would run)
+  tick: (ms) => { ui.busyUntil = 0; return accrue(ms); },            // deterministic active-time advance (only counts when the clock would run)
   idle: (ms) => { ui.idleMs += ms; render(); return currentCue(ui.game); },
   timingActive: () => mTimingActive(),
   setSetting: (k, v) => { progress.settings[k] = v; save(); render(); },

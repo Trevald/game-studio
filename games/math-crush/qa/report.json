@@ -1,11 +1,11 @@
 {
   "game": "games/math-crush/index.html",
-  "at": "2026-10-25T21:44:57.206Z",
+  "at": "2026-10-25T21:51:09.509Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "134 KB"
+      "detail": "135 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
