@@ -60,6 +60,8 @@ function pushSeq(L, moves) { // die index + dir (+ slide length) for each push
     pl = n; }
   return { seq: out, slides };
 }
+// night-3 review: also reject any 4-push direction pattern or exact 3-push run that appears twice (repeated circuits / swaps)
+const repeats = (seq) => { const seen = new Set(), dirs = seq.map((x) => x.slice(0, 2)); for (let i = 0; i + 4 <= dirs.length; i++) { const k = dirs.slice(i, i + 4).join(" "); if (seen.has(k)) return true; seen.add(k); } seen.clear(); for (let i = 0; i + 3 <= seq.length; i++) { const k = seq.slice(i, i + 3).join(" "); if (seen.has(k)) return true; seen.add(k); } return false; };
 const loopy = (seq) => { for (let i = 0; i + 8 <= seq.length; i++) if (seq.slice(i, i + 4).join() === seq.slice(i + 4, i + 8).join()) return true; return false; };
 const res = []; const dbg = { room: 0, ex: 0, cand: 0 };
 for (let t = 0; t < TRIES; t++) {
@@ -69,7 +71,7 @@ for (let t = 0; t < TRIES; t++) {
   for (const [tops, depth] of cands) {
     const goals = L.goals.map((p, i) => ({ p, n: +tops[i] }));
     const sol = pushSolve({ ...L, goals }); if (!sol || sol.capped) continue;
-    const { seq, slides } = pushSeq(L, sol.moves); if (loopy(seq)) { dbg.loopy = (dbg.loopy||0)+1; continue; } if (slides < MINSL) { dbg.sl = (dbg.sl||0)+1; if (process.env.DBG2) console.error(seq.join(" "), [...L.ice]); continue; }
+    const { seq, slides } = pushSeq(L, sol.moves); if (loopy(seq) || repeats(seq)) { dbg.loopy = (dbg.loopy||0)+1; continue; } if (slides < MINSL) { dbg.sl = (dbg.sl||0)+1; if (process.env.DBG2) console.error(seq.join(" "), [...L.ice]); continue; }
     if (new Set(seq.map((x) => x[0])).size !== K) continue;
     // ice must matter: the same room with the ice melted needs a different number of pushes (or can't be done)
     const melted = pushSolve({ ...L, ice: new Set(), goals }, 400000); const iceMatters = !melted || melted.capped || melted.pushes !== depth;

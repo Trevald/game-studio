@@ -20,7 +20,7 @@
       --bg: #15161d; --panel: #1f212b; --ink: #ecebf2; --muted: #a2a1b0; --edge: #343748;
       --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50; --ice: #2f5266; --ice2: #2b4b5e; --ice-line: #7fb2cc;
       --die: #f6f1e6; --die-side: #d9d0bf; --die-edge: #8f8572; --pip: #23263a; --side-num: #5d5546;
-      --player: #f06a5e; --player-ink: #fff; --goal: #8e8370; --ok: #4cc28f; --bad: #e08a55;
+      --player: #f06a5e; --player-ink: #fff; --goal: #c2b394; --ok: #4cc28f; --bad: #e08a55;
       --btn: #2a2d3a; --btn-ink: #ecebf2; --accent: #ecebf2; --accent-ink: #15161d; color-scheme: dark;
     }
   }
@@ -28,10 +28,11 @@
     --bg: #15161d; --panel: #1f212b; --ink: #ecebf2; --muted: #a2a1b0; --edge: #343748;
     --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50; --ice: #2f5266; --ice2: #2b4b5e; --ice-line: #7fb2cc;
     --die: #f6f1e6; --die-side: #d9d0bf; --die-edge: #8f8572; --pip: #23263a; --side-num: #5d5546;
-    --player: #f06a5e; --player-ink: #fff; --goal: #8e8370; --ok: #4cc28f; --bad: #e08a55;
+    --player: #f06a5e; --player-ink: #fff; --goal: #c2b394; --ok: #4cc28f; --bad: #e08a55;
     --btn: #2a2d3a; --btn-ink: #ecebf2; --accent: #ecebf2; --accent-ink: #15161d; color-scheme: dark;
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html, body { margin: 0; min-height: 100%; }
   body { background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); -webkit-tap-highlight-color: transparent;
     padding: env(safe-area-inset-top, 0px) max(12px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(12px, env(safe-area-inset-left, 0px)); }
@@ -98,6 +99,14 @@
   .toggle input { width: 22px; height: 22px; accent-color: var(--player); }
   @media (max-width: 374px) { .controls .lbl { display: none; } }
   @media (max-height: 700px) { .keys { display: none; } .tip { min-height: 0; } }
+  /* short landscape screens (phones on their side): board left, tip + controls right (night 3 review) */
+  @media (orientation: landscape) and (max-height: 520px) {
+    main { width: min(100%, 980px); display: grid; grid-template-columns: minmax(0, 1fr) 300px; grid-template-rows: auto auto 1fr auto;
+      grid-template-areas: "head head" "stat stat" "stage tip" "stage ctl"; column-gap: 16px; row-gap: 6px; padding: 6px 0 8px; }
+    header { grid-area: head; min-height: 44px; } .status { grid-area: stat; } .stage { grid-area: stage; }
+    .tip { grid-area: tip; align-self: end; } .controls { grid-area: ctl; } .keys { display: none; }
+    .controls .lbl { display: none; } .controls .big { max-width: 64px; }
+  }
 </style>
 </head>
 <body>
@@ -187,9 +196,9 @@ const LEVELS = /*LEVELS*/[
   {"name":"First slide","map":["#########","#@.~~~..#","#########"],"dice":[[2,1,2,3,1]],"goals":[[7,1,6]],"sol":"RRRRR","par":2},
   {"name":"Short cut","map":["#######","#..~.##","#@.~.~#","#..~~~#","#######"],"dice":[[2,2,1,3,5]],"goals":[[2,3,4]],"sol":"RURRDRDL","par":3},
   {"name":"Ice lane","map":["#######","#.#~.##","#..~..#","#@.~..#","#.~~#.#","#######"],"dice":[[2,2,4,1,5]],"goals":[[4,3,6]],"sol":"URRURDRDLLDLULURRURD","par":6},
-  {"name":"Skid row","map":["########","#...~..#","#..@~..#","#..~~.##","#...~~.#","########"],"dice":[[2,3,5,6,4]],"goals":[[3,4,5]],"sol":"LLDRDRRRULUURRDLLLULDLDRDRRRULUURRDLULLD","par":9},
+  {"name":"Skid row","map":["########","#..~..~#","#..~..##","#..~~.~#","#.@~~..#","########"],"dice":[[5,3,3,5,1]],"goals":[[5,4,6]],"sol":"RRRRULDLLLULURRRURDLDDRRULULLLDLDR","par":8},
   {"name":"Two on ice","map":["#######","#....@#","#..~..#","#..~~.#","#...#.#","#######"],"dice":[[2,2,5,4,1],[2,3,6,5,3]],"goals":[[5,2,1],[1,3,1]],"sol":"LLLLDRURRDLDDLURURRDLUULLLDRLDDRURUURDULLLDRURRRDDLLURDLDLURULULD","par":13},
-  {"name":"Rink","map":["#######","#~~~@.#","#..~..#","##.~..#","#..~~~#","#######"],"dice":[[4,3,4,2,1],[2,3,3,6,5]],"goals":[[5,2,1],[1,2,6]],"sol":"DLDDLUDRRRULUULLLDRRDDLURUURDULLLDRURRRDDLLUURDLDDLUDRRRULUULLLDRRDDLURULURRDLDRDRU","par":16}
+  {"name":"Rink","map":["#######","#.#@.##","#.....#","#..~..#","#..~~.#","#######"],"dice":[[4,2,6,4,5],[2,2,5,3,6]],"goals":[[2,3,1],[2,4,2]],"sol":"RDRDLDLLLUURRURDLLLDRDRULURDDRRULLUURDRDLDLUDLLURDRRRUULDLLURURDRDLRDL","par":18}
 ];
 const TIPS = {
   0: "Walk into the die to push it. Watch the top number change.",
@@ -200,9 +209,11 @@ const TIPS = {
   6: "Stuck? <b>Hint</b> (H) shows the next push from where you are now.",
   10: "Three dice. Any die can fill any goal: pick the one that is easiest to turn.",
   15: "<b>Ice!</b> A die pushed onto ice keeps rolling until it gets off. Four rolls bring the same number back.",
-  16: "A slide is many rolls for one push. Count the squares before you push.",
-  18: "You walk on ice normally. Only dice slide.",
+  16: "A slide is many rolls for one push. Count the squares before you push. You walk on ice normally: only dice slide.",
+  17: "Ice can be a detour: slide out, turn the die, slide back with new numbers.",
+  18: "Hint (H) tells you how far a die will slide and what comes up.",
   19: "Two dice on the ice. A die can stop another one's slide.",
+  20: "Last room. Decide which die crosses the ice first.",
 };
 const DIRS = { U: [0, -1], D: [0, 1], L: [-1, 0], R: [1, 0] };
 const SAVE_KEY = "pippush.v1";
@@ -425,9 +436,10 @@ function readColors() { for (const k of ["ice", "ice2", "ice-line", "floor", "fl
 
 function layout() {
   const main = document.querySelector("main");
-  const availW = Math.min(main.clientWidth, 540);
-  const used = document.querySelector("header").offsetHeight + document.querySelector(".status").offsetHeight + $("tip").offsetHeight + document.querySelector(".controls").offsetHeight + document.querySelector(".keys").offsetHeight + 70;
-  const availH = Math.max(220, window.innerHeight - used);
+  const side = window.matchMedia("(orientation: landscape) and (max-height: 520px)").matches; // controls beside the board
+  const availW = side ? main.clientWidth - 316 : Math.min(main.clientWidth, 540);
+  const used = document.querySelector("header").offsetHeight + document.querySelector(".status").offsetHeight + (side ? 30 : $("tip").offsetHeight + document.querySelector(".controls").offsetHeight + document.querySelector(".keys").offsetHeight + 70);
+  const availH = Math.max(side ? 120 : 220, window.innerHeight - used);
   // the outer wall ring is cropped to half a cell, so the room gets the space
   cell = 2 * Math.floor(Math.max(30, Math.min(80, availW / (game.lv.w - 1), availH / (game.lv.h - 1))) / 2); // even, so the half-cell crop stays on whole pixels
   dpr = Math.min(3, window.devicePixelRatio || 1);
@@ -614,7 +626,7 @@ function renderUI() {
     $("wMoves").textContent = g.moves; $("wPushes").textContent = g.pushes; $("wPar").textContent = L.par;
     $("winTitle").textContent = last ? "All levels solved!" : "Solved!";
     $("wNote").textContent = g.replay ? "That was a par solution: the fewest pushes possible."
-      : (g.pushes <= L.par ? "At par: the fewest pushes possible." : "Par is the fewest pushes possible. Can you get there?") + (g.hints ? ` Used ${g.hints} hint${g.hints === 1 ? "" : "s"}.` : " No hints used.");
+      : (g.replayed ? `You watched a par solution (${L.par} pushes). Your own result is above. ` : "") + (g.pushes <= L.par ? "At par: the fewest pushes possible." : "Par is the fewest pushes possible. Can you get there?") + (g.hints ? ` Used ${g.hints} hint${g.hints === 1 ? "" : "s"}.` : " No hints used.");
     $("wWatch").hidden = !!g.replay;
     $("wNext").textContent = last ? "Pick a level" : "Next level";
   }
@@ -746,9 +758,11 @@ function doAction(a, fromReplay) {
 }
 // ---- watch the par solution (night 3): replays the stored minimum-push solution from the start ----
 let replay = null; // {steps, i, timer}
+let ownWin = null;
 function startReplay() {
   if (game.screen !== "won" || replay) return;
   const lvl = game.level, hintsUsed = game.hints;
+  ownWin = game.replay ? ownWin : game; // the player's own winning position, restored when the replay finishes
   game = { ...newGame(lvl), hints: hintsUsed, replay: true };
   anim = null; burst = null; shake = null; hint = null; hintBusy = 0; facing = "D";
   replay = { steps: LEVELS[lvl].sol.split(""), i: 0, timer: null };
@@ -757,7 +771,9 @@ function startReplay() {
 }
 function replayTick() {
   if (!replay) return;
-  if (replay.i >= replay.steps.length || game.screen !== "playing") { stopReplay(); return; }
+  if (replay.i >= replay.steps.length || game.screen !== "playing") {
+    if (game.screen === "won" && ownWin) { game = { ...ownWin, replayed: true }; anim = null; } // back to your own result
+    stopReplay(); return; }
   const d = replay.steps[replay.i++];
   doAction(d, true);
   const slide = anim && anim.path ? anim.path.length - 1 : 0;
@@ -766,7 +782,7 @@ function replayTick() {
 function stopReplay() {
   if (!replay) return;
   clearTimeout(replay.timer); replay = null; document.body.classList.remove("replaying");
-  if (game.screen === "playing") game = { ...game, replay: false }; // the player takes over from here
+  if (game.screen === "playing") { game = { ...game, replay: false }; ownWin = null; } // the player takes over from here
   sync();
 }
 function loadLevel(i) {

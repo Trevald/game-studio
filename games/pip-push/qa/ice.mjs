@@ -33,15 +33,20 @@ const model = await q(() => {
   return bad;
 });
 ok(model.length === 0, "ice levels: no die ever stops on ice with a free square ahead; solve() wins all", JSON.stringify(model));
-// 4. replay: solve level 17, watch par, it replays and wins again; key press takes over
-st = await q(() => { const Q = window.__qa; Q.reset(16); for (const a of Q.solve()) Q.act(a); Q.act("watch"); return Q.state(); });
+// 4. replay: solve level 17 the long way (undo + redo adds moves), watch par, it replays, then your own win comes back
+const own = await q(() => { const Q = window.__qa; Q.reset(16); const sol = Q.solve(); Q.act("U"); Q.act("D"); for (const a of sol) Q.act(a); const s = Q.state(); Q.act("watch"); return s; });
+st = await q(() => window.__qa.state());
 ok(st.replaying && st.screen === "playing" && st.moves <= 1, "Watch par restarts the level and replays", JSON.stringify(st));
 await p.waitForTimeout(4000);
 st = await q(() => window.__qa.state());
-ok(st.screen === "won" && !st.replaying && st.pushes === await q(() => window.__qa.par()), "replay ends in a win at par", JSON.stringify(st));
+ok(st.screen === "won" && !st.replaying && st.moves === own.moves && st.pushes === own.pushes, "after the replay your own winning result is back", JSON.stringify([own.moves, st.moves]));
 await p.waitForTimeout(900);
-const note = await p.textContent("#wNote"); const watchHidden = await p.evaluate(() => document.getElementById("wWatch").hidden);
-ok(/par solution/.test(note) && watchHidden, "win card after a replay says so", note);
+const note = await p.textContent("#wNote"); const watchVisible = await p.isVisible("#wWatch");
+ok(/watched a par solution/.test(note) && watchVisible, "win card after a replay says so and shows your numbers", note);
+const mv = await p.textContent("#wMoves"); ok(+mv === own.moves, "win card moves are yours", mv);
+await p.click("#wUndo"); st = await q(() => window.__qa.state());
+ok(st.screen === "playing" && st.moves === own.moves - 1, "Undo on the card undoes your own last move", JSON.stringify(st));
+await q(() => { const Q = window.__qa; Q.reset(16); for (const a of Q.solve()) Q.act(a); }); await p.waitForTimeout(900);
 // real click on Watch par, then a tap on the board stops it
 await p.click("#wWatch"); await p.waitForTimeout(450);
 st = await q(() => window.__qa.state()); ok(st.replaying, "Watch par button starts replay");

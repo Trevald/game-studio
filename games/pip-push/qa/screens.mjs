@@ -21,3 +21,16 @@ for (const [name, vp, scheme] of [["phone", { width: 390, height: 844 }, "light"
   await ctx.close();
 }
 await b.close();
+// night 3 review: landscape phone — controls must be on screen without scrolling
+{
+  const b2 = await chromium.launch(); const ctx = await b2.newContext({ viewport: { width: 844, height: 390 }, hasTouch: true }); const p = await ctx.newPage();
+  await p.goto(url);
+  for (const lv of [0, 14, 20]) {
+    await p.evaluate((lv) => window.__qa.reset(lv), lv); await p.waitForTimeout(150);
+    await p.screenshot({ path: path.join(dir, `shot-landscape-L${lv + 1}.png`) });
+    const r = await p.evaluate(() => { const c = document.querySelector(".controls").getBoundingClientRect(), bd = document.getElementById("board").getBoundingClientRect();
+      return { ctlBottom: c.bottom, boardBottom: bd.bottom, h: innerHeight, scrollH: document.documentElement.scrollHeight, overlapX: bd.right > c.left && c.top < bd.bottom }; });
+    console.log("landscape L" + (lv + 1), JSON.stringify(r), r.ctlBottom <= r.h && r.boardBottom <= r.h && r.scrollH <= r.h + 1 ? "PASS" : "FAIL");
+  }
+  await b2.close();
+}
