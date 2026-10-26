@@ -1,6 +1,6 @@
 {
   "game": "games/suguru-shift/index.html",
-  "at": "2026-10-26T21:53:10.817Z",
+  "at": "2026-10-26T21:55:40.915Z",
   "checks": [
     {
       "name": "file under 2 MB",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: won, playing; resets: 1"
+      "detail": "screens seen: playing; resets: 0"
     },
     {
       "name": "[phone] no console errors or exceptions",

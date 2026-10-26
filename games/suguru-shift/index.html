@@ -32,7 +32,7 @@
   #tip { min-height: 2.8em; font-size: 14px; color: var(--muted); margin: 0; }
   #tip strong { color: var(--ink); }
   .stage { display: flex; flex-direction: column; gap: 10px; }
-  #board { position: relative; width: 100%; aspect-ratio: 1; touch-action: none; user-select: none; -webkit-user-select: none;
+  #board { position: relative; width: min(100%, max(240px, calc(100vh - 320px))); margin: 0 auto; aspect-ratio: 1; touch-action: none; user-select: none; -webkit-user-select: none;
     border-radius: 12px; overflow: hidden; background: var(--wall); cursor: grab; outline: none; }
   #board.dragging { cursor: grabbing; }
   #board:focus-visible { box-shadow: 0 0 0 3px var(--accent); }
@@ -42,7 +42,7 @@
   .cell.ok.drag { background: color-mix(in srgb, var(--ok) 60%, var(--drag)); }
   .cell.hint { box-shadow: inset 0 0 0 3px var(--hint); }
   .tile { position: absolute; display: grid; place-items: center; font-weight: 700; pointer-events: none; font-variant-numeric: tabular-nums; }
-  .tile span { display: grid; place-items: center; width: 74%; height: 74%; border-radius: 50%; border: 3px solid transparent; }
+  .tile span { display: grid; place-items: center; width: 74%; height: 74%; border-radius: 50%; border: 2.5px solid transparent; }
   .tile.clash span { border-color: var(--clash); color: var(--clash); }
   .tile.okc span { color: var(--ok-ink); }
   #walls { position: absolute; inset: 0; pointer-events: none; }
@@ -51,6 +51,7 @@
   #status { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.4em; }
   #status .bad { color: var(--clash); font-weight: 600; }
   #status .good { color: var(--ok-ink); font-weight: 600; }
+  .side { flex: 1; display: flex; flex-direction: column; gap: 8px; }
   .controls { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
   .row { display: flex; gap: 8px; justify-content: space-between; }
   .row .chip { flex: 1; }
@@ -68,7 +69,9 @@
   .sheet { width: min(100%, 420px); background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; max-height: 100%; overflow: auto; }
   .sheet h2 { margin: 0; font-size: 18px; }
   .sheet p { margin: 0; color: var(--muted); font-size: 15px; }
-  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  #padNote { margin: 0; font-size: 13px; color: var(--muted); text-align: center; }
+  body.won #padNote { display: none; }
   .lv { min-height: 56px; border-radius: 12px; border: 1px solid var(--line); background: var(--cell); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
   .lv b { font-size: 18px; }
   .lv small { color: var(--muted); font-size: 12px; }
@@ -110,6 +113,7 @@
         <p id="winText"></p>
         <div class="row"><button class="chip" id="againBtn">Play again</button><button class="chip primary" id="nextBtn">Next level</button></div>
       </div>
+      <p id="padNote"></p>
       <div class="pad" aria-label="Slide the selected line">
         <button id="padL" aria-label="Slide row left">←</button>
         <button id="padU" aria-label="Slide column up">↑</button>
@@ -360,6 +364,7 @@ function render() {
   $("undoBtn").disabled = !game.history.length;
   const sel = cursorShown && game.screen === "playing";
   for (const id of ["padL", "padU", "padD", "padR"]) $(id).disabled = !sel;
+  $("padNote").textContent = sel ? `Arrows slide row ${((cursor / game.W) | 0) + 1} or column ${(cursor % game.W) + 1}` : "Drag a line, or tap a number to use the arrows";
   if (game.screen === "won") {
     const atPar = game.slides <= L.par;
     $("winTitle").textContent = atPar ? "Solved at par ★" : "Solved!";
