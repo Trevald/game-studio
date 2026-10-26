@@ -1,10 +1,10 @@
-// Pip Push — push-level solver (night 2). The game embeds a copy of pushSolve(); keep them in sync.
+// Pip Push — push-level solver (night 2; ice in night 3: S.ice = Set<idx>). The game embeds a copy of pushSolve(); keep them in sync.
 // Searches by pushes, not steps: the player's position is collapsed to the area it can walk to, so a
 // state is (dice, player area). BFS over pushes gives the fewest pushes; walks between pushes are shortest
 // walks. Input: {w, h, walls:Set<idx>, goals:[{p, n}], player: idx, dice:[{p, o:[top,north,east]}]}.
 // Returns {moves: "UDLR...", pushes, firstPush: {stand, d, die}} or null (no solution / cap hit -> {capped}).
 export function pushSolve(S, cap = 400000) {
-  const { w, h, walls, goals } = S, N = w * h;
+  const { w, h, walls, goals } = S, N = w * h, ice = S.ice && S.ice.size ? S.ice : null;
   const DV = { U: -w, D: w, L: -1, R: 1 };
   const inb = (p, d) => !(d === "L" && p % w === 0) && !(d === "R" && p % w === w - 1) && p + DV[d] >= 0 && p + DV[d] < N;
   const roll = ([t, n, e], d) => d === "R" ? [7 - e, n, t] : d === "L" ? [e, n, 7 - t] : d === "U" ? [7 - n, t, e] : [n, 7 - t, e];
@@ -39,7 +39,10 @@ export function pushSolve(S, cap = 400000) {
           if (walls.has(to) || occ.has(to)) continue;
           const opp = { U: "D", D: "U", L: "R", R: "L" }[d]; if (!inb(b, opp)) continue;
           const stand = b - DV[d]; if (st.ar.prev[stand] < 0) continue;
-          const dice = st.dice.slice(); dice[i] = { p: to, o: roll(st.dice[i].o, d) };
+          const dice = st.dice.slice(); let tp = to, to2 = roll(st.dice[i].o, d);
+          // ice (night 3): a die standing on ice keeps rolling while the way ahead is clear
+          while (ice && ice.has(tp) && inb(tp, d) && !walls.has(tp + DV[d]) && !occ.has(tp + DV[d])) { tp += DV[d]; to2 = roll(to2, d); }
+          dice[i] = { p: tp, o: to2 };
           const ar = area(b, dice), k = key(ar.min, dice);
           if (seen.has(k)) continue;
           seen.set(k, { pk: st.k, walk: walk(st.ar.prev, stand) + d, stand, d, die: i });

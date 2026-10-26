@@ -21,10 +21,17 @@ const L = [
   { name: "Notch", map: ["######", "#....#", "#...##", "#....#", "#..@.#", "######"], dice: [[3, 3, 6, 4, 5], [2, 1, 3, 1, 2], [2, 2, 1, 2, 3]], goals: [[1, 2, 6], [4, 3, 6], [4, 1, 4]], push: true },
   { name: "Dock", map: ["#######", "#.....#", "#....@#", "#.....#", "#..#..#", "#######"], dice: [[2, 2, 5, 1, 3], [5, 3, 3, 2, 6], [3, 3, 6, 2, 4]], goals: [[4, 4, 6], [4, 1, 5], [5, 4, 2]], push: true },
   { name: "Three ways", map: ["#######", "#.....#", "#.@...#", "#.....#", "#..#..#", "#######"], dice: [[4, 3, 6, 3, 2], [3, 2, 2, 6, 3], [4, 1, 4, 1, 5]], goals: [[3, 1, 5], [2, 3, 4], [5, 3, 2]], push: true },
+  // night 3: ice (gen4.mjs) — a die pushed onto ice keeps rolling until it leaves the ice or is blocked
+  { name: "First slide", map: ["#########", "#@.~~~..#", "#########"], dice: [[2, 1, 2, 3, 1]], goals: [[7, 1, 6]], push: true },
+  { name: "Short cut", map: ["#######", "#..~.##", "#@.~.~#", "#..~~~#", "#######"], dice: [[2, 2, 1, 3, 5]], goals: [[2, 3, 4]], push: true },
+  { name: "Ice lane", map: ["#######", "#.#~.##", "#..~..#", "#@.~..#", "#.~~#.#", "#######"], dice: [[2, 2, 4, 1, 5]], goals: [[4, 3, 6]], push: true },
+  { name: "Skid row", map: ["########", "#...~..#", "#..@~..#", "#..~~.##", "#...~~.#", "########"], dice: [[2, 3, 5, 6, 4]], goals: [[3, 4, 5]], push: true },
+  { name: "Two on ice", map: ["#######", "#....@#", "#..~..#", "#..~~.#", "#...#.#", "#######"], dice: [[2, 2, 5, 4, 1], [2, 3, 6, 5, 3]], goals: [[5, 2, 1], [1, 3, 1]], push: true },
+  { name: "Rink", map: ["#######", "#~~~@.#", "#..~..#", "##.~..#", "#..~~~#", "#######"], dice: [[4, 3, 4, 2, 1], [2, 3, 3, 6, 5]], goals: [[5, 2, 1], [1, 2, 6]], push: true },
 ];
 const out = [];
 for (const lv of L) {
-  const map = lv.map.map((r) => r.replace(/[^#@]/g, "."));
+  const map = lv.map.map((r) => r.replace(/[^#@~&]/g, "."));
   const clean = { ...lv, map };
   const min = pushSolve(toS(clean), 3e6); // true minimum pushes = par (night 2)
   if (!min || min.capped) throw new Error("unsolvable: " + lv.name);

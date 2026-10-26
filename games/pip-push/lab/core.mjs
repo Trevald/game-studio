@@ -36,6 +36,13 @@ export function step(L, player, dice, d) {
   const bp = by * L.w + bx;
   if (L.walls.has(bp) || dice.some((q) => q.p === bp)) return null;
   const nd = dice.slice();
-  nd[di] = { p: bp, o: OIDX.get(roll(ORIENTS[dice[di].o], d).join()) };
+  let tp = bp, o = roll(ORIENTS[dice[di].o], d);
+  // ice (night 3): a die on ice keeps rolling while the way ahead is clear
+  while (L.ice && L.ice.has(tp)) {
+    const qx = (tp % L.w) + dx, qy = ((tp / L.w) | 0) + dy, qp = qy * L.w + qx;
+    if (qx < 0 || qy < 0 || qx >= L.w || qy >= L.h || L.walls.has(qp) || dice.some((q) => q.p === qp)) break;
+    tp = qp; o = roll(o, d);
+  }
+  nd[di] = { p: tp, o: OIDX.get(o.join()) };
   return { player: np, dice: nd, push: true };
 }
