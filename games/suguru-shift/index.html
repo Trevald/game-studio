@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Suguru Shift</title>
+<style>
+  :root {
+    --bg: #f4f2ec; --panel: #ffffff; --ink: #22201c; --muted: #6f6a60; --line: #d9d4c8; --wall: #2c2a26;
+    --cell: #fbfaf6; --ok: #d7efdc; --ok-ink: #1f6b3a; --clash: #d2453b; --accent: #3d5fc4; --accent-ink: #ffffff;
+    --sel: #3d5fc4; --drag: #e8eefc; --hint: #f3c23d;
+    --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #16161a; --panel: #212127; --ink: #ecebe6; --muted: #a29f97; --line: #3a3a42; --wall: #d9d6cc;
+      --cell: #1c1c22; --ok: #1f3d2a; --ok-ink: #8fe0a8; --clash: #ff6b5f; --accent: #8aa6ff; --accent-ink: #121218; --sel: #8aa6ff; --drag: #262d44; --hint: #f3c23d; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #16161a; --panel: #212127; --ink: #ecebe6; --muted: #a29f97; --line: #3a3a42; --wall: #d9d6cc;
+      --cell: #1c1c22; --ok: #1f3d2a; --ok-ink: #8fe0a8; --clash: #ff6b5f; --accent: #8aa6ff; --accent-ink: #121218; --sel: #8aa6ff; --drag: #262d44; --hint: #f3c23d; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); -webkit-tap-highlight-color: transparent;
+    padding: max(10px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  main { width: min(100%, 480px); margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; gap: 10px; }
+  header { display: flex; align-items: center; gap: 8px; }
+  h1 { margin: 0; font-size: 20px; letter-spacing: -0.01em; flex: 1; }
+  button { font: inherit; color: inherit; }
+  .chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 0 14px; min-height: 44px; min-width: 44px; cursor: pointer; font-weight: 600; font-size: 15px; }
+  .chip:focus-visible, .pad button:focus-visible, .lv:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .hud { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 14px; }
+  .hud b { color: var(--ink); }
+  #tip { min-height: 2.8em; font-size: 14px; color: var(--muted); margin: 0; }
+  #tip strong { color: var(--ink); }
+  .stage { display: flex; flex-direction: column; gap: 10px; }
+  #board { position: relative; width: 100%; aspect-ratio: 1; touch-action: none; user-select: none; -webkit-user-select: none;
+    border-radius: 12px; overflow: hidden; background: var(--wall); cursor: grab; outline: none; }
+  #board.dragging { cursor: grabbing; }
+  #board:focus-visible { box-shadow: 0 0 0 3px var(--accent); }
+  .cell { position: absolute; background: var(--cell); transition: background-color .25s; }
+  .cell.ok { background: var(--ok); }
+  .cell.drag { background: var(--drag); }
+  .cell.ok.drag { background: color-mix(in srgb, var(--ok) 60%, var(--drag)); }
+  .cell.hint { box-shadow: inset 0 0 0 3px var(--hint); }
+  .tile { position: absolute; display: grid; place-items: center; font-weight: 700; pointer-events: none; font-variant-numeric: tabular-nums; }
+  .tile span { display: grid; place-items: center; width: 74%; height: 74%; border-radius: 50%; border: 3px solid transparent; }
+  .tile.clash span { border-color: var(--clash); color: var(--clash); }
+  .tile.okc span { color: var(--ok-ink); }
+  #walls { position: absolute; inset: 0; pointer-events: none; }
+  #cursor { position: absolute; border: 3px solid var(--sel); border-radius: 8px; pointer-events: none; display: none; }
+  #flash { position: absolute; inset: 0; pointer-events: none; background: var(--ok); opacity: 0; transition: opacity .5s; }
+  #status { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.4em; }
+  #status .bad { color: var(--clash); font-weight: 600; }
+  #status .good { color: var(--ok-ink); font-weight: 600; }
+  .controls { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .row { display: flex; gap: 8px; justify-content: space-between; }
+  .row .chip { flex: 1; }
+  .pad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .pad button { min-height: 52px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); font-size: 22px; cursor: pointer; }
+  .pad button:disabled { opacity: .4; cursor: default; }
+  #win { display: none; flex-direction: column; gap: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center; }
+  #win h2 { margin: 0; font-size: 20px; }
+  #win p { margin: 0; color: var(--muted); }
+  #win .primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  body.won #win { display: flex; }
+  body.won .pad { display: none; }
+  #picker, #help { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 80%, transparent); display: none; place-items: center; padding: 16px; z-index: 5; }
+  #picker.open, #help.open { display: grid; }
+  .sheet { width: min(100%, 420px); background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; max-height: 100%; overflow: auto; }
+  .sheet h2 { margin: 0; font-size: 18px; }
+  .sheet p { margin: 0; color: var(--muted); font-size: 15px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .lv { min-height: 56px; border-radius: 12px; border: 1px solid var(--line); background: var(--cell); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+  .lv b { font-size: 18px; }
+  .lv small { color: var(--muted); font-size: 12px; }
+  .lv.done { background: var(--ok); }
+  .lv.cur { outline: 2px solid var(--accent); }
+  .keys { font-size: 13px; color: var(--muted); }
+  @media (orientation: landscape) and (max-height: 560px) {
+    main { width: 100%; max-width: 900px; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto 1fr; column-gap: 16px; row-gap: 6px; }
+    header { grid-column: 2; grid-row: 1; }
+    .stage { grid-column: 1; grid-row: 1 / span 3; }
+    #board { width: min(calc(100vh - 60px), 60vw); }
+    .hud { grid-column: 2; grid-row: 2; }
+    .side { grid-column: 2; grid-row: 3; display: flex; flex-direction: column; gap: 8px; }
+    .controls { margin-top: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cell { transition: none; } #flash { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Suguru Shift</h1>
+    <button class="chip" id="helpBtn" aria-label="How to play">?</button>
+    <button class="chip" id="muteBtn" aria-label="Sound on" aria-pressed="false">♪</button>
+    <button class="chip" id="levelBtn">Level 1</button>
+  </header>
+  <div class="hud"><span>Slides <b id="slides">0</b></span><span>Par <b id="par">1</b></span><span id="best">Best –</span></div>
+  <div class="stage">
+    <div id="board" tabindex="0" role="application" aria-label="Suguru board. Arrow keys move the cursor, Shift plus arrow slides the line.">
+      <div id="cells"></div><div id="tiles"></div><svg id="walls"></svg><div id="cursor"></div><div id="flash"></div>
+    </div>
+    <div id="status" aria-live="polite"></div>
+  </div>
+  <div class="side">
+    <p id="tip"></p>
+    <div class="controls">
+      <div id="win" role="status">
+        <h2 id="winTitle">Solved!</h2>
+        <p id="winText"></p>
+        <div class="row"><button class="chip" id="againBtn">Play again</button><button class="chip primary" id="nextBtn">Next level</button></div>
+      </div>
+      <div class="pad" aria-label="Slide the selected line">
+        <button id="padL" aria-label="Slide row left">←</button>
+        <button id="padU" aria-label="Slide column up">↑</button>
+        <button id="padD" aria-label="Slide column down">↓</button>
+        <button id="padR" aria-label="Slide row right">→</button>
+      </div>
+      <div class="row">
+        <button class="chip" id="undoBtn">Undo</button>
+        <button class="chip" id="restartBtn">Restart</button>
+        <button class="chip" id="hintBtn">Hint</button>
+      </div>
+    </div>
+  </div>
+</main>
+<div id="picker" role="dialog" aria-modal="true" aria-labelledby="pickTitle">
+  <div class="sheet">
+    <h2 id="pickTitle">Levels</h2>
+    <p>Green: solved. ★: solved at par.</p>
+    <div class="grid" id="pickGrid"></div>
+    <button class="chip" id="pickClose">Close</button>
+  </div>
+</div>
+<div id="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="sheet">
+    <h2 id="helpTitle">How to play</h2>
+    <p>This was a solved <strong>Suguru</strong>. A few rows and columns slipped. Slide them back.</p>
+    <p>A region of N cells must hold 1 to N once each. The same number may never touch another, not even diagonally.</p>
+    <p>Regions turn <strong>green</strong> when they hold the right numbers. <strong>Red rings</strong> mark equal numbers that touch.</p>
+    <p>Drag a row sideways or a column up and down; numbers wrap around the edge. Or tap a number and use the arrows.</p>
+    <p class="keys">Keys: arrows move the cursor, Shift+arrow (or Space, then arrow) slides its line. Z undo · R restart · H hint · N next.</p>
+    <button class="chip" id="helpClose">Got it</button>
+  </div>
+</div>
+<script>
+"use strict";
+// ================= constants / levels =================
+const LEVELS = [{"w":4,"h":4,"regions":[0,0,0,1,0,2,1,1,2,2,1,3,2,2,3,3],"goal":[3,2,4,2,1,5,1,3,4,2,4,2,3,1,3,1],"start":[2,4,2,3,1,5,1,3,4,2,4,2,3,1,3,1],"solution":["r0R"],"par":1},{"w":4,"h":4,"regions":[1,0,0,3,1,1,0,0,1,1,0,2,2,2,2,2],"goal":[4,3,4,1,1,5,2,5,2,3,1,3,1,4,2,5],"start":[4,3,2,1,1,5,4,5,2,3,2,3,1,4,1,5],"solution":["c2U"],"par":1},{"w":4,"h":4,"regions":[1,3,3,2,1,2,2,2,1,1,0,2,1,0,0,0],"goal":[4,2,1,2,1,5,4,3,2,3,2,1,5,1,4,3],"start":[2,1,2,4,3,1,5,4,2,3,2,1,5,1,4,3],"solution":["r0R","r1L"],"par":2},{"w":5,"h":5,"regions":[0,0,2,2,2,0,0,0,2,4,3,3,3,2,4,5,3,3,4,4,1,1,1,1,4],"goal":[2,4,2,1,3,1,5,3,5,2,2,4,1,4,1,1,5,3,5,3,3,2,4,1,4],"start":[3,4,2,1,3,2,1,5,3,5,2,4,1,4,1,2,5,3,5,3,1,2,4,1,4],"solution":["c0U","r1L"],"par":2},{"w":5,"h":5,"regions":[0,1,1,1,1,0,0,6,2,2,5,0,0,2,2,5,3,4,4,2,3,3,3,4,4],"goal":[2,3,2,4,1,1,4,1,3,2,2,3,5,4,1,1,4,2,3,5,2,3,1,4,1],"start":[2,3,2,4,1,1,4,1,3,2,3,5,4,1,2,5,1,4,2,3,2,3,1,4,1],"solution":["r2R","r3L"],"par":2},{"w":5,"h":5,"regions":[4,4,2,5,5,4,4,2,0,0,3,3,2,2,0,3,1,6,2,0,1,1,1,1,0],"goal":[1,2,5,2,1,3,4,1,4,3,1,2,3,2,5,3,5,1,4,1,1,4,2,3,2],"start":[1,2,5,2,2,3,4,1,4,1,3,1,2,3,2,5,3,5,1,4,1,4,2,3,1],"solution":["r2L","r3L","c4U"],"par":3},{"w":5,"h":5,"regions":[2,2,1,1,3,0,1,1,3,3,0,0,0,4,3,5,0,6,4,3,5,5,4,4,4],"goal":[2,1,2,1,4,3,4,3,5,2,1,5,2,4,1,3,4,1,5,3,1,2,3,2,1],"start":[1,1,2,1,4,2,4,3,1,2,3,5,2,5,1,1,4,1,4,3,2,3,2,5,3],"solution":["c3U","r4R","c0U"],"par":3},{"w":6,"h":6,"regions":[6,6,6,0,3,3,2,6,6,0,0,3,2,2,2,7,7,3,2,1,7,7,4,3,1,1,5,4,4,4,1,1,5,5,5,4],"goal":[1,2,5,2,4,1,3,4,3,1,3,2,1,2,5,2,4,5,4,3,1,3,1,3,1,2,4,5,4,2,4,5,3,2,1,3],"start":[1,2,5,1,4,1,2,3,4,3,5,3,5,1,2,3,2,4,4,3,1,5,1,3,1,2,4,2,4,2,4,5,3,2,1,3],"solution":["r1L","c3D","r2L"],"par":3},{"w":6,"h":6,"regions":[6,6,3,3,3,3,6,6,1,3,2,2,6,5,1,1,4,2,5,5,1,1,4,4,5,7,0,0,8,4,0,0,0,8,8,8],"goal":[1,5,3,1,4,2,4,2,4,5,3,1,3,1,3,1,4,2,2,4,5,2,3,1,3,1,3,1,4,2,2,5,4,2,3,1],"start":[1,5,3,1,4,2,2,4,5,3,1,4,1,3,1,4,2,3,1,2,4,5,2,3,1,3,1,4,2,3,2,5,4,2,3,1],"solution":["r1R","r2R","r3L","r4R"],"par":4},{"w":6,"h":6,"regions":[4,4,4,4,4,6,8,2,2,2,3,6,8,0,2,2,3,3,7,0,0,5,3,3,7,0,5,5,1,1,7,0,5,1,1,1],"goal":[1,4,5,2,3,1,2,3,1,4,5,2,1,4,5,2,1,3,3,2,1,3,4,2,1,5,4,2,1,3,2,3,1,5,4,2],"start":[1,2,1,5,2,3,1,3,4,4,5,2,3,4,1,2,1,3,1,2,5,3,4,2,3,2,5,1,2,1,1,3,4,5,4,2],"solution":["r4L","c2U","r0L","c0D"],"par":4},{"w":6,"h":6,"regions":[0,6,6,7,7,7,0,6,6,5,5,8,0,0,3,5,5,8,0,3,3,2,5,8,4,3,3,2,1,1,4,4,4,4,1,1],"goal":[4,2,1,3,1,2,1,3,4,2,5,3,5,2,5,1,4,2,3,1,3,2,3,1,5,2,4,1,4,2,4,1,3,2,3,1],"start":[3,4,3,1,3,1,1,5,4,2,5,5,2,1,1,4,2,1,3,2,3,2,3,2,1,5,1,4,1,4,4,2,3,2,3,2],"solution":["r0L","r4L","c1D","c5D","r2R"],"par":5},{"w":6,"h":6,"regions":[5,5,1,1,1,1,5,5,1,4,6,8,2,2,4,4,6,6,2,2,2,4,6,6,7,0,0,0,3,3,7,7,0,3,3,3],"goal":[2,4,2,1,4,3,1,3,5,3,2,1,2,4,2,1,5,4,5,1,3,4,3,1,3,4,2,1,2,5,2,1,3,4,3,1],"start":[3,2,4,2,1,1,3,5,3,2,5,1,2,4,2,1,4,4,1,5,1,3,2,3,5,3,4,2,1,1,1,3,4,3,4,2],"solution":["r0L","r4L","c4D","r1R","r3L","r5R"],"par":6}];
+const TIPS = [
+  "One row slipped. <strong>Drag it sideways</strong> until every region turns green.",
+  "This time a <strong>column</strong> slipped. Drag it up or down. Red rings: equal numbers touching.",
+  "Two lines moved. Fix the one you are sure of first; green regions tell you what is already right.",
+  "A region of 3 cells holds exactly 1, 2 and 3. A 4 or 5 in it is in the wrong place.",
+  "Diagonals count: two equal numbers touching at a corner get red rings too.",
+  "Three slides. Look for the region that is most wrong, and ask which line runs through it.",
+  "Rows and columns both moved. Undo is free; try a slide and read the colours.",
+  "6×6 now. A slid line wraps around: what falls off one edge comes back on the other.",
+  "Four slides. Hint shows the next slide if you get stuck (it still counts your slides).",
+  "Four slides, mixed rows and columns. Order matters when a row and a column cross.",
+  "Five slides. Par is the fewest slides that solve it.",
+  "The last one: six slides. Take your time.",
+];
+const STORE = "suguru-shift.v1";
+
+// ================= core (pure, no DOM) =================
+function moveList(W, H) {
+  const m = [];
+  for (let r = 0; r < H; r++) m.push("r" + r + "L", "r" + r + "R");
+  for (let c = 0; c < W; c++) m.push("c" + c + "U", "c" + c + "D");
+  return m;
+}
+function parseMove(mv) { return { t: mv[0], i: +mv.slice(1, -1), d: mv[mv.length - 1] }; }
+function inverse(mv) { const p = parseMove(mv); return p.t + p.i + ({ L: "R", R: "L", U: "D", D: "U" })[p.d]; }
+function applyMove(g, W, H, mv) {
+  const p = parseMove(mv), n = g.slice();
+  if (p.t === "r") for (let c = 0; c < W; c++) n[p.i * W + c] = g[p.i * W + (p.d === "R" ? (c - 1 + W) % W : (c + 1) % W)];
+  else for (let r = 0; r < H; r++) n[r * W + p.i] = g[(p.d === "D" ? (r - 1 + H) % H : (r + 1) % H) * W + p.i];
+  return n;
+}
+function regionSizes(reg) { const s = []; for (const r of reg) s[r] = (s[r] || 0) + 1; return s; }
+function analyse(g, W, H, reg, size) {
+  const R = size.length, seen = new Array(R).fill(0), bad = new Array(R).fill(false), clash = new Set();
+  for (let k = 0; k < g.length; k++) { const r = reg[k], b = 1 << g[k]; if (g[k] > size[r] || (seen[r] & b)) bad[r] = true; seen[r] |= b; }
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const v = g[y * W + x];
+    for (const [dx, dy] of [[1, 0], [0, 1], [1, 1], [-1, 1]]) {
+      const nx = x + dx, ny = y + dy;
+      if (nx < 0 || nx >= W || ny >= H) continue;
+      if (g[ny * W + nx] === v) { clash.add(y * W + x); clash.add(ny * W + nx); }
+    }
+  }
+  const okRegions = new Set(); bad.forEach((b, i) => { if (!b) okRegions.add(i); });
+  return { valid: okRegions.size === R && clash.size === 0, okRegions, clash };
+}
+// shortest slide list from grid a to grid b (bidirectional BFS), or null past the node budget
+function pathBetween(a, b, W, H, budget = 250000) {
+  const ka = a.join(","), kb = b.join(",");
+  if (ka === kb) return [];
+  const moves = moveList(W, H);
+  const fw = new Map([[ka, null]]), bw = new Map([[kb, null]]);
+  let fq = [a], bq = [b], count = 2;
+  const trace = (map, k, fwd) => { const out = []; while (map.get(k)) { const [pk, mv] = map.get(k); out.push(mv); k = pk; } return fwd ? out.reverse() : out.map(inverse); };
+  while (fq.length && bq.length && count < budget) {
+    const fwd = fq.length <= bq.length, q = fwd ? fq : bq, mine = fwd ? fw : bw, other = fwd ? bw : fw, next = [];
+    for (const g of q) {
+      const k = g.join(",");
+      for (const mv of moves) {
+        const n = applyMove(g, W, H, mv), nk = n.join(",");
+        if (mine.has(nk)) continue;
+        mine.set(nk, [k, mv]); count++;
+        if (other.has(nk)) {
+          const p1 = trace(fw, nk, true), p2 = trace(bw, nk, false);
+          return p1.concat(p2);
+        }
+        next.push(n);
+      }
+    }
+    if (fwd) fq = next; else bq = next;
+  }
+  return null;
+}
+function newGame(level) {
+  const L = LEVELS[level];
+  return { level, W: L.w, H: L.h, reg: L.regions, size: regionSizes(L.regions), grid: L.start.slice(), slides: 0, hints: 0,
+    history: [], screen: "playing" };
+}
+function slide(g, mv, steps = 1) {
+  if (g.screen !== "playing" || steps <= 0) return g;
+  let grid = g.grid;
+  for (let i = 0; i < steps; i++) grid = applyMove(grid, g.W, g.H, mv);
+  const won = analyse(grid, g.W, g.H, g.reg, g.size).valid;
+  return { ...g, grid, slides: g.slides + steps, history: g.history.concat([{ grid: g.grid, slides: g.slides }]), screen: won ? "won" : "playing" };
+}
+function undo(g) {
+  if (!g.history.length) return g;
+  const h = g.history[g.history.length - 1];
+  return { ...g, grid: h.grid, slides: h.slides, history: g.history.slice(0, -1), screen: "playing" };
+}
+function restart(g) {
+  const L = LEVELS[g.level];
+  if (g.slides === 0 && g.screen === "playing" && g.grid.join() === L.start.join()) return g;
+  return { ...g, grid: L.start.slice(), slides: 0, screen: "playing", history: g.history.concat([{ grid: g.grid, slides: g.slides }]) };
+}
+
+// ================= storage + sound =================
+let save = { best: {}, level: 0, muted: false, seenHelp: false };
+try { const s = JSON.parse(localStorage.getItem(STORE) || "null"); if (s && typeof s === "object") save = { ...save, ...s }; } catch (e) {}
+function persist() { try { localStorage.setItem(STORE, JSON.stringify(save)); } catch (e) {} }
+let actx = null;
+function tone(freq, dur = 0.08, delay = 0, vol = 0.05) {
+  if (save.muted) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime + delay, o = actx.createOscillator(), gn = actx.createGain();
+    o.type = "triangle"; o.frequency.value = freq; gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(gn).connect(actx.destination); o.start(t); o.stop(t + dur + 0.02);
+  } catch (e) {}
+}
+const reduceMotion = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// ================= rendering =================
+const $ = (id) => document.getElementById(id);
+let game = newGame(Math.min(Math.max(0, save.level | 0), LEVELS.length - 1));
+let cursor = 0, cursorShown = false, hintMove = null, drag = null, anim = null, lastOk = new Set(), spaceArmed = false;
+let cellEls = [], tileEls = [], ghost = null;
+
+function buildBoard() {
+  const { W, H, reg } = game, cells = $("cells"), tiles = $("tiles"), walls = $("walls");
+  cells.replaceChildren(); tiles.replaceChildren();
+  cellEls = []; tileEls = [];
+  const gap = 1.2; // percentage gap between cells (wall colour shows through)
+  for (let k = 0; k < W * H; k++) {
+    const x = k % W, y = (k / W) | 0, c = document.createElement("div");
+    c.className = "cell";
+    c.style.left = (x * 100 / W + gap / 2) + "%"; c.style.top = (y * 100 / H + gap / 2) + "%";
+    c.style.width = (100 / W - gap) + "%"; c.style.height = (100 / H - gap) + "%";
+    // merge with same-region neighbours: extend over the gap
+    if (x < W - 1 && reg[k] === reg[k + 1]) c.style.width = (100 / W) + "%";
+    if (y < H - 1 && reg[k] === reg[k + W]) c.style.height = (100 / H) + "%";
+    cells.appendChild(c); cellEls.push(c);
+    const t = document.createElement("div");
+    t.className = "tile"; t.innerHTML = "<span></span>";
+    t.style.width = (100 / W) + "%"; t.style.height = (100 / H) + "%";
+    tiles.appendChild(t); tileEls.push(t);
+  }
+  // fill the little corner holes inside a region where a 2x2 block is one region
+  for (let k = 0; k < W * H; k++) {
+    const x = k % W, y = (k / W) | 0;
+    if (x < W - 1 && y < H - 1 && reg[k] === reg[k + 1] && reg[k] === reg[k + W] && reg[k] === reg[k + W + 1]) cellEls[k].style.width = (100 / W) + "%", cellEls[k].style.height = (100 / H) + "%";
+  }
+  ghost = document.createElement("div"); ghost.className = "tile"; ghost.innerHTML = "<span></span>";
+  ghost.style.width = (100 / W) + "%"; ghost.style.height = (100 / H) + "%"; ghost.style.display = "none";
+  tiles.appendChild(ghost);
+  // thin lines between cells of the same region
+  walls.setAttribute("viewBox", `0 0 ${W * 10} ${H * 10}`); walls.setAttribute("preserveAspectRatio", "none");
+  let d = "";
+  for (let k = 0; k < W * H; k++) {
+    const x = k % W, y = (k / W) | 0;
+    if (x < W - 1 && reg[k] === reg[k + 1]) d += `M${(x + 1) * 10} ${y * 10 + 1.5}V${(y + 1) * 10 - 1.5}`;
+    if (y < H - 1 && reg[k] === reg[k + W]) d += `M${x * 10 + 1.5} ${(y + 1) * 10}H${(x + 1) * 10 - 1.5}`;
+  }
+  walls.innerHTML = `<path d="${d}" stroke="var(--line)" stroke-width="0.35" fill="none" vector-effect="non-scaling-stroke" style="stroke-width:1px"/>`;
+  const fs = Math.round(Math.min($("board").clientWidth || 360, 560) / W * 0.42);
+  $("tiles").style.fontSize = Math.max(16, fs) + "px";
+  lastOk = analyse(game.grid, W, H, game.reg, game.size).okRegions;
+}
+function placeTiles() {
+  const { W, H, grid } = game, a = analyse(grid, W, H, game.reg, game.size);
+  const off = drag && drag.axis ? drag.off : 0, cs = cellSize();
+  ghost.style.display = "none";
+  for (let k = 0; k < W * H; k++) {
+    const x = k % W, y = (k / W) | 0, t = tileEls[k];
+    let px = x * cs.w, py = y * cs.h;
+    const inLine = drag && drag.axis && ((drag.axis === "r" && y === drag.y) || (drag.axis === "c" && x === drag.x));
+    if (inLine) {
+      if (drag.axis === "r") {
+        const span = W * cs.w; px = ((px + off) % span + span) % span;
+        if (px > span - cs.w) showGhost(t, grid[k], px - span, py, a.clash.has(k));
+      } else {
+        const span = H * cs.h; py = ((py + off) % span + span) % span;
+        if (py > span - cs.h) showGhost(t, grid[k], px, py - span, a.clash.has(k));
+      }
+    }
+    t.style.transform = `translate(${px}px, ${py}px)`;
+    t.firstChild.textContent = grid[k];
+    const moving = inLine && Math.abs(off) > 1;
+    t.classList.toggle("clash", !moving && a.clash.has(k));
+    t.classList.toggle("okc", !moving && a.okRegions.has(game.reg[k]));
+  }
+  for (let k = 0; k < W * H; k++) {
+    const x = k % W, y = (k / W) | 0, c = cellEls[k];
+    c.classList.toggle("ok", a.okRegions.has(game.reg[k]));
+    c.classList.toggle("drag", !!(drag && drag.axis && ((drag.axis === "r" && y === drag.y) || (drag.axis === "c" && x === drag.x))));
+    const hm = hintMove && parseMove(hintMove);
+    c.classList.toggle("hint", !!(hm && ((hm.t === "r" && y === hm.i) || (hm.t === "c" && x === hm.i))));
+  }
+  const cur = $("cursor");
+  cur.style.display = cursorShown && game.screen === "playing" ? "block" : "none";
+  cur.style.width = cs.w + "px"; cur.style.height = cs.h + "px";
+  cur.style.transform = `translate(${(cursor % W) * cs.w}px, ${((cursor / W) | 0) * cs.h}px)`;
+  return a;
+}
+function showGhost(t, v, px, py, clash) {
+  ghost.style.display = "grid"; ghost.style.transform = `translate(${px}px, ${py}px)`; ghost.firstChild.textContent = v;
+  ghost.classList.toggle("clash", false);
+}
+function cellSize() { const b = $("board"); return { w: b.clientWidth / game.W, h: b.clientHeight / game.H }; }
+function render() {
+  const a = placeTiles(), L = LEVELS[game.level], best = save.best[game.level];
+  $("slides").textContent = game.slides;
+  $("par").textContent = L.par;
+  $("best").textContent = best ? `Best ${best}${best <= L.par ? " ★" : ""}` : "Best –";
+  $("levelBtn").textContent = `Level ${game.level + 1}/${LEVELS.length}`;
+  const R = game.size.length;
+  $("status").innerHTML = game.screen === "won" ? `<span class="good">Valid Suguru!</span><span>${R}/${R} regions</span>`
+    : `<span>Regions <b>${a.okRegions.size}/${R}</b></span><span class="${a.clash.size ? "bad" : ""}">${a.clash.size ? a.clash.size + " touching" : "No touching pairs"}</span>`;
+  $("tip").innerHTML = hintText || TIPS[game.level] || "";
+  document.body.classList.toggle("won", game.screen === "won");
+  $("undoBtn").disabled = !game.history.length;
+  const sel = cursorShown && game.screen === "playing";
+  for (const id of ["padL", "padU", "padD", "padR"]) $(id).disabled = !sel;
+  if (game.screen === "won") {
+    const atPar = game.slides <= L.par;
+    $("winTitle").textContent = atPar ? "Solved at par ★" : "Solved!";
+    $("winText").textContent = `${game.slides} ${game.slides === 1 ? "slide" : "slides"} · par ${L.par}${game.hints ? ` · ${game.hints} hint${game.hints > 1 ? "s" : ""}` : ""}` + (atPar ? "" : " · can you do it in fewer?");
+    $("nextBtn").textContent = game.level === LEVELS.length - 1 ? "All levels" : "Next level";
+  }
+  $("muteBtn").setAttribute("aria-pressed", String(save.muted)); $("muteBtn").textContent = save.muted ? "♪̸" : "♪";
+  $("muteBtn").setAttribute("aria-label", save.muted ? "Sound off" : "Sound on"); $("muteBtn").style.opacity = save.muted ? .5 : 1;
+}
+let hintText = "";
+
+// ================= actions =================
+function commit(mv, steps = 1) {
+  const before = analyse(game.grid, game.W, game.H, game.reg, game.size).okRegions;
+  game = slide(game, mv, steps);
+  hintMove = null; hintText = "";
+  const after = analyse(game.grid, game.W, game.H, game.reg, game.size).okRegions;
+  const gained = [...after].filter((r) => !before.has(r)).length;
+  tone(gained ? 660 : 440, 0.07);
+  if (gained) tone(880, 0.09, 0.06);
+  if (game.screen === "won") onWin();
+  render();
+}
+function onWin() {
+  const prev = save.best[game.level];
+  if (!prev || game.slides < prev) save.best[game.level] = game.slides;
+  persist();
+  [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.25, i * 0.09, 0.06));
+  if (!reduceMotion()) { const f = $("flash"); f.style.opacity = .55; setTimeout(() => (f.style.opacity = 0), 220); }
+  cursorShown = false;
+}
+function doUndo() { if (anim) return; game = undo(game); hintMove = null; hintText = ""; render(); }
+function doRestart() { if (anim) return; game = restart(game); hintMove = null; hintText = ""; render(); }
+function loadLevel(i) {
+  game = newGame(Math.max(0, Math.min(LEVELS.length - 1, i)));
+  save.level = game.level; persist();
+  hintMove = null; hintText = ""; cursorShown = false; cursor = 0;
+  buildBoard(); render();
+}
+function findHint() {
+  const L = LEVELS[game.level];
+  if (game.screen !== "playing") return null;
+  return pathBetween(game.grid, L.goal, game.W, game.H);
+}
+function doHint() {
+  if (game.screen !== "playing" || anim) return;
+  const p = findHint();
+  if (!p || !p.length) { hintMove = null; hintText = "You have wandered quite far. <strong>Undo</strong> a few slides or <strong>Restart</strong>."; render(); return; }
+  hintMove = p[0]; game = { ...game, hints: game.hints + 1 };
+  const m = parseMove(hintMove), dir = { L: "left", R: "right", U: "up", D: "down" }[m.d];
+  hintText = `Hint: slide <strong>${m.t === "r" ? "row" : "column"} ${m.i + 1} ${dir}</strong> (${p.length} ${p.length === 1 ? "slide" : "slides"} to go).`;
+  render();
+}
+// animated slide of the cursor's line (pad / keyboard)
+function animateSlide(mv, steps = 1, fromOff = 0) {
+  if (anim || game.screen !== "playing") return;
+  const p = parseMove(mv), cs = cellSize(), sign = (p.d === "R" || p.d === "D") ? 1 : -1, unit = p.t === "r" ? cs.w : cs.h;
+  const target = sign * steps * unit;
+  const finish = () => {
+    anim = null; drag = null;
+    // keep the cursor on the same number
+    if (cursorShown) {
+      const x = cursor % game.W, y = (cursor / game.W) | 0;
+      if (p.t === "r" && y === p.i) cursor = y * game.W + (((x + sign * steps) % game.W) + game.W) % game.W;
+      if (p.t === "c" && x === p.i) cursor = ((((y + sign * steps) % game.H) + game.H) % game.H) * game.W + x;
+    }
+    if (steps > 0) commit(mv, steps); else render();
+  };
+  if (reduceMotion() || Math.abs(target - fromOff) < 1) { finish(); return; }
+  drag = { axis: p.t, x: p.i, y: p.i, off: fromOff };
+  const t0 = performance.now(), dur = 110;
+  anim = { mv };
+  const step = (now) => {
+    const t = Math.min(1, (now - t0) / dur), e = 1 - (1 - t) * (1 - t);
+    drag.off = fromOff + (target - fromOff) * e;
+    placeTiles();
+    if (t < 1) requestAnimationFrame(step); else finish();
+  };
+  requestAnimationFrame(step);
+}
+function padSlide(dir) {
+  if (game.screen !== "playing") return;
+  const x = cursor % game.W, y = (cursor / game.W) | 0;
+  const mv = dir === "L" || dir === "R" ? "r" + y + dir : "c" + x + dir;
+  animateSlide(mv, 1);
+}
+
+// ================= input =================
+const board = $("board");
+board.addEventListener("pointerdown", (e) => {
+  if (anim || game.screen !== "playing") return;
+  const r = board.getBoundingClientRect(), cs = cellSize();
+  const x = Math.min(game.W - 1, Math.max(0, Math.floor((e.clientX - r.left) / cs.w)));
+  const y = Math.min(game.H - 1, Math.max(0, Math.floor((e.clientY - r.top) / cs.h)));
+  drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, x, y, axis: null, off: 0 };
+  try { board.setPointerCapture(e.pointerId); } catch (err) {}
+  e.preventDefault();
+});
+board.addEventListener("pointermove", (e) => {
+  if (!drag || anim || drag.id !== e.pointerId) return;
+  const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+  if (!drag.axis && Math.hypot(dx, dy) > 8) { drag.axis = Math.abs(dx) >= Math.abs(dy) ? "r" : "c"; board.classList.add("dragging"); hintText = hintText; }
+  if (drag.axis) { drag.off = drag.axis === "r" ? dx : dy; placeTiles(); }
+});
+function endDrag(e, cancel) {
+  if (!drag || anim || drag.id !== e.pointerId) return;
+  board.classList.remove("dragging");
+  const d = drag;
+  if (!d.axis) { // tap: select the number
+    drag = null; cursor = d.y * game.W + d.x; cursorShown = true; tone(330, 0.04, 0, 0.03); render(); return;
+  }
+  const cs = cellSize(), unit = d.axis === "r" ? cs.w : cs.h, n = d.axis === "r" ? game.W : game.H;
+  let steps = cancel ? 0 : Math.round(d.off / unit);
+  let norm = ((steps % n) + n) % n; if (norm > n / 2) norm -= n; // fewest slides that give the same result
+  const line = d.axis === "r" ? d.y : d.x;
+  const mv = d.axis + line + (d.axis === "r" ? (norm >= 0 ? "R" : "L") : (norm >= 0 ? "D" : "U"));
+  // animate from where the finger left it to the snapped spot, then commit |norm| slides
+  const snapOff = steps * unit, from = d.off;
+  drag = { axis: d.axis, x: d.x, y: d.y, off: from };
+  const t0 = performance.now(), dur = reduceMotion() ? 0 : 100;
+  anim = { mv };
+  const tick = (now) => {
+    const t = dur ? Math.min(1, (now - t0) / dur) : 1;
+    drag.off = from + (snapOff - from) * t; placeTiles();
+    if (t < 1) return requestAnimationFrame(tick);
+    anim = null; drag = null;
+    if (norm !== 0) commit(mv, Math.abs(norm)); else render();
+  };
+  requestAnimationFrame(tick);
+}
+board.addEventListener("pointerup", (e) => endDrag(e, false));
+board.addEventListener("pointercancel", (e) => endDrag(e, true));
+
+document.addEventListener("keydown", (e) => {
+  if ($("picker").classList.contains("open") || $("help").classList.contains("open")) {
+    if (e.key === "Escape") { closeSheets(); e.preventDefault(); }
+    return;
+  }
+  const dirs = { ArrowLeft: "L", ArrowRight: "R", ArrowUp: "U", ArrowDown: "D" };
+  const k = e.key.toLowerCase();
+  if (dirs[e.key]) {
+    e.preventDefault();
+    if (game.screen !== "playing") return;
+    if (!cursorShown) { cursorShown = true; render(); return; }
+    if (e.shiftKey || spaceArmed) { spaceArmed = false; padSlide(dirs[e.key]); return; }
+    const x = cursor % game.W, y = (cursor / game.W) | 0, d = dirs[e.key];
+    const nx = Math.max(0, Math.min(game.W - 1, x + (d === "L" ? -1 : d === "R" ? 1 : 0)));
+    const ny = Math.max(0, Math.min(game.H - 1, y + (d === "U" ? -1 : d === "D" ? 1 : 0)));
+    cursor = ny * game.W + nx; render(); return;
+  }
+  if (e.key === " ") { e.preventDefault(); if (game.screen === "playing") { cursorShown = true; spaceArmed = !spaceArmed; hintText = spaceArmed ? "Now press an arrow to slide that line." : ""; render(); } return; }
+  if (k === "z" || e.key === "Backspace") { e.preventDefault(); doUndo(); }
+  else if (k === "r") doRestart();
+  else if (k === "h") doHint();
+  else if (k === "n" || (e.key === "Enter" && game.screen === "won")) { if (game.screen === "won") next(); }
+  else if (e.key === "Escape") { cursorShown = false; spaceArmed = false; render(); }
+});
+function next() { if (game.level === LEVELS.length - 1) openPicker(); else loadLevel(game.level + 1); }
+$("padL").onclick = () => padSlide("L"); $("padR").onclick = () => padSlide("R");
+$("padU").onclick = () => padSlide("U"); $("padD").onclick = () => padSlide("D");
+$("undoBtn").onclick = doUndo; $("restartBtn").onclick = doRestart; $("hintBtn").onclick = doHint;
+$("nextBtn").onclick = next; $("againBtn").onclick = () => loadLevel(game.level);
+$("muteBtn").onclick = () => { save.muted = !save.muted; persist(); render(); };
+function openPicker() {
+  const g = $("pickGrid"); g.replaceChildren();
+  LEVELS.forEach((L, i) => {
+    const b = document.createElement("button"), best = save.best[i];
+    b.className = "lv" + (best ? " done" : "") + (i === game.level ? " cur" : "");
+    b.innerHTML = `<b>${i + 1}${best && best <= L.par ? " ★" : ""}</b><small>${L.w}×${L.h} · par ${L.par}</small>`;
+    b.setAttribute("aria-label", `Level ${i + 1}, ${L.w} by ${L.h}, par ${L.par}${best ? ", best " + best : ""}`);
+    b.onclick = () => { closeSheets(); loadLevel(i); };
+    g.appendChild(b);
+  });
+  $("picker").classList.add("open"); g.children[game.level].focus();
+}
+function closeSheets() { $("picker").classList.remove("open"); $("help").classList.remove("open"); board.focus({ preventScroll: true }); }
+$("levelBtn").onclick = openPicker; $("pickClose").onclick = closeSheets;
+$("helpBtn").onclick = () => { $("help").classList.add("open"); $("helpClose").focus(); };
+$("helpClose").onclick = () => { save.seenHelp = true; persist(); closeSheets(); };
+for (const id of ["picker", "help"]) $(id).addEventListener("click", (e) => { if (e.target.id === id) closeSheets(); });
+window.addEventListener("resize", () => { buildBoard(); render(); });
+
+buildBoard(); render();
+if (!save.seenHelp && game.level === 0) $("help").classList.add("open");
+
+// ================= QA hook =================
+function qaState() {
+  const a = analyse(game.grid, game.W, game.H, game.reg, game.size);
+  return { screen: game.screen, level: game.level, slides: game.slides, par: LEVELS[game.level].par, grid: game.grid.slice(),
+    valid: a.valid, regionsOk: a.okRegions.size, regionsTotal: game.size.length, clashes: a.clash.size };
+}
+window.__qa = {
+  state: qaState,
+  actions: () => game.screen === "playing" ? moveList(game.W, game.H).concat(game.history.length ? ["undo"] : [], ["restart"]) : [],
+  act: (a) => {
+    if (a === "undo") return doUndo();
+    if (a === "restart") return doRestart();
+    if (typeof a === "string" && /^[rc]\d+[LRUD]$/.test(a)) { const p = parseMove(a); if ((p.t === "r" && p.i < game.H && "LR".includes(p.d)) || (p.t === "c" && p.i < game.W && "UD".includes(p.d))) commit(a, 1); }
+  },
+  reset: (level) => { $("help").classList.remove("open"); loadLevel(level ?? game.level); },
+  levels: () => LEVELS.length,
+  solve: () => {
+    const p = pathBetween(game.grid, LEVELS[game.level].goal, game.W, game.H);
+    return p ? p : ["restart", ...LEVELS[game.level].solution];
+  },
+  hint: () => { doHint(); return hintMove; },
+};
+</script>
+</body>
+</html>
