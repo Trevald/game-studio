@@ -260,6 +260,12 @@ function applyMove(g, d) {
   ng.screen = goalStatus(ng).every(Boolean) ? "won" : "playing";
   return { g: ng, r };
 }
+// where a push of die i in direction d ends (ice slides included), without changing g
+function slideEnd(g, i, d) {
+  const [dx, dy] = DIRS[d], die = g.dice[i]; let x = die.x + dx, y = die.y + dy, o = roll(die.o, d), n = 1;
+  while (g.lv.ice.has(y * g.lv.w + x) && !isWall(g, x + dx, y + dy) && dieAt(g, x + dx, y + dy) < 0) { x += dx; y += dy; o = roll(o, d); n++; }
+  return { x, y, o, n };
+}
 function undo(g) {
   if (!g.history.length) return g;
   const s = g.history[g.history.length - 1];
@@ -533,7 +539,7 @@ function draw(now) {
   g.lv.goals.forEach((q, i) => drawGoal(q.x, q.y, q.n, dieAt(g, q.x, q.y) >= 0, status[i]));
   // animation interpolation
   let t = 1;
-  if (anim) { t = Math.min(1, (now - anim.t0) / anim.dur); if (t >= 1) anim = null; }
+  if (anim) { t = Math.max(0, Math.min(1, (now - anim.t0) / anim.dur)); if (t >= 1) anim = null; } // rAF time can lag performance.now()
   const ease = (u) => 1 - Math.pow(1 - u, 3);
   const k = ease(t);
   g.dice.forEach((d, i) => {
@@ -590,8 +596,8 @@ function renderUI() {
     if (hint.stuck) tip.innerHTML = deadLine(g);
     else if (hint.unknown) tip.innerHTML = "<b>Too many ways to look ahead from here.</b> Try Undo or Restart.";
     else { const here = g.player[0] === hint.stand[0] && g.player[1] === hint.stand[1];
-      const up = roll(g.dice[hint.die].o, hint.d)[0];
-      tip.innerHTML = `<b>Hint:</b> ${here ? "push" : "walk to the ring and push"} the die <b>${DIRNAME[hint.d]}</b>: ${up} comes up. Best finish from here: ${hint.left} push${hint.left === 1 ? "" : "es"}.`; }
+      const end = slideEnd(g, hint.die, hint.d), up = end.o[0];
+      tip.innerHTML = `<b>Hint:</b> ${here ? "push" : "walk to the ring and push"} the die <b>${DIRNAME[hint.d]}</b>${end.n > 1 ? ` (it slides ${end.n} squares)` : ""}: ${up} comes up. Best finish from here: ${hint.left} push${hint.left === 1 ? "" : "es"}.`; }
   } else if (g.dead && g.screen === "playing") { tip.classList.add("hint"); tip.innerHTML = deadLine(g); }
   else if (replay) { tip.classList.add("hint"); tip.innerHTML = `<b>Watching the par solution</b> (${g.pushes}/${LEVELS[g.level].par} pushes). Tap the board or press any key to take over.`; }
   else tip.innerHTML = TIPS[g.level] || "";

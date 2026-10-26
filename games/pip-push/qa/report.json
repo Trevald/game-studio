@@ -1,11 +1,11 @@
 {
   "game": "games/pip-push/index.html",
-  "at": "2026-10-26T02:58:58.911Z",
+  "at": "2026-10-26T03:01:17.512Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "59 KB"
+      "detail": "60 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -50,7 +50,7 @@
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 7"
+      "detail": "screens seen: playing, won; resets: 21"
     },
     {
       "name": "every level completable via solve() (21 levels)",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing; resets: 0"
+      "detail": "screens seen: playing, won; resets: 2"
     },
     {
       "name": "[phone] no console errors or exceptions",
