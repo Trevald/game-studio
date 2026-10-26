@@ -106,15 +106,16 @@ export function solveFrom(g, W, H, reg, size, maxDepth, budgetMs = Infinity) {
 }
 // count distinct valid grids reachable in exactly `depth` canonical moves (and solutions)
 export function countSolutions(g, W, H, reg, size, depth) {
-  const moves = moveList(W, H), ends = new Set();
-  let seqs = 0;
+  const moves = moveList(W, H), ends = new Set(), firsts = new Set();
+  let seqs = 0, first = null;
   function dfs(cur, d, prev, run) {
-    if (d === 0) { if (isValid(cur, W, H, reg, size)) { seqs++; ends.add(cur.join("")); } return; }
+    if (d === depth - 1 && prev) first = prev;
+    if (d === 0) { if (isValid(cur, W, H, reg, size)) { seqs++; ends.add(cur.join("")); firsts.add(first || prev); } return; }
     for (const mv of moves) {
       if (!allowed(prev, mv, run, W, H)) continue;
       dfs(apply(cur, W, H, mv), d - 1, mv, mv === prev ? run + 1 : 1);
     }
   }
   dfs(g, depth, null, 0);
-  return { seqs, ends: ends.size };
+  return { seqs, ends: ends.size, firsts };
 }

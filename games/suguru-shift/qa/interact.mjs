@@ -56,9 +56,19 @@ for (let lv = 0; lv < 12; lv++) {
   s = await S(); ok(`hints solve level ${lv + 1} at par`, s.screen === "won" && s.slides === s.par, `${s.slides}/${s.par}`);
 }
 // hint from a wandered state still leads home
-await page.evaluate(() => { window.__qa.reset(10); for (const m of ["r0R","c2D","r5L"]) window.__qa.act(m); });
+await page.evaluate(() => { window.__qa.reset(10); for (const m of ["r0R","c2D"]) window.__qa.act(m); });
 const h = await page.evaluate(() => window.__qa.solve());
-ok("hint path from 3 stray slides exists", Array.isArray(h) && h[0] !== "restart", (h || []).length + " slides");
+ok("hint path from 2 stray slides exists", Array.isArray(h) && h[0] !== "restart", (h || []).length + " slides");
+await page.evaluate(() => { window.__qa.reset(11); for (const m of ["r0R","r1R","c2D","c3U","r5L","c0D"]) window.__qa.act(m); });
+const t0 = Date.now(); await page.evaluate(() => window.__qa.hint()); const dt = Date.now() - t0;
+const tip = await page.locator("#tip").textContent();
+ok("far hint points at Undo quickly", /Undo/.test(tip) && dt < 600, dt + " ms: " + tip);
+// Enter on a focused Next button advances exactly one level
+await page.evaluate(() => { window.__qa.reset(1); for (const m of window.__qa.solve()) window.__qa.act(m); });
+await page.focus("#nextBtn"); await page.keyboard.press("Enter"); await page.waitForTimeout(100);
+ok("Enter on Next goes to the next level only", (await S()).level === 2, "level " + (await S()).level);
+await page.focus("#hintBtn"); await page.keyboard.press(" "); await page.waitForTimeout(100);
+ok("Space on Hint presses Hint", /Hint:/.test(await page.locator("#tip").textContent()));
 // storage blocked
 const ctx2 = await browser.newContext(); const p2 = await ctx2.newPage();
 await p2.addInitScript(() => { Object.defineProperty(window, "localStorage", { get() { throw new Error("blocked"); } }); });

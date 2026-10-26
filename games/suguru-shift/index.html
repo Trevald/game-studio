@@ -23,7 +23,8 @@
     padding: max(10px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
   main { width: min(100%, 480px); margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; gap: 10px; }
   header { display: flex; align-items: center; gap: 8px; }
-  h1 { margin: 0; font-size: 20px; letter-spacing: -0.01em; flex: 1; }
+  h1 { margin: 0; font-size: 20px; letter-spacing: -0.01em; flex: 1; white-space: nowrap; }
+  @media (max-width: 370px) { h1 { font-size: 17px; } header .chip { padding: 0 10px; } }
   button { font: inherit; color: inherit; }
   .chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 0 14px; min-height: 44px; min-width: 44px; cursor: pointer; font-weight: 600; font-size: 15px; }
   .chip:focus-visible, .pad button:focus-visible, .lv:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
@@ -32,7 +33,7 @@
   #tip { min-height: 2.8em; font-size: 14px; color: var(--muted); margin: 0; }
   #tip strong { color: var(--ink); }
   .stage { display: flex; flex-direction: column; gap: 10px; }
-  #board { position: relative; width: min(100%, max(240px, calc(100vh - 320px))); margin: 0 auto; aspect-ratio: 1; touch-action: none; user-select: none; -webkit-user-select: none;
+  #board { position: relative; width: min(100%, max(240px, calc(100vh - 345px))); margin: 0 auto; aspect-ratio: 1; touch-action: none; user-select: none; -webkit-user-select: none;
     border-radius: 12px; overflow: hidden; background: var(--wall); cursor: grab; outline: none; }
   #board.dragging { cursor: grabbing; }
   #board:focus-visible { box-shadow: 0 0 0 3px var(--accent); }
@@ -58,6 +59,9 @@
   .pad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .pad button { min-height: 52px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); font-size: 22px; cursor: pointer; }
   .pad button:disabled { opacity: .4; cursor: default; }
+  .chip.pulse { box-shadow: 0 0 0 3px var(--hint); }
+  body.won .tools { display: none; }
+  #win .row .chip { padding: 0 8px; }
   #win { display: none; flex-direction: column; gap: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center; }
   #win h2 { margin: 0; font-size: 20px; }
   #win p { margin: 0; color: var(--muted); }
@@ -111,7 +115,7 @@
       <div id="win" role="status">
         <h2 id="winTitle">Solved!</h2>
         <p id="winText"></p>
-        <div class="row"><button class="chip" id="againBtn">Play again</button><button class="chip primary" id="nextBtn">Next level</button></div>
+        <div class="row"><button class="chip" id="winUndo">Undo</button><button class="chip" id="againBtn">Play again</button><button class="chip primary" id="nextBtn">Next level</button></div>
       </div>
       <p id="padNote"></p>
       <div class="pad" aria-label="Slide the selected line">
@@ -120,7 +124,7 @@
         <button id="padD" aria-label="Slide column down">↓</button>
         <button id="padR" aria-label="Slide row right">→</button>
       </div>
-      <div class="row">
+      <div class="row tools">
         <button class="chip" id="undoBtn">Undo</button>
         <button class="chip" id="restartBtn">Restart</button>
         <button class="chip" id="hintBtn">Hint</button>
@@ -142,7 +146,7 @@
     <p>This was a solved <strong>Suguru</strong>. A few rows and columns slipped. Slide them back.</p>
     <p>A region of N cells must hold 1 to N once each. The same number may never touch another, not even diagonally.</p>
     <p>Regions turn <strong>green</strong> when they hold the right numbers. <strong>Red rings</strong> mark equal numbers that touch.</p>
-    <p>Drag a row sideways or a column up and down; numbers wrap around the edge. Or tap a number and use the arrows.</p>
+    <p>Drag a row sideways or a column up and down; numbers wrap around the edge. Or tap a number and use the arrows. Each step a line moves is one slide.</p>
     <p class="keys">Keys: arrows move the cursor, Shift+arrow (or Space, then arrow) slides its line. Z undo · R restart · H hint · N next.</p>
     <button class="chip" id="helpClose">Got it</button>
   </div>
@@ -150,11 +154,11 @@
 <script>
 "use strict";
 // ================= constants / levels =================
-const LEVELS = [{"w":4,"h":4,"regions":[0,0,0,1,0,2,1,1,2,2,1,3,2,2,3,3],"goal":[3,2,4,2,1,5,1,3,4,2,4,2,3,1,3,1],"start":[2,4,2,3,1,5,1,3,4,2,4,2,3,1,3,1],"solution":["r0R"],"par":1},{"w":4,"h":4,"regions":[1,0,0,3,1,1,0,0,1,1,0,2,2,2,2,2],"goal":[4,3,4,1,1,5,2,5,2,3,1,3,1,4,2,5],"start":[4,3,2,1,1,5,4,5,2,3,2,3,1,4,1,5],"solution":["c2U"],"par":1},{"w":4,"h":4,"regions":[1,3,3,2,1,2,2,2,1,1,0,2,1,0,0,0],"goal":[4,2,1,2,1,5,4,3,2,3,2,1,5,1,4,3],"start":[2,1,2,4,3,1,5,4,2,3,2,1,5,1,4,3],"solution":["r0R","r1L"],"par":2},{"w":5,"h":5,"regions":[0,0,2,2,2,0,0,0,2,4,3,3,3,2,4,5,3,3,4,4,1,1,1,1,4],"goal":[2,4,2,1,3,1,5,3,5,2,2,4,1,4,1,1,5,3,5,3,3,2,4,1,4],"start":[3,4,2,1,3,2,1,5,3,5,2,4,1,4,1,2,5,3,5,3,1,2,4,1,4],"solution":["c0U","r1L"],"par":2},{"w":5,"h":5,"regions":[0,1,1,1,1,0,0,6,2,2,5,0,0,2,2,5,3,4,4,2,3,3,3,4,4],"goal":[2,3,2,4,1,1,4,1,3,2,2,3,5,4,1,1,4,2,3,5,2,3,1,4,1],"start":[2,3,2,4,1,1,4,1,3,2,3,5,4,1,2,5,1,4,2,3,2,3,1,4,1],"solution":["r2R","r3L"],"par":2},{"w":5,"h":5,"regions":[4,4,2,5,5,4,4,2,0,0,3,3,2,2,0,3,1,6,2,0,1,1,1,1,0],"goal":[1,2,5,2,1,3,4,1,4,3,1,2,3,2,5,3,5,1,4,1,1,4,2,3,2],"start":[1,2,5,2,2,3,4,1,4,1,3,1,2,3,2,5,3,5,1,4,1,4,2,3,1],"solution":["r2L","r3L","c4U"],"par":3},{"w":5,"h":5,"regions":[2,2,1,1,3,0,1,1,3,3,0,0,0,4,3,5,0,6,4,3,5,5,4,4,4],"goal":[2,1,2,1,4,3,4,3,5,2,1,5,2,4,1,3,4,1,5,3,1,2,3,2,1],"start":[1,1,2,1,4,2,4,3,1,2,3,5,2,5,1,1,4,1,4,3,2,3,2,5,3],"solution":["c3U","r4R","c0U"],"par":3},{"w":6,"h":6,"regions":[6,6,6,0,3,3,2,6,6,0,0,3,2,2,2,7,7,3,2,1,7,7,4,3,1,1,5,4,4,4,1,1,5,5,5,4],"goal":[1,2,5,2,4,1,3,4,3,1,3,2,1,2,5,2,4,5,4,3,1,3,1,3,1,2,4,5,4,2,4,5,3,2,1,3],"start":[1,2,5,1,4,1,2,3,4,3,5,3,5,1,2,3,2,4,4,3,1,5,1,3,1,2,4,2,4,2,4,5,3,2,1,3],"solution":["r1L","c3D","r2L"],"par":3},{"w":6,"h":6,"regions":[6,6,3,3,3,3,6,6,1,3,2,2,6,5,1,1,4,2,5,5,1,1,4,4,5,7,0,0,8,4,0,0,0,8,8,8],"goal":[1,5,3,1,4,2,4,2,4,5,3,1,3,1,3,1,4,2,2,4,5,2,3,1,3,1,3,1,4,2,2,5,4,2,3,1],"start":[1,5,3,1,4,2,2,4,5,3,1,4,1,3,1,4,2,3,1,2,4,5,2,3,1,3,1,4,2,3,2,5,4,2,3,1],"solution":["r1R","r2R","r3L","r4R"],"par":4},{"w":6,"h":6,"regions":[4,4,4,4,4,6,8,2,2,2,3,6,8,0,2,2,3,3,7,0,0,5,3,3,7,0,5,5,1,1,7,0,5,1,1,1],"goal":[1,4,5,2,3,1,2,3,1,4,5,2,1,4,5,2,1,3,3,2,1,3,4,2,1,5,4,2,1,3,2,3,1,5,4,2],"start":[1,2,1,5,2,3,1,3,4,4,5,2,3,4,1,2,1,3,1,2,5,3,4,2,3,2,5,1,2,1,1,3,4,5,4,2],"solution":["r4L","c2U","r0L","c0D"],"par":4},{"w":6,"h":6,"regions":[0,6,6,7,7,7,0,6,6,5,5,8,0,0,3,5,5,8,0,3,3,2,5,8,4,3,3,2,1,1,4,4,4,4,1,1],"goal":[4,2,1,3,1,2,1,3,4,2,5,3,5,2,5,1,4,2,3,1,3,2,3,1,5,2,4,1,4,2,4,1,3,2,3,1],"start":[3,4,3,1,3,1,1,5,4,2,5,5,2,1,1,4,2,1,3,2,3,2,3,2,1,5,1,4,1,4,4,2,3,2,3,2],"solution":["r0L","r4L","c1D","c5D","r2R"],"par":5},{"w":6,"h":6,"regions":[5,5,1,1,1,1,5,5,1,4,6,8,2,2,4,4,6,6,2,2,2,4,6,6,7,0,0,0,3,3,7,7,0,3,3,3],"goal":[2,4,2,1,4,3,1,3,5,3,2,1,2,4,2,1,5,4,5,1,3,4,3,1,3,4,2,1,2,5,2,1,3,4,3,1],"start":[3,2,4,2,1,1,3,5,3,2,5,1,2,4,2,1,4,4,1,5,1,3,2,3,5,3,4,2,1,1,1,3,4,3,4,2],"solution":["r0L","r4L","c4D","r1R","r3L","r5R"],"par":6}];
+const LEVELS = [{"w":4,"h":4,"regions":[0,0,0,1,0,2,1,1,2,2,1,3,2,2,3,3],"goal":[3,2,4,2,1,5,1,3,4,2,4,2,3,1,3,1],"start":[2,4,2,3,1,5,1,3,4,2,4,2,3,1,3,1],"solution":["r0R"],"par":1},{"w":4,"h":4,"regions":[1,0,0,3,1,1,0,0,1,1,0,2,2,2,2,2],"goal":[4,3,4,1,1,5,2,5,2,3,1,3,1,4,2,5],"start":[4,3,2,1,1,5,4,5,2,3,2,3,1,4,1,5],"solution":["c2U"],"par":1},{"w":4,"h":4,"regions":[1,3,3,2,1,2,2,2,1,1,0,2,1,0,0,0],"goal":[4,2,1,2,1,5,4,3,2,3,2,1,5,1,4,3],"start":[2,1,2,4,3,1,5,4,2,3,2,1,5,1,4,3],"solution":["r0R","r1L"],"par":2},{"w":5,"h":5,"regions":[0,0,2,2,2,0,0,0,2,4,3,3,3,2,4,5,3,3,4,4,1,1,1,1,4],"goal":[2,4,2,1,3,1,5,3,5,2,2,4,1,4,1,1,5,3,5,3,3,2,4,1,4],"start":[3,4,2,1,3,2,1,5,3,5,2,4,1,4,1,2,5,3,5,3,1,2,4,1,4],"solution":["c0U","r1L"],"par":2},{"w":5,"h":5,"regions":[0,1,1,1,1,0,0,6,2,2,5,0,0,2,2,5,3,4,4,2,3,3,3,4,4],"goal":[2,3,2,4,1,1,4,1,3,2,2,3,5,4,1,1,4,2,3,5,2,3,1,4,1],"start":[2,3,2,4,1,1,4,1,3,2,3,5,4,1,2,5,1,4,2,3,2,3,1,4,1],"solution":["r2R","r3L"],"par":2},{"w":5,"h":5,"regions":[4,4,2,5,5,4,4,2,0,0,3,3,2,2,0,3,1,6,2,0,1,1,1,1,0],"goal":[1,2,5,2,1,3,4,1,4,3,1,2,3,2,5,3,5,1,4,1,1,4,2,3,2],"start":[1,2,5,2,2,3,4,1,4,1,3,1,2,3,2,5,3,5,1,4,1,4,2,3,1],"solution":["r2L","r3L","c4U"],"par":3},{"w":5,"h":5,"regions":[2,2,1,1,3,0,1,1,3,3,0,0,0,4,3,5,0,6,4,3,5,5,4,4,4],"goal":[2,1,2,1,4,3,4,3,5,2,1,5,2,4,1,3,4,1,5,3,1,2,3,2,1],"start":[1,1,2,1,4,2,4,3,1,2,3,5,2,5,1,1,4,1,4,3,2,3,2,5,3],"solution":["c3U","r4R","c0U"],"par":3},{"w":6,"h":6,"regions":[6,6,6,0,3,3,2,6,6,0,0,3,2,2,2,7,7,3,2,1,7,7,4,3,1,1,5,4,4,4,1,1,5,5,5,4],"goal":[1,2,5,2,4,1,3,4,3,1,3,2,1,2,5,2,4,5,4,3,1,3,1,3,1,2,4,5,4,2,4,5,3,2,1,3],"start":[1,2,5,1,4,1,2,3,4,3,5,3,5,1,2,3,2,4,4,3,1,5,1,3,1,2,4,2,4,2,4,5,3,2,1,3],"solution":["r1L","c3D","r2L"],"par":3},{"w":6,"h":6,"regions":[7,7,3,3,3,3,7,7,2,3,5,5,1,2,2,4,0,0,1,6,2,4,4,0,1,6,6,4,4,0,1,1,6,6,8,0],"goal":[1,3,1,3,4,5,4,2,4,2,1,2,3,1,3,5,4,5,4,5,2,1,2,1,1,3,4,3,4,3,5,2,1,2,1,2],"start":[1,3,1,2,4,5,4,2,4,4,1,2,1,3,5,2,5,3,5,2,1,4,1,4,3,1,3,2,3,4,5,2,1,3,1,2],"solution":["c3D","r2R","r3R","r4L"],"par":4},{"w":6,"h":6,"regions":[8,8,8,1,1,3,2,2,8,1,1,3,2,2,2,7,1,3,0,0,0,0,6,3,4,4,0,5,6,6,4,4,5,5,5,6],"goal":[3,2,1,5,1,3,1,5,4,2,4,2,4,2,3,1,3,1,3,1,5,4,2,4,2,4,2,1,3,1,3,1,3,4,2,4],"start":[3,2,1,5,1,3,1,5,4,2,4,2,1,4,2,3,1,3,4,3,1,5,4,2,4,2,1,3,1,2,1,3,4,2,4,3],"solution":["r2L","r3L","r4R","r5R"],"par":4},{"w":6,"h":6,"regions":[1,1,8,2,2,3,1,1,8,0,3,3,6,1,8,0,3,3,6,6,6,0,0,4,6,5,7,7,0,4,5,5,5,5,4,4],"goal":[2,1,2,1,2,1,3,4,3,4,3,4,2,5,1,2,5,2,1,3,4,3,1,4,5,2,1,2,5,3,1,4,5,3,1,2],"start":[4,2,1,2,1,1,2,3,4,3,4,2,1,5,1,2,5,3,5,3,4,3,1,2,4,2,1,2,5,4,1,5,3,1,2,3],"solution":["c0D","c5U","r0L","r1L","r5R"],"par":5},{"w":6,"h":6,"regions":[4,4,6,0,0,8,4,4,6,0,0,7,4,5,1,0,2,7,5,5,1,1,2,7,5,3,3,1,2,7,3,3,3,1,2,2],"goal":[1,4,1,4,2,1,5,3,2,3,5,3,2,1,5,1,2,4,4,3,2,4,3,1,2,1,5,1,5,2,3,4,2,3,4,1],"start":[4,2,4,2,3,1,5,3,5,3,5,4,2,1,2,1,2,1,2,4,3,1,4,3,1,5,2,5,1,2,4,1,3,4,1,3],"solution":["r0R","r3L","r5R","c2D","r4R","c5D"],"par":6}];
 const TIPS = [
   "One row slipped. <strong>Drag it sideways</strong> until every region turns green.",
-  "This time a <strong>column</strong> slipped. Drag it up or down. Red rings: equal numbers touching.",
-  "Two lines moved. Fix the one you are sure of first; green regions tell you what is already right.",
+  "This time a <strong>column</strong> slipped. Drag it up or down.",
+  "Two lines moved. <strong>Red rings</strong> mark equal numbers that touch; green regions are already right.",
   "A region of 3 cells holds exactly 1, 2 and 3. A 4 or 5 in it is in the wrong place.",
   "Diagonals count: two equal numbers touching at a corner get red rings too.",
   "Three slides. Look for the region that is most wrong, and ask which line runs through it.",
@@ -198,7 +202,7 @@ function analyse(g, W, H, reg, size) {
   return { valid: okRegions.size === R && clash.size === 0, okRegions, clash };
 }
 // shortest slide list from grid a to grid b (bidirectional BFS), or null past the node budget
-function pathBetween(a, b, W, H, budget = 250000) {
+function pathBetween(a, b, W, H, budget = 90000) {
   const ka = a.join(","), kb = b.join(",");
   if (ka === kb) return [];
   const moves = moveList(W, H);
@@ -273,38 +277,31 @@ function buildBoard() {
   const { W, H, reg } = game, cells = $("cells"), tiles = $("tiles"), walls = $("walls");
   cells.replaceChildren(); tiles.replaceChildren();
   cellEls = []; tileEls = [];
-  const gap = 1.2; // percentage gap between cells (wall colour shows through)
   for (let k = 0; k < W * H; k++) {
     const x = k % W, y = (k / W) | 0, c = document.createElement("div");
     c.className = "cell";
-    c.style.left = (x * 100 / W + gap / 2) + "%"; c.style.top = (y * 100 / H + gap / 2) + "%";
-    c.style.width = (100 / W - gap) + "%"; c.style.height = (100 / H - gap) + "%";
-    // merge with same-region neighbours: extend over the gap
-    if (x < W - 1 && reg[k] === reg[k + 1]) c.style.width = (100 / W) + "%";
-    if (y < H - 1 && reg[k] === reg[k + W]) c.style.height = (100 / H) + "%";
+    c.style.left = (x * 100 / W) + "%"; c.style.top = (y * 100 / H) + "%";
+    c.style.width = (100 / W + 0.05) + "%"; c.style.height = (100 / H + 0.05) + "%";
     cells.appendChild(c); cellEls.push(c);
     const t = document.createElement("div");
     t.className = "tile"; t.innerHTML = "<span></span>";
     t.style.width = (100 / W) + "%"; t.style.height = (100 / H) + "%";
     tiles.appendChild(t); tileEls.push(t);
   }
-  // fill the little corner holes inside a region where a 2x2 block is one region
-  for (let k = 0; k < W * H; k++) {
-    const x = k % W, y = (k / W) | 0;
-    if (x < W - 1 && y < H - 1 && reg[k] === reg[k + 1] && reg[k] === reg[k + W] && reg[k] === reg[k + W + 1]) cellEls[k].style.width = (100 / W) + "%", cellEls[k].style.height = (100 / H) + "%";
-  }
   ghost = document.createElement("div"); ghost.className = "tile"; ghost.innerHTML = "<span></span>";
   ghost.style.width = (100 / W) + "%"; ghost.style.height = (100 / H) + "%"; ghost.style.display = "none";
   tiles.appendChild(ghost);
   // thin lines between cells of the same region
   walls.setAttribute("viewBox", `0 0 ${W * 10} ${H * 10}`); walls.setAttribute("preserveAspectRatio", "none");
-  let d = "";
+  let thin = "", thick = "";
   for (let k = 0; k < W * H; k++) {
     const x = k % W, y = (k / W) | 0;
-    if (x < W - 1 && reg[k] === reg[k + 1]) d += `M${(x + 1) * 10} ${y * 10 + 1.5}V${(y + 1) * 10 - 1.5}`;
-    if (y < H - 1 && reg[k] === reg[k + W]) d += `M${x * 10 + 1.5} ${(y + 1) * 10}H${(x + 1) * 10 - 1.5}`;
+    if (x < W - 1) { const seg = `M${(x + 1) * 10} ${y * 10}V${(y + 1) * 10}`; if (reg[k] === reg[k + 1]) thin += seg; else thick += seg; }
+    if (y < H - 1) { const seg = `M${x * 10} ${(y + 1) * 10}H${(x + 1) * 10}`; if (reg[k] === reg[k + W]) thin += seg; else thick += seg; }
   }
-  walls.innerHTML = `<path d="${d}" stroke="var(--line)" stroke-width="0.35" fill="none" vector-effect="non-scaling-stroke" style="stroke-width:1px"/>`;
+  walls.innerHTML = `<path d="${thin}" stroke="var(--line)" fill="none" vector-effect="non-scaling-stroke" style="stroke-width:1px"/>` +
+    `<path d="${thick}" stroke="var(--wall)" fill="none" stroke-linecap="square" vector-effect="non-scaling-stroke" style="stroke-width:3.5px"/>` +
+    `<rect x="0" y="0" width="${W * 10}" height="${H * 10}" fill="none" stroke="var(--wall)" vector-effect="non-scaling-stroke" style="stroke-width:6px"/>`;
   const fs = Math.round(Math.min($("board").clientWidth || 360, 560) / W * 0.42);
   $("tiles").style.fontSize = Math.max(16, fs) + "px";
   lastOk = analyse(game.grid, W, H, game.reg, game.size).okRegions;
@@ -367,7 +364,8 @@ function render() {
   $("padNote").textContent = sel ? `Arrows slide row ${((cursor / game.W) | 0) + 1} or column ${(cursor % game.W) + 1}` : "Drag a line, or tap a number to use the arrows";
   if (game.screen === "won") {
     const atPar = game.slides <= L.par;
-    $("winTitle").textContent = atPar ? "Solved at par ★" : "Solved!";
+    const allDone = LEVELS.every((_, i) => save.best[i]), stars = LEVELS.filter((L2, i) => save.best[i] && save.best[i] <= L2.par).length;
+    $("winTitle").textContent = game.level === LEVELS.length - 1 && allDone ? `All ${LEVELS.length} solved · ${stars} ★` : atPar ? "Solved at par ★" : "Solved!";
     $("winText").textContent = `${game.slides} ${game.slides === 1 ? "slide" : "slides"} · par ${L.par}${game.hints ? ` · ${game.hints} hint${game.hints > 1 ? "s" : ""}` : ""}` + (atPar ? "" : " · can you do it in fewer?");
     $("nextBtn").textContent = game.level === LEVELS.length - 1 ? "All levels" : "Next level";
   }
@@ -412,7 +410,13 @@ function findHint() {
 function doHint() {
   if (game.screen !== "playing" || anim) return;
   const p = findHint();
-  if (!p || !p.length) { hintMove = null; hintText = "You have wandered quite far. <strong>Undo</strong> a few slides or <strong>Restart</strong>."; render(); return; }
+  if (!p || !p.length) {
+    hintMove = null; game = { ...game, hints: game.hints + 1 };
+    hintText = game.history.length ? "Hint: you are far from the answer. Press <strong>Undo</strong>, then ask again." : "Hint: press <strong>Restart</strong>, then ask again.";
+    const btn = game.history.length ? $("undoBtn") : $("restartBtn");
+    btn.classList.add("pulse"); setTimeout(() => btn.classList.remove("pulse"), 1600);
+    render(); return;
+  }
   hintMove = p[0]; game = { ...game, hints: game.hints + 1 };
   const m = parseMove(hintMove), dir = { L: "left", R: "right", U: "up", D: "down" }[m.d];
   hintText = `Hint: slide <strong>${m.t === "r" ? "row" : "column"} ${m.i + 1} ${dir}</strong> (${p.length} ${p.length === 1 ? "slide" : "slides"} to go).`;
@@ -503,6 +507,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") { closeSheets(); e.preventDefault(); }
     return;
   }
+  if ((e.key === "Enter" || e.key === " ") && e.target && e.target.closest && e.target.closest("button")) return;
   const dirs = { ArrowLeft: "L", ArrowRight: "R", ArrowUp: "U", ArrowDown: "D" };
   const k = e.key.toLowerCase();
   if (dirs[e.key]) {
@@ -526,7 +531,7 @@ function next() { if (game.level === LEVELS.length - 1) openPicker(); else loadL
 $("padL").onclick = () => padSlide("L"); $("padR").onclick = () => padSlide("R");
 $("padU").onclick = () => padSlide("U"); $("padD").onclick = () => padSlide("D");
 $("undoBtn").onclick = doUndo; $("restartBtn").onclick = doRestart; $("hintBtn").onclick = doHint;
-$("nextBtn").onclick = next; $("againBtn").onclick = () => loadLevel(game.level);
+$("nextBtn").onclick = next; $("winUndo").onclick = doUndo; $("againBtn").onclick = () => loadLevel(game.level);
 $("muteBtn").onclick = () => { save.muted = !save.muted; persist(); render(); };
 function openPicker() {
   const g = $("pickGrid"); g.replaceChildren();
