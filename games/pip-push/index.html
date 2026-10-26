@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pip Push</title>
-<!-- Pip Push — Game Studio, night 2. A Sokoban with dice: every push rolls the die. -->
+<!-- Pip Push — Game Studio, night 3. A Sokoban with dice: every push rolls the die. -->
 <style>
   :root {
     --bg: #f3eee4; --panel: #fffaf1; --ink: #23263a; --muted: #6c6a76; --edge: #ddd3c2;
-    --floor: #fbf6ec; --floor2: #f5eee2; --wall: #cbc0ad; --wall-top: #b3a791;
+    --floor: #fbf6ec; --floor2: #f5eee2; --wall: #cbc0ad; --wall-top: #b3a791; --ice: #d6ecf6; --ice2: #cbe5f2; --ice-line: #ffffff;
     --die: #fffdf8; --die-side: #e8e1d4; --die-edge: #b8ad9a; --pip: #23263a; --side-num: #6d6455;
     --player: #e2574c; --player-ink: #fff; --goal: #a8977a; --ok: #23966a; --bad: #d0703a;
     --btn: #ffffff; --btn-ink: #23263a; --accent: #23263a; --accent-ink: #fffaf1;
@@ -18,7 +18,7 @@
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #15161d; --panel: #1f212b; --ink: #ecebf2; --muted: #a2a1b0; --edge: #343748;
-      --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50;
+      --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50; --ice: #2f5266; --ice2: #2b4b5e; --ice-line: #7fb2cc;
       --die: #f6f1e6; --die-side: #d9d0bf; --die-edge: #8f8572; --pip: #23263a; --side-num: #5d5546;
       --player: #f06a5e; --player-ink: #fff; --goal: #8e8370; --ok: #4cc28f; --bad: #e08a55;
       --btn: #2a2d3a; --btn-ink: #ecebf2; --accent: #ecebf2; --accent-ink: #15161d; color-scheme: dark;
@@ -26,7 +26,7 @@
   }
   :root[data-theme="dark"] {
     --bg: #15161d; --panel: #1f212b; --ink: #ecebf2; --muted: #a2a1b0; --edge: #343748;
-    --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50;
+    --floor: #2c2f3d; --floor2: #282b38; --wall: #444860; --wall-top: #383b50; --ice: #2f5266; --ice2: #2b4b5e; --ice-line: #7fb2cc;
     --die: #f6f1e6; --die-side: #d9d0bf; --die-edge: #8f8572; --pip: #23263a; --side-num: #5d5546;
     --player: #f06a5e; --player-ink: #fff; --goal: #8e8370; --ok: #4cc28f; --bad: #e08a55;
     --btn: #2a2d3a; --btn-ink: #ecebf2; --accent: #ecebf2; --accent-ink: #15161d; color-scheme: dark;
@@ -35,7 +35,9 @@
   html, body { margin: 0; min-height: 100%; }
   body { background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); -webkit-tap-highlight-color: transparent;
     padding: env(safe-area-inset-top, 0px) max(12px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(12px, env(safe-area-inset-left, 0px)); }
-  main { width: min(100%, 540px); margin: 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: 10px; padding: 10px 0 16px; }
+  /* night 3: the page fills the screen; the board takes the free height, controls sit at the bottom (thumb reach) */
+  main { width: min(100%, 540px); margin: 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: 10px; padding: 10px 0 16px;
+    min-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
   header { display: flex; align-items: center; gap: 8px; min-height: 48px; }
   .brand { display: flex; flex-direction: column; flex: 1; min-width: 0; }
   h1 { margin: 0; font-size: 22px; line-height: 1.1; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
@@ -50,14 +52,16 @@
   .status { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 22px; }
   .status b { color: var(--ink); font-weight: 650; }
   #goalsMet.done { color: var(--ok); }
-  .stage { position: relative; display: grid; place-items: center; }
+  .stage { position: relative; display: grid; place-items: center; flex: 1 1 auto; min-height: 0; }
   canvas { display: block; touch-action: none; border-radius: 16px; cursor: pointer; max-width: 100%; }
   .tip { text-align: center; font-size: 14px; color: var(--muted); min-height: 2.8em; margin: 0; padding: 0 8px; }
   .tip b { color: var(--ink); }
   .tip.hint { color: var(--ink); }
   .tip.hint b { color: var(--player); }
   .tipbtn { margin-left: 6px; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--player); background: var(--btn); color: var(--btn-ink); font: 600 14px var(--font); cursor: pointer; }
-  @media (pointer: coarse) { .keys { display: none; } }
+  @media (pointer: coarse) { .keys { display: none; }
+    .pad { grid-template-columns: repeat(3, 60px); grid-template-rows: repeat(2, 54px); gap: 8px; }
+    .pad button svg { width: 26px; height: 26px; } }
   .controls { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; }
   .controls .big { width: 100%; max-width: 130px; padding: 0 8px; }
   .pad { display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(2, 48px); gap: 6px; }
@@ -72,6 +76,7 @@
   #undoBtn { justify-self: end; } #restartBtn { justify-self: start; }
   .primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   .keys { text-align: center; font-size: 12px; color: var(--muted); margin: 0; }
+  body.replaying .pad, body.replaying #hintBtn { opacity: .45; }
   /* overlays */
   .sheet { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 70%, transparent); display: grid; place-items: center; padding: 16px; z-index: 5; }
   .sheet[hidden] { display: none; }
@@ -123,7 +128,7 @@
     </div>
     <button class="big" id="restartBtn" aria-label="Restart (R)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Restart</span></button>
   </div>
-  <p class="keys">Arrows / WASD move · Z undo · R restart · H hint · tap a square to walk, swipe to step</p>
+  <p class="keys">Arrows / WASD move · Z undo · R restart · H hint · P watch par (after solving) · tap a square to walk, swipe to step</p>
 </main>
 
 <div class="sheet" id="winSheet" hidden>
@@ -131,7 +136,7 @@
     <h2 id="winTitle">Solved!</h2>
     <div class="stats"><div><b id="wMoves">0</b><span>moves</span></div><div><b id="wPushes">0</b><span>pushes</span></div><div><b id="wPar">0</b><span>par pushes</span></div></div>
     <p id="wNote"></p>
-    <div class="row"><button class="big" id="wUndo">Undo last move</button><button class="big primary" id="wNext">Next level</button></div>
+    <div class="row"><button class="big" id="wUndo">Undo last move</button><button class="big" id="wWatch"><svg viewBox="0 0 24 24"><path d="M7 5v14l11-7z"/></svg>Watch par</button><button class="big primary" id="wNext">Next level</button></div>
   </div>
 </div>
 <div class="sheet" id="levelSheet" hidden>
@@ -149,6 +154,7 @@
       <li>The die tips over as it moves: <b>the side you push against becomes the top.</b></li>
       <li>The small numbers around a die are its side faces. Opposite faces add up to 7.</li>
       <li>Get every die onto a goal showing that goal's number on top.</li>
+      <li><b>Ice</b> (pale blue): a die pushed onto ice keeps rolling, one roll per square, until it leaves the ice or bumps into something. You walk on ice normally.</li>
       <li>Tap a free square to walk there (it never pushes). Tap or swipe next to a die to push it.</li>
       <li>Stuck? Undo as often as you like, or Restart. <b>Hint</b> (H) shows the next push from where you are now.</li>
     </ol>
@@ -160,7 +166,7 @@
 <script>
 "use strict";
 // ================= constants & levels =================
-// Each level: map rows ('#' wall, '.' floor, '@' player), dice [x,y,top,north,east], goals [x,y,number],
+// Each level: map rows ('#' wall, '.' floor, '@' player, '~' ice, '&' player on ice), dice [x,y,top,north,east], goals [x,y,number],
 // sol = a solution with the fewest pushes (lab/build-levels.mjs), par = the true minimum pushes (lab/push.mjs).
 const LEVELS = /*LEVELS*/[
   {"name":"First roll","map":["#######","#@....#","#######"],"dice":[[2,1,1,2,3]],"goals":[[5,1,3]],"sol":"RRR","par":3},
@@ -177,7 +183,13 @@ const LEVELS = /*LEVELS*/[
   {"name":"Pillar walk","map":["#######","#..@..#","#.#...#","#.....#","#.....#","#######"],"dice":[[4,3,3,1,2],[3,3,6,3,2]],"goals":[[4,2,4],[1,1,4]],"sol":"DRRDDLURULDDLLURLLUURRDRRDDLULUURDRDLDLUDLLURRDRUURULLLRDRDDLLURDRU","par":19},
   {"name":"Notch","map":["######","#....#","#...##","#....#","#..@.#","######"],"dice":[[3,3,6,4,5],[2,1,3,1,2],[2,2,1,2,3]],"goals":[[1,2,6],[4,3,6],[4,1,4]],"sol":"RULDLLUUURRLLDRLDDRULUURRDULLDRDDRRULDLLUUURRDLLDDRUDRRULLDLURRUULDRDDLLURR","par":16},
   {"name":"Dock","map":["#######","#.....#","#....@#","#.....#","#..#..#","#######"],"dice":[[2,2,5,1,3],[5,3,3,2,6],[3,3,6,2,4]],"goals":[[4,4,6],[4,1,5],[5,4,2]],"sol":"ULLLLDRURRDRDLLRUULDLLDDRULUURRDRDLUULLDRLDDRUUDRRUULDLLURDRRDLULLDDRULURRDRRUULDLLURDRD","par":18},
-  {"name":"Three ways","map":["#######","#.....#","#.@...#","#.....#","#..#..#","#######"],"dice":[[4,3,6,3,2],[3,2,2,6,3],[4,1,4,1,5]],"goals":[[3,1,5],[2,3,4],[5,3,2]],"sol":"URDRRDDLURULLULLDRDRLUURDRRDDLURULLULLDDRRURRDDLURULDLLLUURRDULLDDRRURRDDLULUULDRDRRUULRDDLLURURD","par":20}
+  {"name":"Three ways","map":["#######","#.....#","#.@...#","#.....#","#..#..#","#######"],"dice":[[4,3,6,3,2],[3,2,2,6,3],[4,1,4,1,5]],"goals":[[3,1,5],[2,3,4],[5,3,2]],"sol":"URDRRDDLURULLULLDRDRLUURDRRDDLURULLULLDDRRURRDDLURULDLLLUURRDULLDDRRURRDDLULUULDRDRRUULRDDLLURURD","par":20},
+  {"name":"First slide","map":["#########","#@.~~~..#","#########"],"dice":[[2,1,2,3,1]],"goals":[[7,1,6]],"sol":"RRRRR","par":2},
+  {"name":"Short cut","map":["#######","#..~.##","#@.~.~#","#..~~~#","#######"],"dice":[[2,2,1,3,5]],"goals":[[2,3,4]],"sol":"RURRDRDL","par":3},
+  {"name":"Ice lane","map":["#######","#.#~.##","#..~..#","#@.~..#","#.~~#.#","#######"],"dice":[[2,2,4,1,5]],"goals":[[4,3,6]],"sol":"URRURDRDLLDLULURRURD","par":6},
+  {"name":"Skid row","map":["########","#...~..#","#..@~..#","#..~~.##","#...~~.#","########"],"dice":[[2,3,5,6,4]],"goals":[[3,4,5]],"sol":"LLDRDRRRULUURRDLLLULDLDRDRRRULUURRDLULLD","par":9},
+  {"name":"Two on ice","map":["#######","#....@#","#..~..#","#..~~.#","#...#.#","#######"],"dice":[[2,2,5,4,1],[2,3,6,5,3]],"goals":[[5,2,1],[1,3,1]],"sol":"LLLLDRURRDLDDLURURRDLUULLLDRLDDRURUURDULLLDRURRRDDLLURDLDLURULULD","par":13},
+  {"name":"Rink","map":["#######","#~~~@.#","#..~..#","##.~..#","#..~~~#","#######"],"dice":[[4,3,4,2,1],[2,3,3,6,5]],"goals":[[5,2,1],[1,2,6]],"sol":"DLDDLUDRRRULUULLLDRRDDLURUURDULLLDRURRRDDLLUURDLDDLUDRRRULUULLLDRRDDLURULURRDLDRDRU","par":16}
 ];
 const TIPS = {
   0: "Walk into the die to push it. Watch the top number change.",
@@ -187,6 +199,10 @@ const TIPS = {
   5: "Two dice, two goals. Each goal wants its own number.",
   6: "Stuck? <b>Hint</b> (H) shows the next push from where you are now.",
   10: "Three dice. Any die can fill any goal: pick the one that is easiest to turn.",
+  15: "<b>Ice!</b> A die pushed onto ice keeps rolling until it gets off. Four rolls bring the same number back.",
+  16: "A slide is many rolls for one push. Count the squares before you push.",
+  18: "You walk on ice normally. Only dice slide.",
+  19: "Two dice on the ice. A die can stop another one's slide.",
 };
 const DIRS = { U: [0, -1], D: [0, 1], L: [-1, 0], R: [1, 0] };
 const SAVE_KEY = "pippush.v1";
@@ -202,9 +218,9 @@ function roll(o, d) {
 }
 function parseLevel(i) {
   const L = LEVELS[i], h = L.map.length, w = L.map[0].length;
-  const walls = []; let player = [0, 0];
-  L.map.forEach((row, y) => [...row].forEach((c, x) => { if (c === "#") walls.push(y * w + x); if (c === "@") player = [x, y]; }));
-  return { w, h, walls: new Set(walls), goals: L.goals.map(([x, y, n]) => ({ x, y, n })), start: { player, dice: L.dice.map(([x, y, t, n, e]) => ({ x, y, o: [t, n, e] })) } };
+  const walls = [], ice = []; let player = [0, 0];
+  L.map.forEach((row, y) => [...row].forEach((c, x) => { if (c === "#") walls.push(y * w + x); if (c === "@" || c === "&") player = [x, y]; if (c === "~" || c === "&") ice.push(y * w + x); }));
+  return { w, h, walls: new Set(walls), ice: new Set(ice), goals: L.goals.map(([x, y, n]) => ({ x, y, n })), start: { player, dice: L.dice.map(([x, y, t, n, e]) => ({ x, y, o: [t, n, e] })) } };
 }
 function newGame(level) {
   const lv = parseLevel(level);
@@ -235,6 +251,11 @@ function applyMove(g, d) {
   if (r.push) {
     const die = ng.dice[r.dieIndex];
     die.x += dx; die.y += dy; die.o = roll(die.o, d); ng.pushes = g.pushes + 1;
+    r.path = [[die.x, die.y, die.o.slice()]];
+    // ice: the die keeps rolling while it stands on ice and the next square is free
+    while (g.lv.ice.has(die.y * g.lv.w + die.x) && !isWall(g, die.x + dx, die.y + dy) && dieAt(ng, die.x + dx, die.y + dy) < 0) {
+      die.x += dx; die.y += dy; die.o = roll(die.o, d); r.path.push([die.x, die.y, die.o.slice()]);
+    }
   }
   ng.screen = goalStatus(ng).every(Boolean) ? "won" : "playing";
   return { g: ng, r };
@@ -260,12 +281,13 @@ function legalActions(g) {
   if (g.history.length) out.push("undo");
   if (g.dead && g.deadAt >= 0) out.push("rewind");
   if (g.moves > 0 || g.history.length) out.push("restart");
+  if (g.screen === "won") out.push("watch");
   return out;
 }
 
 // ---- push-level solver (copy of lab/push.mjs; keep in sync) ----
 function pushSolve(S, cap = 400000) {
-  const { w, h, walls, goals } = S, N = w * h;
+  const { w, h, walls, goals } = S, N = w * h, ice = S.ice && S.ice.size ? S.ice : null;
   const DV = { U: -w, D: w, L: -1, R: 1 };
   const inb = (p, d) => !(d === "L" && p % w === 0) && !(d === "R" && p % w === w - 1) && p + DV[d] >= 0 && p + DV[d] < N;
   const roll = ([t, n, e], d) => d === "R" ? [7 - e, n, t] : d === "L" ? [e, n, 7 - t] : d === "U" ? [7 - n, t, e] : [n, 7 - t, e];
@@ -300,7 +322,10 @@ function pushSolve(S, cap = 400000) {
           if (walls.has(to) || occ.has(to)) continue;
           const opp = { U: "D", D: "U", L: "R", R: "L" }[d]; if (!inb(b, opp)) continue;
           const stand = b - DV[d]; if (st.ar.prev[stand] < 0) continue;
-          const dice = st.dice.slice(); dice[i] = { p: to, o: roll(st.dice[i].o, d) };
+          const dice = st.dice.slice(); let tp = to, to2 = roll(st.dice[i].o, d);
+          // ice (night 3): a die standing on ice keeps rolling while the way ahead is clear
+          while (ice && ice.has(tp) && inb(tp, d) && !walls.has(tp + DV[d]) && !occ.has(tp + DV[d])) { tp += DV[d]; to2 = roll(to2, d); }
+          dice[i] = { p: tp, o: to2 };
           const ar = area(b, dice), k = key(ar.min, dice);
           if (seen.has(k)) continue;
           seen.set(k, { pk: st.k, walk: walk(st.ar.prev, stand) + d, stand, d, die: i });
@@ -330,7 +355,7 @@ function planFrom(g, moves) {
   }
   return plan;
 }
-const solverInput = (g, cap) => { const w = g.lv.w; return { w, h: g.lv.h, walls: g.lv.walls, goals: g.lv.goals.map((q) => ({ p: q.y * w + q.x, n: q.n })),
+const solverInput = (g, cap) => { const w = g.lv.w; return { w, h: g.lv.h, walls: g.lv.walls, ice: g.lv.ice, goals: g.lv.goals.map((q) => ({ p: q.y * w + q.x, n: q.n })),
   player: g.player[1] * w + g.player[0], dice: g.dice.map((d) => ({ p: d.y * w + d.x, o: d.o.slice() })), cap }; };
 // a hint from a known minimum-push plan, without searching (null if the position isn't on any plan)
 function planHint(g, plans) {
@@ -390,7 +415,7 @@ let burst = null; // win particles
 const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 let C = {};
-function readColors() { for (const k of ["floor", "floor2", "wall", "wall-top", "die", "die-side", "die-edge", "pip", "side-num", "player", "player-ink", "goal", "ok", "bad", "ink", "muted", "panel"]) C[k] = css("--" + k); }
+function readColors() { for (const k of ["ice", "ice2", "ice-line", "floor", "floor2", "wall", "wall-top", "die", "die-side", "die-edge", "pip", "side-num", "player", "player-ink", "goal", "ok", "bad", "ink", "muted", "panel"]) C[k] = css("--" + k); }
 
 function layout() {
   const main = document.querySelector("main");
@@ -434,6 +459,13 @@ function drawDie(px, py, o, opts = {}) {
     ctx.fillText(o[1], 0, -off + 0.5); ctx.fillText(7 - o[1], 0, off + 0.5); ctx.fillText(o[2], off, 0.5); ctx.fillText(7 - o[2], -off, 0.5);
   }
   ctx.restore();
+}
+function drawIce(px, py, alt) {
+  ctx.fillStyle = alt ? C.ice2 : C.ice; ctx.fillRect(px, py, cell, cell);
+  ctx.save(); ctx.strokeStyle = C["ice-line"]; ctx.globalAlpha = 0.85; ctx.lineCap = "round"; ctx.lineWidth = Math.max(1.5, cell * 0.035);
+  ctx.beginPath(); ctx.moveTo(px + cell * 0.18, py + cell * 0.42); ctx.lineTo(px + cell * 0.42, py + cell * 0.18);
+  ctx.moveTo(px + cell * 0.2, py + cell * 0.62); ctx.lineTo(px + cell * 0.62, py + cell * 0.2);
+  ctx.moveTo(px + cell * 0.62, py + cell * 0.84); ctx.lineTo(px + cell * 0.84, py + cell * 0.62); ctx.stroke(); ctx.restore();
 }
 function drawGoal(x, y, n, covered, met) {
   const px = x * cell, py = y * cell, m = cell * 0.1;
@@ -494,7 +526,8 @@ function draw(now) {
     if (g.lv.walls.has(y * w + x)) {
       ctx.fillStyle = C.wall; ctx.fillRect(px, py, cell, cell);
       if (!isWall(g, x, y + 1)) { ctx.fillStyle = C["wall-top"]; ctx.fillRect(px, py + cell * 0.78, cell, cell * 0.22); }
-    } else { ctx.fillStyle = (x + y) % 2 ? C.floor2 : C.floor; ctx.fillRect(px, py, cell, cell); }
+    } else if (g.lv.ice.has(y * w + x)) drawIce(px, py, (x + y) % 2);
+    else { ctx.fillStyle = (x + y) % 2 ? C.floor2 : C.floor; ctx.fillRect(px, py, cell, cell); }
   }
   const status = goalStatus(g);
   g.lv.goals.forEach((q, i) => drawGoal(q.x, q.y, q.n, dieAt(g, q.x, q.y) >= 0, status[i]));
@@ -506,10 +539,13 @@ function draw(now) {
   g.dice.forEach((d, i) => {
     let px = d.x * cell, py = d.y * cell, o = d.o, sx = 1, sy = 1;
     if (anim && anim.push && anim.dieIndex === i) {
-      const f = anim.from.dice[i], [dx, dy] = DIRS[anim.d];
-      px = (f.x + dx * k) * cell; py = (f.y + dy * k) * cell;
-      if (t < 0.5) o = f.o;
-      const squash = 1 - 0.28 * Math.sin(Math.PI * t);
+      // one roll per square: [start, ...path]; a plain push is a path of one square
+      const f = anim.from.dice[i], [dx, dy] = DIRS[anim.d], pts = [[f.x, f.y, f.o]].concat(anim.path || [[d.x, d.y, d.o]]);
+      const segs = pts.length - 1, u = Math.min(segs - 1e-6, (segs === 1 ? k : t) * segs), si = Math.floor(u), ft = u - si;
+      px = (pts[si][0] + dx * ft) * cell; py = (pts[si][1] + dy * ft) * cell;
+      o = ft < 0.5 ? pts[si][2] : pts[si + 1][2];
+      if (t >= 1) { px = d.x * cell; py = d.y * cell; o = d.o; }
+      const squash = 1 - 0.28 * Math.sin(Math.PI * ft);
       if (dx) sx = squash; else sy = squash;
     }
     const gi = g.lv.goals.findIndex((q) => q.x === d.x && q.y === d.y);
@@ -523,7 +559,7 @@ function draw(now) {
   let ppx = g.player[0] * cell, ppy = g.player[1] * cell;
   if (anim && anim.walk) { const pts = anim.walk, u = t * (pts.length - 1), i = Math.min(pts.length - 2, Math.floor(u)), f = u - i;
     ppx = (pts[i][0] + (pts[i + 1][0] - pts[i][0]) * f) * cell; ppy = (pts[i][1] + (pts[i + 1][1] - pts[i][1]) * f) * cell; }
-  else if (anim) { const f = anim.from.player, [dx, dy] = DIRS[anim.d]; ppx = (f[0] + dx * k) * cell; ppy = (f[1] + dy * k) * cell; }
+  else if (anim) { const f = anim.from.player, [dx, dy] = DIRS[anim.d], kp = anim.path && anim.path.length > 1 ? ease(Math.min(1, t * anim.path.length)) : k; ppx = (f[0] + dx * kp) * cell; ppy = (f[1] + dy * kp) * cell; }
   if (shake && !shake.dieIndex && shake.dieIndex !== 0) { const st = (now - shake.t0) / 220; if (st < 1) { const amp = Math.sin(st * Math.PI * 6) * (1 - st) * cell * 0.05; ppx += DIRS[shake.d][0] * amp; ppy += DIRS[shake.d][1] * amp; } }
   if (shake && now - shake.t0 > 220) shake = null;
   drawPlayer(ppx, ppy, facing);
@@ -557,6 +593,7 @@ function renderUI() {
       const up = roll(g.dice[hint.die].o, hint.d)[0];
       tip.innerHTML = `<b>Hint:</b> ${here ? "push" : "walk to the ring and push"} the die <b>${DIRNAME[hint.d]}</b>: ${up} comes up. Best finish from here: ${hint.left} push${hint.left === 1 ? "" : "es"}.`; }
   } else if (g.dead && g.screen === "playing") { tip.classList.add("hint"); tip.innerHTML = deadLine(g); }
+  else if (replay) { tip.classList.add("hint"); tip.innerHTML = `<b>Watching the par solution</b> (${g.pushes}/${LEVELS[g.level].par} pushes). Tap the board or press any key to take over.`; }
   else tip.innerHTML = TIPS[g.level] || "";
   $("hintBtn").disabled = g.screen !== "playing";
   $("undoBtn").disabled = !g.history.length;
@@ -570,7 +607,9 @@ function renderUI() {
     const last = g.level === LEVELS.length - 1;
     $("wMoves").textContent = g.moves; $("wPushes").textContent = g.pushes; $("wPar").textContent = L.par;
     $("winTitle").textContent = last ? "All levels solved!" : "Solved!";
-    $("wNote").textContent = (g.pushes <= L.par ? "At par: the fewest pushes possible." : "Par is the fewest pushes possible. Can you get there?") + (g.hints ? ` Used ${g.hints} hint${g.hints === 1 ? "" : "s"}.` : " No hints used.");
+    $("wNote").textContent = g.replay ? "That was a par solution: the fewest pushes possible."
+      : (g.pushes <= L.par ? "At par: the fewest pushes possible." : "Par is the fewest pushes possible. Can you get there?") + (g.hints ? ` Used ${g.hints} hint${g.hints === 1 ? "" : "s"}.` : " No hints used.");
+    $("wWatch").hidden = !!g.replay;
     $("wNext").textContent = last ? "Pick a level" : "Next level";
   }
   document.documentElement.style.setProperty("--dummy", "0");
@@ -604,6 +643,7 @@ function walkPath(g, tx, ty) {
   return null;
 }
 function walkTo(tx, ty) {
+  if (replay) stopReplay();
   const path = walkPath(game, tx, ty);
   if (!path || !path.length) { sfx.bump(); return; }
   const keepHint = hint && hint.d && hint.stand[0] === tx && hint.stand[1] === ty ? hint : null; // walking onto the ring keeps the arrow
@@ -622,7 +662,7 @@ let hintPlan = null, basePlan = null, hintBusy = 0;
 // search in a worker so the page never freezes; falls back to searching on the page if workers are unavailable
 let solver = null, solverSeq = 0;
 try {
-  const src = pushSolve.toString() + "\nonmessage = (e) => { const S = e.data; S.walls = new Set(S.walls); postMessage({ id: S.id, r: pushSolve(S, S.cap) }); };";
+  const src = pushSolve.toString() + "\nonmessage = (e) => { const S = e.data; S.walls = new Set(S.walls); S.ice = new Set(S.ice); postMessage({ id: S.id, r: pushSolve(S, S.cap) }); };";
   solver = new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })));
   solver.onerror = () => { solver = null; if (hintBusy) { hintBusy = 0; showHint(true); } };
   solver.onmessage = (e) => {
@@ -639,13 +679,14 @@ function finishHint(r) {
   sync();
 }
 function showHint(now) {
+  if (replay) stopReplay();
   if (game.screen !== "playing" || hintBusy) return;
   if (now || game.dead) return finishHint(findHint(game, [basePlan, hintPlan]));
   const quick = planHint(game, [basePlan, hintPlan]);
   if (quick) return finishHint(quick);
   if (!solver) return finishHint(findHint(game, [basePlan, hintPlan]));
   hintBusy = ++solverSeq;
-  const S = solverInput(game, 250000); S.walls = [...S.walls]; S.id = hintBusy;
+  const S = solverInput(game, 250000); S.walls = [...S.walls]; S.ice = [...S.ice]; S.id = hintBusy;
   $("tip").classList.add("hint"); $("tip").innerHTML = "<b>Thinking…</b>";
   solver.postMessage(S);
 }
@@ -656,11 +697,14 @@ function checkDead(sync) {
   const at = game.history.length, sig = diceSig(game.dice) + "@" + at;
   const mark = () => { if (game.screen === "playing" && !game.dead && diceSig(game.dice) + "@" + game.history.length === sig) { game = { ...game, dead: true, deadAt: at - 1 }; sync || renderUI(); } };
   if (sync || !solver) { if (isDead(game)) mark(); return; }
-  const S = solverInput(game, 15000); S.walls = [...S.walls]; S.id = "d" + (++deadSeq); S.sig = sig;
+  const S = solverInput(game, 15000); S.walls = [...S.walls]; S.ice = [...S.ice]; S.id = "d" + (++deadSeq); S.sig = sig;
   pendingDead.set(S.id, mark); solver.postMessage(S);
 }
 const pendingDead = new Map();
-function doAction(a) {
+function doAction(a, fromReplay) {
+  if (!fromReplay && replay) stopReplay();
+  if (!fromReplay && game.replay && a !== "watch" && a !== "hint") game = { ...game, replay: false }; // the player's own play from here
+  if (a === "watch") { startReplay(); return; }
   if (a === "hint") { showHint(true); return; }
   if (DIRS[a] || a === "undo" || a === "restart" || a === "rewind") { hint = null; hintBusy = 0; }
   if (a === "rewind") { game = rewind(game); anim = null; burst = null; sync(); return; }
@@ -676,14 +720,16 @@ function doAction(a) {
   }
   game = g;
   if (r.push && game.screen === "playing" && !game.dead && !planHint(game, [basePlan, hintPlan])) checkDead(syncCheck);
-  anim = reduceMotion ? null : { t0: performance.now(), dur: r.push ? 130 : 95, from: before, d: a, push: r.push, dieIndex: r.dieIndex };
+  anim = reduceMotion ? null : { t0: performance.now(), dur: r.push ? 130 + 75 * (r.path.length - 1) : 95, from: before, d: a, push: r.push, dieIndex: r.dieIndex, path: r.path };
   if (r.push) sfx.push(); else sfx.step();
   const met = goalStatus(game).filter(Boolean).length;
   if (game.screen === "won") {
     sfx.win();
-    const prev = save.solved[game.level];
-    save.solved[game.level] = prev == null ? game.pushes : Math.min(prev, game.pushes);
-    persist();
+    if (!fromReplay) {
+      const prev = save.solved[game.level];
+      save.solved[game.level] = prev == null ? game.pushes : Math.min(prev, game.pushes);
+      persist();
+    }
     if (!reduceMotion) {
       const parts = [];
       for (const q of game.lv.goals) for (let i = 0; i < 14; i++) { const an = Math.random() * Math.PI * 2, sp = 0.6 + Math.random() * 1.2; parts.push({ x: (q.x + 0.5) * cell, y: (q.y + 0.5) * cell, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp - 0.6, c: i % 2 ? C.ok : C.player }); }
@@ -692,7 +738,33 @@ function doAction(a) {
   } else if (met > beforeMet) sfx.goal();
   sync();
 }
+// ---- watch the par solution (night 3): replays the stored minimum-push solution from the start ----
+let replay = null; // {steps, i, timer}
+function startReplay() {
+  if (game.screen !== "won" || replay) return;
+  const lvl = game.level, hintsUsed = game.hints;
+  game = { ...newGame(lvl), hints: hintsUsed, replay: true };
+  anim = null; burst = null; shake = null; hint = null; hintBusy = 0; facing = "D";
+  replay = { steps: LEVELS[lvl].sol.split(""), i: 0, timer: null };
+  document.body.classList.add("replaying");
+  sync(); replayTick();
+}
+function replayTick() {
+  if (!replay) return;
+  if (replay.i >= replay.steps.length || game.screen !== "playing") { stopReplay(); return; }
+  const d = replay.steps[replay.i++];
+  doAction(d, true);
+  const slide = anim && anim.path ? anim.path.length - 1 : 0;
+  replay.timer = setTimeout(replayTick, reduceMotion ? 180 : 200 + 75 * slide + (anim && anim.push ? 80 : 0));
+}
+function stopReplay() {
+  if (!replay) return;
+  clearTimeout(replay.timer); replay = null; document.body.classList.remove("replaying");
+  if (game.screen === "playing") game = { ...game, replay: false }; // the player takes over from here
+  sync();
+}
 function loadLevel(i) {
+  if (replay) stopReplay();
   game = newGame(Math.max(0, Math.min(LEVELS.length - 1, i)));
   save.level = game.level; persist();
   anim = null; burst = null; shake = null; hint = null; hintPlan = null; hintBusy = 0; facing = "D";
@@ -708,7 +780,9 @@ document.addEventListener("keydown", (e) => {
   const levelOrHelp = !$("levelSheet").hidden || !$("helpSheet").hidden;
   if (e.key === "Escape") { closeSheets(); return; }
   if (levelOrHelp) return;
+  if (replay) { e.preventDefault(); stopReplay(); return; }
   if (game.screen === "won") {
+    if (e.key === "p" || e.key === "P") { e.preventDefault(); doAction("watch"); return; }
     if (e.key === "n" || e.key === "N" || e.key === "Enter") { e.preventDefault(); nextLevel(); }
     else if (e.key === "z" || e.key === "Z" || e.key === "Backspace" || e.key === "u") { e.preventDefault(); doAction("undo"); }
     else if (e.key === "r" || e.key === "R") { e.preventDefault(); doAction("restart"); }
@@ -722,7 +796,7 @@ document.addEventListener("keydown", (e) => {
 });
 // swipe or tap on the board
 let pdown = null;
-canvas.addEventListener("pointerdown", (e) => { pdown = { x: e.clientX, y: e.clientY, id: e.pointerId }; try { canvas.setPointerCapture(e.pointerId); } catch (_) {} e.preventDefault(); });
+canvas.addEventListener("pointerdown", (e) => { if (replay) { stopReplay(); pdown = null; e.preventDefault(); return; } pdown = { x: e.clientX, y: e.clientY, id: e.pointerId }; try { canvas.setPointerCapture(e.pointerId); } catch (_) {} e.preventDefault(); });
 canvas.addEventListener("pointerup", (e) => {
   if (!pdown || pdown.id !== e.pointerId) return;
   const dx = e.clientX - pdown.x, dy = e.clientY - pdown.y; pdown = null;
@@ -749,6 +823,7 @@ for (const [id, d] of [["pU", "U"], ["pD", "D"], ["pL", "L"], ["pR", "R"]]) {
 $("undoBtn").onclick = () => { padStops.forEach((f) => f()); doAction("undo"); };
 $("restartBtn").onclick = () => doAction("restart");
 $("wUndo").onclick = () => doAction("undo");
+$("wWatch").onclick = () => doAction("watch");
 function nextLevel() { if (game.level === LEVELS.length - 1) { openLevels(); } else loadLevel(game.level + 1); }
 $("wNext").onclick = nextLevel;
 function closeSheets() { $("levelSheet").hidden = true; $("helpSheet").hidden = true; }
@@ -787,7 +862,7 @@ window.__qa = {
     screen: game.screen, level: game.level, moves: game.moves, pushes: game.pushes,
     player: game.player.slice(), dice: game.dice.map((d) => [d.x, d.y, ...d.o]),
     goals: game.lv.goals.map((q) => [q.x, q.y, q.n]), goalsMet: goalStatus(game).filter(Boolean).length, canUndo: game.history.length > 0,
-    dead: !!game.dead, hints: game.hints, hint: hint ? (hint.d ? { stand: hint.stand.slice(), d: hint.d, die: hint.die, left: hint.left } : hint.stuck ? "stuck" : "unknown") : null,
+    dead: !!game.dead, hints: game.hints, replaying: !!replay, hint: hint ? (hint.d ? { stand: hint.stand.slice(), d: hint.d, die: hint.die, left: hint.left } : hint.stuck ? "stuck" : "unknown") : null,
   }),
   actions: () => legalActions(game),
   act: (a) => { syncCheck = true; try { doAction(a); } finally { syncCheck = false; } anim = null; },
@@ -797,6 +872,7 @@ window.__qa = {
   // test helpers (night 2): "hint" is also an action for act()
   walk: (x, y) => walkPath(game, x, y),
   par: (level) => LEVELS[level ?? game.level].par,
+  ice: () => [...game.lv.ice].map((p) => [p % game.lv.w, (p / game.lv.w) | 0]), // night 3
 };
 </script>
 </body>
