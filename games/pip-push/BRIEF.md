@@ -48,7 +48,7 @@ wastes the space below the controls) and the "Later" list. Goals, in order:
    bottom, in thumb reach, with a bigger pad on phones.
 2. **Ice (new tile).** A die pushed onto ice keeps rolling, one roll per square, until it leaves the ice or hits
    a wall or another die. The player walks on ice normally. Slides change *how many* rolls a push makes, so ice
-   is a new way to turn a die (four rolls bring the same number back). Six new levels (16–21) from `lab/gen4.mjs`,
+   is a new way to turn a die (four rolls bring the same number back). Six new levels (16–21) from `lab/gen4.mjs` (19 and 21 re-picked after review: no repeated circuits),
    each proven to need the ice (the same room with the ice melted needs a different number of pushes).
 3. **Watch the par solution** from the win card (replay of the stored minimum-push solution; any input stops it).
 
@@ -70,7 +70,7 @@ wastes the space below the controls) and the "Later" list. Goals, in order:
 - "Par" on the level card is the push count of the BFS-shortest solution (by steps). It's shown, never required.
 
 ## Later
-- More levels beyond 21. A daily generated room. More tiles (conveyors) and "any odd/even" goals.
+- A ghost preview of where a slide will stop (night-3 review). More levels beyond 21. A daily generated room. More tiles (conveyors) and "any odd/even" goals.
 
 ## Design
 ### Core loop

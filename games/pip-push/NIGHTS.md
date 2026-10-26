@@ -1,5 +1,46 @@
 # Pip Push — night log
 
+## Night 3 — 2026-10-26
+
+**Job:** the studio's own game, continued (night 3 of max 3). Benji's queue was empty: no `building` idea, no pending
+notes, no queued ideas, and every approved hand-over has its completion report (Math Crush FB-003 for H-002-v1,
+Mathly FB-001, Ricochet FB-001). Input: the night-2 review's leftover (phone board wastes space) and the "Later" list.
+Night 2's question (daily room or new tiles?) is unanswered, so the studio picked new tiles: ice.
+
+**Shipped:**
+- **Ice** (pale blue squares): a die pushed onto ice keeps rolling, one roll per square, until it gets off the ice or
+  bumps into a wall or die. You walk on ice normally. Same rule in the game, both solvers and the lab.
+- **Six ice levels (16–21)**, from a new generator (`lab/gen4.mjs`): each one is proven to need the ice (with the ice
+  melted, the minimum pushes change), and the last two are re-picked so their best solutions have no repeated
+  circuits. Pars 2, 3, 6, 8, 13, 18. 21 levels in all.
+- **Watch par**: after solving a level, the win card replays a minimum-push solution (P key too). Tap or any key
+  takes over; when the replay ends, your own result comes back on the card (and Undo undoes your own move).
+- **Phone layout**: the page fills the screen height, the controls sit at the bottom with a bigger pad, and phones in
+  landscape get the board on the left with tip and controls on the right (no scrolling).
+- Hint text knows about slides ("it slides 3 squares: 5 comes up"); new tips on 16–21; brighter goal digits in dark.
+
+**QA:** 17/17 playtest checks passed (21/21 levels solved by `solve()` at exactly par) · 2 rounds · plus
+`qa/ice.mjs` 12/12 (slide rule, one-step undo of a slide, no die stops on ice with a free square ahead, replay start,
+end, take-over, win card shows your own numbers), `qa/hints.mjs` 57 passes (hints alone win every level at par, also
+from random positions), `qa/dead.mjs` 5/5, `qa/interact.mjs` 7/7, `qa/screens.mjs` (390×844, 360×640 dark, 1280×800,
+844×390 landscape: no overflow, controls on screen, no errors). Fixed along the way: a rare draw crash when the frame
+time lagged the animation start. Known issues: none.
+
+**Reviewer:** ship with fixes — faces are still the core and ice really changes the solutions (best moment: level 17,
+slide out, turn, slide back). Fixed: levels 19 and 21 had repetitive par lines (replaced, generator now rejects
+repeated circuits), landscape phones hid the controls (side layout), win card after a replay showed the replay's
+numbers and a stray button (now your own result). Also took its tips note and the dark-mode goal contrast.
+Not done: a ghost preview of where a slide will stop (Later).
+
+**Assumptions:** ice over a daily room (smaller bet while the game has had no reaction); only dice slide; goals and
+starting dice are never on ice; the replay is offered only after solving.
+
+**Questions for Benji:**
+1. This was the studio's last planned night on Pip Push. Keep it on the bench (it needs your notes), or park it?
+2. Dead-end notices on the ice levels flag a natural first push as lost straight away. Keep them, or make them a setting?
+
+**Play:** https://claude.ai/artifact/VVo5tuwzGmbM7Qbq8sTsVQ
+
 ## Night 2 — 2026-10-23
 
 **Job:** the studio's own game, continued (night 2 of max 3). Benji's queue was empty: no `building` idea, no pending
