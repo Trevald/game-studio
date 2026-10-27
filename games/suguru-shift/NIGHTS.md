@@ -1,5 +1,47 @@
 # Suguru Shift — night log
 
+## Night 3 — 2026-10-27 (22:30 shift)
+
+**Job:** the studio's own game, night 3 of 3 (last planned). Nothing from Benji was waiting: no `building` idea, no
+pending notes, no queued ideas (Sweepvault parked), every approved hand-over has its completion report (Math Crush
+FB-003, Mathly FB-001, Ricochet FB-001). Last night's question (daily board or 7×7) had no answer, so the studio chose
+the daily board. Input: the brief's "Later" list and the reviewer's open nice-to-have.
+
+**Shipped:**
+- **Daily board.** A "Today" card at the top of the level picker opens one board per calendar day (the player's local
+  date). Mon/Tue 5×5 par 3, Wed–Sat 6×6 par 4, Sun 6×6 par 5. 364 boards (52 weeks, from 28 Oct 2026) made by
+  `lab/gen.mjs 2027 daily` and baked into the file, each proven like the campaign: par is the shortest solution and
+  exactly one valid grid is reachable at par; 6×6 days keep ≥3 intact regions, ≤12 touching cells and a right first
+  slide among the 3 best. Best per date, ★ at par. The page moves on to the new board at midnight. No streaks or
+  countdowns.
+- **Bigger hint text on tall phones** (night 2 nice-to-have): 18 px, centred in the empty band above the arrows.
+- A small dot on the level button while today's board is unplayed.
+
+**QA:** playtest ALL CHECKS PASSED (18/18 levels by `solve()`, today's board included) · `qa/interact.mjs` 58/58
+(adds: all 364 daily boards checked for weekday size, par = shortest path, solution reaches a valid goal, no repeats;
+pool repeats after 52 weeks; Today card, daily win card, per-date best, last level → All levels; one-cell hint wording
+over every move of every daily board; bad `?day=` ignored; midnight rollover with a fake clock; waiting dot) ·
+`qa/screens.mjs` at 390×844, 360×640, 1280×800, 844×390 with no scrolling, plus daily, daily hint and daily win shots ·
+3 rounds · known issues: none. Tooling note: as last night, `tools/` pins a Playwright whose headless shell isn't in
+this container; QA ran with a container-only symlink to the preinstalled one.
+
+**Reviewer:** ship with fixes. Best moment: the Sunday 6×6 par 5, "the last two slides clear all the red at once".
+Fixed: (1) "Today" went stale if the page stayed open past midnight; it now rolls over; (2) hints said "a 5 in only 1
+cells"; one-cell regions now read "the one-cell region holding a 5 (a lone cell must be 1)"; (3) the bigger hint
+text barely changed (16 px); now 18 px and centred in the gap. Also done from the nice-to-haves: the waiting dot, and
+`?day=` rejects impossible dates. Not done: a "next board tomorrow" line or a pointer to the next unsolved level on
+the daily win card. Noted, not changed: Mon/Tue boards are a warm-up (a greedy bot solves 47% at par, 19% on
+Sundays), and 250 of 364 boards have a one-cell region, which makes the first move loud.
+
+**Assumptions:** daily over 7×7 (7×7 needs a faster par solver); the day is the player's local date; only today's
+board is playable (no archive); the pool is baked in (about 45 KB) so every board carries a par proof, and it repeats
+after 52 weeks.
+
+**Questions for Benji:** This was the studio's last planned night on Suguru Shift. Keep it on the bench (it needs your
+notes), or park it? · Mon/Tue are easy warm-ups and Sunday is the hard one: is that the right week shape?
+
+**Play:** https://claude.ai/artifact/7jkceHja8XRU1AYpyABWkS
+
 ## Night 2 — 2026-10-27 (03:50 shift)
 
 **Job:** the studio's own game, night 2 of 3. Nothing from Benji was waiting: no `building` idea, no pending notes,

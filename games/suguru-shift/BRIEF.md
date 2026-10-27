@@ -116,9 +116,16 @@ only if, with the pins, par equals the scramble and exactly one valid grid is re
 pins two valid grids are reachable. So the pin is the clue that settles the answer. 6×6 pinned boards keep ≥3
 intact regions, ≤12 touching cells and a right first slide among the 4 best board-improving slides.
 
+### Daily board (night 3)
+Today's board joins the level list as the last entry (index 17), built from the pool row for the player's local date
+(`DAILY`, 364 rows: size, par, regions, goal, start, solution). Its best is saved per date (`save.daily`), apart from
+the campaign. A page left open past midnight moves on to the new board (on focus, on returning to the tab, every
+minute, and when the picker opens). The level button shows a small dot while today's board is unplayed. `?day=YYYY-MM-DD`
+picks another date (testing). No streaks, no countdown.
+
 ### QA plan
 - `state()`: `{screen: "playing"|"won", level, slides, par, grid, valid, regionsOk, regionsTotal, clashes}`.
 - Actions: `"r<row>L"`, `"r<row>R"`, `"c<col>U"`, `"c<col>D"` (pinned lines left out), plus `"undo"` and `"restart"`.
-- `state()` also has `pins`, `locked`, `hintStage` and `hintText` (night 2).
+- `state()` also has `pins`, `locked`, `hintStage` and `hintText` (night 2), and `daily` (the date, or null; night 3).
 - `solve()`: bidirectional search from the current grid to the level's goal grid (up to 10 slides), else
   `["restart", ...stored solution]`. Every level must finish with it.
