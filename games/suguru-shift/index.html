@@ -217,7 +217,7 @@ function analyse(g, W, H, reg, size) {
   return { valid: okRegions.size === R && clash.size === 0, okRegions, clash };
 }
 // shortest slide list from grid a to grid b (bidirectional BFS), or null past the node budget
-function pathBetween(a, b, W, H, pins, budget = 90000) {
+function pathBetween(a, b, W, H, pins, budget = 60000) {
   const ka = a.join(","), kb = b.join(",");
   if (ka === kb) return [];
   const moves = moveList(W, H, pins);

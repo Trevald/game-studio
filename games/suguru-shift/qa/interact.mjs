@@ -49,7 +49,8 @@ s = await S(); ok("restart clears slides", s.slides === 0 && s.grid.join() === g
 await page.evaluate(() => window.__qa.act("undo")); s = await S();
 ok("undo after restart brings the slides back", s.slides === 2);
 // hint: following hints solves every level at par from the start
-for (let lv = 0; lv < 12; lv++) {
+const NL = await page.evaluate(() => window.__qa.levels());
+for (let lv = 0; lv < NL; lv++) {
   await page.evaluate((l) => window.__qa.reset(l), lv);
   let n = 0;
   for (; n < 12; n++) { const h = await page.evaluate(() => window.__qa.hint()); if (!h) break; await page.evaluate((m) => window.__qa.act(m), h); if ((await S()).screen === "won") { n++; break; } }
@@ -60,7 +61,7 @@ await page.evaluate(() => { window.__qa.reset(10); for (const m of ["r0R","c2D"]
 const h = await page.evaluate(() => window.__qa.solve());
 ok("hint path from 2 stray slides exists", Array.isArray(h) && h[0] !== "restart", (h || []).length + " slides");
 await page.evaluate(() => { window.__qa.reset(11); for (const m of ["r0R","r1R","c2D","c3U","r5L","c0D"]) window.__qa.act(m); });
-const t0 = Date.now(); await page.evaluate(() => window.__qa.hint()); const dt = Date.now() - t0;
+const dt = await page.evaluate(() => { const t = performance.now(); window.__qa.hint(); return Math.round(performance.now() - t); });
 const tip = await page.locator("#tip").textContent();
 ok("far hint points at Undo quickly", /Undo/.test(tip) && dt < 600, dt + " ms: " + tip);
 // Enter on a focused Next button advances exactly one level
@@ -69,6 +70,36 @@ await page.focus("#nextBtn"); await page.keyboard.press("Enter"); await page.wai
 ok("Enter on Next goes to the next level only", (await S()).level === 2, "level " + (await S()).level);
 await page.focus("#hintBtn"); await page.keyboard.press(" "); await page.waitForTimeout(100);
 ok("Space on Hint presses Hint", /Hint:/.test(await page.locator("#tip").textContent()));
+// pins (level 13+): locked lines can't move by act, pad or drag
+await page.evaluate(() => window.__qa.reset(12));
+s = await S();
+const pin = s.pins[0], W13 = 5, prow = Math.floor(pin / W13), pcol = pin % W13;
+ok("pinned lines are not in actions()", !(await page.evaluate(() => window.__qa.actions())).some((a) => a === "r" + prow + "L" || a === "c" + pcol + "U"));
+await page.evaluate((r) => window.__qa.act("r" + r + "L"), prow);
+ok("act on a pinned row does nothing", (await S()).slides === 0);
+const b13 = await page.locator("#board").boundingBox(), c13 = b13.width / 5;
+await page.mouse.move(b13.x + c13 * ((pcol + 2) % 5 + 0.5), b13.y + c13 * (prow + 0.5)); await page.mouse.down();
+await page.mouse.move(b13.x + c13 * ((pcol + 2) % 5 + 0.5) + c13 * 1.6, b13.y + c13 * (prow + 0.5), { steps: 8 }); await page.mouse.up(); await page.waitForTimeout(300);
+s = await S(); ok("dragging a pinned row slides nothing and says why", s.slides === 0 && /pin/.test(s.hintText), s.hintText);
+await page.touchscreen.tap(b13.x + c13 * (pcol + 0.5), b13.y + c13 * ((prow + 2) % 5 + 0.5)); await page.waitForTimeout(50);
+await page.click("#padU"); await page.waitForTimeout(250);
+s = await S(); ok("pad on a pinned column slides nothing", s.slides === 0 && /Column/.test(s.hintText), s.hintText);
+ok("pinned tile is drawn dark", await page.locator("#tiles .tile.pin").count() === s.pins.length);
+// two-step hint: clue first, direction second
+await page.evaluate(() => window.__qa.reset(5));
+await page.click("#hintBtn"); s = await S();
+ok("first hint gives a clue, no direction", s.hintStage === 1 && !/(left|right|up|down)/.test(s.hintText) && await page.locator(".cell.hint").count() > 0, s.hintText);
+await page.click("#hintBtn"); s = await S();
+ok("second hint names the direction", s.hintStage === 2 && /(left|right|up|down)/.test(s.hintText), s.hintText);
+// live drag preview: on L1, holding the row at the right step shows every region green before release
+await page.evaluate(() => window.__qa.reset(0));
+const sol1 = await page.evaluate(() => window.__qa.solve()), r1 = +sol1[0][1], bb = await page.locator("#board").boundingBox(), c1 = bb.width / 4;
+await page.mouse.move(bb.x + c1 * 1.5, bb.y + c1 * (r1 + 0.5)); await page.mouse.down();
+await page.mouse.move(bb.x + c1 * 1.5 + c1 * 0.9 * (sol1[0].endsWith("R") ? 1 : -1), bb.y + c1 * (r1 + 0.5), { steps: 8 });
+const okCells = await page.locator(".cell.ok").count();
+ok("drag preview shows the result before release", okCells === 16 && (await S()).slides === 0, okCells + " green cells");
+await page.mouse.up(); await page.waitForTimeout(300);
+ok("release commits the previewed slide", (await S()).screen === "won");
 // storage blocked
 const ctx2 = await browser.newContext(); const p2 = await ctx2.newPage();
 await p2.addInitScript(() => { Object.defineProperty(window, "localStorage", { get() { throw new Error("blocked"); } }); });

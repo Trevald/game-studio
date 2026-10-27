@@ -35,6 +35,12 @@ for (const [name, [w, h, mobile]] of Object.entries(sizes)) {
   await page.screenshot({ path: path.join(dir, `shot-${name}-L12.png`) });
   await page.evaluate(() => window.__qa.hint()); await page.waitForTimeout(100);
   await page.screenshot({ path: path.join(dir, `shot-${name}-L12-hint.png`) });
+  await page.evaluate(() => window.__qa.reset(15)); await page.waitForTimeout(150);
+  await page.screenshot({ path: path.join(dir, `shot-${name}-L16-pins.png`) });
+  await page.evaluate(() => window.__qa.hint()); await page.waitForTimeout(100);
+  await page.screenshot({ path: path.join(dir, `shot-${name}-L16-hint1.png`) });
+  await page.evaluate(() => window.__qa.hint()); await page.waitForTimeout(100);
+  await page.screenshot({ path: path.join(dir, `shot-${name}-L16-hint2.png`) });
   if (name === "phone") { await page.click("#levelBtn"); await page.waitForTimeout(100); await page.screenshot({ path: path.join(dir, `shot-${name}-picker.png`) }); }
   const ov = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1 || document.documentElement.scrollHeight > innerHeight + 1);
   if (ov) errors.push(name + ": page scrolls");

@@ -1,6 +1,6 @@
 {
   "game": "games/suguru-shift/index.html",
-  "at": "2026-10-27T03:11:58.608Z",
+  "at": "2026-10-27T03:13:18.569Z",
   "checks": [
     {
       "name": "file under 2 MB",
@@ -50,7 +50,7 @@
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 3"
+      "detail": "screens seen: playing, won; resets: 2"
     },
     {
       "name": "every level completable via solve() (17 levels)",
