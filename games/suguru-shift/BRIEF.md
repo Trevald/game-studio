@@ -25,7 +25,18 @@ drawing UI on the phone.)
 ## References
 - No links in the pitch. Loopover (row/column wrap-sliding puzzle) and Suguru/Tectonic rules are known; nothing fetched.
 
-## Tonight (night 1)
+## Tonight (night 2)
+No notes from Benji; the studio continues its own game (night 2 of 3). Input: the reviewer's open nice-to-have
+and the "Later" list.
+1. **Pins** (from Later: "numbers pinned to their cell"): a pinned number is always in its right place, and its row
+   and its column can't slide. Six new levels (13–18, 5×5 and 6×6) where the pins matter: each is proven to have
+   exactly one valid grid at par with the pins, and without them the board would be ambiguous or shorter.
+2. **Live drag preview** (reviewer's nice-to-have): while you drag, the colours show the board as it would be if
+   you let go at the nearest step.
+3. **Hints that explain** (Later + last night's question): the first Hint press names the clue ("this region has
+   two 3s, and row 2 runs through it") and marks the line; a second press on the same board names the direction.
+
+## Night 1 goals (done)
 1. Core: fixed regions, numbers that slide with wrap-around, live rule feedback (regions turn green when they hold
    1..N, red rings on equal numbers that touch, also diagonally), win on any valid Suguru.
 2. 12 generated levels, 4×4 to 6×6, par 1 to 6, each proven: no valid grid within par−1 slides and exactly one
@@ -38,10 +49,14 @@ drawing UI on the phone.)
 - Par = fewest slides; a slide is one step; sliding a row two steps counts as two slides.
 - All levels open from the start; the picker marks solved and at-par levels.
 
+## Assumptions (night 2)
+- Pins lock both the row and the column of the pinned number (one rule, one icon). Whole locked lines without a
+  pin were not built: a pin explains itself ("this number can't move") better than a lock on a row.
+- A two-step hint (clue first, direction second) answers last night's open question; each press counts as a hint.
+
 ## Later
 - Daily generated board; bigger 7×7 boards (needs a faster solver for par proofs).
-- Locked lines (rows that can't move), or numbers that are pinned to their cell.
-- Hints that explain the deduction instead of showing the move.
+- Pinned levels where the pin forces a detour (the scrambled line itself is pinned).
 
 ## Design
 ### Core loop

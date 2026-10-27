@@ -1,8 +1,14 @@
 // Shared Suguru Shift core (same logic is inlined in index.html).
-export function moveList(W, H) {
-  const m = [];
-  for (let r = 0; r < H; r++) m.push("r" + r + "L", "r" + r + "R");
-  for (let c = 0; c < W; c++) m.push("c" + c + "U", "c" + c + "D");
+// pins: cell indexes whose row and column can't slide
+export function lockedLines(W, pins = []) {
+  const s = new Set();
+  for (const k of pins) { s.add("r" + Math.floor(k / W)); s.add("c" + (k % W)); }
+  return s;
+}
+export function moveList(W, H, pins = []) {
+  const m = [], lk = lockedLines(W, pins);
+  for (let r = 0; r < H; r++) if (!lk.has("r" + r)) m.push("r" + r + "L", "r" + r + "R");
+  for (let c = 0; c < W; c++) if (!lk.has("c" + c)) m.push("c" + c + "U", "c" + c + "D");
   return m;
 }
 export function parseMove(mv) {
@@ -81,9 +87,9 @@ export function allowed(prev, mv, runLen, W, H) {
   return true;
 }
 // iterative deepening: shortest list of moves to any valid grid, or null within maxDepth / budget.
-export function solveFrom(g, W, H, reg, size, maxDepth, budgetMs = Infinity) {
+export function solveFrom(g, W, H, reg, size, maxDepth, budgetMs = Infinity, pins = []) {
   if (isValid(g, W, H, reg, size)) return [];
-  const moves = moveList(W, H), t0 = Date.now();
+  const moves = moveList(W, H, pins), t0 = Date.now();
   let nodes = 0, out = null, timedOut = false;
   const path = [];
   function dfs(cur, depth, prev, run) {
@@ -105,8 +111,8 @@ export function solveFrom(g, W, H, reg, size, maxDepth, budgetMs = Infinity) {
   return out;
 }
 // count distinct valid grids reachable in exactly `depth` canonical moves (and solutions)
-export function countSolutions(g, W, H, reg, size, depth) {
-  const moves = moveList(W, H), ends = new Set(), firsts = new Set();
+export function countSolutions(g, W, H, reg, size, depth, pins = []) {
+  const moves = moveList(W, H, pins), ends = new Set(), firsts = new Set();
   let seqs = 0, first = null;
   function dfs(cur, d, prev, run) {
     if (d === depth - 1 && prev) first = prev;

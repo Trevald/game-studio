@@ -47,6 +47,11 @@
   .tile span { display: grid; place-items: center; width: 74%; height: 74%; border-radius: 50%; border: 2.5px solid transparent; }
   .tile.clash span { border-color: var(--clash); color: var(--clash); }
   .tile.okc span { color: var(--ok-ink); }
+  .tile.pin span { background: var(--wall); color: var(--cell); }
+  .tile.pin.clash span { color: var(--cell); }
+  .tile.pin::after { content: ""; position: absolute; top: 11%; right: 11%; width: 15%; height: 15%; border-radius: 50%; background: var(--hint); box-shadow: 0 0 0 2px var(--cell); }
+  .cell.why { background: color-mix(in srgb, var(--hint) 28%, var(--cell)); }
+  .cell.ok.why { background: color-mix(in srgb, var(--hint) 28%, var(--ok)); }
   #walls { position: absolute; inset: 0; pointer-events: none; }
   #cursor { position: absolute; border: 3px solid var(--sel); border-radius: 8px; pointer-events: none; display: none; }
   #flash { position: absolute; inset: 0; pointer-events: none; background: var(--ok); opacity: 0; transition: opacity .5s; }
@@ -60,6 +65,7 @@
   .pad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .pad button { min-height: 52px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); font-size: 22px; cursor: pointer; }
   .pad button:disabled { opacity: .4; cursor: default; }
+  .pad button.lockd { opacity: .4; }
   .chip.pulse { box-shadow: 0 0 0 3px var(--hint); }
   body.won .tools { display: none; }
   #win .row .chip { padding: 0 8px; }
@@ -147,6 +153,7 @@
     <p>This was a solved <strong>Suguru</strong>. A few rows and columns slipped. Slide them back.</p>
     <p>A region of N cells must hold 1 to N once each. The same number may never touch another, not even diagonally.</p>
     <p>Regions turn <strong>green</strong> when they hold the right numbers. <strong>Red rings</strong> mark equal numbers that touch.</p>
+    <p>A <strong>dark number</strong> is pinned: it is in its right place, and its row and column can't slide.</p>
     <p>Drag a row sideways or a column up and down; numbers wrap around the edge. Or tap a number and use the arrows. Each step a line moves is one slide.</p>
     <p class="keys">Keys: arrows move the cursor, Shift+arrow (or Space, then arrow) slides its line. Z undo · R restart · H hint · N next.</p>
     <button class="chip" id="helpClose">Got it</button>
@@ -155,7 +162,7 @@
 <script>
 "use strict";
 // ================= constants / levels =================
-const LEVELS = [{"w":4,"h":4,"regions":[0,0,0,1,0,2,1,1,2,2,1,3,2,2,3,3],"goal":[3,2,4,2,1,5,1,3,4,2,4,2,3,1,3,1],"start":[2,4,2,3,1,5,1,3,4,2,4,2,3,1,3,1],"solution":["r0R"],"par":1},{"w":4,"h":4,"regions":[1,0,0,3,1,1,0,0,1,1,0,2,2,2,2,2],"goal":[4,3,4,1,1,5,2,5,2,3,1,3,1,4,2,5],"start":[4,3,2,1,1,5,4,5,2,3,2,3,1,4,1,5],"solution":["c2U"],"par":1},{"w":4,"h":4,"regions":[1,3,3,2,1,2,2,2,1,1,0,2,1,0,0,0],"goal":[4,2,1,2,1,5,4,3,2,3,2,1,5,1,4,3],"start":[2,1,2,4,3,1,5,4,2,3,2,1,5,1,4,3],"solution":["r0R","r1L"],"par":2},{"w":5,"h":5,"regions":[0,0,2,2,2,0,0,0,2,4,3,3,3,2,4,5,3,3,4,4,1,1,1,1,4],"goal":[2,4,2,1,3,1,5,3,5,2,2,4,1,4,1,1,5,3,5,3,3,2,4,1,4],"start":[3,4,2,1,3,2,1,5,3,5,2,4,1,4,1,2,5,3,5,3,1,2,4,1,4],"solution":["c0U","r1L"],"par":2},{"w":5,"h":5,"regions":[0,1,1,1,1,0,0,6,2,2,5,0,0,2,2,5,3,4,4,2,3,3,3,4,4],"goal":[2,3,2,4,1,1,4,1,3,2,2,3,5,4,1,1,4,2,3,5,2,3,1,4,1],"start":[2,3,2,4,1,1,4,1,3,2,3,5,4,1,2,5,1,4,2,3,2,3,1,4,1],"solution":["r2R","r3L"],"par":2},{"w":5,"h":5,"regions":[4,4,2,5,5,4,4,2,0,0,3,3,2,2,0,3,1,6,2,0,1,1,1,1,0],"goal":[1,2,5,2,1,3,4,1,4,3,1,2,3,2,5,3,5,1,4,1,1,4,2,3,2],"start":[1,2,5,2,2,3,4,1,4,1,3,1,2,3,2,5,3,5,1,4,1,4,2,3,1],"solution":["r2L","r3L","c4U"],"par":3},{"w":5,"h":5,"regions":[2,2,1,1,3,0,1,1,3,3,0,0,0,4,3,5,0,6,4,3,5,5,4,4,4],"goal":[2,1,2,1,4,3,4,3,5,2,1,5,2,4,1,3,4,1,5,3,1,2,3,2,1],"start":[1,1,2,1,4,2,4,3,1,2,3,5,2,5,1,1,4,1,4,3,2,3,2,5,3],"solution":["c3U","r4R","c0U"],"par":3},{"w":6,"h":6,"regions":[6,6,6,0,3,3,2,6,6,0,0,3,2,2,2,7,7,3,2,1,7,7,4,3,1,1,5,4,4,4,1,1,5,5,5,4],"goal":[1,2,5,2,4,1,3,4,3,1,3,2,1,2,5,2,4,5,4,3,1,3,1,3,1,2,4,5,4,2,4,5,3,2,1,3],"start":[1,2,5,1,4,1,2,3,4,3,5,3,5,1,2,3,2,4,4,3,1,5,1,3,1,2,4,2,4,2,4,5,3,2,1,3],"solution":["r1L","c3D","r2L"],"par":3},{"w":6,"h":6,"regions":[7,7,3,3,3,3,7,7,2,3,5,5,1,2,2,4,0,0,1,6,2,4,4,0,1,6,6,4,4,0,1,1,6,6,8,0],"goal":[1,3,1,3,4,5,4,2,4,2,1,2,3,1,3,5,4,5,4,5,2,1,2,1,1,3,4,3,4,3,5,2,1,2,1,2],"start":[1,3,1,2,4,5,4,2,4,4,1,2,1,3,5,2,5,3,5,2,1,4,1,4,3,1,3,2,3,4,5,2,1,3,1,2],"solution":["c3D","r2R","r3R","r4L"],"par":4},{"w":6,"h":6,"regions":[8,8,8,1,1,3,2,2,8,1,1,3,2,2,2,7,1,3,0,0,0,0,6,3,4,4,0,5,6,6,4,4,5,5,5,6],"goal":[3,2,1,5,1,3,1,5,4,2,4,2,4,2,3,1,3,1,3,1,5,4,2,4,2,4,2,1,3,1,3,1,3,4,2,4],"start":[3,2,1,5,1,3,1,5,4,2,4,2,1,4,2,3,1,3,4,3,1,5,4,2,4,2,1,3,1,2,1,3,4,2,4,3],"solution":["r2L","r3L","r4R","r5R"],"par":4},{"w":6,"h":6,"regions":[1,1,8,2,2,3,1,1,8,0,3,3,6,1,8,0,3,3,6,6,6,0,0,4,6,5,7,7,0,4,5,5,5,5,4,4],"goal":[2,1,2,1,2,1,3,4,3,4,3,4,2,5,1,2,5,2,1,3,4,3,1,4,5,2,1,2,5,3,1,4,5,3,1,2],"start":[4,2,1,2,1,1,2,3,4,3,4,2,1,5,1,2,5,3,5,3,4,3,1,2,4,2,1,2,5,4,1,5,3,1,2,3],"solution":["c0D","c5U","r0L","r1L","r5R"],"par":5},{"w":6,"h":6,"regions":[4,4,6,0,0,8,4,4,6,0,0,7,4,5,1,0,2,7,5,5,1,1,2,7,5,3,3,1,2,7,3,3,3,1,2,2],"goal":[1,4,1,4,2,1,5,3,2,3,5,3,2,1,5,1,2,4,4,3,2,4,3,1,2,1,5,1,5,2,3,4,2,3,4,1],"start":[4,2,4,2,3,1,5,3,5,3,5,4,2,1,2,1,2,1,2,4,3,1,4,3,1,5,2,5,1,2,4,1,3,4,1,3],"solution":["r0R","r3L","r5R","c2D","r4R","c5D"],"par":6}];
+const LEVELS = [{"w":4,"h":4,"regions":[0,0,0,1,0,2,1,1,2,2,1,3,2,2,3,3],"goal":[3,2,4,2,1,5,1,3,4,2,4,2,3,1,3,1],"start":[2,4,2,3,1,5,1,3,4,2,4,2,3,1,3,1],"solution":["r0R"],"par":1},{"w":4,"h":4,"regions":[1,0,0,3,1,1,0,0,1,1,0,2,2,2,2,2],"goal":[4,3,4,1,1,5,2,5,2,3,1,3,1,4,2,5],"start":[4,3,2,1,1,5,4,5,2,3,2,3,1,4,1,5],"solution":["c2U"],"par":1},{"w":4,"h":4,"regions":[1,3,3,2,1,2,2,2,1,1,0,2,1,0,0,0],"goal":[4,2,1,2,1,5,4,3,2,3,2,1,5,1,4,3],"start":[2,1,2,4,3,1,5,4,2,3,2,1,5,1,4,3],"solution":["r0R","r1L"],"par":2},{"w":5,"h":5,"regions":[0,0,2,2,2,0,0,0,2,4,3,3,3,2,4,5,3,3,4,4,1,1,1,1,4],"goal":[2,4,2,1,3,1,5,3,5,2,2,4,1,4,1,1,5,3,5,3,3,2,4,1,4],"start":[3,4,2,1,3,2,1,5,3,5,2,4,1,4,1,2,5,3,5,3,1,2,4,1,4],"solution":["c0U","r1L"],"par":2},{"w":5,"h":5,"regions":[0,1,1,1,1,0,0,6,2,2,5,0,0,2,2,5,3,4,4,2,3,3,3,4,4],"goal":[2,3,2,4,1,1,4,1,3,2,2,3,5,4,1,1,4,2,3,5,2,3,1,4,1],"start":[2,3,2,4,1,1,4,1,3,2,3,5,4,1,2,5,1,4,2,3,2,3,1,4,1],"solution":["r2R","r3L"],"par":2},{"w":5,"h":5,"regions":[4,4,2,5,5,4,4,2,0,0,3,3,2,2,0,3,1,6,2,0,1,1,1,1,0],"goal":[1,2,5,2,1,3,4,1,4,3,1,2,3,2,5,3,5,1,4,1,1,4,2,3,2],"start":[1,2,5,2,2,3,4,1,4,1,3,1,2,3,2,5,3,5,1,4,1,4,2,3,1],"solution":["r2L","r3L","c4U"],"par":3},{"w":5,"h":5,"regions":[2,2,1,1,3,0,1,1,3,3,0,0,0,4,3,5,0,6,4,3,5,5,4,4,4],"goal":[2,1,2,1,4,3,4,3,5,2,1,5,2,4,1,3,4,1,5,3,1,2,3,2,1],"start":[1,1,2,1,4,2,4,3,1,2,3,5,2,5,1,1,4,1,4,3,2,3,2,5,3],"solution":["c3U","r4R","c0U"],"par":3},{"w":6,"h":6,"regions":[6,6,6,0,3,3,2,6,6,0,0,3,2,2,2,7,7,3,2,1,7,7,4,3,1,1,5,4,4,4,1,1,5,5,5,4],"goal":[1,2,5,2,4,1,3,4,3,1,3,2,1,2,5,2,4,5,4,3,1,3,1,3,1,2,4,5,4,2,4,5,3,2,1,3],"start":[1,2,5,1,4,1,2,3,4,3,5,3,5,1,2,3,2,4,4,3,1,5,1,3,1,2,4,2,4,2,4,5,3,2,1,3],"solution":["r1L","c3D","r2L"],"par":3},{"w":6,"h":6,"regions":[7,7,3,3,3,3,7,7,2,3,5,5,1,2,2,4,0,0,1,6,2,4,4,0,1,6,6,4,4,0,1,1,6,6,8,0],"goal":[1,3,1,3,4,5,4,2,4,2,1,2,3,1,3,5,4,5,4,5,2,1,2,1,1,3,4,3,4,3,5,2,1,2,1,2],"start":[1,3,1,2,4,5,4,2,4,4,1,2,1,3,5,2,5,3,5,2,1,4,1,4,3,1,3,2,3,4,5,2,1,3,1,2],"solution":["c3D","r2R","r3R","r4L"],"par":4},{"w":6,"h":6,"regions":[8,8,8,1,1,3,2,2,8,1,1,3,2,2,2,7,1,3,0,0,0,0,6,3,4,4,0,5,6,6,4,4,5,5,5,6],"goal":[3,2,1,5,1,3,1,5,4,2,4,2,4,2,3,1,3,1,3,1,5,4,2,4,2,4,2,1,3,1,3,1,3,4,2,4],"start":[3,2,1,5,1,3,1,5,4,2,4,2,1,4,2,3,1,3,4,3,1,5,4,2,4,2,1,3,1,2,1,3,4,2,4,3],"solution":["r2L","r3L","r4R","r5R"],"par":4},{"w":6,"h":6,"regions":[1,1,8,2,2,3,1,1,8,0,3,3,6,1,8,0,3,3,6,6,6,0,0,4,6,5,7,7,0,4,5,5,5,5,4,4],"goal":[2,1,2,1,2,1,3,4,3,4,3,4,2,5,1,2,5,2,1,3,4,3,1,4,5,2,1,2,5,3,1,4,5,3,1,2],"start":[4,2,1,2,1,1,2,3,4,3,4,2,1,5,1,2,5,3,5,3,4,3,1,2,4,2,1,2,5,4,1,5,3,1,2,3],"solution":["c0D","c5U","r0L","r1L","r5R"],"par":5},{"w":6,"h":6,"regions":[4,4,6,0,0,8,4,4,6,0,0,7,4,5,1,0,2,7,5,5,1,1,2,7,5,3,3,1,2,7,3,3,3,1,2,2],"goal":[1,4,1,4,2,1,5,3,2,3,5,3,2,1,5,1,2,4,4,3,2,4,3,1,2,1,5,1,5,2,3,4,2,3,4,1],"start":[4,2,4,2,3,1,5,3,5,3,5,4,2,1,2,1,2,1,2,4,3,1,4,3,1,5,2,5,1,2,4,1,3,4,1,3],"solution":["r0R","r3L","r5R","c2D","r4R","c5D"],"par":6},{"w":5,"h":5,"regions":[3,3,5,1,6,3,3,5,1,1,2,2,5,1,1,4,2,2,0,0,4,4,0,0,0],"goal":[2,1,2,5,1,3,4,3,4,3,1,2,1,2,1,3,4,3,4,5,2,1,2,1,3],"start":[1,2,1,2,5,3,4,3,4,3,2,1,2,1,1,3,4,3,4,5,2,1,2,1,3],"pins":[9],"solution":["r0L","r2R"],"par":2},{"w":5,"h":5,"regions":[4,4,1,1,6,4,0,3,1,1,0,0,3,2,1,0,3,3,2,2,5,5,3,2,2],"goal":[2,1,2,4,1,3,4,3,5,3,2,1,2,4,1,3,4,5,3,5,1,2,1,2,1],"start":[2,1,2,4,1,3,4,3,5,3,1,2,1,2,4,5,3,4,5,3,2,1,2,1,1],"pins":[4],"solution":["r2L","r3L","r4R"],"par":3},{"w":5,"h":5,"regions":[6,3,3,4,4,1,1,3,3,4,1,1,2,2,2,1,0,0,2,2,5,5,0,0,0],"goal":[1,3,1,3,2,2,4,2,4,1,1,3,1,3,2,5,4,5,4,5,1,2,3,1,2],"start":[1,3,1,3,1,1,4,2,4,2,5,2,3,1,3,1,4,5,4,2,5,2,3,1,2],"pins":[18,22],"solution":["r2L","c0U","c4D"],"par":3},{"w":6,"h":6,"regions":[0,0,8,8,4,4,0,8,8,2,4,4,0,3,3,2,2,2,0,3,3,5,5,2,6,6,3,1,1,1,6,6,6,1,1,7],"goal":[4,5,4,3,4,3,1,2,1,2,1,2,3,5,3,4,5,3,2,1,2,1,2,1,5,3,4,3,5,4,4,1,2,1,2,1],"start":[4,1,4,3,4,3,2,5,2,1,2,1,3,1,3,4,5,3,2,5,2,1,2,1,4,1,3,4,3,5,4,5,2,1,2,1],"pins":[18,34],"solution":["c1U","r1L","r4L"],"par":3},{"w":6,"h":6,"regions":[7,7,5,1,2,6,7,4,5,1,2,6,4,4,5,1,2,6,4,4,5,1,2,6,3,3,3,8,8,6,3,3,0,0,0,0],"goal":[2,1,2,1,2,1,3,5,4,3,4,3,1,2,1,2,1,2,3,4,3,4,3,4,2,1,5,1,2,5,4,3,2,4,3,1],"start":[1,2,4,2,3,3,3,5,1,3,1,2,1,2,3,2,4,4,3,4,5,4,1,5,2,1,2,1,3,1,4,3,1,4,2,2],"pins":[12,9],"solution":["c2D","c4U","c5D","r0L"],"par":4}];
 const TIPS = [
   "One row slipped. <strong>Drag it sideways</strong> until every region turns green.",
   "This time a <strong>column</strong> slipped. Drag it up or down.",
@@ -165,18 +172,25 @@ const TIPS = [
   "Three slides. Look for the region that is most wrong, and ask which line runs through it.",
   "Rows and columns both moved. Undo is free; try a slide and read the colours.",
   "6×6 now. A slid line wraps around: what falls off one edge comes back on the other.",
-  "Four slides. Hint shows the next slide if you get stuck (it still counts your slides).",
+  "Four slides. Hint points at a clue; press it again for the direction.",
   "Four slides, mixed rows and columns. Order matters when a row and a column cross.",
   "Five slides. Par is the fewest slides that solve it.",
-  "The last one: six slides. Take your time.",
+  "Six slides. Take your time.",
+  "New: a <strong>pin</strong>. The dark number is in its right place, and its row and column can't slide.",
+  "Without the pin this board has two answers. The pin tells you which one is right.",
+  "Two pins hold two rows and two columns. Fewer lines to try, so read each one carefully.",
+  "6×6 with two pins. A pinned number never moves, but a column can still slide through a pinned row.",
+  "The last one: four slides around two pins.",
 ];
 const STORE = "suguru-shift.v1";
 
 // ================= core (pure, no DOM) =================
-function moveList(W, H) {
-  const m = [];
-  for (let r = 0; r < H; r++) m.push("r" + r + "L", "r" + r + "R");
-  for (let c = 0; c < W; c++) m.push("c" + c + "U", "c" + c + "D");
+// a pin fixes its number: its row and its column can't slide
+function lockedLines(W, pins) { const s = new Set(); for (const k of pins || []) { s.add("r" + Math.floor(k / W)); s.add("c" + (k % W)); } return s; }
+function moveList(W, H, pins) {
+  const m = [], lk = lockedLines(W, pins);
+  for (let r = 0; r < H; r++) if (!lk.has("r" + r)) m.push("r" + r + "L", "r" + r + "R");
+  for (let c = 0; c < W; c++) if (!lk.has("c" + c)) m.push("c" + c + "U", "c" + c + "D");
   return m;
 }
 function parseMove(mv) { return { t: mv[0], i: +mv.slice(1, -1), d: mv[mv.length - 1] }; }
@@ -203,10 +217,10 @@ function analyse(g, W, H, reg, size) {
   return { valid: okRegions.size === R && clash.size === 0, okRegions, clash };
 }
 // shortest slide list from grid a to grid b (bidirectional BFS), or null past the node budget
-function pathBetween(a, b, W, H, budget = 90000) {
+function pathBetween(a, b, W, H, pins, budget = 90000) {
   const ka = a.join(","), kb = b.join(",");
   if (ka === kb) return [];
-  const moves = moveList(W, H);
+  const moves = moveList(W, H, pins);
   const fw = new Map([[ka, null]]), bw = new Map([[kb, null]]);
   let fq = [a], bq = [b], count = 2;
   const trace = (map, k, fwd) => { const out = []; while (map.get(k)) { const [pk, mv] = map.get(k); out.push(mv); k = pk; } return fwd ? out.reverse() : out.map(inverse); };
@@ -229,13 +243,38 @@ function pathBetween(a, b, W, H, budget = 90000) {
   }
   return null;
 }
+// why a line is suspect: a broken region or a touching pair that has a cell on it
+function lineClue(g, line) {
+  const { W, H, grid, reg, size } = g, t = line[0], i = +line.slice(1);
+  const on = (k) => (t === "r" ? Math.floor(k / W) === i : k % W === i);
+  const where = (t === "r" ? "row " : "column ") + (i + 1);
+  for (let r = 0; r < size.length; r++) {
+    const cells = []; for (let k = 0; k < grid.length; k++) if (reg[k] === r) cells.push(k);
+    const big = cells.find((k) => grid[k] > size[r] && on(k));
+    if (big !== undefined) return { cells, text: `a ${grid[big]} sits in a region of ${size[r]} on ${where}` };
+    for (const k of cells) {
+      const twin = cells.find((j) => j !== k && grid[j] === grid[k]);
+      if (twin !== undefined && (on(k) || on(twin))) return { cells, text: `the region with two ${grid[k]}s runs through ${where}` };
+    }
+  }
+  for (let k = 0; k < grid.length; k++) {
+    if (!on(k)) continue;
+    const x = k % W, y = Math.floor(k / W);
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      const nx = x + dx, ny = y + dy; if ((!dx && !dy) || nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+      if (grid[ny * W + nx] === grid[k]) return { cells: [k, ny * W + nx], text: `two ${grid[k]}s touch on ${where}` };
+    }
+  }
+  return { cells: [], text: `${where} is out of place` };
+}
 function newGame(level) {
   const L = LEVELS[level];
-  return { level, W: L.w, H: L.h, reg: L.regions, size: regionSizes(L.regions), grid: L.start.slice(), slides: 0, hints: 0,
+  return { level, W: L.w, H: L.h, reg: L.regions, size: regionSizes(L.regions), pins: L.pins || [], locked: lockedLines(L.w, L.pins),
+    grid: L.start.slice(), slides: 0, hints: 0,
     history: [], screen: "playing" };
 }
 function slide(g, mv, steps = 1) {
-  if (g.screen !== "playing" || steps <= 0) return g;
+  if (g.screen !== "playing" || steps <= 0 || g.locked.has(mv.slice(0, -1))) return g;
   let grid = g.grid;
   for (let i = 0; i < steps; i++) grid = applyMove(grid, g.W, g.H, mv);
   const won = analyse(grid, g.W, g.H, g.reg, g.size).valid;
@@ -271,6 +310,7 @@ const reduceMotion = () => window.matchMedia && matchMedia("(prefers-reduced-mot
 // ================= rendering =================
 const $ = (id) => document.getElementById(id);
 let game = newGame(Math.min(Math.max(0, save.level | 0), LEVELS.length - 1));
+let hintKey = "", hintStage = 0, hintLeft = 0, hintWhy = new Set();
 let cursor = 0, cursorShown = false, hintMove = null, drag = null, anim = null, lastOk = new Set(), spaceArmed = false;
 let cellEls = [], tileEls = [], ghost = null;
 
@@ -308,8 +348,21 @@ function buildBoard() {
   lastOk = analyse(game.grid, W, H, game.reg, game.size).okRegions;
 }
 function placeTiles() {
-  const { W, H, grid } = game, a = analyse(grid, W, H, game.reg, game.size);
-  const off = drag && drag.axis ? drag.off : 0, cs = cellSize();
+  const { W, H, grid } = game, cs = cellSize();
+  const off = drag && drag.axis ? drag.off : 0;
+  // live preview: colour the board as it would be if the line snapped to the nearest step now
+  let a = analyse(grid, W, H, game.reg, game.size), dest = (k) => k;
+  if (drag && drag.axis && !drag.locked) {
+    const unit = drag.axis === "r" ? cs.w : cs.h, n = drag.axis === "r" ? W : H, st = Math.round(off / unit), sh = ((st % n) + n) % n;
+    if (sh) {
+      const line = drag.axis === "r" ? drag.y : drag.x;
+      const mv = drag.axis + line + (drag.axis === "r" ? "R" : "D");
+      let pg = grid; for (let i = 0; i < sh; i++) pg = applyMove(pg, W, H, mv);
+      a = analyse(pg, W, H, game.reg, game.size);
+      dest = (k) => drag.axis === "r" ? (Math.floor(k / W) === line ? Math.floor(k / W) * W + ((k % W) + sh) % W : k)
+        : (k % W === line ? ((Math.floor(k / W) + sh) % H) * W + k % W : k);
+    }
+  }
   ghost.style.display = "none";
   for (let k = 0; k < W * H; k++) {
     const x = k % W, y = (k / W) | 0, t = tileEls[k];
@@ -326,9 +379,10 @@ function placeTiles() {
     }
     t.style.transform = `translate(${px}px, ${py}px)`;
     t.firstChild.textContent = grid[k];
-    const moving = inLine && Math.abs(off) > 1;
-    t.classList.toggle("clash", !moving && a.clash.has(k));
-    t.classList.toggle("okc", !moving && a.okRegions.has(game.reg[k]));
+    const d = dest(k);
+    t.classList.toggle("clash", a.clash.has(d));
+    t.classList.toggle("okc", a.okRegions.has(game.reg[d]));
+    t.classList.toggle("pin", game.pins.includes(k));
   }
   for (let k = 0; k < W * H; k++) {
     const x = k % W, y = (k / W) | 0, c = cellEls[k];
@@ -336,6 +390,7 @@ function placeTiles() {
     c.classList.toggle("drag", !!(drag && drag.axis && ((drag.axis === "r" && y === drag.y) || (drag.axis === "c" && x === drag.x))));
     const hm = hintMove && parseMove(hintMove);
     c.classList.toggle("hint", !!(hm && ((hm.t === "r" && y === hm.i) || (hm.t === "c" && x === hm.i))));
+    c.classList.toggle("why", hintWhy.has(k));
   }
   const cur = $("cursor");
   cur.style.display = cursorShown && game.screen === "playing" ? "block" : "none";
@@ -361,8 +416,13 @@ function render() {
   document.body.classList.toggle("won", game.screen === "won");
   $("undoBtn").disabled = !game.history.length;
   const sel = cursorShown && game.screen === "playing";
-  for (const id of ["padL", "padU", "padD", "padR"]) $(id).disabled = !sel;
-  $("padNote").textContent = sel ? `Arrows slide row ${((cursor / game.W) | 0) + 1} or column ${(cursor % game.W) + 1}` : "Drag a line, or tap a number to use the arrows";
+  const cx = cursor % game.W, cy = (cursor / game.W) | 0;
+  for (const id of ["padL", "padR"]) { $(id).disabled = !sel; $(id).classList.toggle("lockd", sel && game.locked.has("r" + cy)); }
+  for (const id of ["padU", "padD"]) { $(id).disabled = !sel; $(id).classList.toggle("lockd", sel && game.locked.has("c" + cx)); }
+  const rl = game.locked.has("r" + cy), cl = game.locked.has("c" + cx);
+  $("padNote").textContent = !sel ? "Drag a line, or tap a number to use the arrows"
+    : rl && cl ? `Row ${cy + 1} and column ${cx + 1} are pinned` : rl ? `Arrows slide column ${cx + 1} (row ${cy + 1} is pinned)`
+    : cl ? `Arrows slide row ${cy + 1} (column ${cx + 1} is pinned)` : `Arrows slide row ${cy + 1} or column ${cx + 1}`;
   if (game.screen === "won") {
     const atPar = game.slides <= L.par;
     const allDone = LEVELS.every((_, i) => save.best[i]), stars = LEVELS.filter((L2, i) => save.best[i] && save.best[i] <= L2.par).length;
@@ -374,12 +434,13 @@ function render() {
   $("muteBtn").setAttribute("aria-label", save.muted ? "Sound off" : "Sound on"); $("muteBtn").style.opacity = save.muted ? .5 : 1;
 }
 let hintText = "";
+function clearHint() { hintMove = null; hintText = ""; hintKey = ""; hintStage = 0; hintWhy = new Set(); }
 
 // ================= actions =================
 function commit(mv, steps = 1) {
   const before = analyse(game.grid, game.W, game.H, game.reg, game.size).okRegions;
   game = slide(game, mv, steps);
-  hintMove = null; hintText = "";
+  clearHint();
   const after = analyse(game.grid, game.W, game.H, game.reg, game.size).okRegions;
   const gained = [...after].filter((r) => !before.has(r)).length;
   tone(gained ? 660 : 440, 0.07);
@@ -395,32 +456,41 @@ function onWin() {
   if (!reduceMotion()) { const f = $("flash"); f.style.opacity = .55; setTimeout(() => (f.style.opacity = 0), 220); }
   cursorShown = false;
 }
-function doUndo() { if (anim) return; game = undo(game); hintMove = null; hintText = ""; render(); }
-function doRestart() { if (anim) return; game = restart(game); hintMove = null; hintText = ""; render(); }
+function doUndo() { if (anim) return; game = undo(game); clearHint(); render(); }
+function doRestart() { if (anim) return; game = restart(game); clearHint(); render(); }
 function loadLevel(i) {
   game = newGame(Math.max(0, Math.min(LEVELS.length - 1, i)));
   save.level = game.level; persist();
-  hintMove = null; hintText = ""; cursorShown = false; cursor = 0;
+  clearHint(); cursorShown = false; cursor = 0;
   buildBoard(); render();
 }
 function findHint() {
   const L = LEVELS[game.level];
   if (game.screen !== "playing") return null;
-  return pathBetween(game.grid, L.goal, game.W, game.H);
+  return pathBetween(game.grid, L.goal, game.W, game.H, game.pins);
 }
 function doHint() {
   if (game.screen !== "playing" || anim) return;
+  const key = game.grid.join();
+  if (hintMove && hintKey === key && hintStage === 1) { // second press: name the direction
+    const m = parseMove(hintMove), dir = { L: "left", R: "right", U: "up", D: "down" }[m.d];
+    game = { ...game, hints: game.hints + 1 }; hintStage = 2;
+    hintText = `Hint: slide <strong>${m.t === "r" ? "row" : "column"} ${m.i + 1} ${dir}</strong> (${hintLeft} ${hintLeft === 1 ? "slide" : "slides"} to go).`;
+    render(); return;
+  }
   const p = findHint();
   if (!p || !p.length) {
-    hintMove = null; game = { ...game, hints: game.hints + 1 };
+    clearHint(); game = { ...game, hints: game.hints + 1 };
     hintText = game.history.length ? "Hint: you are far from the answer. Press <strong>Undo</strong>, then ask again." : "Hint: press <strong>Restart</strong>, then ask again.";
     const btn = game.history.length ? $("undoBtn") : $("restartBtn");
     btn.classList.add("pulse"); setTimeout(() => btn.classList.remove("pulse"), 1600);
     render(); return;
   }
-  hintMove = p[0]; game = { ...game, hints: game.hints + 1 };
-  const m = parseMove(hintMove), dir = { L: "left", R: "right", U: "up", D: "down" }[m.d];
-  hintText = `Hint: slide <strong>${m.t === "r" ? "row" : "column"} ${m.i + 1} ${dir}</strong> (${p.length} ${p.length === 1 ? "slide" : "slides"} to go).`;
+  // first press: the clue and the line, not the direction
+  hintMove = p[0]; hintKey = key; hintStage = 1; hintLeft = p.length; game = { ...game, hints: game.hints + 1 };
+  const clue = lineClue(game, hintMove.slice(0, -1));
+  hintWhy = new Set(clue.cells);
+  hintText = `Hint: ${clue.text}. Try sliding that line. <strong>Hint again</strong> for the direction.`;
   render();
 }
 // animated slide of the cursor's line (pad / keyboard)
@@ -450,10 +520,17 @@ function animateSlide(mv, steps = 1, fromOff = 0) {
   };
   requestAnimationFrame(step);
 }
+function lockedNote(line) {
+  const t = line[0] === "r" ? "Row" : "Column";
+  hintMove = null; hintWhy = new Set(); hintStage = 0;
+  hintText = `${t} ${+line.slice(1) + 1} can't slide: a <strong>pin</strong> holds it.`;
+  tone(196, 0.09, 0, 0.04); render();
+}
 function padSlide(dir) {
   if (game.screen !== "playing") return;
   const x = cursor % game.W, y = (cursor / game.W) | 0;
   const mv = dir === "L" || dir === "R" ? "r" + y + dir : "c" + x + dir;
+  if (game.locked.has(mv.slice(0, -1))) { lockedNote(mv.slice(0, -1)); return; }
   animateSlide(mv, 1);
 }
 
@@ -471,8 +548,12 @@ board.addEventListener("pointerdown", (e) => {
 board.addEventListener("pointermove", (e) => {
   if (!drag || anim || drag.id !== e.pointerId) return;
   const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
-  if (!drag.axis && Math.hypot(dx, dy) > 8) { drag.axis = Math.abs(dx) >= Math.abs(dy) ? "r" : "c"; board.classList.add("dragging"); hintText = hintText; }
-  if (drag.axis) { drag.off = drag.axis === "r" ? dx : dy; placeTiles(); }
+  if (!drag.axis && Math.hypot(dx, dy) > 8) {
+    drag.axis = Math.abs(dx) >= Math.abs(dy) ? "r" : "c"; board.classList.add("dragging");
+    drag.locked = game.locked.has(drag.axis + (drag.axis === "r" ? drag.y : drag.x));
+    if (drag.locked) lockedNote(drag.axis + (drag.axis === "r" ? drag.y : drag.x));
+  }
+  if (drag.axis) { const raw = drag.axis === "r" ? dx : dy; drag.off = drag.locked ? Math.max(-6, Math.min(6, raw * 0.1)) : raw; placeTiles(); }
 });
 function endDrag(e, cancel) {
   if (!drag || anim || drag.id !== e.pointerId) return;
@@ -482,7 +563,7 @@ function endDrag(e, cancel) {
     drag = null; cursor = d.y * game.W + d.x; cursorShown = true; tone(330, 0.04, 0, 0.03); render(); return;
   }
   const cs = cellSize(), unit = d.axis === "r" ? cs.w : cs.h, n = d.axis === "r" ? game.W : game.H;
-  let steps = cancel ? 0 : Math.round(d.off / unit);
+  let steps = cancel || d.locked ? 0 : Math.round(d.off / unit);
   let norm = ((steps % n) + n) % n; if (norm > n / 2) norm -= n; // fewest slides that give the same result
   const line = d.axis === "r" ? d.y : d.x;
   const mv = d.axis + line + (d.axis === "r" ? (norm >= 0 ? "R" : "L") : (norm >= 0 ? "D" : "U"));
@@ -539,7 +620,7 @@ function openPicker() {
   LEVELS.forEach((L, i) => {
     const b = document.createElement("button"), best = save.best[i];
     b.className = "lv" + (best ? " done" : "") + (i === game.level ? " cur" : "");
-    b.innerHTML = `<b>${i + 1}${best && best <= L.par ? " ★" : ""}</b><small>${L.w}×${L.h} · par ${L.par}</small>`;
+    b.innerHTML = `<b>${i + 1}${best && best <= L.par ? " ★" : ""}</b><small>${L.w}×${L.h} · par ${L.par}${L.pins ? " · pin" : ""}</small>`;
     b.setAttribute("aria-label", `Level ${i + 1}, ${L.w} by ${L.h}, par ${L.par}${best ? ", best " + best : ""}`);
     b.onclick = () => { closeSheets(); loadLevel(i); };
     g.appendChild(b);
@@ -560,20 +641,21 @@ if (!save.seenHelp && game.level === 0) $("help").classList.add("open");
 function qaState() {
   const a = analyse(game.grid, game.W, game.H, game.reg, game.size);
   return { screen: game.screen, level: game.level, slides: game.slides, par: LEVELS[game.level].par, grid: game.grid.slice(),
-    valid: a.valid, regionsOk: a.okRegions.size, regionsTotal: game.size.length, clashes: a.clash.size };
+    valid: a.valid, regionsOk: a.okRegions.size, regionsTotal: game.size.length, clashes: a.clash.size, pins: game.pins.slice(),
+    locked: [...game.locked], hintStage, hintText: hintText.replace(/<[^>]+>/g, "") };
 }
 window.__qa = {
   state: qaState,
-  actions: () => game.screen === "playing" ? moveList(game.W, game.H).concat(game.history.length ? ["undo"] : [], ["restart"]) : [],
+  actions: () => game.screen === "playing" ? moveList(game.W, game.H, game.pins).concat(game.history.length ? ["undo"] : [], ["restart"]) : [],
   act: (a) => {
     if (a === "undo") return doUndo();
     if (a === "restart") return doRestart();
-    if (typeof a === "string" && /^[rc]\d+[LRUD]$/.test(a)) { const p = parseMove(a); if ((p.t === "r" && p.i < game.H && "LR".includes(p.d)) || (p.t === "c" && p.i < game.W && "UD".includes(p.d))) commit(a, 1); }
+    if (typeof a === "string" && /^[rc]\d+[LRUD]$/.test(a)) { const p = parseMove(a); if (((p.t === "r" && p.i < game.H && "LR".includes(p.d)) || (p.t === "c" && p.i < game.W && "UD".includes(p.d))) && !game.locked.has(p.t + p.i)) commit(a, 1); }
   },
   reset: (level) => { $("help").classList.remove("open"); loadLevel(level ?? game.level); },
   levels: () => LEVELS.length,
   solve: () => {
-    const p = pathBetween(game.grid, LEVELS[game.level].goal, game.W, game.H);
+    const p = pathBetween(game.grid, LEVELS[game.level].goal, game.W, game.H, game.pins);
     return p ? p : ["restart", ...LEVELS[game.level].solution];
   },
   hint: () => { doHint(); return hintMove; },

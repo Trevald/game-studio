@@ -101,7 +101,65 @@ const plan = [
   [4, 4, 1, { kind: "r" }], [4, 4, 1, { kind: "c" }], [4, 4, 2], [5, 5, 2], [5, 5, 2, { minBad: 3 }],
   [5, 5, 3], [5, 5, 3, { minBad: 4 }], [6, 6, 3, LATE], [6, 6, 4, LATE], [6, 6, 4, LATE], [6, 6, 5, LATE], [6, 6, 6, LATE],
 ];
+// Night 2: pinned levels. A pin fixes its number's row and column. Keep only boards where the pins matter:
+// without them the board has more than one valid grid at par, or a shorter solution.
+function makePinned(W, H, k, np, opts = {}) {
+  const stat = { matter: 0, par: 0, ends: 0, q: 0 };
+  for (let tries = 0; tries < 400000; tries++) {
+    const { reg, size } = partition(W, H);
+    if (size.filter((s) => s === 1).length > 1) continue;
+    const sol = fill(W, H, reg, size);
+    if (!sol) continue;
+    const pins = [];
+    while (pins.length < np) {
+      const c = Math.floor(rnd() * W * H);
+      if (pins.some((p) => p % W === c % W || ((p / W) | 0) === ((c / W) | 0))) continue;
+      pins.push(c);
+    }
+    const moves = moveList(W, H, pins);
+    let g = sol, seq = [], used = new Set();
+    while (seq.length < k) {
+      const m = pick(moves), line = m.slice(0, -1);
+      if (used.has(line)) continue;
+      used.add(line); seq.push(m); g = apply(g, W, H, m);
+    }
+    if (isValid(g, W, H, reg, size)) continue;
+    const a = analyse(g, W, H, reg, size);
+    if (opts.minOk && size.length - a.badRegions.size < opts.minOk) { stat.q++; continue; }
+    if (opts.maxClash && a.clash.size > opts.maxClash) { stat.q++; continue; }
+    if (opts.minBad && a.badRegions.size < opts.minBad) { stat.q++; continue; }
+    const score = (gg) => { const b = analyse(gg, W, H, reg, size); return (size.length - b.badRegions.size) * 10 - b.clash.size; };
+    if (opts.greedyTop) {
+      const inv = new Set(seq.map(inverse));
+      const top = moves.map((m) => [m, score(apply(g, W, H, m))]).sort((x, y) => y[1] - x[1]).slice(0, opts.greedyTop);
+      if (!top.some(([m]) => inv.has(m))) { stat.q++; continue; }
+    }
+    const best = solveFrom(g, W, H, reg, size, k, Infinity, pins);
+    if (!best || best.length !== k) { stat.par++; continue; }
+    const c = countSolutions(g, W, H, reg, size, k, pins);
+    if (c.ends !== 1) { stat.ends++; continue; }
+    // do the pins matter?
+    const free = solveFrom(g, W, H, reg, size, k);
+    const freeEnds = free && free.length === k ? countSolutions(g, W, H, reg, size, k).ends : 0;
+    if (!(free.length < k || freeEnds > 1)) { stat.matter++; continue; }
+    return { w: W, h: H, regions: reg, sizes: size, goal: sol, start: g, pins, solution: best, par: k, scramble: seq, seqs: c.seqs,
+      freePar: free.length, freeEnds, okRegions: size.length - a.badRegions.size, badRegions: a.badRegions.size, clashes: a.clash.size };
+  }
+  console.error(JSON.stringify(stat));
+  throw new Error("no pinned level " + W + "x" + H + " k" + k);
+}
+const PL = { minOk: 3, maxClash: 14, greedyTop: 4 };
+const plan2 = [[5, 5, 2, 1, { minBad: 2 }], [5, 5, 3, 1, { minBad: 3 }], [5, 5, 3, 2, {}], [6, 6, 3, 2, PL], [6, 6, 4, 2, PL], [6, 6, 5, 1, { minOk: 3, maxClash: 16, greedyTop: 6 }]];
 const out = [];
+if (process.argv[3] === "pins") {
+  for (const [W, H, k, np, o] of plan2) {
+    const t = Date.now();
+    let lv; try { lv = makePinned(W, H, k, np, o); } catch (e) { console.error(e.message); continue; }
+    console.error(`pinned ${W}x${H} par ${k} pins ${np}: free par ${lv.freePar} free ends ${lv.freeEnds} ok ${lv.okRegions}/${lv.sizes.length} clash ${lv.clashes} ${Date.now() - t}ms`);
+    out.push(lv);
+  }
+  console.log(JSON.stringify(out)); process.exit(0);
+}
 for (const [W, H, k, o] of plan) {
   const t = Date.now();
   const lv = make(W, H, k, o);
