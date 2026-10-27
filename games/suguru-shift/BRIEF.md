@@ -25,6 +25,23 @@ drawing UI on the phone.)
 ## References
 - No links in the pitch. Loopover (row/column wrap-sliding puzzle) and Suguru/Tectonic rules are known; nothing fetched.
 
+## Tonight (night 3)
+No notes from Benji and no answer yet to last night's question (daily board or 7×7). The studio continues its own
+game, night 3 of 3 (last planned). Input: the reviewer's open nice-to-have and the "Later" list.
+1. **Daily board** (from Later): one new board per calendar day, the same for everyone on that date. Boards come
+   from a pool of 364 proven boards made by `lab/gen.mjs 2027 daily` (52 weeks, so the weekday keeps its size when the
+   pool repeats): Mon/Tue 5×5 par 3, Wed–Sat 6×6 par 4, Sun 6×6 par 5. Each is proven like the campaign: no valid
+   grid within par−1 slides, exactly one at par, and the 6×6 limits (≥3 intact regions, ≤12 touching, a right
+   first slide among the 3 best board-improving slides). Opened from a "Today" card at the top of the level picker;
+   best result per date. No streaks, rewards or countdowns (RULES: no dark patterns, no timers).
+2. **Bigger hint text on tall phones** (reviewer's nice-to-have, night 2): the tip line grows into the empty space.
+
+## Assumptions (night 3)
+- Daily over 7×7: 7×7 needs a faster par solver than one night allows, and a daily board gives a reason to come
+  back without new mechanics. The day is the player's local date. Only today's board is playable (no archive).
+- The pool is baked into the file (about 60 KB) instead of generated in the browser, so every daily board carries
+  the same par proof as the campaign. It starts on 28 Oct 2026 and repeats after 52 weeks.
+
 ## Tonight (night 2)
 No notes from Benji; the studio continues its own game (night 2 of 3). Input: the reviewer's open nice-to-have
 and the "Later" list.
@@ -55,10 +72,9 @@ and the "Later" list.
 - A two-step hint (clue first, direction second) answers last night's open question; each press counts as a hint.
 
 ## Later
-- Daily generated board; bigger 7×7 boards (needs a faster solver for par proofs).
+- Bigger 7×7 boards (needs a faster solver for par proofs). Daily archive (play earlier days).
 - Pinned levels where the pin forces a detour (the scrambled line itself is pinned).
 - A 6×6 par-5 pinned level (none found that needed its pins in 400k tries tonight).
-- Bigger hint text in the empty space on tall phones.
 
 ## Design
 ### Core loop

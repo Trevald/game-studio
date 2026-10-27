@@ -151,6 +151,24 @@ function makePinned(W, H, k, np, opts = {}) {
 const PL = { minOk: 3, maxClash: 14, greedyTop: 4 };
 const plan2 = [[5, 5, 2, 1, { minBad: 2 }], [5, 5, 3, 1, { minBad: 3 }], [5, 5, 3, 2, {}], [6, 6, 3, 2, PL], [6, 6, 4, 2, { minOk: 3, maxClash: 12, greedyTop: 4 }]];
 const out = [];
+// Night 3: daily boards. One per date from DAILY_START, in date order, so the weekday picks the size:
+// Mon/Tue 5x5 par 3, Wed-Sat 6x6 par 4, Sun 6x6 par 5; 364 days (52 weeks) so the cycle keeps weekdays. Same proofs and 6x6 limits as levels 8-12.
+// Compact output: regions base36, grids as digit strings, solution as a space-separated move list.
+// Usage: node gen.mjs <seed> daily <count> [startIndex] > daily-part.json
+if (process.argv[3] === "daily") {
+  const count = +(process.argv[4] || 364), from = +(process.argv[5] || 0);
+  const START = Date.UTC(2026, 9, 28); // Wednesday 28 Oct 2026
+  for (let i = 0; i < from; i++) rnd(); // offset the stream per chunk
+  for (let i = from; i < from + count; i++) {
+    const dow = new Date(START + i * 864e5).getUTCDay(); // 0 = Sunday
+    const spec = dow === 1 || dow === 2 ? [5, 5, 3, { minBad: 3, minOk: 2, maxClash: 10 }] : dow === 0 ? [6, 6, 5, LATE] : [6, 6, 4, LATE];
+    const t = Date.now();
+    const lv = make(...spec);
+    console.error(`day ${i} dow ${dow} ${lv.w}x${lv.h} par ${lv.par} ok ${lv.okRegions}/${lv.sizes.length} clash ${lv.clashes} ${Date.now() - t}ms`);
+    out.push({ i, w: lv.w, h: lv.h, r: lv.regions.map((x) => x.toString(36)).join(""), g: lv.goal.join(""), s: lv.start.join(""), p: lv.par, sol: lv.solution.join(" ") });
+  }
+  console.log(JSON.stringify(out)); process.exit(0);
+}
 if (process.argv[3] === "pins") {
   for (const [W, H, k, np, o] of plan2) {
     const t = Date.now();
