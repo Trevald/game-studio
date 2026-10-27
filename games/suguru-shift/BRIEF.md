@@ -57,6 +57,8 @@ and the "Later" list.
 ## Later
 - Daily generated board; bigger 7×7 boards (needs a faster solver for par proofs).
 - Pinned levels where the pin forces a detour (the scrambled line itself is pinned).
+- A 6×6 par-5 pinned level (none found that needed its pins in 400k tries tonight).
+- Bigger hint text in the empty space on tall phones.
 
 ## Design
 ### Core loop
