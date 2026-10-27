@@ -41,6 +41,15 @@ for (const [name, [w, h, mobile]] of Object.entries(sizes)) {
   await page.screenshot({ path: path.join(dir, `shot-${name}-L16-hint1.png`) });
   await page.evaluate(() => window.__qa.hint()); await page.waitForTimeout(100);
   await page.screenshot({ path: path.join(dir, `shot-${name}-L16-hint2.png`) });
+  // night 3: today's board (a Sunday 6x6 par 5 via ?day=) and its win card
+  await page.goto(url + "?day=2026-11-01"); await page.waitForTimeout(200);
+  await page.evaluate(() => { document.getElementById("help").classList.remove("open"); window.__qa.reset(window.__qa.levels() - 1); });
+  await page.waitForTimeout(150);
+  await page.screenshot({ path: path.join(dir, `shot-${name}-daily.png`) });
+  await page.evaluate(() => window.__qa.hint()); await page.waitForTimeout(100);
+  await page.screenshot({ path: path.join(dir, `shot-${name}-daily-hint.png`) });
+  await page.evaluate(() => { window.__qa.act("restart"); for (const m of window.__qa.solve()) window.__qa.act(m); }); await page.waitForTimeout(700);
+  await page.screenshot({ path: path.join(dir, `shot-${name}-daily-won.png`) });
   if (name === "phone") { await page.click("#levelBtn"); await page.waitForTimeout(100); await page.screenshot({ path: path.join(dir, `shot-${name}-picker.png`) }); }
   const ov = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1 || document.documentElement.scrollHeight > innerHeight + 1);
   if (ov) errors.push(name + ": page scrolls");

@@ -109,6 +109,46 @@ ok("preview waits for the line to rest", okEarly < 16, okEarly + " green cells a
 ok("drag preview shows the result before release", okCells === 16 && (await S()).slides === 0, okCells + " green cells");
 await page.mouse.up(); await page.waitForTimeout(300);
 ok("release commits the previewed slide", (await S()).screen === "won");
+// ---- night 3: daily board ----
+const pool = await page.evaluate(() => {
+  const bad = [], seen = new Set(), base = Date.UTC(2026, 9, 28);
+  for (let i = 0; i < 364; i++) {
+    const d = new Date(base + i * 864e5), key = d.toISOString().slice(0, 10), L = dailyLevel(key), dow = d.getUTCDay();
+    const want = dow === 1 || dow === 2 ? [5, 3] : dow === 0 ? [6, 5] : [6, 4];
+    let g = L.start; for (const m of L.solution) g = applyMove(g, L.w, L.h, m);
+    const size = regionSizes(L.regions), a = analyse(g, L.w, L.h, L.regions, size);
+    const sp = pathBetween(L.start, L.goal, L.w, L.h, [], 400000);
+    const k = L.start.join("") + L.regions.join(",");
+    if (L.w !== want[0] || L.par !== want[1] || L.solution.length !== L.par || !a.valid || g.join() !== L.goal.join() || !sp || sp.length !== L.par || seen.has(k)
+      || analyse(L.start, L.w, L.h, L.regions, size).valid) bad.push(key);
+    seen.add(k);
+  }
+  const cyc = dailyLevel("2027-10-27").start.join() === dailyLevel("2026-10-28").start.join();
+  return { bad, cyc };
+});
+ok("all 364 daily boards: weekday size, par = shortest, solution reaches a valid goal, no repeats", !pool.bad.length, pool.bad.slice(0, 5).join(" "));
+ok("daily pool repeats after 52 weeks", pool.cyc);
+const p3 = await ctx.newPage(); const e3 = []; p3.on("pageerror", (e) => e3.push(e.message));
+await p3.goto(url + "?day=2026-11-01"); await p3.waitForTimeout(200);
+await p3.evaluate(() => document.getElementById("help").classList.remove("open"));
+await p3.click("#levelBtn"); await p3.waitForTimeout(100);
+const tTxt = await p3.locator("#todayBtn").innerText();
+ok("picker shows today's board on top", /Today/.test(tTxt) && /1 Nov/.test(tTxt) && /par 5/.test(tTxt), tTxt.replace(/\n/g, " "));
+await p3.click("#todayBtn"); await p3.waitForTimeout(100);
+let d3 = await p3.evaluate(() => window.__qa.state());
+ok("Today opens the daily board (Sunday 6×6 par 5)", d3.daily === "2026-11-01" && d3.par === 5 && d3.grid.length === 36 && /Daily/.test(await p3.locator("#levelBtn").innerText()));
+await p3.evaluate(() => { for (const m of window.__qa.solve()) window.__qa.act(m); }); await p3.waitForTimeout(100);
+d3 = await p3.evaluate(() => window.__qa.state());
+const wt = await p3.locator("#winTitle").innerText(), nb = await p3.locator("#nextBtn").innerText();
+ok("daily win card", d3.screen === "won" && /Today's board at par/.test(wt) && nb === "All levels", wt + " / " + nb);
+const stored = await p3.evaluate(() => JSON.parse(localStorage.getItem("suguru-shift.v1")));
+ok("daily best saved per date, campaign bests untouched", stored.daily["2026-11-01"] === 5 && !stored.best[17], JSON.stringify(stored.daily));
+await p3.click("#nextBtn"); await p3.waitForTimeout(100);
+ok("All levels opens the picker with today's best", await p3.locator("#picker.open").count() === 1 && /best 5/.test(await p3.locator("#todayBtn").innerText()));
+await p3.click("#pickGrid .lv >> nth=16"); await p3.waitForTimeout(100);
+await p3.evaluate(() => { for (const m of window.__qa.solve()) window.__qa.act(m); }); await p3.waitForTimeout(100);
+ok("last campaign level leads to All levels", (await p3.locator("#nextBtn").innerText()) === "All levels" && (await p3.locator("#levelBtn").innerText()) === "Level 17/17");
+ok("no errors on the daily page", !e3.length, e3.join());
 // storage blocked
 const ctx2 = await browser.newContext(); const p2 = await ctx2.newPage();
 await p2.addInitScript(() => { Object.defineProperty(window, "localStorage", { get() { throw new Error("blocked"); } }); });
