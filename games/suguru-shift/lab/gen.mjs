@@ -149,7 +149,7 @@ function makePinned(W, H, k, np, opts = {}) {
   throw new Error("no pinned level " + W + "x" + H + " k" + k);
 }
 const PL = { minOk: 3, maxClash: 14, greedyTop: 4 };
-const plan2 = [[5, 5, 2, 1, { minBad: 2 }], [5, 5, 3, 1, { minBad: 3 }], [5, 5, 3, 2, {}], [6, 6, 3, 2, PL], [6, 6, 4, 2, PL], [6, 6, 5, 1, { minOk: 3, maxClash: 16, greedyTop: 6 }]];
+const plan2 = [[5, 5, 2, 1, { minBad: 2 }], [5, 5, 3, 1, { minBad: 3 }], [5, 5, 3, 2, {}], [6, 6, 3, 2, PL], [6, 6, 4, 2, { minOk: 3, maxClash: 12, greedyTop: 4 }]];
 const out = [];
 if (process.argv[3] === "pins") {
   for (const [W, H, k, np, o] of plan2) {

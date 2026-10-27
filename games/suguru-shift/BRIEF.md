@@ -29,10 +29,10 @@ drawing UI on the phone.)
 No notes from Benji; the studio continues its own game (night 2 of 3). Input: the reviewer's open nice-to-have
 and the "Later" list.
 1. **Pins** (from Later: "numbers pinned to their cell"): a pinned number is always in its right place, and its row
-   and its column can't slide. Six new levels (13–18, 5×5 and 6×6) where the pins matter: each is proven to have
-   exactly one valid grid at par with the pins, and without them the board would be ambiguous or shorter.
-2. **Live drag preview** (reviewer's nice-to-have): while you drag, the colours show the board as it would be if
-   you let go at the nearest step.
+   and its column can't slide (striped on the board). Five new levels (13–17, 5×5 and 6×6) where the pins matter: each
+   is proven to have exactly one valid grid at par with the pins, and two without them.
+2. **Live drag preview** (reviewer's nice-to-have): while you drag, once the line rests on a step for 0.3 s, the
+   colours and counts show the board as it would be if you let go there.
 3. **Hints that explain** (Later + last night's question): the first Hint press names the clue ("this region has
    two 3s, and row 2 runs through it") and marks the line; a second press on the same board names the direction.
 
@@ -92,8 +92,15 @@ instant (and undoable).
 - Regions flash green the moment they become correct; a short chord on a win (WebAudio, mute toggle).
 - At-par wins get a star in the picker.
 
+### Pins (night 2)
+`lab/gen.mjs 2026 pins` makes levels 13–17 (`lab/levels-pins.json`): scramble only unpinned lines, then keep a board
+only if, with the pins, par equals the scramble and exactly one valid grid is reachable at par, while without the
+pins two valid grids are reachable. So the pin is the clue that settles the answer. 6×6 pinned boards keep ≥3
+intact regions, ≤12 touching cells and a right first slide among the 4 best board-improving slides.
+
 ### QA plan
 - `state()`: `{screen: "playing"|"won", level, slides, par, grid, valid, regionsOk, regionsTotal, clashes}`.
-- Actions: `"r<row>L"`, `"r<row>R"`, `"c<col>U"`, `"c<col>D"`, plus `"undo"` and `"restart"`.
+- Actions: `"r<row>L"`, `"r<row>R"`, `"c<col>U"`, `"c<col>D"` (pinned lines left out), plus `"undo"` and `"restart"`.
+- `state()` also has `pins`, `locked`, `hintStage` and `hintText` (night 2).
 - `solve()`: bidirectional search from the current grid to the level's goal grid (up to 10 slides), else
   `["restart", ...stored solution]`. Every level must finish with it.

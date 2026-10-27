@@ -50,6 +50,7 @@
   .tile.pin span { background: var(--wall); color: var(--cell); }
   .tile.pin.clash span { color: var(--cell); }
   .tile.pin::after { content: ""; position: absolute; top: 11%; right: 11%; width: 15%; height: 15%; border-radius: 50%; background: var(--hint); box-shadow: 0 0 0 2px var(--cell); }
+  .cell.lockline { background-image: repeating-linear-gradient(135deg, transparent 0 7px, color-mix(in srgb, var(--wall) 9%, transparent) 7px 9px); }
   .cell.why { background: color-mix(in srgb, var(--hint) 28%, var(--cell)); }
   .cell.ok.why { background: color-mix(in srgb, var(--hint) 28%, var(--ok)); }
   #walls { position: absolute; inset: 0; pointer-events: none; }
@@ -85,7 +86,8 @@
   body.won #padNote { display: none; }
   .lv { min-height: 56px; border-radius: 12px; border: 1px solid var(--line); background: var(--cell); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
   .lv b { font-size: 18px; }
-  .lv small { color: var(--muted); font-size: 12px; }
+  .lv small { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .pdot { display: inline-block; width: 9px; height: 9px; margin-left: 4px; border-radius: 50%; background: var(--wall); box-shadow: inset 0 0 0 2px var(--hint); vertical-align: -1px; }
   .lv.done { background: var(--ok); }
   .lv.cur { outline: 2px solid var(--accent); }
   .keys { font-size: 13px; color: var(--muted); }
@@ -142,7 +144,7 @@
 <div id="picker" role="dialog" aria-modal="true" aria-labelledby="pickTitle">
   <div class="sheet">
     <h2 id="pickTitle">Levels</h2>
-    <p>Green: solved. ★: solved at par.</p>
+    <p>Green: solved. ★: solved at par. Dark dot: has pins.</p>
     <div class="grid" id="pickGrid"></div>
     <button class="chip" id="pickClose">Close</button>
   </div>
@@ -153,7 +155,7 @@
     <p>This was a solved <strong>Suguru</strong>. A few rows and columns slipped. Slide them back.</p>
     <p>A region of N cells must hold 1 to N once each. The same number may never touch another, not even diagonally.</p>
     <p>Regions turn <strong>green</strong> when they hold the right numbers. <strong>Red rings</strong> mark equal numbers that touch.</p>
-    <p>A <strong>dark number</strong> is pinned: it is in its right place, and its row and column can't slide.</p>
+    <p>A <strong>dark number</strong> is pinned: it is in its right place, and its row and column (striped) can't slide.</p>
     <p>Drag a row sideways or a column up and down; numbers wrap around the edge. Or tap a number and use the arrows. Each step a line moves is one slide.</p>
     <p class="keys">Keys: arrows move the cursor, Shift+arrow (or Space, then arrow) slides its line. Z undo · R restart · H hint · N next.</p>
     <button class="chip" id="helpClose">Got it</button>
@@ -162,7 +164,7 @@
 <script>
 "use strict";
 // ================= constants / levels =================
-const LEVELS = [{"w":4,"h":4,"regions":[0,0,0,1,0,2,1,1,2,2,1,3,2,2,3,3],"goal":[3,2,4,2,1,5,1,3,4,2,4,2,3,1,3,1],"start":[2,4,2,3,1,5,1,3,4,2,4,2,3,1,3,1],"solution":["r0R"],"par":1},{"w":4,"h":4,"regions":[1,0,0,3,1,1,0,0,1,1,0,2,2,2,2,2],"goal":[4,3,4,1,1,5,2,5,2,3,1,3,1,4,2,5],"start":[4,3,2,1,1,5,4,5,2,3,2,3,1,4,1,5],"solution":["c2U"],"par":1},{"w":4,"h":4,"regions":[1,3,3,2,1,2,2,2,1,1,0,2,1,0,0,0],"goal":[4,2,1,2,1,5,4,3,2,3,2,1,5,1,4,3],"start":[2,1,2,4,3,1,5,4,2,3,2,1,5,1,4,3],"solution":["r0R","r1L"],"par":2},{"w":5,"h":5,"regions":[0,0,2,2,2,0,0,0,2,4,3,3,3,2,4,5,3,3,4,4,1,1,1,1,4],"goal":[2,4,2,1,3,1,5,3,5,2,2,4,1,4,1,1,5,3,5,3,3,2,4,1,4],"start":[3,4,2,1,3,2,1,5,3,5,2,4,1,4,1,2,5,3,5,3,1,2,4,1,4],"solution":["c0U","r1L"],"par":2},{"w":5,"h":5,"regions":[0,1,1,1,1,0,0,6,2,2,5,0,0,2,2,5,3,4,4,2,3,3,3,4,4],"goal":[2,3,2,4,1,1,4,1,3,2,2,3,5,4,1,1,4,2,3,5,2,3,1,4,1],"start":[2,3,2,4,1,1,4,1,3,2,3,5,4,1,2,5,1,4,2,3,2,3,1,4,1],"solution":["r2R","r3L"],"par":2},{"w":5,"h":5,"regions":[4,4,2,5,5,4,4,2,0,0,3,3,2,2,0,3,1,6,2,0,1,1,1,1,0],"goal":[1,2,5,2,1,3,4,1,4,3,1,2,3,2,5,3,5,1,4,1,1,4,2,3,2],"start":[1,2,5,2,2,3,4,1,4,1,3,1,2,3,2,5,3,5,1,4,1,4,2,3,1],"solution":["r2L","r3L","c4U"],"par":3},{"w":5,"h":5,"regions":[2,2,1,1,3,0,1,1,3,3,0,0,0,4,3,5,0,6,4,3,5,5,4,4,4],"goal":[2,1,2,1,4,3,4,3,5,2,1,5,2,4,1,3,4,1,5,3,1,2,3,2,1],"start":[1,1,2,1,4,2,4,3,1,2,3,5,2,5,1,1,4,1,4,3,2,3,2,5,3],"solution":["c3U","r4R","c0U"],"par":3},{"w":6,"h":6,"regions":[6,6,6,0,3,3,2,6,6,0,0,3,2,2,2,7,7,3,2,1,7,7,4,3,1,1,5,4,4,4,1,1,5,5,5,4],"goal":[1,2,5,2,4,1,3,4,3,1,3,2,1,2,5,2,4,5,4,3,1,3,1,3,1,2,4,5,4,2,4,5,3,2,1,3],"start":[1,2,5,1,4,1,2,3,4,3,5,3,5,1,2,3,2,4,4,3,1,5,1,3,1,2,4,2,4,2,4,5,3,2,1,3],"solution":["r1L","c3D","r2L"],"par":3},{"w":6,"h":6,"regions":[7,7,3,3,3,3,7,7,2,3,5,5,1,2,2,4,0,0,1,6,2,4,4,0,1,6,6,4,4,0,1,1,6,6,8,0],"goal":[1,3,1,3,4,5,4,2,4,2,1,2,3,1,3,5,4,5,4,5,2,1,2,1,1,3,4,3,4,3,5,2,1,2,1,2],"start":[1,3,1,2,4,5,4,2,4,4,1,2,1,3,5,2,5,3,5,2,1,4,1,4,3,1,3,2,3,4,5,2,1,3,1,2],"solution":["c3D","r2R","r3R","r4L"],"par":4},{"w":6,"h":6,"regions":[8,8,8,1,1,3,2,2,8,1,1,3,2,2,2,7,1,3,0,0,0,0,6,3,4,4,0,5,6,6,4,4,5,5,5,6],"goal":[3,2,1,5,1,3,1,5,4,2,4,2,4,2,3,1,3,1,3,1,5,4,2,4,2,4,2,1,3,1,3,1,3,4,2,4],"start":[3,2,1,5,1,3,1,5,4,2,4,2,1,4,2,3,1,3,4,3,1,5,4,2,4,2,1,3,1,2,1,3,4,2,4,3],"solution":["r2L","r3L","r4R","r5R"],"par":4},{"w":6,"h":6,"regions":[1,1,8,2,2,3,1,1,8,0,3,3,6,1,8,0,3,3,6,6,6,0,0,4,6,5,7,7,0,4,5,5,5,5,4,4],"goal":[2,1,2,1,2,1,3,4,3,4,3,4,2,5,1,2,5,2,1,3,4,3,1,4,5,2,1,2,5,3,1,4,5,3,1,2],"start":[4,2,1,2,1,1,2,3,4,3,4,2,1,5,1,2,5,3,5,3,4,3,1,2,4,2,1,2,5,4,1,5,3,1,2,3],"solution":["c0D","c5U","r0L","r1L","r5R"],"par":5},{"w":6,"h":6,"regions":[4,4,6,0,0,8,4,4,6,0,0,7,4,5,1,0,2,7,5,5,1,1,2,7,5,3,3,1,2,7,3,3,3,1,2,2],"goal":[1,4,1,4,2,1,5,3,2,3,5,3,2,1,5,1,2,4,4,3,2,4,3,1,2,1,5,1,5,2,3,4,2,3,4,1],"start":[4,2,4,2,3,1,5,3,5,3,5,4,2,1,2,1,2,1,2,4,3,1,4,3,1,5,2,5,1,2,4,1,3,4,1,3],"solution":["r0R","r3L","r5R","c2D","r4R","c5D"],"par":6},{"w":5,"h":5,"regions":[3,3,5,1,6,3,3,5,1,1,2,2,5,1,1,4,2,2,0,0,4,4,0,0,0],"goal":[2,1,2,5,1,3,4,3,4,3,1,2,1,2,1,3,4,3,4,5,2,1,2,1,3],"start":[1,2,1,2,5,3,4,3,4,3,2,1,2,1,1,3,4,3,4,5,2,1,2,1,3],"pins":[9],"solution":["r0L","r2R"],"par":2},{"w":5,"h":5,"regions":[4,4,1,1,6,4,0,3,1,1,0,0,3,2,1,0,3,3,2,2,5,5,3,2,2],"goal":[2,1,2,4,1,3,4,3,5,3,2,1,2,4,1,3,4,5,3,5,1,2,1,2,1],"start":[2,1,2,4,1,3,4,3,5,3,1,2,1,2,4,5,3,4,5,3,2,1,2,1,1],"pins":[4],"solution":["r2L","r3L","r4R"],"par":3},{"w":5,"h":5,"regions":[6,3,3,4,4,1,1,3,3,4,1,1,2,2,2,1,0,0,2,2,5,5,0,0,0],"goal":[1,3,1,3,2,2,4,2,4,1,1,3,1,3,2,5,4,5,4,5,1,2,3,1,2],"start":[1,3,1,3,1,1,4,2,4,2,5,2,3,1,3,1,4,5,4,2,5,2,3,1,2],"pins":[18,22],"solution":["r2L","c0U","c4D"],"par":3},{"w":6,"h":6,"regions":[0,0,8,8,4,4,0,8,8,2,4,4,0,3,3,2,2,2,0,3,3,5,5,2,6,6,3,1,1,1,6,6,6,1,1,7],"goal":[4,5,4,3,4,3,1,2,1,2,1,2,3,5,3,4,5,3,2,1,2,1,2,1,5,3,4,3,5,4,4,1,2,1,2,1],"start":[4,1,4,3,4,3,2,5,2,1,2,1,3,1,3,4,5,3,2,5,2,1,2,1,4,1,3,4,3,5,4,5,2,1,2,1],"pins":[18,34],"solution":["c1U","r1L","r4L"],"par":3},{"w":6,"h":6,"regions":[7,7,5,1,2,6,7,4,5,1,2,6,4,4,5,1,2,6,4,4,5,1,2,6,3,3,3,8,8,6,3,3,0,0,0,0],"goal":[2,1,2,1,2,1,3,5,4,3,4,3,1,2,1,2,1,2,3,4,3,4,3,4,2,1,5,1,2,5,4,3,2,4,3,1],"start":[1,2,4,2,3,3,3,5,1,3,1,2,1,2,3,2,4,4,3,4,5,4,1,5,2,1,2,1,3,1,4,3,1,4,2,2],"pins":[12,9],"solution":["c2D","c4U","c5D","r0L"],"par":4}];
+const LEVELS = [{"w":4,"h":4,"regions":[0,0,0,1,0,2,1,1,2,2,1,3,2,2,3,3],"goal":[3,2,4,2,1,5,1,3,4,2,4,2,3,1,3,1],"start":[2,4,2,3,1,5,1,3,4,2,4,2,3,1,3,1],"solution":["r0R"],"par":1},{"w":4,"h":4,"regions":[1,0,0,3,1,1,0,0,1,1,0,2,2,2,2,2],"goal":[4,3,4,1,1,5,2,5,2,3,1,3,1,4,2,5],"start":[4,3,2,1,1,5,4,5,2,3,2,3,1,4,1,5],"solution":["c2U"],"par":1},{"w":4,"h":4,"regions":[1,3,3,2,1,2,2,2,1,1,0,2,1,0,0,0],"goal":[4,2,1,2,1,5,4,3,2,3,2,1,5,1,4,3],"start":[2,1,2,4,3,1,5,4,2,3,2,1,5,1,4,3],"solution":["r0R","r1L"],"par":2},{"w":5,"h":5,"regions":[0,0,2,2,2,0,0,0,2,4,3,3,3,2,4,5,3,3,4,4,1,1,1,1,4],"goal":[2,4,2,1,3,1,5,3,5,2,2,4,1,4,1,1,5,3,5,3,3,2,4,1,4],"start":[3,4,2,1,3,2,1,5,3,5,2,4,1,4,1,2,5,3,5,3,1,2,4,1,4],"solution":["c0U","r1L"],"par":2},{"w":5,"h":5,"regions":[0,1,1,1,1,0,0,6,2,2,5,0,0,2,2,5,3,4,4,2,3,3,3,4,4],"goal":[2,3,2,4,1,1,4,1,3,2,2,3,5,4,1,1,4,2,3,5,2,3,1,4,1],"start":[2,3,2,4,1,1,4,1,3,2,3,5,4,1,2,5,1,4,2,3,2,3,1,4,1],"solution":["r2R","r3L"],"par":2},{"w":5,"h":5,"regions":[4,4,2,5,5,4,4,2,0,0,3,3,2,2,0,3,1,6,2,0,1,1,1,1,0],"goal":[1,2,5,2,1,3,4,1,4,3,1,2,3,2,5,3,5,1,4,1,1,4,2,3,2],"start":[1,2,5,2,2,3,4,1,4,1,3,1,2,3,2,5,3,5,1,4,1,4,2,3,1],"solution":["r2L","r3L","c4U"],"par":3},{"w":5,"h":5,"regions":[2,2,1,1,3,0,1,1,3,3,0,0,0,4,3,5,0,6,4,3,5,5,4,4,4],"goal":[2,1,2,1,4,3,4,3,5,2,1,5,2,4,1,3,4,1,5,3,1,2,3,2,1],"start":[1,1,2,1,4,2,4,3,1,2,3,5,2,5,1,1,4,1,4,3,2,3,2,5,3],"solution":["c3U","r4R","c0U"],"par":3},{"w":6,"h":6,"regions":[6,6,6,0,3,3,2,6,6,0,0,3,2,2,2,7,7,3,2,1,7,7,4,3,1,1,5,4,4,4,1,1,5,5,5,4],"goal":[1,2,5,2,4,1,3,4,3,1,3,2,1,2,5,2,4,5,4,3,1,3,1,3,1,2,4,5,4,2,4,5,3,2,1,3],"start":[1,2,5,1,4,1,2,3,4,3,5,3,5,1,2,3,2,4,4,3,1,5,1,3,1,2,4,2,4,2,4,5,3,2,1,3],"solution":["r1L","c3D","r2L"],"par":3},{"w":6,"h":6,"regions":[7,7,3,3,3,3,7,7,2,3,5,5,1,2,2,4,0,0,1,6,2,4,4,0,1,6,6,4,4,0,1,1,6,6,8,0],"goal":[1,3,1,3,4,5,4,2,4,2,1,2,3,1,3,5,4,5,4,5,2,1,2,1,1,3,4,3,4,3,5,2,1,2,1,2],"start":[1,3,1,2,4,5,4,2,4,4,1,2,1,3,5,2,5,3,5,2,1,4,1,4,3,1,3,2,3,4,5,2,1,3,1,2],"solution":["c3D","r2R","r3R","r4L"],"par":4},{"w":6,"h":6,"regions":[8,8,8,1,1,3,2,2,8,1,1,3,2,2,2,7,1,3,0,0,0,0,6,3,4,4,0,5,6,6,4,4,5,5,5,6],"goal":[3,2,1,5,1,3,1,5,4,2,4,2,4,2,3,1,3,1,3,1,5,4,2,4,2,4,2,1,3,1,3,1,3,4,2,4],"start":[3,2,1,5,1,3,1,5,4,2,4,2,1,4,2,3,1,3,4,3,1,5,4,2,4,2,1,3,1,2,1,3,4,2,4,3],"solution":["r2L","r3L","r4R","r5R"],"par":4},{"w":6,"h":6,"regions":[1,1,8,2,2,3,1,1,8,0,3,3,6,1,8,0,3,3,6,6,6,0,0,4,6,5,7,7,0,4,5,5,5,5,4,4],"goal":[2,1,2,1,2,1,3,4,3,4,3,4,2,5,1,2,5,2,1,3,4,3,1,4,5,2,1,2,5,3,1,4,5,3,1,2],"start":[4,2,1,2,1,1,2,3,4,3,4,2,1,5,1,2,5,3,5,3,4,3,1,2,4,2,1,2,5,4,1,5,3,1,2,3],"solution":["c0D","c5U","r0L","r1L","r5R"],"par":5},{"w":6,"h":6,"regions":[4,4,6,0,0,8,4,4,6,0,0,7,4,5,1,0,2,7,5,5,1,1,2,7,5,3,3,1,2,7,3,3,3,1,2,2],"goal":[1,4,1,4,2,1,5,3,2,3,5,3,2,1,5,1,2,4,4,3,2,4,3,1,2,1,5,1,5,2,3,4,2,3,4,1],"start":[4,2,4,2,3,1,5,3,5,3,5,4,2,1,2,1,2,1,2,4,3,1,4,3,1,5,2,5,1,2,4,1,3,4,1,3],"solution":["r0R","r3L","r5R","c2D","r4R","c5D"],"par":6},{"w":5,"h":5,"regions":[3,3,5,1,6,3,3,5,1,1,2,2,5,1,1,4,2,2,0,0,4,4,0,0,0],"goal":[2,1,2,5,1,3,4,3,4,3,1,2,1,2,1,3,4,3,4,5,2,1,2,1,3],"start":[1,2,1,2,5,3,4,3,4,3,2,1,2,1,1,3,4,3,4,5,2,1,2,1,3],"pins":[9],"solution":["r0L","r2R"],"par":2},{"w":5,"h":5,"regions":[4,4,1,1,6,4,0,3,1,1,0,0,3,2,1,0,3,3,2,2,5,5,3,2,2],"goal":[2,1,2,4,1,3,4,3,5,3,2,1,2,4,1,3,4,5,3,5,1,2,1,2,1],"start":[2,1,2,4,1,3,4,3,5,3,1,2,1,2,4,5,3,4,5,3,2,1,2,1,1],"pins":[4],"solution":["r2L","r3L","r4R"],"par":3},{"w":5,"h":5,"regions":[6,3,3,4,4,1,1,3,3,4,1,1,2,2,2,1,0,0,2,2,5,5,0,0,0],"goal":[1,3,1,3,2,2,4,2,4,1,1,3,1,3,2,5,4,5,4,5,1,2,3,1,2],"start":[1,3,1,3,1,1,4,2,4,2,5,2,3,1,3,1,4,5,4,2,5,2,3,1,2],"pins":[18,22],"solution":["r2L","c0U","c4D"],"par":3},{"w":6,"h":6,"regions":[0,0,8,8,4,4,0,8,8,2,4,4,0,3,3,2,2,2,0,3,3,5,5,2,6,6,3,1,1,1,6,6,6,1,1,7],"goal":[4,5,4,3,4,3,1,2,1,2,1,2,3,5,3,4,5,3,2,1,2,1,2,1,5,3,4,3,5,4,4,1,2,1,2,1],"start":[4,1,4,3,4,3,2,5,2,1,2,1,3,1,3,4,5,3,2,5,2,1,2,1,4,1,3,4,3,5,4,5,2,1,2,1],"pins":[18,34],"solution":["c1U","r1L","r4L"],"par":3},{"w":6,"h":6,"regions":[2,2,0,0,0,0,2,2,8,8,8,8,4,2,1,1,7,7,4,4,1,1,7,3,6,4,5,5,3,3,6,4,5,5,3,3],"goal":[1,4,1,4,2,3,2,3,2,3,1,4,1,5,1,4,2,3,2,3,2,3,1,5,1,5,1,4,2,4,2,4,2,3,1,3],"start":[1,4,1,3,1,4,2,3,2,4,2,3,1,5,1,3,1,5,3,2,4,2,4,2,1,5,1,3,1,3,2,4,2,4,2,3],"pins":[2,25],"solution":["r3R","c3U","c4U","c5D"],"par":4}];
 const TIPS = [
   "One row slipped. <strong>Drag it sideways</strong> until every region turns green.",
   "This time a <strong>column</strong> slipped. Drag it up or down.",
@@ -217,7 +219,8 @@ function analyse(g, W, H, reg, size) {
   return { valid: okRegions.size === R && clash.size === 0, okRegions, clash };
 }
 // shortest slide list from grid a to grid b (bidirectional BFS), or null past the node budget
-function pathBetween(a, b, W, H, pins, budget = 60000) {
+function pathBetween(a, b, W, H, pins, budget = 60000, ms = Infinity) {
+  const t0 = performance.now();
   const ka = a.join(","), kb = b.join(",");
   if (ka === kb) return [];
   const moves = moveList(W, H, pins);
@@ -232,6 +235,7 @@ function pathBetween(a, b, W, H, pins, budget = 60000) {
         const n = applyMove(g, W, H, mv), nk = n.join(",");
         if (mine.has(nk)) continue;
         mine.set(nk, [k, mv]); count++;
+        if ((count & 1023) === 0 && performance.now() - t0 > ms) return null;
         if (other.has(nk)) {
           const p1 = trace(fw, nk, true), p2 = trace(bw, nk, false);
           return p1.concat(p2);
@@ -243,19 +247,30 @@ function pathBetween(a, b, W, H, pins, budget = 60000) {
   }
   return null;
 }
-// why a line is suspect: a broken region or a touching pair that has a cell on it
-function lineClue(g, line) {
-  const { W, H, grid, reg, size } = g, t = line[0], i = +line.slice(1);
+// why a line is suspect: a broken region or a touching pair with a cell on it, preferring one that this slide
+// mends, and saying so when no other single slide would
+function lineClue(g, mv) {
+  const { W, H, grid, reg, size } = g, line = mv.slice(0, -1), t = line[0], i = +line.slice(1);
   const on = (k) => (t === "r" ? Math.floor(k / W) === i : k % W === i);
   const where = (t === "r" ? "row " : "column ") + (i + 1);
+  const ok1 = (gr, r) => analyse(gr, W, H, reg, size).okRegions.has(r);
+  const after = applyMove(grid, W, H, mv);
+  const clues = [];
   for (let r = 0; r < size.length; r++) {
     const cells = []; for (let k = 0; k < grid.length; k++) if (reg[k] === r) cells.push(k);
     const big = cells.find((k) => grid[k] > size[r] && on(k));
-    if (big !== undefined) return { cells, text: `a ${grid[big]} sits in a region of ${size[r]} on ${where}` };
-    for (const k of cells) {
+    let what = big !== undefined ? `the region with a ${grid[big]} in only ${size[r]} cells` : null;
+    if (!what) for (const k of cells) {
       const twin = cells.find((j) => j !== k && grid[j] === grid[k]);
-      if (twin !== undefined && (on(k) || on(twin))) return { cells, text: `the region with two ${grid[k]}s runs through ${where}` };
+      if (twin !== undefined && (on(k) || on(twin))) { what = `the region with two ${grid[k]}s`; break; }
     }
+    if (what) clues.push({ r, cells, what, mends: ok1(after, r) });
+  }
+  const c = clues.find((x) => x.mends) || clues[0];
+  if (c) {
+    if (!c.mends) return { cells: c.cells, text: `${c.what} runs through ${where}` };
+    const others = moveList(W, H, g.pins).filter((m) => m.slice(0, -1) !== line && ok1(applyMove(grid, W, H, m), c.r));
+    return { cells: c.cells, text: others.length ? `one slide of ${where} mends ${c.what}` : `${c.what} can only be mended in one slide by ${where}` };
   }
   for (let k = 0; k < grid.length; k++) {
     if (!on(k)) continue;
@@ -354,7 +369,9 @@ function placeTiles() {
   let a = analyse(grid, W, H, game.reg, game.size), dest = (k) => k;
   if (drag && drag.axis && !drag.locked) {
     const unit = drag.axis === "r" ? cs.w : cs.h, n = drag.axis === "r" ? W : H, st = Math.round(off / unit), sh = ((st % n) + n) % n;
-    if (sh) {
+    // the colours only follow once the line rests on a step (about 0.3 s), so scrubbing isn't free
+    if (drag.restStep !== st) { drag.restStep = st; drag.restAt = performance.now(); clearTimeout(drag.restTimer); if (sh) drag.restTimer = setTimeout(() => { if (drag && drag.restStep === st) { drag.rested = st; placeTiles(); } }, 300); }
+    if (sh && (drag.rested === st || anim)) {
       const line = drag.axis === "r" ? drag.y : drag.x;
       const mv = drag.axis + line + (drag.axis === "r" ? "R" : "D");
       let pg = grid; for (let i = 0; i < sh; i++) pg = applyMove(pg, W, H, mv);
@@ -391,16 +408,18 @@ function placeTiles() {
     const hm = hintMove && parseMove(hintMove);
     c.classList.toggle("hint", !!(hm && ((hm.t === "r" && y === hm.i) || (hm.t === "c" && x === hm.i))));
     c.classList.toggle("why", hintWhy.has(k));
+    c.classList.toggle("lockline", game.locked.has("r" + y) || game.locked.has("c" + x));
   }
+  if (drag && drag.axis && !anim) setStatus(a);
   const cur = $("cursor");
   cur.style.display = cursorShown && game.screen === "playing" ? "block" : "none";
   cur.style.width = cs.w + "px"; cur.style.height = cs.h + "px";
   cur.style.transform = `translate(${(cursor % W) * cs.w}px, ${((cursor / W) | 0) * cs.h}px)`;
   return a;
 }
-function showGhost(t, v, px, py, clash) {
+function showGhost(t, v, px, py) {
   ghost.style.display = "grid"; ghost.style.transform = `translate(${px}px, ${py}px)`; ghost.firstChild.textContent = v;
-  ghost.classList.toggle("clash", false);
+  for (const c of ["clash", "okc"]) ghost.classList.toggle(c, t.classList.contains(c));
 }
 function cellSize() { const b = $("board"); return { w: b.clientWidth / game.W, h: b.clientHeight / game.H }; }
 function render() {
@@ -410,8 +429,7 @@ function render() {
   $("best").textContent = best ? `Best ${best}${best <= L.par ? " ★" : ""}` : "Best –";
   $("levelBtn").textContent = `Level ${game.level + 1}/${LEVELS.length}`;
   const R = game.size.length;
-  $("status").innerHTML = game.screen === "won" ? `<span class="good">Valid Suguru!</span><span>${R}/${R} regions</span>`
-    : `<span>Regions <b>${a.okRegions.size}/${R}</b></span><span class="${a.clash.size ? "bad" : ""}">${a.clash.size ? a.clash.size + " touching" : "No touching pairs"}</span>`;
+  if (game.screen === "won") $("status").innerHTML = `<span class="good">Valid Suguru!</span><span>${R}/${R} regions</span>`; else setStatus(a);
   $("tip").innerHTML = hintText || TIPS[game.level] || "";
   document.body.classList.toggle("won", game.screen === "won");
   $("undoBtn").disabled = !game.history.length;
@@ -434,6 +452,10 @@ function render() {
   $("muteBtn").setAttribute("aria-label", save.muted ? "Sound off" : "Sound on"); $("muteBtn").style.opacity = save.muted ? .5 : 1;
 }
 let hintText = "";
+function setStatus(a) {
+  const R = game.size.length;
+  $("status").innerHTML = `<span>Regions <b>${a.okRegions.size}/${R}</b></span><span class="${a.clash.size ? "bad" : ""}">${a.clash.size ? a.clash.size + " touching" : "No touching pairs"}</span>`;
+}
 function clearHint() { hintMove = null; hintText = ""; hintKey = ""; hintStage = 0; hintWhy = new Set(); }
 
 // ================= actions =================
@@ -467,7 +489,13 @@ function loadLevel(i) {
 function findHint() {
   const L = LEVELS[game.level];
   if (game.screen !== "playing") return null;
-  return pathBetween(game.grid, L.goal, game.W, game.H, game.pins);
+  return pathBetween(game.grid, L.goal, game.W, game.H, game.pins, 30000, 260);
+}
+// when the current board is too far for a quick search: how many undos get back within reach?
+function undosToTrack() {
+  const L = LEVELS[game.level], h = game.history;
+  for (let n = 1; n <= Math.min(4, h.length); n++) if (pathBetween(h[h.length - n].grid, L.goal, game.W, game.H, game.pins, 8000, 70)) return n;
+  return 0;
 }
 function doHint() {
   if (game.screen !== "playing" || anim) return;
@@ -481,14 +509,16 @@ function doHint() {
   const p = findHint();
   if (!p || !p.length) {
     clearHint(); game = { ...game, hints: game.hints + 1 };
-    hintText = game.history.length ? "Hint: you are far from the answer. Press <strong>Undo</strong>, then ask again." : "Hint: press <strong>Restart</strong>, then ask again.";
-    const btn = game.history.length ? $("undoBtn") : $("restartBtn");
+    const n = undosToTrack();
+    hintText = n ? `Hint: you have drifted from the answer. Press <strong>Undo</strong>${n > 1 ? ` ${n} times` : ""}, then ask again.`
+      : "Hint: you are far from the answer. Press <strong>Restart</strong>, then ask again.";
+    const btn = n ? $("undoBtn") : $("restartBtn");
     btn.classList.add("pulse"); setTimeout(() => btn.classList.remove("pulse"), 1600);
     render(); return;
   }
   // first press: the clue and the line, not the direction
   hintMove = p[0]; hintKey = key; hintStage = 1; hintLeft = p.length; game = { ...game, hints: game.hints + 1 };
-  const clue = lineClue(game, hintMove.slice(0, -1));
+  const clue = lineClue(game, hintMove);
   hintWhy = new Set(clue.cells);
   hintText = `Hint: ${clue.text}. Try sliding that line. <strong>Hint again</strong> for the direction.`;
   render();
@@ -620,8 +650,8 @@ function openPicker() {
   LEVELS.forEach((L, i) => {
     const b = document.createElement("button"), best = save.best[i];
     b.className = "lv" + (best ? " done" : "") + (i === game.level ? " cur" : "");
-    b.innerHTML = `<b>${i + 1}${best && best <= L.par ? " ★" : ""}</b><small>${L.w}×${L.h} · par ${L.par}${L.pins ? " · pin" : ""}</small>`;
-    b.setAttribute("aria-label", `Level ${i + 1}, ${L.w} by ${L.h}, par ${L.par}${best ? ", best " + best : ""}`);
+    b.innerHTML = `<b>${i + 1}${best && best <= L.par ? " ★" : ""}</b><small>${L.w}×${L.h} · par ${L.par}${L.pins ? '<i class="pdot" aria-hidden="true"></i>' : ""}</small>`;
+    b.setAttribute("aria-label", `Level ${i + 1}, ${L.w} by ${L.h}, par ${L.par}${L.pins ? ", pins" : ""}${best ? ", best " + best : ""}`);
     b.onclick = () => { closeSheets(); loadLevel(i); };
     g.appendChild(b);
   });
