@@ -149,6 +149,31 @@ await p3.click("#pickGrid .lv >> nth=16"); await p3.waitForTimeout(100);
 await p3.evaluate(() => { for (const m of window.__qa.solve()) window.__qa.act(m); }); await p3.waitForTimeout(100);
 ok("last campaign level leads to All levels", (await p3.locator("#nextBtn").innerText()) === "All levels" && (await p3.locator("#levelBtn").innerText()) === "Level 17/17");
 ok("no errors on the daily page", !e3.length, e3.join());
+// hint wording on one-cell regions, over every move of every daily board
+const oneCell = await p3.evaluate(() => {
+  let bad = 0, seen = 0; const base = Date.UTC(2026, 9, 28);
+  for (let i = 0; i < 364; i++) {
+    const L = dailyLevel(new Date(base + i * 864e5).toISOString().slice(0, 10));
+    const g = { W: L.w, H: L.h, grid: L.start, reg: L.regions, size: regionSizes(L.regions), pins: [] };
+    for (const m of moveList(L.w, L.h, [])) { const t = lineClue(g, m).text; if (/only 1 cells/.test(t)) bad++; if (/one-cell/.test(t)) seen++; }
+  }
+  return { bad, seen };
+});
+ok("hints never say 'only 1 cells'", oneCell.bad === 0 && oneCell.seen > 0, JSON.stringify(oneCell));
+ok("a bad ?day= date is ignored", await (async () => { const p4 = await ctx.newPage(); await p4.goto(url + "?day=2026-02-30"); const d = await p4.evaluate(() => TODAY); await p4.close(); return d !== "2026-02-30" && d !== "2026-03-02"; })());
+// midnight: a page left open moves on to the new day's board
+const p5 = await ctx.newPage();
+await p5.clock.install({ time: new Date(2026, 9, 27, 23, 59, 30) });
+await p5.goto(url); await p5.waitForTimeout(100);
+await p5.evaluate(() => { document.getElementById("help").classList.remove("open"); window.__qa.reset(window.__qa.levels() - 1); });
+const before = (await p5.evaluate(() => window.__qa.state())).daily;
+await p5.clock.fastForward("02:00");
+await p5.evaluate(() => window.dispatchEvent(new Event("focus")));
+const after5 = await p5.evaluate(() => window.__qa.state());
+ok("today rolls over at midnight", before === "2026-10-27" && after5.daily === "2026-10-28" && /A new day/.test(after5.hintText), before + " → " + after5.daily);
+await p5.evaluate(() => window.__qa.reset(0));
+ok("level button shows a dot while today's board is unplayed", await p5.locator("#levelBtn.fresh").count() === 1);
+await p5.close();
 // storage blocked
 const ctx2 = await browser.newContext(); const p2 = await ctx2.newPage();
 await p2.addInitScript(() => { Object.defineProperty(window, "localStorage", { get() { throw new Error("blocked"); } }); });

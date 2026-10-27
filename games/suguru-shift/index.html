@@ -93,7 +93,8 @@
   .lv.today { min-height: 60px; flex-direction: row; justify-content: space-between; padding: 0 14px; gap: 10px; border-color: var(--accent); }
   .lv.today small { white-space: normal; text-align: right; }
   /* tall phones: the tip line has room to be read at arm's length */
-  @media (max-width: 600px) and (min-height: 780px) { #tip { font-size: 16px; min-height: 4.2em; } }
+  @media (max-width: 600px) and (min-height: 780px) { #tip { font-size: 18px; line-height: 1.45; min-height: 4.4em; margin: auto 0; } }
+  #levelBtn.fresh::after { content: ""; display: inline-block; width: 8px; height: 8px; margin-left: 6px; border-radius: 50%; background: var(--accent); vertical-align: 1px; }
   .lv.cur { outline: 2px solid var(--accent); }
   .keys { font-size: 13px; color: var(--muted); }
   @media (orientation: landscape) and (max-height: 560px) {
@@ -187,8 +188,11 @@ function dailyLevel(key) {
     start: [...start].map(Number), solution: sol.split(" "), daily: key, label, short: d + " " + label.split(" ").pop() };
 }
 // today's board joins the level list as the last entry (?day=YYYY-MM-DD picks another date, for testing)
-let TODAY = localKey(new Date());
-try { const q = new URLSearchParams(location.search).get("day"); if (q && /^\d{4}-\d\d-\d\d$/.test(q)) TODAY = q; } catch (e) {}
+let TODAY = localKey(new Date()), DAY_FIXED = false;
+try {
+  const q = new URLSearchParams(location.search).get("day");
+  if (q && /^\d{4}-\d\d-\d\d$/.test(q) && new Date(q + "T00:00:00Z").toISOString().slice(0, 10) === q) { TODAY = q; DAY_FIXED = true; }
+} catch (e) {}
 LEVELS.push(dailyLevel(TODAY));
 const isDaily = (i) => !!LEVELS[i].daily;
 const TIPS = [
@@ -285,7 +289,8 @@ function lineClue(g, mv) {
   for (let r = 0; r < size.length; r++) {
     const cells = []; for (let k = 0; k < grid.length; k++) if (reg[k] === r) cells.push(k);
     const big = cells.find((k) => grid[k] > size[r] && on(k));
-    let what = big !== undefined ? `the region with a ${grid[big]} in only ${size[r]} cells` : null;
+    let what = big === undefined ? null : size[r] === 1 ? `the one-cell region holding a ${grid[big]} (a lone cell must be 1)`
+      : `the region with a ${grid[big]} in only ${size[r]} cells`;
     if (!what) for (const k of cells) {
       const twin = cells.find((j) => j !== k && grid[j] === grid[k]);
       if (twin !== undefined && (on(k) || on(twin))) { what = `the region with two ${grid[k]}s`; break; }
@@ -459,6 +464,9 @@ function render() {
   $("slides").textContent = game.slides;
   $("par").textContent = L.par;
   $("best").textContent = best ? `Best ${best}${best <= L.par ? " ★" : ""}` : "Best –";
+  const fresh = !L.daily && !bestOf(CAMPAIGN);
+  $("levelBtn").classList.toggle("fresh", fresh);
+  $("levelBtn").setAttribute("aria-label", (L.daily ? `Daily board, ${L.label}` : `Level ${game.level + 1} of ${CAMPAIGN}`) + (fresh ? ". Today's board is waiting" : "") + ". Open levels");
   $("levelBtn").textContent = L.daily ? `Daily · ${L.short}` : `Level ${game.level + 1}/${CAMPAIGN}`;
   const R = game.size.length;
   if (game.screen === "won") $("status").innerHTML = `<span class="good">Valid Suguru!</span><span>${R}/${R} regions</span>`; else setStatus(a);
@@ -678,7 +686,20 @@ $("padU").onclick = () => padSlide("U"); $("padD").onclick = () => padSlide("D")
 $("undoBtn").onclick = doUndo; $("restartBtn").onclick = doRestart; $("hintBtn").onclick = doHint;
 $("nextBtn").onclick = next; $("winUndo").onclick = doUndo; $("againBtn").onclick = () => loadLevel(game.level);
 $("muteBtn").onclick = () => { save.muted = !save.muted; persist(); render(); };
+// a page left open past midnight moves on to the new day's board
+function refreshToday() {
+  if (DAY_FIXED || anim || drag) return;
+  const k = localKey(new Date());
+  if (k === TODAY) return;
+  TODAY = k; LEVELS[CAMPAIGN] = dailyLevel(k);
+  if (game.level === CAMPAIGN) { loadLevel(CAMPAIGN); hintText = `A new day: this is today's board, ${LEVELS[CAMPAIGN].label}.`; }
+  render();
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshToday(); });
+window.addEventListener("focus", refreshToday);
+setInterval(refreshToday, 60000);
 function openPicker() {
+  refreshToday();
   const g = $("pickGrid"); g.replaceChildren();
   const D = CAMPAIGN, TL = LEVELS[D], tb = $("todayBtn"), tbest = bestOf(D);
   tb.className = "lv today" + (tbest ? " done" : "") + (game.level === D ? " cur" : "");
