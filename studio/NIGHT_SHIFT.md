@@ -5,7 +5,8 @@ Benji is asleep: never stop to ask him anything. When something is ambiguous, ta
 reasonable reading, write down the assumption in the night log, and keep going.
 
 **One job per shift.** There are two shifts a night (about 22:30 and 03:50), each its own session.
-Each shift either finishes interrupted work, iterates one game that has feedback, or starts one game. Never two.
+Each shift either finishes interrupted work, iterates one game that has feedback or an approved hand-over,
+or starts one game from Benji's queue. Never two. With nothing in the backlog, the shift does nothing.
 
 ---
 
@@ -38,14 +39,10 @@ Read the board (`ideas`, `feedback`, `studio/state`) as described in `studio/BOA
    A hand-over that was only partly done (report says what's left) counts as unfinished.
 2. **New game** — otherwise, the first `queued` idea in Benji's queue order: lowest `order` first;
    ideas without an `order` come after those, oldest `createdAt` first.
-3. **Studio's own game** — if neither exists, the studio works on its own idea:
-   - **Continue** the newest idea with `origin: "studio"` if it has had fewer than 3 nights and
-     isn't `parked`. Tonight's input is the reviewer's "must fix" and "nice to have" items from the
-     last entry in its NIGHTS.md, plus anything left in its brief's "Later" list.
-   - **Otherwise pitch a new one** following "Studio pitch" in `studio/roles/producer.md`, and add it
-     to the board as a new idea with `origin: "studio"` (see `studio/BOARD.md`).
-
-   Benji's work always comes first: his notes and queued ideas are checked before this step every night.
+3. **Nothing to do — stop.** If none of the above exists, end the shift right away. The studio never
+   comes up with its own game ideas and never continues an earlier studio-pitched idea on its own.
+   Don't change the board, don't commit, don't publish anything. Final message, one line:
+   `No work tonight — nothing in the backlog.`
 
 Set the chosen idea to `status: "building"` on the board right away so Benji can see the shift started.
 
@@ -92,7 +89,7 @@ Follow `studio/roles/producer.md`. New game: if the idea already has a `slug` on
 `games/<slug>/DESIGN.md` exists, Benji has prepared it: use that folder and follow its DESIGN.md.
 Otherwise create `games/<slug>/` (slug = short kebab-case name),
 copy `studio/templates/BRIEF.md` and fill it in. Iteration: update the existing brief with tonight's
-goals, derived from Benji's notes (or, for the studio's own game, the last review), and nothing else.
+goals, derived from Benji's notes (or the approved hand-over), and nothing else.
 
 Commit: `git add -A && git commit -m "<slug>: brief for night N"`.
 
