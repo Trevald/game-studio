@@ -1,0 +1,225 @@
+{
+  "game": "games/fault-lines/index.html",
+  "at": "2026-10-28T03:26:34.395Z",
+  "checks": [
+    {
+      "name": "file under 2 MB",
+      "ok": true,
+      "detail": "29 KB"
+    },
+    {
+      "name": "external resources only from allowed CDNs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "library versions pinned",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no alert/confirm/prompt/print/iframe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "has a <title>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "declares window.__qa",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[desktop] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[desktop] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"playing\",\"level\":0,\"size\":[4,3],\"regions\":[],\"statuses\":[],\"free\":12,\"good\":0,\"bad\":0,\"hints\":0,\"hint\":null,\"labels\":[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]}"
+    },
+    {
+      "name": "[desktop] survives 400 random actions",
+      "ok": true,
+      "detail": "screens seen: playing; resets: 0"
+    },
+    {
+      "name": "every level completable via solve() (11 levels)",
+      "ok": true,
+      "detail": "L1:4 L2:5 L3:5 L4:6 L5:7 L6:9 L7:9 L8:10 L9:12 L10:12 L11:12"
+    },
+    {
+      "name": "[desktop] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] no horizontal scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "[phone] __qa hook present",
+      "ok": true,
+      "detail": "{\"state\":\"function\",\"actions\":\"function\",\"act\":\"function\",\"solve\":\"function\",\"levels\":\"function\",\"reset\":\"function\"}"
+    },
+    {
+      "name": "[phone] state() is serializable with a screen field",
+      "ok": true,
+      "detail": "{\"screen\":\"playing\",\"level\":0,\"size\":[4,3],\"regions\":[],\"statuses\":[],\"free\":12,\"good\":0,\"bad\":0,\"hints\":0,\"hint\":null,\"labels\":[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]}"
+    },
+    {
+      "name": "[phone] survives 60 random actions",
+      "ok": true,
+      "detail": "screens seen: playing; resets: 0"
+    },
+    {
+      "name": "[phone] no console errors or exceptions",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "games/fault-lines/qa/desktop-01-load.png",
+    "games/fault-lines/qa/desktop-02-after-play.png",
+    "games/fault-lines/qa/desktop-03-solved.png",
+    "games/fault-lines/qa/phone-01-load.png",
+    "games/fault-lines/qa/phone-02-after-play.png"
+  ],
+  "desktop_initialState": {
+    "screen": "playing",
+    "level": 0,
+    "size": [
+      4,
+      3
+    ],
+    "regions": [],
+    "statuses": [],
+    "free": 12,
+    "good": 0,
+    "bad": 0,
+    "hints": 0,
+    "hint": null,
+    "labels": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  },
+  "solveResults": [
+    {
+      "lv": 0,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 1,
+      "ok": true,
+      "moves": 5,
+      "screen": "won"
+    },
+    {
+      "lv": 2,
+      "ok": true,
+      "moves": 5,
+      "screen": "won"
+    },
+    {
+      "lv": 3,
+      "ok": true,
+      "moves": 6,
+      "screen": "won"
+    },
+    {
+      "lv": 4,
+      "ok": true,
+      "moves": 7,
+      "screen": "won"
+    },
+    {
+      "lv": 5,
+      "ok": true,
+      "moves": 9,
+      "screen": "won"
+    },
+    {
+      "lv": 6,
+      "ok": true,
+      "moves": 9,
+      "screen": "won"
+    },
+    {
+      "lv": 7,
+      "ok": true,
+      "moves": 10,
+      "screen": "won"
+    },
+    {
+      "lv": 8,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 9,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    },
+    {
+      "lv": 10,
+      "ok": true,
+      "moves": 12,
+      "screen": "won"
+    }
+  ],
+  "phone_initialState": {
+    "screen": "playing",
+    "level": 0,
+    "size": [
+      4,
+      3
+    ],
+    "regions": [],
+    "statuses": [],
+    "free": 12,
+    "good": 0,
+    "bad": 0,
+    "hints": 0,
+    "hint": null,
+    "labels": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  },
+  "passed": true
+}

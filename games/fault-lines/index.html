@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fault Lines</title>
+<style>
+  :root {
+    --bg: #f3efe6; --panel: #fffdf8; --ink: #24211b; --muted: #6d675a; --line: #d9d2c3;
+    --cell: #fffdf8; --reg: #dde6f4; --good: #d3ecd6; --bad: #f5d3cd; --stroke: #ffe39a;
+    --wall: #4a5873; --given: #24211b; --accent: #2e63b8; --goodInk: #1f6b33; --badInk: #a3312a;
+    --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #15161a; --panel: #1f2126; --ink: #ece8de; --muted: #a29d90; --line: #3a3d45;
+      --cell: #1f2126; --reg: #283650; --good: #1f4429; --bad: #552624; --stroke: #5b4a17;
+      --wall: #9fb2d6; --given: #ece8de; --accent: #7ea6ec; --goodInk: #7fd493; --badInk: #f09a90; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #15161a; --panel: #1f2126; --ink: #ece8de; --muted: #a29d90; --line: #3a3d45;
+    --cell: #1f2126; --reg: #283650; --good: #1f4429; --bad: #552624; --stroke: #5b4a17;
+    --wall: #9fb2d6; --given: #ece8de; --accent: #7ea6ec; --goodInk: #7fd493; --badInk: #f09a90; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); -webkit-tap-highlight-color: transparent;
+    padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(16px, env(safe-area-inset-left, 0px)); }
+  main { width: min(100%, 560px); margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; gap: 10px; padding: 12px 0 16px; }
+  header { display: flex; align-items: center; gap: 8px; }
+  h1 { margin: 0; font-size: 22px; letter-spacing: -0.01em; flex: 1; white-space: nowrap; }
+  .pill { font: 600 14px var(--font); min-height: 44px; min-width: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--panel); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+  .pill:focus-visible, .lv:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .pill.primary { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+  .pill[disabled] { opacity: .45; cursor: default; }
+  .hud { display: flex; justify-content: space-between; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 15px; }
+  #wrap { flex: 1; display: grid; place-items: center; min-height: 0; }
+  #board { width: min(100%, calc(100dvh - 300px)); min-width: 240px; max-width: 100%; aspect-ratio: 1; touch-action: none; user-select: none; -webkit-user-select: none; display: block; outline: none; }
+  #board:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+  #board text { font: 700 44px var(--font); fill: var(--ink); dominant-baseline: central; text-anchor: middle; pointer-events: none; }
+  #tip { min-height: 2.9em; text-align: center; color: var(--muted); font-size: 15px; display: grid; place-items: center; padding: 0 4px; }
+  #tip b { color: var(--ink); }
+  #tip .ok { color: var(--goodInk); font-weight: 700; } #tip .no { color: var(--badInk); font-weight: 700; }
+  .bar { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  #win { display: none; flex-direction: column; align-items: center; gap: 8px; }
+  #win.on { display: flex; }
+  #win .big { font-size: 20px; font-weight: 700; color: var(--goodInk); }
+  .overlay { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 86%, transparent); display: none; place-items: center; padding: 16px; z-index: 5; }
+  .overlay.on { display: grid; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; width: min(100%, 420px); max-height: 100%; overflow: auto; display: grid; gap: 14px; }
+  .card h2 { margin: 0; font-size: 20px; }
+  .card p { margin: 0; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+  .lv { min-height: 64px; border-radius: 12px; border: 1px solid var(--line); background: var(--cell); color: var(--ink); font: 700 18px var(--font); cursor: pointer; display: grid; place-items: center; padding: 6px 0; line-height: 1.15; }
+  .lv small { display: block; font: 500 12px var(--font); color: var(--muted); }
+  .lv.done { background: var(--good); border-color: transparent; }
+  .lv.cur { outline: 2px solid var(--accent); }
+  .keys { font-size: 13px; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  @media (orientation: landscape) and (max-height: 560px) {
+    main { width: min(100%, 980px); display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto 1fr auto auto; column-gap: 20px; row-gap: 8px; }
+    #wrap { grid-column: 1; grid-row: 1 / span 5; }
+    #board { width: calc(100dvh - 32px); min-width: 0; }
+    header, .hud, #tip, .bar, #win { grid-column: 2; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Fault Lines</h1>
+    <button class="pill" id="levelsBtn" aria-label="Levels">Levels</button>
+    <button class="pill" id="helpBtn" aria-label="How to play">?</button>
+    <button class="pill" id="muteBtn" aria-label="Sound on">♪</button>
+  </header>
+  <div class="hud"><span id="lvl">Level 1</span><span id="count">0 of 12 cells</span></div>
+  <div id="wrap"><svg id="board" role="img" aria-label="Puzzle board" tabindex="0"></svg></div>
+  <div id="tip" aria-live="polite"></div>
+  <div id="win" aria-live="polite"><div class="big" id="winText">Solved!</div>
+    <div class="bar"><button class="pill primary" id="nextBtn">Next level</button><button class="pill" id="winLevels">Levels</button></div></div>
+  <div class="bar" id="tools">
+    <button class="pill" id="undoBtn">Undo</button>
+    <button class="pill" id="restartBtn">Restart</button>
+    <button class="pill" id="hintBtn">Hint</button>
+  </div>
+</main>
+<div class="overlay" id="levelsOv" role="dialog" aria-modal="true" aria-label="Levels">
+  <div class="card"><h2>Levels</h2><div class="grid" id="lvGrid"></div><button class="pill" id="closeLevels">Close</button></div>
+</div>
+<div class="overlay" id="helpOv" role="dialog" aria-modal="true" aria-label="How to play">
+  <div class="card"><h2>How to play</h2>
+    <p>Every number is already in place; the walls are gone. Group the cells back into regions: a region of <b>N</b> cells holds each number from 1 to N once (so its biggest number is its size, at most 5).</p>
+    <p><b>Drag</b> across cells to make a region. Drag from a region to grow it; drag back to take a cell out of the stroke. <b>Tap</b> a free cell to make a one-cell region, tap a cell in a region to free it.</p>
+    <p>Dark lines are fixed walls: the cells on either side are in different regions. A region turns green when it holds 1 to N. Solve the board by making every region green. There is exactly one answer, and it can be found without guessing.</p>
+    <p class="keys">Keyboard: arrows move · Space/Enter pen down/up · Backspace frees a cell · Z undo · R restart · H hint · N next · L levels</p>
+    <button class="pill primary" id="closeHelp">Play</button></div>
+</div>
+<script>
+// ---------- constants + levels ----------
+// LEVELS-BEGIN
+const LEVELS = [
+  {"w":4,"h":3,"d":"421313424213","walls":[[9,10]],"regions":[[0,1,2,3],[4,5,8,9],[6,7,10,11]]},
+  {"w":4,"h":4,"d":"1343451223451521","walls":[[5,6],[6,10],[6,7]],"regions":[[2,3,7,11,15],[6],[9,10,12,13,14],[0,1,4,5,8]]},
+  {"w":4,"h":4,"d":"1254543112524313","walls":[[10,14],[2,6],[9,10]],"regions":[[2,3,7,11,15],[0,1,5,6,10],[4,8,9,12,13],[14]]},
+  {"w":5,"h":5,"d":"5142123534514124235435123","walls":[[15,16],[22,23]],"regions":[[5,10,11,15,20],[0,1,2,3,6],[4,7,8,9,14],[12,16,17,21,22],[13,18,19,23,24]]},
+  {"w":5,"h":5,"d":"1214253531212453451221343","walls":[[12,13],[2,7],[21,22]],"regions":[[13,14,18,19,24],[3,4,7,8,9],[11,12,17,22,23],[0,5,10,15,16],[1,2,6],[20,21]]},
+  {"w":6,"h":6,"d":"141413252324314153425321134145252323","walls":[[11,17],[30,31],[6,7]],"regions":[[14,15,16,17,22],[4,5,10,11],[13,18,19,20,21],[0,1,6,12],[2,3,7,8,9],[23,28,29,34,35],[24,25,30],[26,27,31,32,33]]},
+  {"w":6,"h":6,"d":"252121134343525151413234354152423241","walls":[[10,16],[26,27],[33,34]],"regions":[[13,14,15,20,26],[21,22,28,34,35],[11,16,17,23,29],[1,2,3,7,8],[0,6,12,18,24],[4,5,9,10],[19,25,30,31,32],[27,33]]},
+  {"w":6,"h":6,"d":"212531343125152543234121512343234121","walls":[[13,19],[15,21],[2,8],[3,9]],"regions":[[18,19,25],[24,30,31,32,33],[0,6,7,12,13],[1,2],[3,4,5,10,16],[8,9,14,15,20],[11,17,22,23,28],[21,26,27],[29,34,35]]},
+  {"w":7,"h":7,"d":"2312154454342132121351434542352121314353423214213","walls":[[0,7],[1,2],[19,26],[36,37],[41,48]],"regions":[[0,1,8,9,16],[7,14,15,21],[31,32,37,38,45],[22,28,29,30,35],[36,42,43,44],[33,39,40,41],[46,47,48],[17,18,23,24,25],[13,20,26,27,34],[4,5,6,12,19],[2,3,10,11]]},
+  {"w":7,"h":7,"d":"3232121141534525242131313542245413551325213451434","walls":[[13,20],[22,23],[39,40],[42,43],[6,13],[7,14]],"regions":[[21,28,29,35,42],[8,9,14,15,22],[0,1,7],[36,37,38,39,43],[16,23,24,30,31],[40,44,45,46,47],[2,3,4,10,17],[5,11,12,13,19],[6],[18,25,26,32,33],[20,27,34,41,48]]},
+  {"w":7,"h":7,"d":"3523214241453213532412421532135341442425251313131","walls":[[10,11],[10,17],[18,25],[26,27],[30,31],[35,36],[7,8]],"regions":[[3,4,5,10],[27,34,41,47,48],[31,32,38,39,46],[19,25,26,33,40],[6,11,12,13,20],[17,18,24],[7,14,15,16,22],[0,1,2,8,9],[23,30,37,44,45],[21,28,29,35],[36,42,43]]}
+];
+// LEVELS-END
+const TIPS = [
+  "<b>Drag</b> across cells to make a region. A region of 3 cells holds 1, 2 and 3.",
+  "A region's biggest number is its size. A <b>5</b> needs a 4, 3, 2 and 1 next to it.",
+  "<b>Dark lines</b> are fixed walls: the cells on either side are in different regions.",
+  "A 1 with no 2 beside it stands alone: <b>tap</b> it.",
+];
+const KEY = "faultLines.v1";
+
+// ---------- game core (pure) ----------
+function lvl(n) { const L = LEVELS[n]; return { ...L, n: L.w * L.h, wallSet: new Set(L.walls.map(([a, b]) => a + "-" + b)) }; }
+const isWall = (L, a, b) => L.wallSet.has(a < b ? a + "-" + b : b + "-" + a);
+function adj(L, a, b) { const ax = a % L.w, bx = b % L.w; return (Math.abs(a - b) === L.w) || (Math.abs(a - b) === 1 && Math.abs(ax - bx) === 1); }
+function nb(L, i) { const x = i % L.w, y = (i / L.w) | 0, o = []; if (y > 0) o.push(i - L.w); if (x < L.w - 1) o.push(i + 1); if (y < L.h - 1) o.push(i + L.w); if (x > 0) o.push(i - 1); return o; }
+// labels: -1 free, else region id. normalize = split disconnected parts, renumber 0.. in reading order.
+function normalize(L, lab) {
+  const out = new Array(L.n).fill(-1); let id = 0;
+  for (let s = 0; s < L.n; s++) {
+    if (lab[s] < 0 || out[s] >= 0) continue;
+    const st = [s]; out[s] = id;
+    while (st.length) { const c = st.pop(); for (const q of nb(L, c)) if (out[q] < 0 && lab[q] === lab[s] && !isWall(L, c, q)) { out[q] = id; st.push(q); } }
+    id++;
+  }
+  return out;
+}
+function regionsOf(lab) { const m = new Map(); lab.forEach((v, i) => { if (v >= 0) { if (!m.has(v)) m.set(v, []); m.get(v).push(i); } }); return [...m.values()]; }
+function status(L, cells) {
+  const ds = cells.map((i) => +L.d[i]), set = new Set(ds);
+  if (cells.length > 5 || set.size < ds.length) return "bad";
+  return Math.max(...ds) === cells.length ? "good" : "open";
+}
+function newGame(level, lab) {
+  const L = lvl(level);
+  return { level, L, lab: lab ? normalize(L, lab) : new Array(L.n).fill(-1), undo: [], hints: 0, screen: "playing", hint: null };
+}
+function evaluate(g) {
+  const regs = regionsOf(g.lab).map((c) => ({ cells: c, st: status(g.L, c) }));
+  const free = g.lab.filter((v) => v < 0).length;
+  const good = regs.filter((r) => r.st === "good").length, bad = regs.filter((r) => r.st === "bad").length;
+  return { regs, free, good, bad, won: free === 0 && bad === 0 && regs.every((r) => r.st === "good") };
+}
+function commit(g, lab) {
+  const nl = normalize(g.L, lab);
+  if (nl.join() === g.lab.join()) return g;
+  const ng = { ...g, undo: [...g.undo, g.lab], lab: nl, hint: null };
+  ng.screen = evaluate(ng).won ? "won" : "playing";
+  return ng;
+}
+// a stroke: cells in order; base = label of the first cell (null = new region)
+function applyStroke(g, cells, base) {
+  const lab = g.lab.slice(), id = base ?? Math.max(-1, ...lab) + 1;
+  for (const c of cells) lab[c] = id;
+  return commit(g, lab);
+}
+function applyTap(g, i) {
+  const lab = g.lab.slice();
+  if (lab[i] < 0) lab[i] = Math.max(-1, ...lab) + 1; else lab[i] = -1;
+  return commit(g, lab);
+}
+function applyFree(g, i) { if (g.lab[i] < 0) return g; const lab = g.lab.slice(); lab[i] = -1; return commit(g, lab); }
+function applyRegion(g, cells) { return applyStroke(g, cells, null); }
+function applyRestart(g) { if (g.lab.every((v) => v < 0)) return g; return { ...g, undo: [...g.undo, g.lab], lab: new Array(g.L.n).fill(-1), screen: "playing", hint: null }; }
+function applyUndo(g) { if (!g.undo.length) return g; const lab = g.undo[g.undo.length - 1]; const ng = { ...g, lab, undo: g.undo.slice(0, -1), hint: null }; ng.screen = evaluate(ng).won ? "won" : "playing"; return ng; }
+// hint: first a region that can't be right, else the next region the deduction order finds
+function findHint(g) {
+  const answer = g.L.regions, ansOf = new Array(g.L.n);
+  answer.forEach((c, k) => c.forEach((i) => (ansOf[i] = k)));
+  const ev = evaluate(g);
+  for (const r of ev.regs) {
+    const ks = new Set(r.cells.map((i) => ansOf[i]));
+    const exact = ks.size === 1 && answer[[...ks][0]].length === r.cells.length;
+    if (ks.size > 1 || (r.st === "good" && !exact)) return { kind: "wrong", cells: r.cells };
+  }
+  for (const c of answer) {
+    const id = g.lab[c[0]];
+    if (id >= 0 && c.every((i) => g.lab[i] === id) && g.lab.filter((v) => v === id).length === c.length) continue;
+    return { kind: "next", cells: c };
+  }
+  return null;
+}
+function applyHint(g) { if (g.screen !== "playing") return g; const h = findHint(g); return h ? { ...g, hint: h, hints: g.hints + 1 } : g; }
+
+// ---------- state + persistence ----------
+let save = { solved: {}, level: 0, boards: {}, mute: false, helped: false };
+try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && typeof s === "object") save = { ...save, ...s }; } catch (e) {}
+function persist() { try { save.level = game.level; save.boards[game.level] = game.lab; localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) {} }
+function startLevel(n, fresh) {
+  n = Math.max(0, Math.min(LEVELS.length - 1, n | 0));
+  const stored = !fresh && Array.isArray(save.boards[n]) && save.boards[n].length === LEVELS[n].w * LEVELS[n].h ? save.boards[n] : null;
+  game = newGame(n, stored);
+  stroke = null; cursor = Math.min(cursor, game.L.n - 1); penDown = false;
+  render(); persist();
+}
+let game = null, stroke = null, cursor = 0, penDown = false;
+
+// ---------- sound ----------
+let ac = null;
+function tone(freqs, dur = 0.12, vol = 0.06) {
+  if (save.mute) return;
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const t = ac.currentTime;
+    freqs.forEach((f, k) => { const o = ac.createOscillator(), gn = ac.createGain(); o.type = "triangle"; o.frequency.value = f;
+      gn.gain.setValueAtTime(0, t + k * 0.06); gn.gain.linearRampToValueAtTime(vol, t + k * 0.06 + 0.01); gn.gain.exponentialRampToValueAtTime(0.0001, t + k * 0.06 + dur);
+      o.connect(gn).connect(ac.destination); o.start(t + k * 0.06); o.stop(t + k * 0.06 + dur + 0.02); });
+  } catch (e) {}
+}
+
+// ---------- rendering ----------
+const $ = (id) => document.getElementById(id);
+const S = 100, PAD = 6;
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+function cellXY(L, i) { return [PAD + (i % L.w) * S, PAD + ((i / L.w) | 0) * S]; }
+function render() {
+  const g = game, L = g.L, ev = evaluate(g), svg = $("board");
+  svg.setAttribute("viewBox", `0 0 ${L.w * S + PAD * 2} ${L.h * S + PAD * 2}`);
+  const stOf = new Array(L.n).fill(null);
+  for (const r of ev.regs) for (const c of r.cells) stOf[c] = r.st;
+  const inStroke = new Set(stroke ? stroke.cells : []);
+  // label preview while stroking
+  let lab = g.lab;
+  if (stroke && stroke.cells.length) { lab = lab.slice(); const id = stroke.base ?? 999; for (const c of stroke.cells) lab[c] = id; }
+  const kids = [];
+  const won = g.screen === "won";
+  for (let i = 0; i < L.n; i++) {
+    const [x, y] = cellXY(L, i);
+    let fill = "var(--cell)";
+    if (inStroke.has(i)) fill = "var(--stroke)";
+    else if (stOf[i] === "good") fill = won ? "var(--cell)" : "var(--good)";
+    else if (stOf[i] === "bad") fill = "var(--bad)";
+    else if (stOf[i] === "open") fill = "var(--reg)";
+    kids.push(el("rect", { x, y, width: S, height: S, fill, "data-i": i }));
+  }
+  // thin grid lines
+  for (let i = 0; i < L.n; i++) for (const q of nb(L, i)) if (q > i) {
+    const sameReg = lab[i] >= 0 && lab[i] === lab[q] && !isWall(L, i, q);
+    const [x, y] = cellXY(L, i), horiz = q === i + 1;
+    const line = horiz ? { x1: x + S, y1: y, x2: x + S, y2: y + S } : { x1: x, y1: y + S, x2: x + S, y2: y + S };
+    if (isWall(L, i, q)) continue;
+    const reg = (lab[i] >= 0 || lab[q] >= 0) && !sameReg;
+    kids.push(el("line", { ...line, stroke: reg ? (won ? "var(--given)" : "var(--wall)") : "var(--line)", "stroke-width": reg ? 7 : 2, "stroke-linecap": "round" }));
+  }
+  // given walls + outer frame
+  for (const [a, b] of L.walls) {
+    const i = Math.min(a, b), q = Math.max(a, b), [x, y] = cellXY(L, i), horiz = q === i + 1;
+    const line = horiz ? { x1: x + S, y1: y, x2: x + S, y2: y + S } : { x1: x, y1: y + S, x2: x + S, y2: y + S };
+    kids.push(el("line", { ...line, stroke: "var(--given)", "stroke-width": 10, "stroke-linecap": "round" }));
+  }
+  kids.push(el("rect", { x: PAD, y: PAD, width: L.w * S, height: L.h * S, fill: "none", stroke: "var(--given)", "stroke-width": 10, rx: 4 }));
+  // hint outline
+  if (g.hint) for (const c of g.hint.cells) {
+    const [x, y] = cellXY(L, c);
+    kids.push(el("rect", { x: x + 9, y: y + 9, width: S - 18, height: S - 18, rx: 12, fill: "none", stroke: g.hint.kind === "wrong" ? "var(--badInk)" : "var(--accent)", "stroke-width": 6, "stroke-dasharray": "14 9" }));
+  }
+  // stroke path
+  if (stroke && stroke.cells.length > 1) {
+    const pts = stroke.cells.map((c) => { const [x, y] = cellXY(L, c); return (x + S / 2) + "," + (y + S / 2); }).join(" ");
+    kids.push(el("polyline", { points: pts, fill: "none", stroke: "var(--accent)", "stroke-width": 8, "stroke-linecap": "round", "stroke-linejoin": "round", opacity: 0.55 }));
+  }
+  for (let i = 0; i < L.n; i++) { const [x, y] = cellXY(L, i); const t = el("text", { x: x + S / 2, y: y + S / 2 + 2 }); t.textContent = L.d[i]; kids.push(t); }
+  if (kbActive && !won) { const [x, y] = cellXY(L, cursor); kids.push(el("rect", { x: x + 4, y: y + 4, width: S - 8, height: S - 8, rx: 10, fill: "none", stroke: penDown ? "var(--badInk)" : "var(--accent)", "stroke-width": 5 })); }
+  svg.replaceChildren(...kids);
+  svg.setAttribute("aria-label", `Board ${L.w} by ${L.h}. ${ev.good} green regions, ${ev.free} free cells.`);
+  $("lvl").textContent = `Level ${g.level + 1} of ${LEVELS.length} · ${L.w}×${L.h}`;
+  const placed = L.n - ev.free;
+  $("count").textContent = won ? (g.hints ? `${g.hints} hint${g.hints > 1 ? "s" : ""}` : "no hints") : `${placed} of ${L.n} cells grouped`;
+  $("undoBtn").disabled = !g.undo.length;
+  $("restartBtn").disabled = g.lab.every((v) => v < 0);
+  $("hintBtn").disabled = won;
+  $("win").classList.toggle("on", won);
+  $("tools").style.display = won ? "none" : "";
+  const last = g.level === LEVELS.length - 1;
+  $("nextBtn").textContent = last ? "Back to level 1" : "Next level";
+  $("winText").textContent = last && LEVELS.every((_, k) => save.solved[k] || k === g.level) ? "All levels solved!" : "Solved!";
+  $("tip").innerHTML = tipText(g, ev);
+}
+function tipText(g, ev) {
+  if (g.screen === "won") return "Every region holds 1 to N.";
+  if (stroke && stroke.cells.length) {
+    const cells = stroke.base != null ? [...new Set([...regionsOf(g.lab).find((r) => r.includes(stroke.first)) || [], ...stroke.cells])] : stroke.cells;
+    const ds = cells.map((i) => +g.L.d[i]).sort((a, b) => a - b), st = status(g.L, cells);
+    const word = st === "good" ? `<span class="ok">✓ holds 1 to ${cells.length}</span>` : st === "bad" ? `<span class="no">${cells.length > 5 ? "more than 5 cells" : "a number repeats"}</span>` : `needs ${Math.max(...ds)} cells`;
+    return `${cells.length} cell${cells.length > 1 ? "s" : ""}: ${ds.join(" ")} · ${word}`;
+  }
+  if (g.hint) return g.hint.kind === "wrong" ? "The <b>dashed</b> region can't be right: its cells belong to different regions." : `The <b>dashed</b> ${g.hint.cells.length} cell${g.hint.cells.length > 1 ? "s" : ""} make one region.`;
+  if (ev.bad) return `<span class="no">Red</span> regions repeat a number or have more than 5 cells.`;
+  if (g.level < TIPS.length && !ev.regs.length) return TIPS[g.level];
+  return "Group every cell into a region that holds 1 to N.";
+}
+
+// ---------- input ----------
+const svg = $("board");
+let kbActive = false;
+function cellAt(ev) {
+  const r = svg.getBoundingClientRect(), L = game.L;
+  const vw = L.w * S + PAD * 2, vh = L.h * S + PAD * 2, sc = Math.min(r.width / vw, r.height / vh);
+  const ox = r.left + (r.width - vw * sc) / 2, oy = r.top + (r.height - vh * sc) / 2;
+  const fx = ((ev.clientX - ox) / sc - PAD) / S, fy = ((ev.clientY - oy) / sc - PAD) / S;
+  if (fx < 0 || fy < 0 || fx >= L.w || fy >= L.h) return { i: -1, fx, fy };
+  return { i: (fy | 0) * L.w + (fx | 0), fx, fy };
+}
+function beginStroke(i) { stroke = { first: i, base: game.lab[i] >= 0 ? game.lab[i] : null, cells: [i], moved: false }; }
+function extendStroke(i) {
+  const L = game.L, c = stroke.cells, last = c[c.length - 1];
+  if (i === last) return false;
+  if (c.length > 1 && i === c[c.length - 2]) { c.pop(); stroke.moved = true; return true; }
+  if (!adj(L, last, i) || isWall(L, last, i) || c.includes(i)) return false;
+  c.push(i); stroke.moved = true; tone([520 + c.length * 40], 0.05, 0.03); return true;
+}
+function endStroke() {
+  if (!stroke) return;
+  const s = stroke; stroke = null;
+  const before = evaluate(game).good;
+  if (!s.moved && s.cells.length === 1) game = applyTap(game, s.first);
+  else game = applyStroke(game, s.cells, s.base);
+  afterMove(before);
+}
+function afterMove(beforeGood) {
+  const ev = evaluate(game);
+  if (game.screen === "won") { save.solved[game.level] = true; tone([523, 659, 784, 1047], 0.35, 0.07); }
+  else if (ev.good > beforeGood) tone([660, 880], 0.16, 0.05);
+  render(); persist();
+}
+let activePointer = null;
+svg.addEventListener("pointerdown", (e) => {
+  if (game.screen !== "playing" || activePointer !== null) return;
+  const { i } = cellAt(e); if (i < 0) return;
+  e.preventDefault(); activePointer = e.pointerId; kbActive = false; penDown = false;
+  try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+  beginStroke(i); render();
+});
+svg.addEventListener("pointermove", (e) => {
+  if (e.pointerId !== activePointer || !stroke) return;
+  const { i, fx, fy } = cellAt(e); if (i < 0) return;
+  // only take a cell once the finger is well inside it (avoids corner flicker)
+  const dx = fx - (fx | 0) - 0.5, dy = fy - (fy | 0) - 0.5;
+  if (Math.abs(dx) > 0.38 || Math.abs(dy) > 0.38) return;
+  const L = game.L, last = stroke.cells[stroke.cells.length - 1];
+  let changed = false;
+  if (!adj(L, last, i) && i !== last) { // fast drag skipped a cell: bridge through one orthogonal step
+    const lx = last % L.w, ly = (last / L.w) | 0, ix = i % L.w, iy = (i / L.w) | 0;
+    if (Math.abs(lx - ix) + Math.abs(ly - iy) === 2) {
+      const mids = [ly * L.w + ix, iy * L.w + lx, ((ly + iy) / 2) * L.w + (lx + ix) / 2].filter((m) => Number.isInteger(m) && adj(L, last, m) && adj(L, m, i));
+      for (const m of mids) { if (extendStroke(m)) { changed = true; break; } }
+    }
+  }
+  changed = extendStroke(i) || changed;
+  if (changed) render();
+});
+function finishPointer(e) { if (e.pointerId !== activePointer) return; activePointer = null; endStroke(); }
+svg.addEventListener("pointerup", finishPointer);
+svg.addEventListener("pointercancel", (e) => { if (e.pointerId !== activePointer) return; activePointer = null; stroke = null; render(); });
+
+function doUndo() { if (stroke) { stroke = null; penDown = false; } const b = evaluate(game).good; game = applyUndo(game); afterMove(b); }
+function doRestart() { stroke = null; penDown = false; game = applyRestart(game); render(); persist(); }
+function doHint() { game = applyHint(game); render(); }
+function doNext() { startLevel(game.level === LEVELS.length - 1 ? 0 : game.level + 1); }
+$("undoBtn").onclick = doUndo; $("restartBtn").onclick = doRestart; $("hintBtn").onclick = doHint; $("nextBtn").onclick = doNext;
+function openLevels() {
+  $("lvGrid").replaceChildren(...LEVELS.map((L, k) => { const b = document.createElement("button"); b.className = "lv" + (save.solved[k] ? " done" : "") + (k === game.level ? " cur" : "");
+    b.innerHTML = `${k + 1}<small>${L.w}×${L.h}${save.solved[k] ? " ✓" : ""}</small>`; b.setAttribute("aria-label", `Level ${k + 1}, ${L.w} by ${L.h}${save.solved[k] ? ", solved" : ""}`);
+    b.onclick = () => { closeOv("levelsOv"); startLevel(k); }; return b; }));
+  openOv("levelsOv");
+}
+let lastFocus = null;
+function openOv(id) { lastFocus = document.activeElement; $(id).classList.add("on"); const f = $(id).querySelector(".lv.cur, .pill.primary, button"); f && f.focus(); }
+function closeOv(id) { $(id).classList.remove("on"); lastFocus && lastFocus.focus && lastFocus.focus(); }
+$("levelsBtn").onclick = openLevels; $("winLevels").onclick = openLevels; $("closeLevels").onclick = () => closeOv("levelsOv");
+$("helpBtn").onclick = () => openOv("helpOv"); $("closeHelp").onclick = () => { save.helped = true; persist(); closeOv("helpOv"); };
+for (const id of ["levelsOv", "helpOv"]) $(id).addEventListener("pointerdown", (e) => { if (e.target.id === id) closeOv(id); });
+function setMute() { $("muteBtn").textContent = save.mute ? "♪̸" : "♪"; $("muteBtn").setAttribute("aria-label", save.mute ? "Sound off" : "Sound on"); $("muteBtn").style.opacity = save.mute ? .55 : 1; }
+$("muteBtn").onclick = () => { save.mute = !save.mute; setMute(); persist(); };
+
+document.addEventListener("keydown", (e) => {
+  const ov = document.querySelector(".overlay.on");
+  if (ov) { if (e.key === "Escape") closeOv(ov.id); return; }
+  if (e.target.tagName === "BUTTON" && (e.key === " " || e.key === "Enter")) return;
+  const L = game.L, k = e.key;
+  const mv = { ArrowUp: -L.w, ArrowDown: L.w, ArrowLeft: -1, ArrowRight: 1 }[k];
+  if (mv !== undefined) {
+    e.preventDefault(); kbActive = true;
+    const x = cursor % L.w, n = cursor + mv;
+    if (n < 0 || n >= L.n || (mv === 1 && x === L.w - 1) || (mv === -1 && x === 0)) { render(); return; }
+    if (penDown && stroke) { if (extendStroke(n) || stroke.cells[stroke.cells.length - 1] === n) cursor = n; }
+    else cursor = n;
+    render(); return;
+  }
+  if (e.ctrlKey || e.metaKey) { if (k.toLowerCase() === "z") { e.preventDefault(); doUndo(); } return; }
+  if (k === " " || k === "Enter") {
+    e.preventDefault(); if (game.screen === "won") { if (k === "Enter") doNext(); return; }
+    kbActive = true;
+    if (!penDown) { penDown = true; beginStroke(cursor); render(); } else { penDown = false; endStroke(); }
+    return;
+  }
+  if (k === "Escape") { if (stroke) { stroke = null; penDown = false; render(); } return; }
+  if (k === "Backspace" || k === "Delete") { e.preventDefault(); if (game.screen !== "playing" || stroke) return; const b = evaluate(game).good; game = applyFree(game, cursor); afterMove(b); return; }
+  const kl = k.toLowerCase();
+  if (kl === "z") doUndo(); else if (kl === "r") doRestart(); else if (kl === "h") doHint();
+  else if (kl === "n" && game.screen === "won") doNext(); else if (kl === "l") openLevels();
+});
+
+setMute();
+startLevel(save.level || 0);
+if (!save.helped && !Object.keys(save.solved).length) openOv("helpOv");
+
+// ---------- QA hook ----------
+function qaAct(a) {
+  const b = evaluate(game).good;
+  if (a === "undo") return doUndo();
+  if (a === "restart") return doRestart();
+  if (a === "hint") return doHint();
+  if (a === "next") return doNext();
+  const [kind, x, y] = String(a).split(":");
+  if (game.screen !== "playing") return;
+  if (kind === "tap") game = applyTap(game, +x);
+  else if (kind === "join") { if (!adj(game.L, +x, +y) || isWall(game.L, +x, +y)) return; game = applyStroke(game, [+x, +y], game.lab[+x] >= 0 ? game.lab[+x] : null); }
+  else if (kind === "region") game = applyRegion(game, x.split(",").map(Number));
+  else return;
+  afterMove(b);
+}
+window.__qa = {
+  state: () => { const ev = evaluate(game); return { screen: game.screen, level: game.level, size: [game.L.w, game.L.h], regions: ev.regs.map((r) => r.cells), statuses: ev.regs.map((r) => r.st), free: ev.free, good: ev.good, bad: ev.bad, hints: game.hints, hint: game.hint, labels: game.lab.slice() }; },
+  actions: () => {
+    if (game.screen !== "playing") return ["undo", "restart"];
+    const L = game.L, out = ["undo", "restart", "hint"];
+    for (let i = 0; i < L.n; i++) { out.push("tap:" + i); for (const q of nb(L, i)) if (!isWall(L, i, q)) out.push("join:" + i + ":" + q); }
+    return out;
+  },
+  act: (a) => { document.querySelectorAll(".overlay.on").forEach((o) => o.classList.remove("on")); qaAct(a); },
+  reset: (level) => { document.querySelectorAll(".overlay.on").forEach((o) => o.classList.remove("on")); startLevel(level ?? game.level, true); game.undo = []; render(); },
+  levels: () => LEVELS.length,
+  solve: () => ["restart", ...game.L.regions.map((c) => "region:" + c.join(","))],
+  hintFor: () => findHint(game),
+};
+</script>
+</body>
+</html>
