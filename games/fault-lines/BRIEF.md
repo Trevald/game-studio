@@ -2,7 +2,7 @@
 title: Fault Lines
 slug: fault-lines
 idea_id: studio-fault-lines
-artifact: <filled in after the first publish>
+artifact: https://claude.ai/artifact/1B3Ejw2aqygoVABnp6iBqW
 ---
 
 # Fault Lines
