@@ -1,11 +1,11 @@
 {
   "game": "games/fault-lines/index.html",
-  "at": "2026-10-28T03:26:34.395Z",
+  "at": "2026-10-28T03:28:06.461Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "29 KB"
+      "detail": "30 KB"
     },
     {
       "name": "external resources only from allowed CDNs",

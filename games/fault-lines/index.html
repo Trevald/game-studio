@@ -33,7 +33,7 @@
   .pill[disabled] { opacity: .45; cursor: default; }
   .hud { display: flex; justify-content: space-between; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 15px; }
   #wrap { flex: 1; display: grid; place-items: center; min-height: 0; }
-  #board { width: min(100%, calc(100dvh - 300px)); min-width: 240px; max-width: 100%; aspect-ratio: 1; touch-action: none; user-select: none; -webkit-user-select: none; display: block; outline: none; }
+  #board { width: min(100%, calc((100dvh - 300px) * var(--ar, 1))); min-width: 240px; max-width: 100%; aspect-ratio: var(--ar, 1); touch-action: none; user-select: none; -webkit-user-select: none; display: block; outline: none; }
   #board:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
   #board text { font: 700 44px var(--font); fill: var(--ink); dominant-baseline: central; text-anchor: middle; pointer-events: none; }
   #tip { min-height: 2.9em; text-align: center; color: var(--muted); font-size: 15px; display: grid; place-items: center; padding: 0 4px; }
@@ -58,7 +58,7 @@
   @media (orientation: landscape) and (max-height: 560px) {
     main { width: min(100%, 980px); display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto 1fr auto auto; column-gap: 20px; row-gap: 8px; }
     #wrap { grid-column: 1; grid-row: 1 / span 5; }
-    #board { width: calc(100dvh - 32px); min-width: 0; }
+    #board { width: calc((100dvh - 32px) * var(--ar, 1)); min-width: 0; }
     header, .hud, #tip, .bar, #win { grid-column: 2; }
   }
 </style>
@@ -226,6 +226,7 @@ function cellXY(L, i) { return [PAD + (i % L.w) * S, PAD + ((i / L.w) | 0) * S];
 function render() {
   const g = game, L = g.L, ev = evaluate(g), svg = $("board");
   svg.setAttribute("viewBox", `0 0 ${L.w * S + PAD * 2} ${L.h * S + PAD * 2}`);
+  svg.style.setProperty("--ar", `${L.w * S + PAD * 2} / ${L.h * S + PAD * 2}`);
   const stOf = new Array(L.n).fill(null);
   for (const r of ev.regs) for (const c of r.cells) stOf[c] = r.st;
   const inStroke = new Set(stroke ? stroke.cells : []);
@@ -284,7 +285,7 @@ function render() {
   const last = g.level === LEVELS.length - 1;
   $("nextBtn").textContent = last ? "Back to level 1" : "Next level";
   $("winText").textContent = last && LEVELS.every((_, k) => save.solved[k] || k === g.level) ? "All levels solved!" : "Solved!";
-  $("tip").innerHTML = tipText(g, ev);
+  $("tip").innerHTML = "<span>" + tipText(g, ev) + "</span>";
 }
 function tipText(g, ev) {
   if (g.screen === "won") return "Every region holds 1 to N.";

@@ -1,0 +1,226 @@
+{
+ "passed": 44,
+ "total": 44,
+ "results": [
+  {
+   "name": "L1 4x3: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 1, lookahead rounds 1"
+  },
+  {
+   "name": "L2 4x4: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 3, lookahead rounds 0"
+  },
+  {
+   "name": "L3 4x4: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 3, lookahead rounds 0"
+  },
+  {
+   "name": "L4 5x5: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 2, lookahead rounds 1"
+  },
+  {
+   "name": "L5 5x5: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 3, lookahead rounds 3"
+  },
+  {
+   "name": "L6 6x6: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 3, lookahead rounds 2"
+  },
+  {
+   "name": "L7 6x6: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 3, lookahead rounds 3"
+  },
+  {
+   "name": "L8 6x6: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 4, lookahead rounds 5"
+  },
+  {
+   "name": "L9 7x7: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 5, lookahead rounds 4"
+  },
+  {
+   "name": "L10 7x7: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 6, lookahead rounds 5"
+  },
+  {
+   "name": "L11 7x7: exactly one answer, it is the stored one, solvable without guessing",
+   "ok": true,
+   "info": "walls 7, lookahead rounds 7"
+  },
+  {
+   "name": "help shows on first visit",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "help closes",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "L1 has a region drawable as one stroke",
+   "ok": true,
+   "info": "[0,1,2,3]"
+  },
+  {
+   "name": "dragging the cells of an answer region makes one green region",
+   "ok": true,
+   "info": "[[0,1,2,3]]"
+  },
+  {
+   "name": "dragging back takes the last cell out of the stroke",
+   "ok": true,
+   "info": "[[0,1]]"
+  },
+  {
+   "name": "tap a free cell makes a one-cell region",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "tap it again frees it",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "dragging from a region grows it",
+   "ok": true,
+   "info": "[[0,1,2]]"
+  },
+  {
+   "name": "freeing the middle cell splits the region in two",
+   "ok": true,
+   "info": "[[0],[2]]"
+  },
+  {
+   "name": "a stroke can't cross a fixed wall",
+   "ok": true,
+   "info": "[[9]]"
+  },
+  {
+   "name": "Undo removes the stroke",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "Restart clears the board",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "Restart can be undone",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "Hint marks a region that can't be right",
+   "ok": true,
+   "info": "{\"kind\":\"wrong\",\"cells\":[0,1]}"
+  },
+  {
+   "name": "Hint then marks the first region you can deduce",
+   "ok": true,
+   "info": "{\"kind\":\"next\",\"cells\":[13,14,18,19,24]}"
+  },
+  {
+   "name": "following hints alone solves level 5",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "win card shows with Next",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "Next opens level 6",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "reload keeps the level and the board",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "solved level marked in the picker",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "no console errors (desktop)",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "keyboard pen solves level 1",
+   "ok": true,
+   "info": "[[0,1,2,3],[4,5,8,9],[6,7,10,11]]"
+  },
+  {
+   "name": "Enter on the win card goes to level 2",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "H gives a hint",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "no console errors (keyboard)",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "phone: no scroll, board on screen, buttons ≥ 44px",
+   "ok": true,
+   "info": "{\"scrollX\":false,\"scrollY\":false,\"boardOff\":false,\"small\":0}"
+  },
+  {
+   "name": "phone: no console errors",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "small: no scroll, board on screen, buttons ≥ 44px",
+   "ok": true,
+   "info": "{\"scrollX\":false,\"scrollY\":false,\"boardOff\":false,\"small\":0}"
+  },
+  {
+   "name": "small: no console errors",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "desktop: no scroll, board on screen, buttons ≥ 44px",
+   "ok": true,
+   "info": "{\"scrollX\":false,\"scrollY\":false,\"boardOff\":false,\"small\":0}"
+  },
+  {
+   "name": "desktop: no console errors",
+   "ok": true,
+   "info": ""
+  },
+  {
+   "name": "landscape: no scroll, board on screen, buttons ≥ 44px",
+   "ok": true,
+   "info": "{\"scrollX\":false,\"scrollY\":false,\"boardOff\":false,\"small\":0}"
+  },
+  {
+   "name": "landscape: no console errors",
+   "ok": true,
+   "info": ""
+  }
+ ]
+}
