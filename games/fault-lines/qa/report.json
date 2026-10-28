@@ -1,11 +1,11 @@
 {
   "game": "games/fault-lines/index.html",
-  "at": "2026-10-28T03:28:06.461Z",
+  "at": "2026-10-28T03:36:59.653Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "30 KB"
+      "detail": "31 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -55,7 +55,7 @@
     {
       "name": "every level completable via solve() (11 levels)",
       "ok": true,
-      "detail": "L1:4 L2:5 L3:5 L4:6 L5:7 L6:9 L7:9 L8:10 L9:12 L10:12 L11:12"
+      "detail": "L1:5 L2:5 L3:5 L4:8 L5:8 L6:10 L7:10 L8:10 L9:12 L10:13 L11:12"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -128,7 +128,7 @@
     {
       "lv": 0,
       "ok": true,
-      "moves": 4,
+      "moves": 5,
       "screen": "won"
     },
     {
@@ -146,25 +146,25 @@
     {
       "lv": 3,
       "ok": true,
-      "moves": 6,
+      "moves": 8,
       "screen": "won"
     },
     {
       "lv": 4,
       "ok": true,
-      "moves": 7,
+      "moves": 8,
       "screen": "won"
     },
     {
       "lv": 5,
       "ok": true,
-      "moves": 9,
+      "moves": 10,
       "screen": "won"
     },
     {
       "lv": 6,
       "ok": true,
-      "moves": 9,
+      "moves": 10,
       "screen": "won"
     },
     {
@@ -182,7 +182,7 @@
     {
       "lv": 9,
       "ok": true,
-      "moves": 12,
+      "moves": 13,
       "screen": "won"
     },
     {

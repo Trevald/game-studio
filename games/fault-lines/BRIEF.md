@@ -30,7 +30,7 @@ in one night. Sum Trail needs heavy arithmetic per move; Hitori Rooms is close t
 1. Core: every cell numbered, drag across cells to group them into a region, live feedback (a region that holds
    exactly 1..N turns green, a region with a repeated number or more than 5 cells turns red), win when every cell
    is in a green region.
-2. 10 generated levels, 4×4 to 7×7, each with exactly one answer, solvable by deduction without guessing (proven by
+2. 11 generated levels, 4×3 to 7×7, each with exactly one answer, solvable by deduction without guessing (proven by
    `lab/gen.mjs`). Some levels show a few fixed walls where they are needed to make the answer unique.
 3. Drag on touch/mouse (drag from a region to grow it, back over a cell to take it back, tap to free a cell);
    keyboard cursor + pen.
@@ -40,7 +40,7 @@ in one night. Sum Trail needs heavy arithmetic per move; Hitori Rooms is close t
 - Max region size 5 (numbers 1–5), as in most Suguru books.
 - The original Suguru's "equal numbers never touch" rule holds in every grid (the generator makes real Suguru
   solutions), but the player never has to check it: it's not a clue here, only the region rule is.
-- Fixed walls ("given" walls) are allowed as clues where the numbers alone allow two answers; the generator keeps
+- Fixed walls ("given" walls, orange) are allowed as clues where the numbers alone allow two answers; the generator keeps
   as few as it can.
 - No par or move count; the win card shows hints used. All levels open from the start.
 
@@ -50,9 +50,10 @@ in one night. Sum Trail needs heavy arithmetic per move; Hitori Rooms is close t
 
 ## Design
 ### Core loop
-Scan for a forced shape (a 1 with no 2 next to it is a region of its own; a 2 whose only neighbouring 1 is shared
-with nothing else; a 5 that needs a 4, 3, 2 and 1 within reach), drag those cells together, watch it turn green,
-which leaves fewer free cells for the rest.
+Scan for a forced shape (a number with only one way to collect the 1..N it needs, a 5 that needs a 4, 3, 2 and
+1 within reach, a cell that only one shape can still cover), drag those cells together, watch it turn green, which
+leaves fewer free cells for the rest. (Equal numbers never touch in a Suguru, so a "lone 1" only happens behind
+fixed walls.)
 
 ### The twist
 The numbers are the whole clue. A region's size is the largest number in it, so every number is a promise about
@@ -71,12 +72,13 @@ the size of the region it belongs to, and every free cell must end up in some gr
 cells whose numbers are exactly 1..size) to check that the regions are the only answer, adding a fixed wall where a
 second answer exists and removing every fixed wall that isn't needed. A level is kept only if a "human" solver
 finishes it using two kinds of step: *only one shape fits this cell*, and *this shape would leave a cell with no
-shape*. Order: 1–2 4×4 (tutorial: lone 1s, a 2, a 3), 3–4 5×5, 5–7 6×6, 8–10 7×7, rising in steps needed.
-Tips on the first levels: "drag across cells to make a region", "a region of 3 holds 1, 2 and 3", "a 1 with no 2
-beside it stands alone".
+shape*, and only if the very first step is of the first kind (there is always a forced first region). Order: 1 4×3, 2–3 4×4, 4–5 5×5, 6–8 6×6, 9–11 7×7, rising in look-ahead steps needed (0–7), 1–5 fixed walls.
+Tips on the first levels: "drag across cells to make a region", "a region's biggest number is its size", "orange
+lines are fixed walls", "find a number with only one way to collect what it needs".
 
 ### Win / lose / restart
-Win when every cell is in a green region (with the fixed walls respected, that is the unique answer). Card: hints
+Win when every cell is in a green region. A region with a fixed wall inside it (drawn around the wall's end) is red,
+so the win is always the unique answer. Card: hints
 used, Next. No lose state; Undo is unlimited, Restart is instant and undoable.
 
 ### Feel

@@ -3,7 +3,7 @@ import { makeLevel, rng } from "./core.mjs";
 import fs from "node:fs";
 const seed = Number(process.argv[2] || 2810);
 const r = rng(seed);
-const pool = (W, H, n, maxWalls, extra = {}) => { const out = []; let t = 0; while (out.length < n && t < n * 8) { t++; const L = makeLevel(W, H, r, { maxWalls, ...extra }); if (L) out.push({ ...L, b: L.rounds - L.singles, ones: L.regions.filter((c) => c.length === 1).length }); } return out; };
+const pool = (W, H, n, maxWalls, extra = {}) => { const out = []; let t = 0; while (out.length < n && t < n * 40) { t++; const L = makeLevel(W, H, r, { maxWalls, ...extra }); if (L && L.firstSingle) out.push({ ...L, b: L.rounds - L.singles, ones: L.regions.filter((c) => c.length === 1).length }); } return out; };
 const levels = [];
 const take = (list, k, key) => list.sort(key).slice(0, k);
 // 4x3 first board: small regions, at most one lookahead round

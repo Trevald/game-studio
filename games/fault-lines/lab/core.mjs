@@ -120,17 +120,17 @@ export function solveCover(N, cands, limit = 2) {
 export function humanSolve(N, cands) {
   let alive = cands.map((_, k) => k);
   const covered = new Uint8Array(N), order = [];
-  let singles = 0, lookahead = 0, rounds = 0;
+  let singles = 0, lookahead = 0, rounds = 0, firstSingle = false;
   const byCellAlive = () => { const m = Array.from({ length: N }, () => []); for (const k of alive) for (const i of cands[k]) m[i].push(k); return m; };
   const fix = (k) => { order.push(cands[k]); for (const i of cands[k]) covered[i] = 1; const s = new Set(cands[k]); alive = alive.filter((q) => !cands[q].some((i) => s.has(i))); };
   while (true) {
-    if (covered.every((v) => v)) return { ok: true, order, singles, lookahead, rounds };
+    if (covered.every((v) => v)) return { ok: true, order, singles, lookahead, rounds, firstSingle };
     rounds++;
     const m = byCellAlive();
     let did = false;
     for (let i = 0; i < N; i++) if (!covered[i]) {
       if (m[i].length === 0) return { ok: false, order, singles, lookahead, rounds, why: "dead cell" };
-      if (m[i].length === 1) { fix(m[i][0]); singles++; did = true; break; }
+      if (m[i].length === 1) { if (rounds === 1) firstSingle = true; fix(m[i][0]); singles++; did = true; break; }
     }
     if (did) continue;
     // (B) one-step lookahead
@@ -179,5 +179,5 @@ export function makeLevel(W, H, r, opt = {}) {
   if (solveCover(N, cands, 2).length !== 1) return null;
   const h = humanSolve(N, cands);
   if (!h.ok) { (globalThis.WHY ||= {})['h' + walls.size] = (WHY['h' + walls.size] || 0) + 1; return null; }
-  return { W, H, dig: sol.dig, walls: [...walls].sort(), regions: h.order, singles: h.singles, lookahead: h.lookahead, rounds: h.rounds, cands: cands.length };
+  return { W, H, dig: sol.dig, walls: [...walls].sort(), regions: h.order, singles: h.singles, lookahead: h.lookahead, rounds: h.rounds, firstSingle: h.firstSingle, cands: cands.length };
 }

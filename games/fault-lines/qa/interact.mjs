@@ -53,17 +53,19 @@ const st = (page) => page.evaluate(() => window.__qa.state());
   await page.evaluate(() => window.__qa.reset(0));
   const L1 = LEVELS[0];
   // a real answer region of L1, dragged along a path
-  const reg = L1.regions.find((c) => c.length >= 3);
+  let reg;
   // order the region's cells into a walk (all L1 regions are paths or near-paths; fall back to region: action)
   const walk = (cells) => { for (const s of cells) { const p = [s], rec = () => { if (p.length === cells.length) return true; const last = p[p.length - 1]; for (const q of cells) if (!p.includes(q) && (Math.abs(q - last) === L1.w || (Math.abs(q - last) === 1 && ((q / L1.w) | 0) === ((last / L1.w) | 0)))) { p.push(q); if (rec()) return true; p.pop(); } return false; }; if (rec()) return p; } return null; };
-  const w = walk(reg);
+  reg = L1.regions.find((c) => c.length >= 2 && walk(c));
+  const w = reg && walk(reg);
   check("L1 has a region drawable as one stroke", !!w, JSON.stringify(reg));
   await drag(page, w);
   let s = await st(page);
   check("dragging the cells of an answer region makes one green region", s.regions.length === 1 && s.statuses[0] === "good" && s.regions[0].length === reg.length, JSON.stringify(s.regions));
   // retract: drag 3 cells then back one
   await page.evaluate(() => window.__qa.reset(0));
-  await drag(page, [w[0], w[1], w[2], w[1]]);
+  const col = [0, L1.w, 2 * L1.w];
+  await drag(page, [col[0], col[1], col[2], col[1]]);
   s = await st(page);
   check("dragging back takes the last cell out of the stroke", s.regions.length === 1 && s.regions[0].length === 2, JSON.stringify(s.regions));
   // tap a free cell → one-cell region; tap again → free
@@ -75,7 +77,7 @@ const st = (page) => page.evaluate(() => window.__qa.state());
   check("tap it again frees it", s.regions.length === 0 && s.free === L1.w * L1.h);
   // grow from an existing region
   await page.evaluate(() => window.__qa.reset(0));
-  await drag(page, [w[0], w[1]]); await drag(page, [w[1], w[2]]);
+  await drag(page, [col[0], col[1]]); await drag(page, [col[1], col[2]]);
   s = await st(page);
   check("dragging from a region grows it", s.regions.length === 1 && s.regions[0].length === 3, JSON.stringify(s.regions));
   // tap a cell in the middle of a 3-region: frees it and the rest splits
@@ -89,6 +91,19 @@ const st = (page) => page.evaluate(() => window.__qa.state());
   await page.evaluate(() => window.__qa.reset(0));
   await drag(page, [wa, wb]); s = await st(page);
   check("a stroke can't cross a fixed wall", !s.regions.some((r) => r.includes(wa) && r.includes(wb)), JSON.stringify(s.regions));
+  // a region that wraps around a fixed wall is red and can't win
+  {
+    const k = LEVELS.findIndex((L) => L.walls.length), L = LEVELS[k], [a, b] = L.walls[0], W = L.w;
+    const nbs = (i) => [i - W, i + W, i % W ? i - 1 : -1, i % W < W - 1 ? i + 1 : -1].filter((q) => q >= 0 && q < L.w * L.h);
+    const prev = new Map([[a, null]]), q = [a];
+    while (q.length) { const c = q.shift(); if (c === b) break; for (const n of nbs(c)) if (!prev.has(n) && !(c === a && n === b)) { prev.set(n, c); q.push(n); } }
+    const path = []; for (let c = b; c != null; c = prev.get(c)) path.unshift(c);
+    await page.evaluate((k) => window.__qa.reset(k), k);
+    await page.evaluate((p) => window.__qa.act("region:" + p.join(",")), path);
+    s = await st(page);
+    const r = s.regions.findIndex((r) => r.includes(a) && r.includes(b));
+    check("a region wrapped around a fixed wall turns red", r >= 0 && s.statuses[r] === "bad", JSON.stringify({ path, st: s.statuses[r] }));
+  }
   // undo + restart
   await page.evaluate(() => window.__qa.reset(0));
   await drag(page, [w[0], w[1]]); await page.click("#undoBtn"); s = await st(page);
@@ -133,12 +148,18 @@ const st = (page) => page.evaluate(() => window.__qa.state());
   const go = async (to) => { while (cur !== to) { const cx = cur % L.w, cy = (cur / L.w) | 0, tx = to % L.w, ty = (to / L.w) | 0; const k = tx > cx ? "ArrowRight" : tx < cx ? "ArrowLeft" : ty > cy ? "ArrowDown" : "ArrowUp"; await page.keyboard.press(k); cur += { ArrowRight: 1, ArrowLeft: -1, ArrowDown: L.w, ArrowUp: -L.w }[k]; } };
   // pen strokes along walks of each answer region
   const walkOf = (cells) => { for (const s of cells) { const p = [s], rec = () => { if (p.length === cells.length) return true; const last = p[p.length - 1]; for (const q of cells) if (!p.includes(q) && (Math.abs(q - last) === L.w || (Math.abs(q - last) === 1 && ((q / L.w) | 0) === ((last / L.w) | 0)))) { p.push(q); if (rec()) return true; p.pop(); } return false; }; if (rec()) return p; } return null; };
+  const isAdj = (p, q) => Math.abs(p - q) === L.w || (Math.abs(p - q) === 1 && ((p / L.w) | 0) === ((q / L.w) | 0));
   for (const reg of L.regions) {
-    const w = walkOf(reg);
+    // grow the region one cell at a time: pen down on a cell already in it, step to the next, pen up
+    const done = [reg[0]];
     await page.keyboard.press("Escape");
-    await go(w[0]); await page.keyboard.press("Space");
-    for (const c of w.slice(1)) await go(c);
-    await page.keyboard.press("Space");
+    await go(reg[0]); await page.keyboard.press("Space"); await page.keyboard.press("Space"); // tap: one-cell region
+    while (done.length < reg.length) {
+      const nxt = reg.find((c) => !done.includes(c) && done.some((d) => isAdj(c, d)));
+      const from = done.find((d) => isAdj(d, nxt));
+      await go(from); await page.keyboard.press("Space"); await go(nxt); await page.keyboard.press("Space");
+      done.push(nxt);
+    }
   }
   const s = await st(page);
   check("keyboard pen solves level 1", s.screen === "won", JSON.stringify(s.regions));
