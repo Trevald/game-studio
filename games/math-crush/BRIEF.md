@@ -40,6 +40,24 @@ for the designer in `design-studio/games/math-crush/feedback/FB-002-match-only.m
   rewards), read in place; SHA256SUMS verified clean before building. Authorization: STATUS.md (Benji, 25 Oct,
   "Create the hand-over with all needed assets"). Picked as job 1b (approved hand-over with no completion report;
   no pending board notes). Report: `design-studio/games/math-crush/feedback/FB-003-sweet-play.md`. No URLs.
+- **Night 4:** owner scope change `design-studio/games/math-crush/feedback/FB-004-focus-on-core.md` (Benji, 28 Oct:
+  "remove the hammer and the sugar rush and the time challenge"), on top of the frozen H-002-v1. Picked as job 1b:
+  STATUS.md lists the development implementation as outstanding; no pending board notes, nothing queued. Assumption:
+  FB-004 counts as approved scope for the night studio because it quotes Benji's direct request and STATUS names
+  the development team as the next action. Only the removal and its dependent save/sticker/balance work are in scope;
+  target variety, frosting, Candy orders and new feedback effects stay proposals. Report: `FB-005`. No URLs.
+
+## Tonight (night 4) — FB-004 focus on chains and specials
+1. **FB-004-A/B/C:** remove the hammer (button, charge, targeting, cue, help, keys, `__qa` action), Sugar Rush
+   (charge bar, ×2, cue, sound) and the speed challenge (results button, clock, time rows, help). Normal play untimed.
+2. **FB-004-D:** retire Sugar Rush and Perfect Batch from the active collection (book shows 4); earned ones stay in
+   history, still usable as a badge, shown under "Retired".
+3. **FB-004-E:** new rules version `core-v1` for records and attempts. One-time migration: stars, wins and unlocks
+   kept for all levels; best scores kept for L1–7 (no Rush there; the hammer never scored) and moved to a
+   "best with Sugar Rush (old rules)" field for L8–12; old `sweet-v1` records left verbatim. An active attempt on
+   L1–7 carries on (hammer/clock fields dropped); one on L8–12 is archived and offered as "Start this level".
+4. Re-verify three-star routes on L8–12 without Rush (no threshold change unless the search fails).
+5. Update engine tests, screen audit, FB-005 completion report.
 
 ## Tonight (night 3) — H-002-v1 "play first, sweet rewards"
 1. **Phase A (MC-010/011/017/019):** schema-2 level data (12 levels, explicit star thresholds, initial specials,
