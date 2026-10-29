@@ -1,8 +1,5 @@
-# Math Crush — authoritative design pointer
+# Math Crush — design pointer
 
-**Latest owner direction (28 October):** [FB-004 — focus on core](../../design-studio/games/math-crush/feedback/FB-004-focus-on-core.md) requests removal of hammer, Sugar Rush and time challenge. Development team owns implementation; this feedback update changes no runtime code. Read before the historical packet scope below.
+Current requested development handover: [H-003-v1](../../design-studio/games/math-crush/handovers/H-003-v1/HANDOVER.md), MC-020–028. Read [STATUS](../../design-studio/games/math-crush/STATUS.md) for owner direction and phases. In-place main-first delivery: original assets, data, rules, visual and motion specifications are bundled. This commit changes no production gameplay.
 
-Current requested Candy Match iteration: [H-002-v1](../../design-studio/games/math-crush/handovers/H-002-v1/HANDOVER.md).
-Read [STATUS](../../design-studio/games/math-crush/STATUS.md) for Benji's 25 October 2026 handover request and exact phase scope. Verify packet SHA256SUMS.txt, then implement A foundations, B reactions/hammer, C Rush/stickers. Required raster/SVG assets, level data, solution witnesses, rules, screen references and QA are bundled. Read in place on main. Return evidence in design-studio/games/math-crush/feedback/FB-003-sweet-play.md.
-
-Prior H-001-v1 and original design/handover-v1 remain historical. H-002 overrides included behavior. Keep Candy Match only; do not restore Equation/Clear UI, but preserve old saved records. No production game code changed in the handover delivery. Later mechanics in BACKLOG.md are excluded.
+Classic core-v1 remains playable. Build Journey as a separate preview before any replacement decision. Stickers are now requested removed; hammer/Rush/time already removed. Prior H-001/H-002 packets remain history, not authority to reintroduce retired features. Completion report: design-studio/games/math-crush/feedback/FB-006-journey.md.

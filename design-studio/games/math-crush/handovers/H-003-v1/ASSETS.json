@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "runtimeBytes": 1041592,
+  "files": [
+    {
+      "source": "assets/add.svg",
+      "destination": "games/math-crush/assets/journey-v1/add.svg",
+      "role": "runtime",
+      "bytes": 170,
+      "sha256": "770eed4c3222976d01ac3bb21543cb2f8ab68bb4fa8c632d392699f6eea2cc2c",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/board-full.svg",
+      "destination": "games/math-crush/assets/journey-v1/board-full.svg",
+      "role": "runtime",
+      "bytes": 1722,
+      "sha256": "e3e92a664a9ecba7d95d78651ba9b3ffa5e8d24db2d7a9c9720e3c6f02b6d605",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/board-hourglass.svg",
+      "destination": "games/math-crush/assets/journey-v1/board-hourglass.svg",
+      "role": "runtime",
+      "bytes": 1591,
+      "sha256": "f3563f7698c8269eaba693053f3939e3fc79ee663a51c10fe3879f3c27b2e119",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/board-ring.svg",
+      "destination": "games/math-crush/assets/journey-v1/board-ring.svg",
+      "role": "runtime",
+      "bytes": 1656,
+      "sha256": "9dbc14b45b305d8b9711d997a09ad846deb01a5e74a409d3fda2b0e8b3e850ce",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/burst.svg",
+      "destination": "games/math-crush/assets/journey-v1/burst.svg",
+      "role": "runtime",
+      "bytes": 244,
+      "sha256": "24c7549dc75220d2c8aff8c661fa9aa62aed307a5da48382414a41acd95f6364",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/cloud.svg",
+      "destination": "games/math-crush/assets/journey-v1/cloud.svg",
+      "role": "runtime",
+      "bytes": 204,
+      "sha256": "8453ce2af0ce53c99a0fd7600cab7bc1085ed65b3cca564c8d23e4389f1f25b1",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/confetti.svg",
+      "destination": "games/math-crush/assets/journey-v1/confetti.svg",
+      "role": "runtime",
+      "bytes": 229,
+      "sha256": "539f4703b44cf98ccd63d39bdc3bc1231bd9006b9abf1a8788ad037ff704b7dc",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/gap.svg",
+      "destination": "games/math-crush/assets/journey-v1/gap.svg",
+      "role": "runtime",
+      "bytes": 278,
+      "sha256": "c7518ec16f3708ad10a91ffa5ff69f42131070993f4374ac6a927471e1b38552",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/glint.svg",
+      "destination": "games/math-crush/assets/journey-v1/glint.svg",
+      "role": "runtime",
+      "bytes": 210,
+      "sha256": "fc3ed04a94526dd86f4d4c586b1c3d42f5ca9e7ba0c10a717bd9330230fe0866",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/jelly-shard.svg",
+      "destination": "games/math-crush/assets/journey-v1/jelly-shard.svg",
+      "role": "runtime",
+      "bytes": 174,
+      "sha256": "7f683e93f13413c8f3acd9f53a061ee879702941b8c905080cbe13bd43506c56",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/jelly.svg",
+      "destination": "games/math-crush/assets/journey-v1/jelly.svg",
+      "role": "runtime",
+      "bytes": 369,
+      "sha256": "190097de2a03fd722f9a118b6c1ec9f58b5672856818746639f521366d83d7ba",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/lock.svg",
+      "destination": "games/math-crush/assets/journey-v1/lock.svg",
+      "role": "runtime",
+      "bytes": 337,
+      "sha256": "722fa0ad990c19518af7f3f6a28c67cbdc8859ac7a77ba6139af8a1c7b1d7a62",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/match-atlas.json",
+      "destination": "games/math-crush/assets/match-atlas.json",
+      "role": "runtime",
+      "bytes": 1470,
+      "sha256": "0b967b8496ed3c6bf5ac0eeb3fb69f59f1a712f5fa1540830b4bca0397a41f01",
+      "provenance": "Reused existing repository art from1d3543c. Atlas JSON points at bundled WebP. No new independent rights audit claimed."
+    },
+    {
+      "source": "assets/match-atlas.webp",
+      "destination": "games/math-crush/assets/match-atlas.webp",
+      "role": "runtime",
+      "bytes": 307958,
+      "sha256": "bf55aaf8c4b3ee9eb0e774f9f0a0e1026343a5ac9e1123614b70c38dadfded77",
+      "provenance": "Reused existing repository art from1d3543c. Atlas JSON points at bundled WebP. No new independent rights audit claimed."
+    },
+    {
+      "source": "assets/match-bg.webp",
+      "destination": "games/math-crush/assets/match-bg.webp",
+      "role": "runtime",
+      "bytes": 218086,
+      "sha256": "dcfcaa0452430f76ed728df8a5725f8cb137fedcecb64642c85b1a8f8377aca6",
+      "provenance": "Reused existing repository art from1d3543c. Atlas JSON points at bundled WebP. No new independent rights audit claimed."
+    },
+    {
+      "source": "assets/motion.css",
+      "destination": "games/math-crush/assets/journey-v1/motion.css",
+      "role": "runtime",
+      "bytes": 1924,
+      "sha256": "0cdc1267cd632de1be29192d6e9209ee1724f50e63eba885b3c1389222c6255e",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/multiply.svg",
+      "destination": "games/math-crush/assets/journey-v1/multiply.svg",
+      "role": "runtime",
+      "bytes": 175,
+      "sha256": "8bded6c3107d9b18772a96bf62a5f8d3ab71a64652b86c5c0e6dc254becafeec",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/row-blast.svg",
+      "destination": "games/math-crush/assets/journey-v1/row-blast.svg",
+      "role": "runtime",
+      "bytes": 259,
+      "sha256": "5ad3e94856c934991538307ef5cfbbfe9555663679b2925b6e0e1e9dd4a5cdb5",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/sparkle.svg",
+      "destination": "games/math-crush/assets/journey-v1/sparkle.svg",
+      "role": "runtime",
+      "bytes": 200,
+      "sha256": "f179bb01363b780bb80ddc337dd3a645bd37890c2c296b85d5f6faa83cafa539",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/star.svg",
+      "destination": "games/math-crush/assets/journey-v1/star.svg",
+      "role": "runtime",
+      "bytes": 198,
+      "sha256": "85b84fc66c393f8b186f021071f07d1eca8f37340760a4e096d4407f510e28b5",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/stripe-overlay.svg",
+      "destination": "games/math-crush/assets/journey-v1/stripe-overlay.svg",
+      "role": "runtime",
+      "bytes": 246,
+      "sha256": "08262f8d16bbdceb73aea57d30e00d57b4a634eacc99d7097d8131541667c980",
+      "provenance": "Reused existing repository art from1d3543c. Atlas JSON points at bundled WebP. No new independent rights audit claimed."
+    },
+    {
+      "source": "assets/target-next.svg",
+      "destination": "games/math-crush/assets/journey-v1/target-next.svg",
+      "role": "runtime",
+      "bytes": 214,
+      "sha256": "26abcdcd33d3e503696e9595616bed7131352d245eeead295ab0417b582648ed",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/tokens.css",
+      "destination": "games/math-crush/assets/journey-v1/tokens.css",
+      "role": "runtime",
+      "bytes": 169,
+      "sha256": "2106db209c3770ef22f77a55567aa65fe495913e9ff6596e6d45c0c51d33feea",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/world-chocolate.svg",
+      "destination": null,
+      "role": "reference-only",
+      "bytes": 2788,
+      "sha256": "cb0a74e4aa459d0e237c7d65bf1ad8e124d0d7853d1f0aef7f20dfaf4812993e",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/world-chocolate.webp",
+      "destination": "games/math-crush/assets/journey-v1/world-chocolate.webp",
+      "role": "runtime",
+      "bytes": 154050,
+      "sha256": "a537d87e3fe725bb4d152881dff034156fd42d0c35d08929f2ffd858350b08ed",
+      "provenance": "Original built-in imagegen output,29Oct2026; prompt in ART-PROMPTS.json; no third-party image references. Format conversion only, WebP quality82."
+    },
+    {
+      "source": "assets/world-frosting.svg",
+      "destination": null,
+      "role": "reference-only",
+      "bytes": 2341,
+      "sha256": "8fb7f95a1f231f3e6c6724e03fe15e75bb8cfa654ec68ac32f7277190f3f5d78",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/world-frosting.webp",
+      "destination": "games/math-crush/assets/journey-v1/world-frosting.webp",
+      "role": "runtime",
+      "bytes": 171206,
+      "sha256": "f035ed5d179c9d6c7eb2ed66a2da5b6a85a83308db7e87b9b5528499abd96545",
+      "provenance": "Original built-in imagegen output,29Oct2026; prompt in ART-PROMPTS.json; no third-party image references. Format conversion only, WebP quality82."
+    },
+    {
+      "source": "assets/world-garden.svg",
+      "destination": null,
+      "role": "reference-only",
+      "bytes": 2277,
+      "sha256": "d91831011474632c1ccc29a0cc82de7bd1fe5ea48cdddff068ef98a3ef17b9c0",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    },
+    {
+      "source": "assets/world-garden.webp",
+      "destination": "games/math-crush/assets/journey-v1/world-garden.webp",
+      "role": "runtime",
+      "bytes": 177756,
+      "sha256": "2e2fb11afb33f6caf5af9fb2fbe949a45fb887f47fe6b867659d7436a2100ae8",
+      "provenance": "Original built-in imagegen output,29Oct2026; prompt in ART-PROMPTS.json; no third-party image references. Format conversion only, WebP quality82."
+    },
+    {
+      "source": "assets/wrapped-overlay.svg",
+      "destination": "games/math-crush/assets/journey-v1/wrapped-overlay.svg",
+      "role": "runtime",
+      "bytes": 276,
+      "sha256": "e9a443c758293267e7766f6f1bf78ff402595b9e961b01d579b528e06f64f519",
+      "provenance": "Reused existing repository art from1d3543c. Atlas JSON points at bundled WebP. No new independent rights audit claimed."
+    },
+    {
+      "source": "assets/you-are-here.svg",
+      "destination": "games/math-crush/assets/journey-v1/you-are-here.svg",
+      "role": "runtime",
+      "bytes": 221,
+      "sha256": "8e6a882141ca50de80e4cb4129e4a9230a9c9113648a692ac11542aa7f876c2d",
+      "provenance": "Original native SVG/CSS authored for this packet; no external artwork/font dependency."
+    }
+  ]
+}

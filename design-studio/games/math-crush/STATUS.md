@@ -1,3 +1,15 @@
+# Current update — 29 October 2026
+
+H-003-v1 is the owner-requested handover for development: MC-020–028, phased sticker removal, living world map, motion, varied additive targets, shaped/jelly boards, target sequences and later multiplication pilots. Packet: handovers/H-003-v1/HANDOVER.md. Approved scope is the requested prototype iteration; constants and supplied art are designer-selected defaults, not final owner balance acceptance. Publication target main under standing studio/RULES.md; commit is the one adding this frozen packet, SHA256SUMS.txt pins content. No gameplay files changed.
+
+Owner evidence: Benji, this chat01a15e41-fe8f-7601-902e-c3250203b5a9,29 October2026. After a no-code playtest/report and priorities, he said “Sounds good. I want to add the following: - Remove the sticker book - The level selection view is to boring”, then “Create the hand over for the development team. Don't forget any graphics needed”. This authorizes creating/delivering this bounded development iteration. The prior “Do not make any code changes” is honored: this is design, data and asset delivery only. No runtime implementation or final acceptance implied.
+
+Baseline1d3543c: FB-005 reports hammer/Rush/time removal implemented. I played all12levels via browser (opening keyboard/tap, later visible-chain browser-assisted selection, no game solve shortcut); that was a heuristic review, not human difficulty evidence. The old STATUS outstanding-removal note below is historical. All12independent-model routes in this packet must be replayed against the new production engine. Backlog: mixed/subtraction/division, promotion of Journey as default, final difficulty balancing. No blocker to phased prototype scope.
+
+Next action: development team implements PhaseA independently, then previews PhaseB; PhaseD multiplication after additive checks. Return feedback/FB-006-journey.md. No external team message, queue or automation dispatch performed.
+
+---
+
 # Current update — 28 October 2026
 
 **Owner requested removing hammer, Sugar Rush and time challenge; documentation only in this chat.** See [FB-004](feedback/FB-004-focus-on-core.md) for exact owner wording, scoped acceptance expectations, dependent sticker/save/balance considerations and development follow-up. H-002-v1 remains frozen; its inclusion of these features is historical and must not be treated as a request to retain them after this owner update.

@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "generated": "2026-10-29",
+  "purpose": "Original runtime map backdrops; compressed to WebP82; originals remain in generated-images library",
+  "prompts": [
+    {
+      "world": "garden",
+      "prompt": "Original production mobile puzzle game map background, portrait 2:3 composition. Candy Garden: round pink candy-floss trees, striped lollipops, gumdrop flowers, soft green candy hills, peach sky. Rich professionally painted 2.5D casual candy game environment, glossy tactile sweets, rounded forms, soft dimensional shadows, strong coherent lighting, playful polished high-quality game art. Landscape fills the entire image edge to edge. Leave a broad winding quiet central corridor from upper centre through middle to lower centre, without drawing a path: live numbered level nodes and cream path will be overlaid later. Beautiful distinct landmarks mainly along the left and right edges, 4 gentle elevation terraces, foreground sweets at bottom corners, middle distance scenery and pale soft sky at top. Composition useful for a scrolling mobile map. No text, no numbers, no UI, no buttons, no stars, no logos, no character, no watermark, no actual Candy Crush assets. Own original candy-world art direction. Avoid empty flat vector look, photorealism, hard geometry and noisy fine texture."
+    },
+    {
+      "world": "chocolate",
+      "prompt": "Original production mobile puzzle game map background, portrait 2:3 composition. Chocolate Hills: rounded chocolate hills with white icing caps, wafer bridges at the sides, chocolate squares and caramel pools, warm biscuit sky. Rich professionally painted 2.5D casual candy game environment, glossy tactile sweets, rounded forms, soft dimensional shadows, strong coherent lighting, playful polished high-quality game art. Landscape fills the entire image edge to edge. Leave a broad winding quiet central corridor from upper centre through middle to lower centre, without drawing a path: live numbered level nodes and cream path will be overlaid later. Beautiful distinct landmarks mainly along the left and right edges, 4 gentle elevation terraces, foreground sweets at bottom corners, middle distance scenery and pale soft sky at top. Composition useful for a scrolling mobile map. No text, no numbers, no UI, no buttons, no stars, no logos, no character, no watermark, no actual Candy Crush assets. Own original candy-world art direction. Avoid empty flat vector look, photorealism, hard geometry and noisy fine texture."
+    },
+    {
+      "world": "frosting",
+      "prompt": "Original production mobile puzzle game map background, portrait 2:3 composition. Frosting Lake: pale turquoise frosting lake with soft sugar islands, lavender candy peaks, white frosting edges, peppermint trees, pale blue sky. Rich professionally painted 2.5D casual candy game environment, glossy tactile sweets, rounded forms, soft dimensional shadows, strong coherent lighting, playful polished high-quality game art. Landscape fills the entire image edge to edge. Leave a broad winding quiet central corridor from upper centre through middle to lower centre, without drawing a path: live numbered level nodes and cream path will be overlaid later. Beautiful distinct landmarks mainly along the left and right edges, 4 gentle elevation terraces, foreground sweets at bottom corners, middle distance scenery and pale soft sky at top. Composition useful for a scrolling mobile map. No text, no numbers, no UI, no buttons, no stars, no logos, no character, no watermark, no actual Candy Crush assets. Own original candy-world art direction. Avoid empty flat vector look, photorealism, hard geometry and noisy fine texture."
+    }
+  ]
+}
