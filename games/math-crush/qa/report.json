@@ -1,11 +1,11 @@
 {
   "game": "games/math-crush/index.html",
-  "at": "2026-10-25T22:03:30.905Z",
+  "at": "2026-10-29T07:14:42.860Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "135 KB"
+      "detail": "125 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -50,7 +50,7 @@
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 54"
+      "detail": "screens seen: playing, won; resets: 53"
     },
     {
       "name": "every level completable via solve() (12 levels)",
@@ -80,7 +80,7 @@
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 9"
+      "detail": "screens seen: playing, won; resets: 8"
     },
     {
       "name": "[phone] no console errors or exceptions",

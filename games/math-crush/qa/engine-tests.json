@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-25T22:03:30.705Z",
-  "passed": 95,
-  "total": 95,
+  "date": "2026-10-29T07:13:14.990Z",
+  "passed": 85,
+  "total": 85,
   "results": [
     {
       "name": "schema-2 level data: 12 levels, witnesses, thresholds, initial specials",
@@ -89,21 +89,6 @@
       "detail": "{\"type\":\"stripe+stripe\",\"cells\":[0,1]}"
     },
     {
-      "name": "fixture rush-0",
-      "ok": true,
-      "detail": "{\"pts\":187,\"rush\":{\"charge\":0,\"uses\":3}}"
-    },
-    {
-      "name": "fixture rush-1",
-      "ok": true,
-      "detail": "{\"pts\":374,\"rush\":{\"charge\":0,\"uses\":2}}"
-    },
-    {
-      "name": "fixture rush-2",
-      "ok": true,
-      "detail": "{\"pts\":200,\"rush\":{\"charge\":0,\"uses\":0}}"
-    },
-    {
       "name": "chain points 2..8 = 100,187,300,525,600,675,750",
       "ok": true,
       "detail": "[100,187,300,525,600,675,750]"
@@ -169,14 +154,9 @@
       "detail": "{\"drag\":\"Too high · slide back\",\"tap\":\"Too high · Tap the last candy to adjust\"}"
     },
     {
-      "name": "MC-010 L6 'A little help?' appears after 8 active idle s; pause doesn't count",
+      "name": "FB-004-A no hammer cue on L6 after idling",
       "ok": true,
-      "detail": "{\"idlePaused\":0,\"idle\":{\"cue\":{\"id\":\"l6-hammer\",\"text\":\"A little help?\",\"cells\":null},\"ring\":true}}"
-    },
-    {
-      "name": "MC-010 hammer lesson completes on confirmed use, not on selection",
-      "ok": true,
-      "detail": "{\"sel\":false,\"done\":true}"
+      "detail": "{\"cue\":null,\"ring\":false}"
     },
     {
       "name": "MC-011 thresholds L1 300/400, L2 400/600, L3 450/750",
@@ -194,64 +174,64 @@
       "detail": "rgba(255,255,255,.6)"
     },
     {
-      "name": "MC-011 level 1: real-engine three-star route without tools/speed (1112 ≥ 400)",
+      "name": "MC-011 level 1: real-engine three-star route under core-v1 (no Rush, no hammer) (1112 ≥ 400)",
       "ok": true,
       "detail": "{\"level\":1,\"core\":1112,\"need\":400,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 2: real-engine three-star route without tools/speed (687 ≥ 600)",
+      "name": "MC-011 level 2: real-engine three-star route under core-v1 (no Rush, no hammer) (687 ≥ 600)",
       "ok": true,
       "detail": "{\"level\":2,\"core\":687,\"need\":600,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 3: real-engine three-star route without tools/speed (1225 ≥ 750)",
+      "name": "MC-011 level 3: real-engine three-star route under core-v1 (no Rush, no hammer) (1225 ≥ 750)",
       "ok": true,
       "detail": "{\"level\":3,\"core\":1225,\"need\":750,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 4: real-engine three-star route without tools/speed (1562 ≥ 900)",
+      "name": "MC-011 level 4: real-engine three-star route under core-v1 (no Rush, no hammer) (1562 ≥ 900)",
       "ok": true,
       "detail": "{\"level\":4,\"core\":1562,\"need\":900,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 5: real-engine three-star route without tools/speed (2100 ≥ 1200)",
+      "name": "MC-011 level 5: real-engine three-star route under core-v1 (no Rush, no hammer) (2100 ≥ 1200)",
       "ok": true,
       "detail": "{\"level\":5,\"core\":2100,\"need\":1200,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 6: real-engine three-star route without tools/speed (2012 ≥ 1200)",
+      "name": "MC-011 level 6: real-engine three-star route under core-v1 (no Rush, no hammer) (2012 ≥ 1200)",
       "ok": true,
       "detail": "{\"level\":6,\"core\":2012,\"need\":1200,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 7: real-engine three-star route without tools/speed (2900 ≥ 1200)",
+      "name": "MC-011 level 7: real-engine three-star route under core-v1 (no Rush, no hammer) (2900 ≥ 1200)",
       "ok": true,
       "detail": "{\"level\":7,\"core\":2900,\"need\":1200,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 8: real-engine three-star route without tools/speed (2911 ≥ 1200)",
+      "name": "MC-011 level 8: real-engine three-star route under core-v1 (no Rush, no hammer) (1812 ≥ 1200)",
       "ok": true,
-      "detail": "{\"level\":8,\"core\":2911,\"need\":1200,\"reached\":true}"
+      "detail": "{\"level\":8,\"core\":1812,\"need\":1200,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 9: real-engine three-star route without tools/speed (3900 ≥ 1500)",
+      "name": "MC-011 level 9: real-engine three-star route under core-v1 (no Rush, no hammer) (3075 ≥ 1500)",
       "ok": true,
-      "detail": "{\"level\":9,\"core\":3900,\"need\":1500,\"reached\":true}"
+      "detail": "{\"level\":9,\"core\":3075,\"need\":1500,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 10: real-engine three-star route without tools/speed (4875 ≥ 1500)",
+      "name": "MC-011 level 10: real-engine three-star route under core-v1 (no Rush, no hammer) (3600 ≥ 1500)",
       "ok": true,
-      "detail": "{\"level\":10,\"core\":4875,\"need\":1500,\"reached\":true}"
+      "detail": "{\"level\":10,\"core\":3600,\"need\":1500,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 11: real-engine three-star route without tools/speed (4025 ≥ 1500)",
+      "name": "MC-011 level 11: real-engine three-star route under core-v1 (no Rush, no hammer) (3025 ≥ 1500)",
       "ok": true,
-      "detail": "{\"level\":11,\"core\":4025,\"need\":1500,\"reached\":true}"
+      "detail": "{\"level\":11,\"core\":3025,\"need\":1500,\"reached\":true}"
     },
     {
-      "name": "MC-011 level 12: real-engine three-star route without tools/speed (4175 ≥ 1500)",
+      "name": "MC-011 level 12: real-engine three-star route under core-v1 (no Rush, no hammer) (3050 ≥ 1500)",
       "ok": true,
-      "detail": "{\"level\":12,\"core\":4175,\"need\":1500,\"reached\":true}"
+      "detail": "{\"level\":12,\"core\":3050,\"need\":1500,\"reached\":true}"
     },
     {
       "name": "MC-011 meter uses the live core score (100 lights no threshold mark)",
@@ -271,7 +251,7 @@
     {
       "name": "MC-012 closure: corner 3x3 clipped, hit stripe fires once, union counted once",
       "ok": true,
-      "detail": "{\"n\":2,\"base\":100,\"mult\":1,\"rush\":false,\"chainPts\":100,\"plainPts\":100,\"blastPts\":125,\"removal\":[15,16,17,18,19,23,24],\"blastOnly\":[15,16,17,18,19],\"activated\":[18,24],\"combo\":null,\"reward\":null}"
+      "detail": "{\"n\":2,\"base\":100,\"mult\":1,\"chainPts\":100,\"blastPts\":125,\"removal\":[15,16,17,18,19,23,24],\"blastOnly\":[15,16,17,18,19],\"activated\":[18,24],\"combo\":null,\"reward\":null}"
     },
     {
       "name": "MC-012 winning move: no refill, no special placed",
@@ -291,82 +271,52 @@
     {
       "name": "MC-016 staged events (spark, mix) roll back with Undo",
       "ok": true,
-      "detail": "{\"a\":{\"spark\":true,\"mix\":true,\"rush\":false,\"seven\":false},\"b\":{\"spark\":false,\"mix\":false,\"rush\":false,\"seven\":false}}"
+      "detail": "{\"a\":{\"spark\":true,\"mix\":true,\"seven\":false},\"b\":{\"spark\":false,\"mix\":false,\"seven\":false}}"
     },
     {
-      "name": "MC-014 L1–5 grant no hammer and show no button",
+      "name": "FB-004-A/B no hammer or Sugar Rush button, bar, copy, state field or action on any level",
       "ok": true,
-      "detail": "[0,0,0,0,0]"
+      "detail": "[][]"
     },
     {
-      "name": "MC-014 Cancel spends nothing; confirm spends the one charge atomically",
+      "name": "FB-004-B L8+ chains score plain chain points (never doubled)",
       "ok": true,
-      "detail": "{\"l1to5\":[0,0,0,0,0],\"cancel\":1,\"charge\":[1,0],\"tools\":1,\"free\":true,\"colOnly\":true,\"solvable\":true,\"undo\":true,\"restart\":1}"
+      "detail": "[{\"n\":3,\"pts\":187,\"exp\":187},{\"n\":2,\"pts\":100,\"exp\":100},{\"n\":5,\"pts\":525,\"exp\":525},{\"n\":3,\"pts\":187,\"exp\":187}]"
     },
     {
-      "name": "MC-014 smash: no score/quota/move, special under it not triggered, only its column falls, seeded refill solvable",
+      "name": "FB-004-A/B/C help copy mentions no hammer, Sugar Rush or timing",
       "ok": true,
-      "detail": "{\"l1to5\":[0,0,0,0,0],\"cancel\":1,\"charge\":[1,0],\"tools\":1,\"free\":true,\"colOnly\":true,\"solvable\":true,\"undo\":true,\"restart\":1}"
-    },
-    {
-      "name": "MC-014 Undo restores tile, charge and RNG; tool counter stays (monotonic)",
-      "ok": true,
-      "detail": "{\"l1to5\":[0,0,0,0,0],\"cancel\":1,\"charge\":[1,0],\"tools\":1,\"free\":true,\"colOnly\":true,\"solvable\":true,\"undo\":true,\"restart\":1}"
-    },
-    {
-      "name": "MC-014 Restart resets the configured charge",
-      "ok": true,
-      "detail": 1
-    },
-    {
-      "name": "MC-015 Rush absent before L8; L8 starts at charge 2",
-      "ok": true,
-      "detail": "{\"before8\":[null,null,null],\"start\":{\"charge\":2,\"uses\":0},\"wrong\":{\"charge\":2,\"uses\":0},\"tool\":{\"charge\":2,\"uses\":0}}"
-    },
-    {
-      "name": "MC-015 wrong sums and tool actions neither charge nor spend",
-      "ok": true,
-      "detail": "{\"before8\":[null,null,null],\"start\":{\"charge\":2,\"uses\":0},\"wrong\":{\"charge\":2,\"uses\":0},\"tool\":{\"charge\":2,\"uses\":0}}"
-    },
-    {
-      "name": "MC-015 activation on a 3+ chain at charge 2; boosted chains score ×2; win with uses left adds no bonus",
-      "ok": true,
-      "detail": "[{\"n\":3,\"rush\":{\"charge\":0,\"uses\":3},\"pts\":187,\"screen\":\"playing\"},{\"n\":5,\"rush\":{\"charge\":0,\"uses\":2},\"pts\":1050,\"screen\":\"playing\"},{\"n\":3,\"rush\":{\"charge\":0,\"uses\":1},\"pts\":374,\"screen\":\"playing\"},{\"n\":5,\"rush\":{\"charge\":0,\"uses\":0},\"pts\":1050,\"screen\":\"won\"}]"
-    },
-    {
-      "name": "MC-015 Undo restores charge and uses exactly",
-      "ok": true,
-      "detail": "{\"a\":{\"charge\":0,\"uses\":3},\"b\":{\"charge\":2,\"uses\":0}}"
+      "detail": ""
     },
     {
       "name": "MC-016 failed attempts award nothing",
       "ok": true,
-      "detail": "{\"lost\":\"lost\",\"afterLoss\":[],\"win1\":[\"perfect-batch\",\"sweet-start\"],\"win2\":[\"perfect-batch\",\"sweet-start\"],\"toolWin\":1,\"toolStickers\":[],\"afterTool\":[\"perfect-batch\",\"sweet-start\"]}"
+      "detail": "{\"lost\":\"lost\",\"afterLoss\":[],\"win1\":[\"sweet-start\"],\"win2\":[\"sweet-start\"],\"l8Stickers\":[]}"
     },
     {
-      "name": "MC-016 L1 win commits Sweet Start + Perfect Batch; a repeat win adds no duplicates",
+      "name": "MC-016 L1 win commits Sweet Start only (FB-004-D: Perfect Batch retired); a repeat win adds no duplicates",
       "ok": true,
-      "detail": "{\"lost\":\"lost\",\"afterLoss\":[],\"win1\":[\"perfect-batch\",\"sweet-start\"],\"win2\":[\"perfect-batch\",\"sweet-start\"],\"toolWin\":1,\"toolStickers\":[],\"afterTool\":[\"perfect-batch\",\"sweet-start\"]}"
+      "detail": "{\"lost\":\"lost\",\"afterLoss\":[],\"win1\":[\"sweet-start\"],\"win2\":[\"sweet-start\"],\"l8Stickers\":[]}"
     },
     {
-      "name": "MC-016 a tool used then undone still counts against Perfect Batch (monotonic)",
+      "name": "FB-004-D retired stickers are never awarded (L8 win)",
       "ok": true,
-      "detail": "{\"lost\":\"lost\",\"afterLoss\":[],\"win1\":[\"perfect-batch\",\"sweet-start\"],\"win2\":[\"perfect-batch\",\"sweet-start\"],\"toolWin\":1,\"toolStickers\":[],\"afterTool\":[\"perfect-batch\",\"sweet-start\"]}"
+      "detail": "[]"
     },
     {
-      "name": "MC-016 book: locked stickers show their condition; earned one becomes the badge; Back restores Home",
+      "name": "MC-016/FB-004-D book: 4 active stickers, retired ones hidden when not earned; locked stickers show their condition; earned one becomes the badge; Back restores Home",
       "ok": true,
-      "detail": "{\"open\":\"book\",\"locked\":4,\"cond\":\"Lucky Seven\\nMake a seven-candy chain and finish the level\\nNot earned yet\",\"badge\":\"sweet-start\",\"back\":\"home\",\"modal\":null,\"homeBadge\":true}"
+      "detail": "{\"open\":\"book\",\"locked\":3,\"total\":4,\"count\":\"1 of 4 discovered\",\"cond\":\"Lucky Seven\\nMake a seven-candy chain and finish the level\\nNot earned yet\",\"badge\":\"sweet-start\",\"back\":\"home\",\"modal\":null,\"homeBadge\":true}"
     },
     {
-      "name": "MC-016 book mid-game: selection cancelled, clock paused, Back returns to Pause",
+      "name": "MC-016 book mid-game: selection cancelled, Back returns to Pause",
       "ok": true,
-      "detail": "{\"chain\":0,\"timing\":false,\"modal\":\"pause\"}"
+      "detail": "{\"chain\":0,\"modal\":\"pause\"}"
     },
     {
-      "name": "MC-017 win card: Next, Play again, speed challenge; no Assisted; no clock in normal play",
+      "name": "MC-017/FB-004-C win card: Next and Play again only; no speed challenge, clock, time rows or Assisted",
       "ok": true,
-      "detail": "{\"next\":true,\"again\":true,\"speed\":true,\"assisted\":false,\"clock\":false}"
+      "detail": "{\"next\":true,\"again\":true,\"speed\":false,\"assisted\":false,\"clock\":false,\"time\":false}"
     },
     {
       "name": "MC-017 Next opens the next board directly",
@@ -374,34 +324,9 @@
       "detail": ""
     },
     {
-      "name": "MC-017 timed attempt: clock visible, starts only on the first board action",
+      "name": "FB-004-C core-v1 record has stars/best/wins and no time fields",
       "ok": true,
-      "detail": "{\"timed\":true,\"timing\":false,\"clock\":true}"
-    },
-    {
-      "name": "MC-017 pause excluded; Undo never rewinds time",
-      "ok": true,
-      "detail": "{\"win\":{\"next\":true,\"again\":true,\"speed\":true,\"assisted\":false,\"clock\":false},\"next\":{\"screen\":\"playing\",\"mode\":\"match\",\"level\":1,\"qaLevel\":1,\"modal\":null,\"version\":\"sweet-v1\",\"target\":10,\"movesLeft\":5,\"made\":0,\"quota\":3,\"score\":0,\"coreScore\":0,\"chainPts\":0,\"blastPts\":0,\"finish\":0,\"stars\":0,\"thresholds\":[400,600],\"hints\":0,\"undoCount\":0,\"toolsUsed\":0,\"undoAvailable\":0,\"hammer\":0,\"rush\":null,\"staged\":{\"spark\":false,\"mix\":false,\"rush\":false,\"seven\":false},\"tool\":null,\"cue\":{\"id\":\"l2-longer\",\"text\":\"Try a longer chain\",\"cells\":[0,1,2]},\"last\":null,\"board\":[2,3,5,6,3,5,5,4,1,3,7,7,9,6,9,8,9,5,1,1,6,8,6,7,7],\"specials\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"ids\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],\"rng\":2,\"chain\":[],\"timed\":false,\"timing\":false,\"elapsedMs\":0,\"seq\":0},\"timedStart\":{\"timed\":true,\"timing\":false,\"clock\":true},\"beforeTouch\":true,\"ticking\":true,\"paused\":true,\"noRewind\":true,\"first\":{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nFirst time\\n0:20\",\"best\":20000},\"faster\":{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nPersonal best\\n0:12 (8s faster)\",\"best\":12000},\"slower\":{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nYour time\\n0:30\\nBest\\n0:12\",\"best\":12000},\"tie\":{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nYour time\\n0:12\\nBest\\n0:12\",\"best\":12000},\"stars\":3}"
-    },
-    {
-      "name": "MC-017 first finish says 'First time'",
-      "ok": true,
-      "detail": "{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nFirst time\\n0:20\",\"best\":20000}"
-    },
-    {
-      "name": "MC-017 faster says 'Personal best' with difference; slower says 'Your time' with best; tie keeps record",
-      "ok": true,
-      "detail": "[{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nPersonal best\\n0:12 (8s faster)\",\"best\":12000},{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nYour time\\n0:30\\nBest\\n0:12\",\"best\":12000},{\"txt\":\"Chain points\\n300\\nMoves bonus\\n100\\nYour time\\n0:12\\nBest\\n0:12\",\"best\":12000}]"
-    },
-    {
-      "name": "MC-017 timer doesn't affect stars",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "MC-017 speed challenge not offered for an uncompleted level",
-      "ok": true,
-      "detail": ""
+      "detail": "{\"stars\":3,\"best\":400,\"wins\":1}"
     },
     {
       "name": "MC-017 final level: Next becomes Candy trail",
@@ -414,9 +339,9 @@
       "detail": "{\"txt\":\"One more try?\\n\\nYou made 0 of 3 chains.\\n\\n1\\n3\\n6\\nRetry\\nUndo last move\\nLevels\",\"undo\":true,\"retry\":\"playing\",\"moves\":5}"
     },
     {
-      "name": "MC-019 active sweet-v1 snapshot saved after a committed action (legacy slot untouched)",
+      "name": "MC-019 active core-v1 snapshot saved after a committed action (legacy slot untouched)",
       "ok": true,
-      "detail": "{\"ver\":\"sweet-v1\",\"moves\":4,\"legacy\":null}"
+      "detail": "{\"ver\":\"core-v1\",\"moves\":4,\"legacy\":null}"
     },
     {
       "name": "MC-019 reload → Continue resumes the committed state",
@@ -426,22 +351,52 @@
     {
       "name": "MC-019 corrupt active v3 → restore error, records kept",
       "ok": true,
-      "detail": "{\"modal\":\"restore-error\",\"unlocked\":5,\"stickers\":2}"
+      "detail": "{\"modal\":\"restore-error\",\"unlocked\":5,\"stickers\":1}"
     },
     {
       "name": "MC-019 old candy-v2 attempt archived verbatim and offered as 'Start this level' on new rules",
       "ok": true,
-      "detail": "{\"offer\":true,\"noContinue\":true,\"archived\":true,\"v2\":\"{\\\"version\\\":\\\"candy-v2\\\",\\\"stars\\\":[3,3,2,1,1,1,0,0,0,0,0,0],\\\"best\\\":[900,687,700,600,800,800,0,0,0,0,0,0],\\\"bestTimed\\\":[950,0,0,0,0,0,0,0,0,0,0,0],\\\"assisted\\\":[false,false,false,false,false,false,false,false,false,false,false,false]}\",\"v1best\":650,\"eq\":4,\"cl\":2,\"unlocked\":7,\"speedSetting\":true,\"v3empty\":true,\"started\":true,\"noSpeedSwitch\":true,\"speedOld\":true}"
+      "detail": "{\"offer\":true,\"noContinue\":true,\"archived\":true,\"v2\":\"{\\\"version\\\":\\\"candy-v2\\\",\\\"stars\\\":[3,3,2,1,1,1,0,0,0,0,0,0],\\\"best\\\":[900,687,700,600,800,800,0,0,0,0,0,0],\\\"bestTimed\\\":[950,0,0,0,0,0,0,0,0,0,0,0],\\\"assisted\\\":[false,false,false,false,false,false,false,false,false,false,false,false]}\",\"v1best\":650,\"eq\":4,\"cl\":2,\"unlocked\":7,\"speedSetting\":true,\"v3empty\":true,\"started\":true,\"noSpeedSwitch\":true}"
     },
     {
       "name": "MC-019 legacy v1/v2 records, removed modes, unlocks and old settings kept; v3 starts empty",
       "ok": true,
-      "detail": "{\"offer\":true,\"noContinue\":true,\"archived\":true,\"v2\":\"{\\\"version\\\":\\\"candy-v2\\\",\\\"stars\\\":[3,3,2,1,1,1,0,0,0,0,0,0],\\\"best\\\":[900,687,700,600,800,800,0,0,0,0,0,0],\\\"bestTimed\\\":[950,0,0,0,0,0,0,0,0,0,0,0],\\\"assisted\\\":[false,false,false,false,false,false,false,false,false,false,false,false]}\",\"v1best\":650,\"eq\":4,\"cl\":2,\"unlocked\":7,\"speedSetting\":true,\"v3empty\":true,\"started\":true,\"noSpeedSwitch\":true,\"speedOld\":true}"
+      "detail": "{\"offer\":true,\"noContinue\":true,\"archived\":true,\"v2\":\"{\\\"version\\\":\\\"candy-v2\\\",\\\"stars\\\":[3,3,2,1,1,1,0,0,0,0,0,0],\\\"best\\\":[900,687,700,600,800,800,0,0,0,0,0,0],\\\"bestTimed\\\":[950,0,0,0,0,0,0,0,0,0,0,0],\\\"assisted\\\":[false,false,false,false,false,false,false,false,false,false,false,false]}\",\"v1best\":650,\"eq\":4,\"cl\":2,\"unlocked\":7,\"speedSetting\":true,\"v3empty\":true,\"started\":true,\"noSpeedSwitch\":true}"
     },
     {
-      "name": "MC-017 speed-bonus switch removed; completion from older versions unlocks the challenge",
+      "name": "MC-017 speed-bonus switch stays removed",
       "ok": true,
-      "detail": "{\"offer\":true,\"noContinue\":true,\"archived\":true,\"v2\":\"{\\\"version\\\":\\\"candy-v2\\\",\\\"stars\\\":[3,3,2,1,1,1,0,0,0,0,0,0],\\\"best\\\":[900,687,700,600,800,800,0,0,0,0,0,0],\\\"bestTimed\\\":[950,0,0,0,0,0,0,0,0,0,0,0],\\\"assisted\\\":[false,false,false,false,false,false,false,false,false,false,false,false]}\",\"v1best\":650,\"eq\":4,\"cl\":2,\"unlocked\":7,\"speedSetting\":true,\"v3empty\":true,\"started\":true,\"noSpeedSwitch\":true,\"speedOld\":true}"
+      "detail": "{\"offer\":true,\"noContinue\":true,\"archived\":true,\"v2\":\"{\\\"version\\\":\\\"candy-v2\\\",\\\"stars\\\":[3,3,2,1,1,1,0,0,0,0,0,0],\\\"best\\\":[900,687,700,600,800,800,0,0,0,0,0,0],\\\"bestTimed\\\":[950,0,0,0,0,0,0,0,0,0,0,0],\\\"assisted\\\":[false,false,false,false,false,false,false,false,false,false,false,false]}\",\"v1best\":650,\"eq\":4,\"cl\":2,\"unlocked\":7,\"speedSetting\":true,\"v3empty\":true,\"started\":true,\"noSpeedSwitch\":true}"
+    },
+    {
+      "name": "FB-004-E migration: stars/wins kept; L1–7 best kept; L8–12 best moved to rushBest; sweet-v1 records untouched",
+      "ok": true,
+      "detail": "{\"rules\":\"core-v1\",\"old\":true,\"r1\":{\"stars\":3,\"best\":400,\"wins\":2},\"r6\":{\"stars\":3,\"best\":1450,\"wins\":1},\"r8\":{\"stars\":3,\"best\":0,\"wins\":1,\"rushBest\":1572},\"stickers\":\"first-spark,perfect-batch,sugar-rush,sweet-start\",\"badge\":\"sugar-rush\",\"homeBadge\":true,\"unlocked\":10,\"offer\":false,\"cont\":true,\"archived\":0,\"damaged\":false,\"resumed\":{\"screen\":\"playing\",\"level\":2,\"made\":1,\"score\":187,\"version\":\"core-v1\",\"keys\":[]},\"undo\":0,\"trail\":[\"Level 1, 3 of 3 stars\",\"Level 2, not completed yet\",\"Level 3, not completed yet\",\"Level 4, not completed yet\",\"Level 5, not completed yet\",\"Level 6, 3 of 3 stars\",\"Level 7, not completed yet\",\"Level 8, 3 of 3 stars\"],\"book\":\"Your sweet collection\\n\\nLittle wins. Tap a sticker you've earned to make it your badge.\\n\\nSweet Start\\nFirst Spark\\nMix Master\\nLucky Seven\\n2 of 4 discovered\\nRetired · earned under the old rules\\nPerfect Batch\\nSugar Rush\\nBadge\\nBack\",\"result\":\"New best score\\n500\\nBest with Sugar Rush (old rules) 1572\"}"
+    },
+    {
+      "name": "FB-004-E L1–7 active attempt continues under core-v1 (hammer/Rush/clock fields dropped), Undo works, no damaged-save message",
+      "ok": true,
+      "detail": "{\"screen\":\"playing\",\"level\":2,\"made\":1,\"score\":187,\"version\":\"core-v1\",\"keys\":[]}"
+    },
+    {
+      "name": "FB-004-D retired stickers kept as history and as badge; book shows them under Retired",
+      "ok": true,
+      "detail": "Your sweet collection Little wins. Tap a sticker you've earned to make it your badge. Sweet Start First Spark Mix Master Lucky Seven 2 of 4 discovered Retired · earned under the old rules Perfect Batch Sugar Rush Badge Back"
+    },
+    {
+      "name": "FB-004-E trail keeps earned stars",
+      "ok": true,
+      "detail": "[\"Level 1, 3 of 3 stars\",\"Level 2, not completed yet\",\"Level 3, not completed yet\",\"Level 4, not completed yet\",\"Level 5, not completed yet\",\"Level 6, 3 of 3 stars\",\"Level 7, not completed yet\",\"Level 8, 3 of 3 stars\"]"
+    },
+    {
+      "name": "FB-004-E L8 result shows the old Rush best separately",
+      "ok": true,
+      "detail": "New best score\n500\nBest with Sugar Rush (old rules) 1572"
+    },
+    {
+      "name": "FB-004-E L8–12 active attempt (Rush state) archived and offered as 'Start this level', not 'damaged'",
+      "ok": true,
+      "detail": "{\"offer\":true,\"cont\":false,\"archived\":1}"
     },
     {
       "name": "MC-019 storage blocked: plays in memory, unobtrusive notice, no errors",
@@ -462,11 +417,6 @@
       "name": "input: keyboard arrows + Space + Enter completes the level",
       "ok": true,
       "detail": ""
-    },
-    {
-      "name": "input: hammer by pointer — target highlighted with number visible, then Smash candy",
-      "ok": true,
-      "detail": "{\"ht\":{\"target\":{\"kind\":\"hammer\",\"target\":12},\"smashDisabled\":false,\"visible\":true},\"hammer\":0}"
     },
     {
       "name": "no page errors (real input)",

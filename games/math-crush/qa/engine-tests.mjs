@@ -1,5 +1,5 @@
-// Math Crush engine, rules and recovery tests — H-002-v1 "play first, sweet rewards" (MC-010..MC-019),
-// plus the retained H-001-v1 core rules. Runs the real game page in Chromium through window.__qa and real input.
+// Math Crush engine, rules and recovery tests — H-002-v1 "play first, sweet rewards" (MC-010..MC-019) as changed by
+// FB-004 (no hammer, no Sugar Rush, no speed challenge; rules core-v1), plus the retained H-001-v1 core rules. Runs the real game page in Chromium through window.__qa and real input.
 // Usage (from repo root, after `cd tools && npm ci`): node games/math-crush/qa/engine-tests.mjs
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -72,17 +72,8 @@ const over = await ev(() => {
   return { drag, tap };
 });
 t("MC-010 above target: 'Too high · slide back' / tap 'Tap the last candy to adjust'", /Too high · slide back/.test(over.drag) && /Tap the last candy to adjust/.test(over.tap), JSON.stringify(over));
-// L6 hammer cue after 8 active idle seconds (real clock); input resets it; time in Pause doesn't count
-await ev(() => { __qa.reset(5); });
-await page.waitForTimeout(3000);
-const idleMid = await ev(() => { const a = __qa.state().cue; __qa.button("pause"); return a; });
-await page.waitForTimeout(6000);
-const idlePaused = await ev(() => { const a = ui.idleMs; __qa.button("resume"); return a; });
-await page.waitForTimeout(8700);
-const idle = await ev(() => ({ cue: __qa.state().cue, ring: !!document.querySelector(".pill.cuebtn") }));
-t("MC-010 L6 'A little help?' appears after 8 active idle s; pause doesn't count", idleMid === null && idlePaused < 1000 && idle.cue && idle.cue.text === "A little help?" && idle.ring, JSON.stringify({ idlePaused, idle }));
-const l6done = await ev(() => { __qa.button("hammer"); const sel = !!__qa.saved().matchV3.lessons["l6-hammer"]; __qa.button("tool-cancel"); __qa.act({ hammer: 7 }); return { sel, done: !!__qa.saved().matchV3.lessons["l6-hammer"] }; });
-t("MC-010 hammer lesson completes on confirmed use, not on selection", !l6done.sel && l6done.done, JSON.stringify(l6done));
+const l6 = await ev(() => { __qa.reset(5); ui.idleMs = 20000; render(); return { cue: __qa.state().cue, ring: !!document.querySelector(".cuebtn") }; });
+t("FB-004-A no hammer cue on L6 after idling", l6.cue === null && !l6.ring, JSON.stringify(l6));
 
 // ---------- MC-011 levels and stars ----------
 const th = await ev(() => LEVELS.match.map((L) => L.starThresholds.join("/")));
@@ -95,7 +86,7 @@ const clean = await ev(() => {
 t("MC-011 L1 clean three-pair route scores 400 → 3 stars", JSON.stringify(clean.lens) === "[2,2,2]" && clean.score === 400 && clean.stars === 3, JSON.stringify(clean));
 t("MC-011 completion star stays hollow before the win", clean.playingStars === 0 && clean.meterStar !== "#FFC83A", clean.meterStar);
 const ts = await ev(() => Array.from({ length: 12 }, (_, li) => { const r = __qa.threeStar(li, 40); return { level: r.level, core: r.core, need: r.threeStar, reached: r.reached }; }));
-for (const r of ts) t(`MC-011 level ${r.level}: real-engine three-star route without tools/speed (${r.core} ≥ ${r.need})`, r.reached, JSON.stringify(r));
+for (const r of ts) t(`MC-011 level ${r.level}: real-engine three-star route under core-v1 (no Rush, no hammer) (${r.core} ≥ ${r.need})`, r.reached, JSON.stringify(r));
 const meter = await ev(() => { __qa.reset(0); __qa.act({ chain: [0, 1, 2, 3, 8].slice(0, 2) }); const s = __qa.state(); const lit = [...document.querySelectorAll(".meter .tk path")].map((p) => p.getAttribute("fill") === "#FFC83A"); return { score: s.coreScore, lit }; });
 t("MC-011 meter uses the live core score (100 lights no threshold mark)", meter.score === 100 && JSON.stringify(meter.lit) === "[false,false,false]", JSON.stringify(meter));
 
@@ -145,47 +136,25 @@ const mixUndo = await ev(() => {
 });
 t("MC-016 staged events (spark, mix) roll back with Undo", mixUndo.a.mix && mixUndo.a.spark && !mixUndo.b.mix && !mixUndo.b.spark, JSON.stringify(mixUndo));
 
-// ---------- MC-014 hammer ----------
-const hm = await ev(() => {
-  const out = {};
-  out.l1to5 = [0, 1, 2, 3, 4].map((li) => { __qa.reset(li); return __qa.state().hammer + (document.querySelector('[data-k="hammer"]') ? 10 : 0); });
-  __qa.reset(5); const g = ui.game; g.cells[7].sp = "stripe"; render();
-  __qa.button("hammer"); __qa.button("tool-cancel"); out.cancel = __qa.state().hammer;
-  const s0 = __qa.state(); __qa.act({ hammer: 7 }); const s1 = __qa.state();
-  out.charge = [s0.hammer, s1.hammer]; out.tools = s1.toolsUsed; out.free = s1.movesLeft === s0.movesLeft && s1.made === s0.made && s1.score === s0.score && s1.blastPts === 0;
-  out.colOnly = [0, 1, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14].every((i) => s1.ids[i] === s0.ids[i]) && s1.ids[7] === s0.ids[2] && s1.rng !== s0.rng;
-  out.solvable = !!M.shortest(ui.game);
-  __qa.act("undo"); const s2 = __qa.state();
-  out.undo = s2.hammer === 1 && s2.rng === s0.rng && JSON.stringify(s2.ids) === JSON.stringify(s0.ids) && s2.specials[7] === "stripe" && s2.toolsUsed === 1;
-  __qa.act({ hammer: 7 }); __qa.button("pause"); __qa.button("restart"); if (ui.modal === "confirm-restart") __qa.button("confirm"); out.restart = __qa.state().hammer;
+// ---------- FB-004-A/B removal: hammer and Sugar Rush ----------
+const rm = await ev(() => {
+  const out = { levels: [] };
+  for (let li = 0; li < 12; li++) {
+    __qa.reset(li); const s = __qa.state(), txt = document.body.innerText;
+    out.levels.push({ li, hammerBtn: !!document.querySelector('[data-k="hammer"],[data-k="smash"]'), rushBar: !!document.querySelector(".rushbar"), words: /Sugar Rush|Hammer|Smash/i.test(txt),
+      stateKeys: ["hammer", "rush", "tool", "toolsUsed", "timed", "elapsedMs"].filter((k) => k in s), hamAct: __qa.actions().some((a) => a && a.hammer !== undefined) });
+  }
+  out.engine = ["hammer", "rushActive"].filter((k) => typeof M[k] === "function");
+  out.data = LEVELS.match.some((L) => "tools" in L || "rushEnabled" in L);
+  __qa.reset(7); const g = ui.game; g.cells = g.cells.map((c) => ({ ...c, v: 9, sp: null })); [3, 3, 6].forEach((v, i) => { g.cells[i].v = v; });
+  const pts = []; for (let k = 0; k < 4; k++) { const ch = M.allChains(ui.game, 400).find((c) => c.length >= 3) || M.shortest(ui.game); const before = __qa.state().chainPts; __qa.act({ chain: ch }); pts.push({ n: ch.length, pts: __qa.state().chainPts - before, exp: M.chainPoints(ch.length) }); if (__qa.state().screen !== "playing") break; }
+  out.l8 = pts;
+  __qa.button("pause"); __qa.button("help"); out.help = document.querySelector(".mcm").innerText; __qa.button("closehelp"); __qa.button("resume");
   return out;
 });
-t("MC-014 L1–5 grant no hammer and show no button", hm.l1to5.every((x) => x === 0), JSON.stringify(hm.l1to5));
-t("MC-014 Cancel spends nothing; confirm spends the one charge atomically", hm.cancel === 1 && JSON.stringify(hm.charge) === "[1,0]" && hm.tools === 1, JSON.stringify(hm));
-t("MC-014 smash: no score/quota/move, special under it not triggered, only its column falls, seeded refill solvable", hm.free && hm.colOnly && hm.solvable, JSON.stringify(hm));
-t("MC-014 Undo restores tile, charge and RNG; tool counter stays (monotonic)", hm.undo, JSON.stringify(hm));
-t("MC-014 Restart resets the configured charge", hm.restart === 1, hm.restart);
-
-// ---------- MC-015 Sugar Rush ----------
-const rs = await ev(() => {
-  const out = {};
-  out.before8 = [0, 4, 6].map((li) => { __qa.reset(li); return __qa.state().rush; });
-  __qa.reset(7); out.start = __qa.state().rush;
-  const g = ui.game; g.cells = g.cells.map((c, i) => ({ ...c, v: 9 })); g.cells[0].v = 4; g.cells[1].v = 9; render();
-  __qa.act({ chain: [0, 1] }); out.wrong = __qa.state().rush; // wrong sum (13): no charge, no spend
-  __qa.act({ hammer: 20 }); out.tool = __qa.state().rush;
-  return out;
-});
-t("MC-015 Rush absent before L8; L8 starts at charge 2", rs.before8.every((x) => x === null) && rs.start.charge === 2 && rs.start.uses === 0, JSON.stringify(rs));
-t("MC-015 wrong sums and tool actions neither charge nor spend", rs.wrong.charge === 2 && rs.tool.charge === 2 && rs.wrong.uses === 0, JSON.stringify(rs));
-const rs2 = await ev(() => {
-  __qa.reset(7); const route = __qa.threeStar(7, 30).route; const seen = [];
-  for (const ch of route) { __qa.act({ chain: ch }); const s = __qa.state(); seen.push({ n: ch.length, rush: s.rush, pts: s.last && s.last.chainPts, screen: s.screen }); }
-  const s = __qa.state(); return { seen, score: s.coreScore, parts: s.chainPts + s.blastPts + s.finish, stickers: __qa.saved().matchV3.stickers };
-});
-t("MC-015 activation on a 3+ chain at charge 2; boosted chains score ×2; win with uses left adds no bonus", rs2.seen.some((x) => x.rush && x.rush.uses === 3) && rs2.score === rs2.parts && !!rs2.stickers["sugar-rush"], JSON.stringify(rs2.seen));
-const rsU = await ev(() => { __qa.reset(7); const g = ui.game; g.rush = { charge: 2, uses: 0 }; const ch = M.allChains(g, 400).find((c) => c.length >= 3); __qa.act({ chain: ch }); const a = __qa.state().rush; __qa.act("undo"); return { a, b: __qa.state().rush }; });
-t("MC-015 Undo restores charge and uses exactly", rsU.a.uses === 3 && rsU.b.charge === 2 && rsU.b.uses === 0, JSON.stringify(rsU));
+t("FB-004-A/B no hammer or Sugar Rush button, bar, copy, state field or action on any level", rm.levels.every((x) => !x.hammerBtn && !x.rushBar && !x.words && !x.stateKeys.length && !x.hamAct) && !rm.engine.length && !rm.data, JSON.stringify(rm.levels.filter((x) => x.hammerBtn || x.rushBar || x.words || x.stateKeys.length || x.hamAct)) + JSON.stringify(rm.engine));
+t("FB-004-B L8+ chains score plain chain points (never doubled)", rm.l8.length >= 2 && rm.l8.every((x) => x.pts === x.exp), JSON.stringify(rm.l8));
+t("FB-004-A/B/C help copy mentions no hammer, Sugar Rush or timing", !/hammer|Sugar Rush|speed|\btime/i.test(rm.help), (rm.help.match(/.{0,60}(hammer|Sugar Rush|speed|\btime).{0,60}/i) || [""])[0]);
 
 // ---------- MC-016 stickers ----------
 await fresh();
@@ -195,54 +164,38 @@ const st = await ev(() => {
   out.lost = s.screen; out.afterLoss = Object.keys(__qa.saved().matchV3.stickers);
   __qa.reset(0); for (const a of __qa.solve()) __qa.act(a); out.win1 = Object.keys(__qa.saved().matchV3.stickers).sort();
   __qa.reset(0); for (const a of __qa.solve()) __qa.act(a); out.win2 = Object.keys(__qa.saved().matchV3.stickers).sort();
-  __qa.reset(5); __qa.act({ hammer: 3 }); __qa.act("undo"); for (const a of __qa.solve()) __qa.act(a); out.toolWin = __qa.state().toolsUsed; out.toolStickers = M.stickersFor(ui.game);
-  out.afterTool = Object.keys(__qa.saved().matchV3.stickers).sort();
+  __qa.reset(7); for (const a of __qa.solve()) __qa.act(a); out.l8Stickers = M.stickersFor(ui.game);
   return out;
 });
 t("MC-016 failed attempts award nothing", st.afterLoss.length === 0 && st.lost === "lost", JSON.stringify(st));
-t("MC-016 L1 win commits Sweet Start + Perfect Batch; a repeat win adds no duplicates", JSON.stringify(st.win1) === '["perfect-batch","sweet-start"]' && JSON.stringify(st.win2) === JSON.stringify(st.win1), JSON.stringify(st));
-t("MC-016 a tool used then undone still counts against Perfect Batch (monotonic)", st.toolWin === 1 && !st.toolStickers.includes("perfect-batch"), JSON.stringify(st));
+t("MC-016 L1 win commits Sweet Start only (FB-004-D: Perfect Batch retired); a repeat win adds no duplicates", JSON.stringify(st.win1) === '["sweet-start"]' && JSON.stringify(st.win2) === JSON.stringify(st.win1), JSON.stringify(st));
+t("FB-004-D retired stickers are never awarded (L8 win)", !st.l8Stickers.includes("perfect-batch") && !st.l8Stickers.includes("sugar-rush"), JSON.stringify(st.l8Stickers));
 const book = await ev(() => {
   __qa.open("home"); document.querySelector('[data-k="book"]').click(); const open = __qa.state().modal;
-  const locked = document.querySelectorAll(".stk.locked").length;
+  const locked = document.querySelectorAll(".stk.locked").length, total = document.querySelectorAll(".stk").length, count = document.querySelector(".mcm").innerText.match(/\d+ of \d+ discovered/)[0];
   document.querySelector('[data-k="stk-lucky-seven"]').click(); const cond = document.querySelector(".binfo").innerText;
   document.querySelector('[data-k="stk-sweet-start"]').click(); document.querySelector('[data-k="set-badge"]').click();
   const badge = __qa.saved().matchV3.badge; document.querySelector('[data-k="book-back"]').click();
-  return { open, locked, cond, badge, back: __qa.state().screen, modal: __qa.state().modal, homeBadge: !!document.querySelector(".badgeimg") };
+  return { open, locked, total, count, cond, badge, back: __qa.state().screen, modal: __qa.state().modal, homeBadge: !!document.querySelector(".badgeimg") };
 });
-t("MC-016 book: locked stickers show their condition; earned one becomes the badge; Back restores Home", book.open === "book" && book.locked === 4 && /seven-candy chain/.test(book.cond) && book.badge === "sweet-start" && book.back === "home" && !book.modal && book.homeBadge, JSON.stringify(book));
-const midBook = await ev(() => { __qa.reset(1, { timed: true }); __qa.act({ chain: [0, 1, 2] }); ui.chain = [5, 6]; __qa.button("pause"); __qa.button("book"); const a = { chain: ui.chain.length, timing: __qa.timingActive() }; __qa.button("book-back"); return { ...a, modal: __qa.state().modal }; });
-t("MC-016 book mid-game: selection cancelled, clock paused, Back returns to Pause", midBook.chain === 0 && !midBook.timing && midBook.modal === "pause", JSON.stringify(midBook));
+t("MC-016/FB-004-D book: 4 active stickers, retired ones hidden when not earned; locked stickers show their condition; earned one becomes the badge; Back restores Home", book.open === "book" && book.locked === 3 && book.total === 4 && book.count === "1 of 4 discovered" && /seven-candy chain/.test(book.cond) && book.badge === "sweet-start" && book.back === "home" && !book.modal && book.homeBadge, JSON.stringify(book));
+const midBook = await ev(() => { __qa.reset(1); __qa.act({ chain: [0, 1, 2] }); ui.chain = [5, 6]; __qa.button("pause"); __qa.button("book"); const a = { chain: ui.chain.length }; __qa.button("book-back"); return { ...a, modal: __qa.state().modal }; });
+t("MC-016 book mid-game: selection cancelled, Back returns to Pause", midBook.chain === 0 && midBook.modal === "pause", JSON.stringify(midBook));
 
-// ---------- MC-017 results and speed challenge ----------
+// ---------- MC-017 results (FB-004-C: no speed challenge) ----------
 await fresh();
 const sp = await ev(() => {
   const out = {};
   __qa.reset(0); for (const a of __qa.solve()) __qa.act(a);
-  out.win = { next: !!document.querySelector('.mcm [data-k="next"]'), again: !!document.querySelector('.mcm [data-k="retry"]'), speed: !!document.querySelector('.mcm [data-k="speed"]'), assisted: /Assisted/.test(document.body.innerText), clock: !!document.querySelector("#mclock") };
+  out.win = { next: !!document.querySelector('.mcm [data-k="next"]'), again: !!document.querySelector('.mcm [data-k="retry"]'), speed: !!document.querySelector('.mcm [data-k="speed"]'), assisted: /Assisted/.test(document.body.innerText), clock: !!document.querySelector("#mclock, .clock"), time: /time|First time|Personal best/i.test(document.querySelector(".mcm").innerText) };
   document.querySelector('.mcm [data-k="next"]').click(); out.next = __qa.state();
-  __qa.reset(0); for (const a of __qa.solve()) __qa.act(a);
-  document.querySelector('.mcm [data-k="speed"]').click(); let s = __qa.state(); out.timedStart = { timed: s.timed, timing: s.timing, clock: !!document.querySelector("#mclock") };
-  out.beforeTouch = __qa.tick(3000) === false;
-  __qa.act(__qa.solve()[0]); out.ticking = __qa.tick(20000) === true;
-  __qa.button("pause"); out.paused = __qa.tick(5000) === false; __qa.button("resume");
-  __qa.act("undo"); out.noRewind = __qa.state().elapsedMs === 20000;
-  for (const a of __qa.solve()) __qa.act(a); __qa.tick(5000);
-  out.first = { txt: document.querySelector(".rows2").innerText, best: __qa.saved().matchV3.records["sweet-v1:1"].bestTimeMs };
-  const runTimed = (ms) => { document.querySelector('.mcm [data-k="speed"]').click(); __qa.act(__qa.solve()[0]); __qa.tick(ms); for (const a of __qa.solve()) __qa.act(a); return { txt: document.querySelector(".rows2").innerText, best: __qa.saved().matchV3.records["sweet-v1:1"].bestTimeMs }; };
-  out.faster = runTimed(12000); out.slower = runTimed(30000); out.tie = runTimed(12400);
-  out.stars = __qa.state().stars;
+  __qa.button("speed"); out.afterSpeedKey = __qa.state().screen;
+  out.rec = __qa.saved().matchV3.records["core-v1:1"];
   return out;
 });
-t("MC-017 win card: Next, Play again, speed challenge; no Assisted; no clock in normal play", sp.win.next && sp.win.again && sp.win.speed && !sp.win.assisted && !sp.win.clock, JSON.stringify(sp.win));
+t("MC-017/FB-004-C win card: Next and Play again only; no speed challenge, clock, time rows or Assisted", sp.win.next && sp.win.again && !sp.win.speed && !sp.win.assisted && !sp.win.clock && !sp.win.time, JSON.stringify(sp.win));
 t("MC-017 Next opens the next board directly", sp.next.screen === "playing" && sp.next.level === 1);
-t("MC-017 timed attempt: clock visible, starts only on the first board action", sp.timedStart.timed && !sp.timedStart.timing && sp.timedStart.clock && sp.beforeTouch && sp.ticking, JSON.stringify(sp.timedStart));
-t("MC-017 pause excluded; Undo never rewinds time", sp.paused && sp.noRewind, JSON.stringify(sp));
-t("MC-017 first finish says 'First time'", /First time\s*0:20/.test(sp.first.txt) && sp.first.best === 20000, JSON.stringify(sp.first));
-t("MC-017 faster says 'Personal best' with difference; slower says 'Your time' with best; tie keeps record", /Personal best\s*0:12 \(8s faster\)/.test(sp.faster.txt) && sp.faster.best === 12000 && /Your time\s*0:30[\s\S]*Best\s*0:12/.test(sp.slower.txt) && sp.slower.best === 12000 && sp.tie.best === 12000 && /Your time/.test(sp.tie.txt), JSON.stringify([sp.faster, sp.slower, sp.tie]));
-t("MC-017 timer doesn't affect stars", sp.stars === 3);
-const unl = await ev(() => { __qa.reset(4); let s = __qa.state(); return !!completedEver(4); });
-t("MC-017 speed challenge not offered for an uncompleted level", unl === false);
+t("FB-004-C core-v1 record has stars/best/wins and no time fields", sp.rec && sp.rec.stars === 3 && sp.rec.best === 400 && !("bestTimeMs" in sp.rec), JSON.stringify(sp.rec));
 const l12 = await ev(() => { __qa.reset(11); for (const a of __qa.solve()) __qa.act(a); const b = document.querySelector('.mcm .pbtn'); return b && b.innerText; });
 t("MC-017 final level: Next becomes Candy trail", l12 === "Candy trail", l12);
 const loss = await ev(() => { __qa.reset(3); let s = __qa.state(); while (s.screen === "playing") { __qa.act({ chain: [0, 5] }); s = __qa.state(); } const txt = document.querySelector(".mcm").innerText; const undo = !!document.querySelector('.mcm [data-k="undo2"]'); document.querySelector('.mcm [data-k="retry"]').click(); const r = __qa.state(); return { txt, undo, retry: r.screen, moves: r.movesLeft }; });
@@ -250,7 +203,7 @@ t("MC-017 failure: 'One more try?', Retry immediate, Undo offered", /One more tr
 
 // ---------- MC-019 saves, migration, recovery ----------
 const ps = await ev(() => { __qa.reset(3); __qa.act({ chain: [0, 1] }); const s = __qa.saved().matchV3.active; return { ver: s && s.version, moves: s && s.game.movesLeft, legacy: __qa.saved().active }; });
-t("MC-019 active sweet-v1 snapshot saved after a committed action (legacy slot untouched)", ps.ver === "sweet-v1" && ps.moves === 4 && ps.legacy === null, JSON.stringify(ps));
+t("MC-019 active core-v1 snapshot saved after a committed action (legacy slot untouched)", ps.ver === "core-v1" && ps.moves === 4 && ps.legacy === null, JSON.stringify(ps));
 await page.reload(); await page.waitForTimeout(300);
 const rr = await ev(() => { __qa.open("home"); const b = document.querySelector('[data-k="continue"]'); b.click(); const s = __qa.state(); return { screen: s.screen, moves: s.movesLeft, level: s.level }; });
 t("MC-019 reload → Continue resumes the committed state", rr.screen === "playing" && rr.moves === 4 && rr.level === 3, JSON.stringify(rr));
@@ -270,14 +223,49 @@ const mig = await ev(() => {
   __qa.open("home"); const sv = __qa.saved(); const home = document.body.innerText;
   const out = { offer: /Start this level · Level 6/.test(home), noContinue: !document.querySelector('[data-k="continue"]'), archived: sv.matchV3.archivedActive.length === 1 && sv.matchV3.archivedActive[0].data.game.li === 5,
     v2: JSON.stringify(sv.matchV2), v1best: sv.match.best[0], eq: sv.equation.unlocked, cl: sv.clear.unlocked, unlocked: sv.match.unlocked, speedSetting: sv.settings.speed, v3empty: Object.keys(sv.matchV3.records).length === 0 };
-  document.querySelector('[data-k="offer-start"]').click(); const s = __qa.state(); out.started = s.screen === "playing" && s.level === 5 && s.version === "sweet-v1";
+  document.querySelector('[data-k="offer-start"]').click(); const s = __qa.state(); out.started = s.screen === "playing" && s.level === 5 && s.version === "core-v1";
   out.noSpeedSwitch = (__qa.button("pause"), !document.querySelector('[data-k="speed"]')); __qa.button("resume");
-  out.speedOld = completedEver(0) && completedEver(5);
   return out;
 });
 t("MC-019 old candy-v2 attempt archived verbatim and offered as 'Start this level' on new rules", mig.offer && mig.noContinue && mig.archived && mig.started, JSON.stringify(mig));
 t("MC-019 legacy v1/v2 records, removed modes, unlocks and old settings kept; v3 starts empty", mig.v2 === JSON.stringify(legacy.matchV2) && mig.v1best === 650 && mig.eq === 4 && mig.cl === 2 && mig.unlocked === 7 && mig.speedSetting === true && mig.v3empty, JSON.stringify(mig));
-t("MC-017 speed-bonus switch removed; completion from older versions unlocks the challenge", mig.noSpeedSwitch && mig.speedOld, JSON.stringify(mig));
+t("MC-017 speed-bonus switch stays removed", mig.noSpeedSwitch, JSON.stringify(mig));
+// FB-004-E: a sweet-v1 save (H-002-v1 build) with Rush-boosted bests, retired stickers as badge and an active attempt
+const sweet = (activeLi) => ({ schemaVersion: 1, settings: { sound: false, haptics: true, speed: false, tap: false }, coach: {}, coach2: {},
+  match: { unlocked: 10, stars: Array(12).fill(0), best: Array(12).fill(0) }, matchV2: { version: "candy-v2", stars: Array(12).fill(0), best: Array(12).fill(0), bestTimed: Array(12).fill(0), assisted: Array(12).fill(false) },
+  matchV3: { contentVersion: "sweet-v1", records: { "sweet-v1:1": { stars: 3, best: 400, bestTimeMs: 21000, timeDetails: null, wins: 2 }, "sweet-v1:6": { stars: 3, best: 1450, bestTimeMs: 0, timeDetails: null, wins: 1 }, "sweet-v1:8": { stars: 3, best: 1572, bestTimeMs: 0, timeDetails: null, wins: 1 } },
+    lessons: { "l1-pair": true, "l8-rush": true, "l6-hammer": true }, stickers: { "sweet-start": "2026-10-28", "perfect-batch": "2026-10-28", "sugar-rush": "2026-10-28", "first-spark": "2026-10-28" }, badge: "sugar-rush",
+    active: null, archivedActive: [], offerStart: null }, active: null });
+const mkActive = (li) => ({ version: "sweet-v1", game: (() => { const G = { mode: "match", version: "sweet-v1", li, rows: 5, cols: 5, target: LEVELS.match[li].target, quota: LEVELS.match[li].quota, moves: LEVELS.match[li].moves, movesLeft: LEVELS.match[li].moves - 1, made: 1, chainPts: 187, blastPts: 0, finish: 0,
+  cells: LEVELS.match[li].values.map((v, i) => ({ id: i, v, sp: null })), nextId: 25, rng: 77, refills: 1, hammer: li >= 5 ? 1 : 0, rush: li >= 7 ? { charge: 0, uses: 3 } : null, ev: { spark: false, mix: false, rush: li >= 7, seven: false }, hints: 0, undos: 0, toolsUsed: 0, status: "playing", last: null, seq: 1, timed: false, timing: false, elapsed: 0, hist: [] };
+  G.hist = [{ ...JSON.parse(JSON.stringify(G)), movesLeft: G.moves, made: 0, chainPts: 0, seq: 0, hist: undefined }]; delete G.hist[0].hist; return G; })() });
+for (const li of [2, 8]) {
+  const save = await ev(([li, a, b]) => { const S = eval("(" + a + ")")(li); S.matchV3.active = eval("(" + b + ")")(li); return S; }, [li, sweet.toString(), mkActive.toString()]);
+  await ev((S) => { ui.game = null; ui.screen = "home"; ui.modal = null; localStorage.setItem("mathcrush.v1", JSON.stringify(S)); }, save);
+  await page.reload(); await page.waitForTimeout(300);
+  const m = await ev(() => {
+    __qa.open("home"); const sv = __qa.saved(), v3 = sv.matchV3, home = document.body.innerText, out = {};
+    out.rules = v3.rules; out.old = v3.records["sweet-v1:1"] && v3.records["sweet-v1:1"].bestTimeMs === 21000 && v3.records["sweet-v1:8"].best === 1572;
+    out.r1 = v3.records["core-v1:1"]; out.r6 = v3.records["core-v1:6"]; out.r8 = v3.records["core-v1:8"];
+    out.stickers = Object.keys(v3.stickers).sort().join(); out.badge = v3.badge; out.homeBadge = !!document.querySelector(".badgeimg"); out.unlocked = sv.match.unlocked;
+    out.offer = /Start this level/.test(home); out.cont = !!document.querySelector('[data-k="continue"]'); out.archived = v3.archivedActive.length; out.damaged = false;
+    if (out.cont) { document.querySelector('[data-k="continue"]').click(); const s = __qa.state(); out.resumed = { screen: s.screen, level: s.level, made: s.made, score: s.chainPts, version: s.version, keys: ["hammer", "rush", "timed", "toolsUsed"].filter((k) => k in ui.game) }; out.damaged = s.modal === "restore-error";
+      __qa.act("undo"); out.undo = __qa.state().made; }
+    __qa.open("levels"); out.trail = [...document.querySelectorAll(".node3")].slice(0, 8).map((n) => n.getAttribute("aria-label"));
+    __qa.open("home"); document.querySelector('[data-k="book"]').click(); out.book = document.querySelector(".mcm").innerText; mButton("book-back");
+    __qa.reset(7); for (const a of __qa.solve()) __qa.act(a); out.result = document.querySelector(".scorebox").innerText;
+    return out;
+  });
+  if (li === 2) {
+    t("FB-004-E migration: stars/wins kept; L1–7 best kept; L8–12 best moved to rushBest; sweet-v1 records untouched", m.rules === "core-v1" && m.old && m.r1.stars === 3 && m.r1.best === 400 && m.r1.wins === 2 && m.r6.best === 1450 && m.r8.stars === 3 && m.r8.best === 0 && m.r8.rushBest === 1572 && m.unlocked === 10, JSON.stringify(m));
+    t("FB-004-E L1–7 active attempt continues under core-v1 (hammer/Rush/clock fields dropped), Undo works, no damaged-save message", m.cont && !m.damaged && m.resumed.screen === "playing" && m.resumed.level === 2 && m.resumed.made === 1 && m.resumed.version === "core-v1" && !m.resumed.keys.length && m.undo === 0, JSON.stringify(m.resumed));
+    t("FB-004-D retired stickers kept as history and as badge; book shows them under Retired", m.stickers === "first-spark,perfect-batch,sugar-rush,sweet-start" && m.badge === "sugar-rush" && m.homeBadge && /2 of 4 discovered/.test(m.book) && /Retired/.test(m.book) && /Sugar Rush/.test(m.book), m.book.replace(/\s+/g, " "));
+    t("FB-004-E trail keeps earned stars", /Level 1, 3 of 3 stars/.test(m.trail[0]) && /Level 6, 3 of 3 stars/.test(m.trail[5]), JSON.stringify(m.trail));
+    t("FB-004-E L8 result shows the old Rush best separately", /Best with Sugar Rush \(old rules\) 1572/.test(m.result), m.result);
+  } else {
+    t("FB-004-E L8–12 active attempt (Rush state) archived and offered as 'Start this level', not 'damaged'", !m.cont && m.offer && m.archived === 1 && !m.damaged, JSON.stringify({ offer: m.offer, cont: m.cont, archived: m.archived }));
+  }
+}
 const ctx2 = await browser.newContext({ viewport: { width: 390, height: 844 } });
 await ctx2.addInitScript(() => { Object.defineProperty(window, "localStorage", { get() { throw new Error("blocked"); } }); });
 const p2 = await ctx2.newPage(); const err2 = []; p2.on("pageerror", (e) => err2.push(e.message));
@@ -311,12 +299,6 @@ const steps = await p3.evaluate((kc) => { const out = []; let cur = 0; for (cons
 for (const k of steps) await p3.keyboard.press(k === " " ? "Space" : k);
 await p3.keyboard.press("Enter"); await p3.waitForTimeout(300);
 t("input: keyboard arrows + Space + Enter completes the level", (await p3.evaluate(() => __qa.state().screen)) === "won");
-await p3.evaluate(() => { __qa.reset(5); });
-await p3.click('[data-k="hammer"]'); const [hx, hy] = await center(12); await p3.mouse.click(hx, hy); await p3.waitForTimeout(80);
-const ht = await p3.evaluate(() => ({ target: __qa.state().tool, smashDisabled: document.querySelector('[data-k="smash"]').disabled, visible: !!document.querySelector('.tile2.smash[data-cell="12"] .d') }));
-await p3.click('[data-k="smash"]'); await p3.waitForTimeout(300);
-const hs = await p3.evaluate(() => __qa.state());
-t("input: hammer by pointer — target highlighted with number visible, then Smash candy", ht.target && ht.target.target === 12 && !ht.smashDisabled && ht.visible && hs.hammer === 0 && hs.toolsUsed === 1, JSON.stringify({ ht, hammer: hs.hammer }));
 t("no page errors (real input)", err3.length === 0, err3.join(" | "));
 t("no page errors", errors.length === 0, errors.join(" | "));
 await browser.close();
