@@ -46,6 +46,30 @@ for the designer in `design-studio/games/math-crush/feedback/FB-002-match-only.m
   FB-004 counts as approved scope for the night studio because it quotes Benji's direct request and STATUS names
   the development team as the next action. Only the removal and its dependent save/sticker/balance work are in scope;
   target variety, frosting, Candy orders and new feedback effects stay proposals. Report: `FB-005`. No URLs.
+- **Night 5:** approved hand-over `design-studio/games/math-crush/handovers/H-003-v1/` ("a sweeter journey",
+  MC-020–028), read in place. STATUS.md (29 Oct) records Benji's request ("Remove the sticker book", "The level
+  selection view is to boring", "Create the hand over for the development team") and pins the frozen revision
+  `e030f63`. `sha256sum -c SHA256SUMS.txt` clean, `python3 -B data/validate.py` all PASS before building. Picked as
+  job 1b (approved hand-over without a completion report; no pending board notes, nothing queued). Report:
+  `FB-006-journey.md`. No URLs.
+
+## Tonight (night 5) — H-003-v1 "a sweeter journey"
+Work the phases in the packet's order and only claim phases whose checks pass.
+1. **Phase A:** MC-020 remove stickers everywhere (Home, Pause, toasts, award logic, announcements, `__qa`,
+   asset loading); stored sticker data kept inert. MC-024 the new three-chapter scrolling map (painted
+   regions, live path, real 64px nodes, mask thumbnails, stars, frontier pin, locks, sticky chapter label,
+   Continue shelf) for Classic. MC-025 motion: press/extend feedback, clear pop, stripe sweep, wrapped burst,
+   jelly shards, fall, score count-up, target slide, calm idle (clouds, glints, special wobble, pin breath),
+   reduced-motion switch; input lock ≤ 900 ms.
+2. **Phase B:** MC-021/022/023 Journey preview 1–10 from `data/levels.json` (schema 3): masks with segmented
+   gravity, jelly objectives, changing targets, xorshift32 RNG, product-aware repair; separate `matchJourney`
+   save namespace; Home entry "Journey preview"; Classic untouched.
+3. **Phase C (partial):** replay all 12 witness routes in the real engine (exact snapshot match), tests for
+   QA.md boundaries, screens at 360×640 / 390×844 / 1280×800 / 150 % text. Journey stays opt-in (owner playtest
+   decides promotion).
+4. **Phase D (if A–C pass):** MC-026 multiplication pilots 11–12 behind an explicit "Multiplication preview"
+   unlock after level 10, with multiplication-specific tests. Otherwise nodes 11–12 say "Coming later".
+5. FB-006 completion report per requirement ID.
 
 ## Tonight (night 4) — FB-004 focus on chains and specials
 1. **FB-004-A/B/C:** remove the hammer (button, charge, targeting, cue, help, keys, `__qa` action), Sugar Rush
@@ -183,6 +207,25 @@ Rules, constants and screens are the designer's (HANDOVER.md MC-001–009, SCREE
   actions add `"undo"`; `__qa.fixtures()` runs mechanics-fixtures.json through the real `M.resolve` engine;
   `__qa.tick(ms)` advances speed-timer time deterministically; `__qa.threeStar(li)` searches for a no-speed
   3-star route with the real engine. `solve()` unchanged (shortest chains).
+
+### Night 5 design notes (H-003-v1 journey)
+Rules are the packet's (RULES.md, model.py is the oracle); this records the mapping onto the build.
+- **One engine, two campaigns.** Every attempt carries `camp` (`classic` | `journey`). A normalised level
+  definition feeds the engine: active mask (Classic = all 25), operation (`add` | `multiply`), target list,
+  objective (`chains` | `jelly`), jelly cells, reward mode (Classic L1–3 none, L4–6 stripe, L7–12 both), RNG
+  (Classic mulberry32, Journey xorshift32) and repair (Classic old row-1 pair, Journey RULES.md pair). Classic
+  behaviour, data, IDs and saves are unchanged; voids are `null` cells.
+- **Core loop per level** comes from data: chains on full/hourglass/ring boards, jelly patches under candies,
+  target sequences ("Now make 12"), and later products.
+- **Map:** one scroll of three painted regions (Garden 1–4, Chocolate 5–8, Frosting 9–12) used by both
+  campaigns with their own content; nodes start levels directly; Continue shelf outside the scroll.
+- **Feel tonight:** clear pop with path stagger, stripe sweep and wrapped burst SVGs, jelly shards, target
+  slide after settling, calm idle (2 clouds, one glint, special wobble, pin breath); all off with reduced motion.
+- **QA plan:** `levels()` = 22 or 24: 0–11 Classic, 12+ Journey (12–21 additive, 22–23 multiplication once
+  Phase D is enabled). `reset(n)` starts that level; `state()` adds `campaign, operation, targets, targetIndex,
+  jelly[], active[]`. `solve()` plays the first legal chain each move (jelly levels prefer chains that hit
+  jelly). New `__qa.witness(id)` replays a packet witness route through the real engine and compares the full
+  snapshot; `journey-tests.mjs` covers QA.md boundaries.
 
 ## Assumptions (night 3)
 - Home **Play** opens the board of the highest unlocked level; the trail stays a secondary "Levels" button.
