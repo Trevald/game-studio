@@ -994,7 +994,7 @@ function mHome() {
     const g = act.g;
     h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:.9375rem;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} move${g.movesLeft === 1 ? "" : "s"} left` : "Saved attempt"}</span></button>`;
   } else if (v3.offerStart !== null && v3.offerStart !== undefined) {
-    h += `<div class="banner panel small" role="note">Your unfinished game was saved under the old rules. It is kept, but can't continue.</div>`;
+    h += `<div class="banner panel small" role="note">Your stars and levels are safe. Your unfinished round was played under the old rules, so it starts fresh.</div>`;
     h += `<button class="pbtn" data-k="offer-start">Start this level · Level ${v3.offerStart + 1}</button>`;
   } else {
     h += `<button class="pbtn" data-k="play" style="min-height:64px;font-size:1.75rem">Play · Level ${playLevel() + 1}</button>`;

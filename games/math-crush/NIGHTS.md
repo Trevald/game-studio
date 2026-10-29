@@ -1,5 +1,32 @@
 # Math Crush — night log
 
+## Night 4 — 2026-10-29
+
+**Job:** owner scope change FB-004 (Benji, 28 Oct: "remove the hammer and the sugar rush and the time challenge"), recorded by
+the designer with development named as the next action. No pending board notes, nothing queued. Treated as job 1b (outstanding
+approved work on the H-002-v1 packet).
+
+**Shipped:**
+- Hammer, Sugar Rush and the speed challenge are gone: UI, cues, help copy, sounds, clock, engine code, level fields and `__qa` hooks.
+- Perfect Batch and Sugar Rush stickers retired (4 active). Earned ones are kept, usable as a badge, and shown under "Retired".
+- New rules version `core-v1` with a one-time migration. Stars, unlocks, wins and stickers are kept. L1–7 bests carry over; L8–12 bests become
+  "Best with Sugar Rush (old rules)". An unfinished L1–7 game continues; an L8–12 one restarts with a clear note.
+- Three stars still reachable on every level without Rush; no threshold changes.
+
+**QA:** playtest all checks passed · engine tests 85/85 · screen audit clean (4 sizes) · 2 rounds. Local note: `tools/` pins
+playwright 1.56, whose browser isn't in this sandbox, so the run linked the preinstalled playwright 1.63 into `tools/node_modules` (not committed).
+
+**Reviewer:** ship it. The removal is clean and the save carry-over works. Fixed: the old-attempt message now says stars and levels are
+safe and that the round starts fresh. Not fixed (out of scope, in FB-005): flat L5–12 curve, loss-card tiles, colour-by-value-mod-6,
+blast animation overlap.
+
+**Assumptions:** FB-004 counts as approved scope for the night studio; the sticker treatment follows the designer's recommendation;
+L1–7 bests are comparable across versions (the hammer never scored).
+
+**Questions for Benji:** see the board report.
+
+**Play:** https://claude.ai/artifact/D5kYHgsZbouMh73g1VMLTj
+
 ## Night 3 — 2026-10-25
 
 **Job:** approved hand-over not yet built — `design-studio/games/math-crush/handovers/H-002-v1` ("play first, sweet rewards"),
