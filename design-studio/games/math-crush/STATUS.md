@@ -1,3 +1,14 @@
+# Current update — 28 October 2026
+
+**Owner requested removing hammer, Sugar Rush and time challenge; documentation only in this chat.** See [FB-004](feedback/FB-004-focus-on-core.md) for exact owner wording, scoped acceptance expectations, dependent sticker/save/balance considerations and development follow-up. H-002-v1 remains frozen; its inclusion of these features is historical and must not be treated as a request to retain them after this owner update.
+
+H-002 implementation was reported in FB-003 at runtime commit `1c4d9c5`. The latest playtest completed L1–8 and started L9; report/screenshots published on main at `0c1a2f0`. New target sequences and extra mechanics remain proposals, not blanket-approved changes. No gameplay modifications are included in this feedback update; initial local edits were reverted at the owner's clarification.
+
+Publication: main, in the commit adding FB-004. Outstanding: development implementation, dependent sticker treatment and score/save migration choices, post-removal three-star verification. Next action: development team reads FB-004 and implements the requested removal, returning evidence. No external message or task dispatch performed.
+
+---
+
+# Historical delivery status
 # Math Crush — status
 Updated: 2026-10-25. **H-002-v1 delivered on main for the requested prototype implementation iteration.**
 

@@ -1,5 +1,7 @@
 # Math Crush — authoritative design pointer
 
+**Latest owner direction (28 October):** [FB-004 — focus on core](../../design-studio/games/math-crush/feedback/FB-004-focus-on-core.md) requests removal of hammer, Sugar Rush and time challenge. Development team owns implementation; this feedback update changes no runtime code. Read before the historical packet scope below.
+
 Current requested Candy Match iteration: [H-002-v1](../../design-studio/games/math-crush/handovers/H-002-v1/HANDOVER.md).
 Read [STATUS](../../design-studio/games/math-crush/STATUS.md) for Benji's 25 October 2026 handover request and exact phase scope. Verify packet SHA256SUMS.txt, then implement A foundations, B reactions/hammer, C Rush/stickers. Required raster/SVG assets, level data, solution witnesses, rules, screen references and QA are bundled. Read in place on main. Return evidence in design-studio/games/math-crush/feedback/FB-003-sweet-play.md.
 
