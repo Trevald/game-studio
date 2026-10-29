@@ -1,11 +1,11 @@
 {
   "game": "games/math-crush/index.html",
-  "at": "2026-10-29T07:18:51.528Z",
+  "at": "2026-10-29T22:08:35.001Z",
   "checks": [
     {
       "name": "file under 2 MB",
       "ok": true,
-      "detail": "125 KB"
+      "detail": "175 KB"
     },
     {
       "name": "external resources only from allowed CDNs",
@@ -45,17 +45,17 @@
     {
       "name": "[desktop] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"home\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
+      "detail": "{\"screen\":\"home\",\"mode\":\"match\",\"campaign\":\"classic\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
     },
     {
       "name": "[desktop] survives 400 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 54"
+      "detail": "screens seen: playing, won; resets: 52"
     },
     {
-      "name": "every level completable via solve() (12 levels)",
+      "name": "every level completable via solve() (24 levels)",
       "ok": true,
-      "detail": "L1:3 L2:3 L3:3 L4:3 L5:4 L6:4 L7:4 L8:4 L9:5 L10:5 L11:5 L12:5"
+      "detail": "L1:3 L2:3 L3:3 L4:3 L5:4 L6:4 L7:4 L8:4 L9:5 L10:5 L11:5 L12:5 L13:3 L14:3 L15:3 L16:3 L17:2 L18:4 L19:4 L20:3 L21:4 L22:4 L23:3 L24:3"
     },
     {
       "name": "[desktop] no console errors or exceptions",
@@ -75,12 +75,12 @@
     {
       "name": "[phone] state() is serializable with a screen field",
       "ok": true,
-      "detail": "{\"screen\":\"home\",\"mode\":\"match\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
+      "detail": "{\"screen\":\"home\",\"mode\":\"match\",\"campaign\":\"classic\",\"level\":null,\"qaLevel\":null,\"modal\":null}"
     },
     {
       "name": "[phone] survives 60 random actions",
       "ok": true,
-      "detail": "screens seen: playing, won; resets: 8"
+      "detail": "screens seen: playing, won; resets: 7"
     },
     {
       "name": "[phone] no console errors or exceptions",
@@ -98,6 +98,7 @@
   "desktop_initialState": {
     "screen": "home",
     "mode": "match",
+    "campaign": "classic",
     "level": null,
     "qaLevel": null,
     "modal": null
@@ -174,11 +175,84 @@
       "ok": true,
       "moves": 5,
       "screen": "won"
+    },
+    {
+      "lv": 12,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 13,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 14,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 15,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 16,
+      "ok": true,
+      "moves": 2,
+      "screen": "won"
+    },
+    {
+      "lv": 17,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 18,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 19,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 20,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 21,
+      "ok": true,
+      "moves": 4,
+      "screen": "won"
+    },
+    {
+      "lv": 22,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
+    },
+    {
+      "lv": 23,
+      "ok": true,
+      "moves": 3,
+      "screen": "won"
     }
   ],
   "phone_initialState": {
     "screen": "home",
     "mode": "match",
+    "campaign": "classic",
     "level": null,
     "qaLevel": null,
     "modal": null

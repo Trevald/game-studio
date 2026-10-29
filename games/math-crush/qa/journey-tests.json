@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-29T22:05:36.906Z",
+  "date": "2026-10-29T22:08:34.683Z",
   "passed": 82,
   "total": 82,
   "results": [
@@ -201,7 +201,7 @@
     {
       "name": "MC-023 the HUD holds the old target while the clear resolves; the model already has the new one",
       "ok": true,
-      "detail": "{\"during\":{\"shown\":10,\"model\":12,\"busy\":true,\"lock\":657},\"blocked\":true,\"after\":{\"shown\":12,\"busy\":false,\"status\":\"Now make 12\"}}"
+      "detail": "{\"during\":{\"shown\":10,\"model\":12,\"busy\":true,\"lock\":657.1999999999534},\"blocked\":true,\"after\":{\"shown\":12,\"busy\":false,\"status\":\"Now make 12\"}}"
     },
     {
       "name": "MC-023 no input during the transition; then 'Now make 12' once",
@@ -211,7 +211,7 @@
     {
       "name": "MC-025 the whole resolving lock stays within 900 ms",
       "ok": true,
-      "detail": "657"
+      "detail": "657.1999999999534"
     },
     {
       "name": "MC-023/MC-027 reload mid-transition: committed new target shown, old chain not counted twice",
@@ -361,12 +361,12 @@
     {
       "name": "MC-025 a stripe clear shows the row sweep, popping candies and falling refills",
       "ok": true,
-      "detail": "{\"sweep\":1,\"ghosts\":4,\"drops\":12,\"lock\":475}"
+      "detail": "{\"sweep\":1,\"ghosts\":4,\"drops\":12,\"lock\":474}"
     },
     {
       "name": "MC-025 resolving lock ≤ 900 ms (ordinary and combination)",
       "ok": true,
-      "detail": "[475,557]"
+      "detail": "[474,557]"
     },
     {
       "name": "MC-025 Pause resolves presentation to the committed state at once",
