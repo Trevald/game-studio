@@ -496,8 +496,8 @@
   .under .jl { width: calc(100% + 12px); height: calc(100% + 12px); margin: -6px; filter: saturate(1.6) drop-shadow(0 0 3px rgba(245,181,255,.9)); }
   .under .jl.hit { filter: drop-shadow(0 0 4px #fff) brightness(1.15); }
   .tile2.onjelly { box-shadow: 0 0 0 4px #D86AE8, 0 0 14px 5px rgba(201,105,215,.85); }
-  .tile2 .jmark { position: absolute; left: 3px; bottom: 3px; width: 34%; height: 34%; z-index: 1; pointer-events: none; background: url(assets/journey-v1/jelly.svg) center / contain no-repeat;
-    filter: saturate(1.8) drop-shadow(0 1px 0 rgba(74,23,54,.6)); }
+  .tile2 .jmark { position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit; background: url(assets/journey-v1/jelly.svg) center / 100% 100% no-repeat, rgba(201,105,215,.38);
+    filter: saturate(1.6); }
   .tile2.selnew { animation: mc-sel 120ms ease-out; }
   @keyframes mc-sel { 0% { transform: scale(.96); } 60% { transform: scale(1.04); } 100% { transform: none; } }
   .tile2.drop2 { animation: drop2 var(--fd, 180ms) cubic-bezier(.4,0,.8,.6) var(--fdl, 0ms) both, mc-land 90ms ease-out calc(var(--fdl, 0ms) + var(--fd, 180ms)); }
@@ -526,6 +526,7 @@
   .ghosts .shard2 { width: 40%; height: 40%; place-self: center; animation: mc-shard 300ms ease-out both; }
   @keyframes mc-shard { from { transform: none; opacity: 1; } to { transform: translate(var(--sx), var(--sy)) rotate(var(--sr)); opacity: 0; } }
   .mchip { font-size: 1rem; white-space: nowrap; }
+  .popup2 .jpop { display: block; width: max-content; margin: 4px auto 0; background: #B45AC6; }
   .popup2 { animation-duration: 900ms; }
   /* calm loops stop in dialogs and while the page is hidden; reduced motion: no loops, travel, scale or confetti */
   body.modal-open .cloud, body.hid .cloud, body.modal-open .pin, body.hid .pin { animation-play-state: paused; }
@@ -1520,7 +1521,7 @@ function mPlay() {
   let popup = "";
   if (ui.popup) {
     const p = ui.popup, py = Math.max(2, Math.min(70, p.row * 20 - 4));
-    popup = `<div class="popup2" style="--py:${py}%" aria-hidden="true"><b>${p.chainPts + p.blastPts}</b>${p.combo ? `<span>Special mix!</span>` : p.blastPts ? `<span>+${p.blastPts} blast bonus</span>` : p.jelly ? `<span>${p.jelly} jelly cleared</span>` : ""}</div>`;
+    popup = `<div class="popup2" style="--py:${py}%" aria-hidden="true"><b>${p.chainPts + p.blastPts}</b>${p.combo ? `<span>Special mix!</span>` : p.blastPts ? `<span>+${p.blastPts} blast bonus</span>` : ""}${p.jelly ? `<span class="jpop">−${p.jelly} jelly</span>` : ""}</div>`;
     ui.popup = null;
   }
   const opName = M.mul(g) ? "Multiply to make" : "Make";
@@ -1640,7 +1641,7 @@ function flushFx() { // pause / hidden / QA: resolve presentation to the committ
   ui.fxTimers = []; ui.held = null; ui.busyUntil = 0; ui.ghosts = null; ui.popup = null; ui.dropFrom = null;
 }
 function mStart(li, camp = "classic") { // MC-010: always straight onto the board
-  flushFx();
+  flushFx(); document.querySelectorAll("body > .confetti").forEach((d) => d.remove()); // a win's confetti never follows into the next attempt
   ui.camp = camp;
   ui.game = M.start(li, camp);
   ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null;
