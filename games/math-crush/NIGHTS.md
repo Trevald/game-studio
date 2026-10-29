@@ -1,5 +1,30 @@
 # Math Crush — night log
 
+## Night 5 — 2026-10-29
+
+**Job:** approved hand-over not yet built: `design-studio/games/math-crush/handovers/H-003-v1` ("a sweeter journey", MC-020–028), packet
+frozen at `e030f63`, checksums and validator clean. No pending board notes, nothing queued.
+
+**Shipped:**
+- Sticker system removed everywhere (stored data kept inert).
+- New three-chapter scrolling map (painted regions, live path, real nodes with board thumbnails, frontier pin, Continue shelf) for Classic and Journey.
+- **Journey preview** (Home, secondary): 12 authored levels with hourglass/ring boards, jelly objectives, changing targets and two
+  multiplication pilots (unlocked after level 10). It has its own save namespace; Classic is unchanged.
+- Motion pass: chain pop, stripe sweep, wrapped burst, jelly shards, fall and bounce, score count-up, target slide, calm idle; a Reduce motion switch.
+
+**QA:** playtest all checks passed (24 levels) · journey tests 82/82 (all 12 packet witnesses replay exactly in the real engine) · classic tests
+86/86 · screen audit clean (4 sizes) · 2 rounds.
+
+**Reviewer:** ship with fixes. The twist holds, and long chains on jelly levels are the best moment; levels are short and easy. Fixed: jelly
+readability, jelly count alongside blast bonus, leftover confetti. Not fixed (packet-defined, in FB-006): small shape changes, flat difficulty,
+1-padding in multiplication, Journey staying secondary.
+
+**Assumptions:** the Journey card opens the Journey map; the reveal ribbon also plays on Classic; lower-segment refills pop in; input lock 480 ms.
+
+**Questions for Benji:** see the board report.
+
+**Play:** https://claude.ai/artifact/D5kYHgsZbouMh73g1VMLTj
+
 ## Night 4 — 2026-10-29
 
 **Job:** owner scope change FB-004 (Benji, 28 Oct: "remove the hammer and the sugar rush and the time challenge"), recorded by
