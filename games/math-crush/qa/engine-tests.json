@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-29T07:19:06.156Z",
-  "passed": 85,
-  "total": 85,
+  "date": "2026-10-29T22:02:02.012Z",
+  "passed": 86,
+  "total": 86,
   "results": [
     {
       "name": "schema-2 level data: 12 levels, witnesses, thresholds, initial specials",
@@ -251,7 +251,7 @@
     {
       "name": "MC-012 closure: corner 3x3 clipped, hit stripe fires once, union counted once",
       "ok": true,
-      "detail": "{\"n\":2,\"base\":100,\"mult\":1,\"chainPts\":100,\"blastPts\":125,\"removal\":[15,16,17,18,19,23,24],\"blastOnly\":[15,16,17,18,19],\"activated\":[18,24],\"combo\":null,\"reward\":null}"
+      "detail": "{\"n\":2,\"base\":100,\"mult\":1,\"chainPts\":100,\"blastPts\":125,\"removal\":[15,16,17,18,19,23,24],\"blastOnly\":[15,16,17,18,19],\"activated\":[18,24],\"combo\":null,\"jellyHit\":[],\"reward\":null}"
     },
     {
       "name": "MC-012 winning move: no refill, no special placed",
@@ -269,9 +269,9 @@
       "detail": "{\"shown\":[5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],\"removed\":[5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}"
     },
     {
-      "name": "MC-016 staged events (spark, mix) roll back with Undo",
+      "name": "MC-013 Undo after a combo restores both consumed specials exactly",
       "ok": true,
-      "detail": "{\"a\":{\"spark\":true,\"mix\":true,\"seven\":false},\"b\":{\"spark\":false,\"mix\":false,\"seven\":false}}"
+      "detail": "{\"a\":0,\"restored\":true}"
     },
     {
       "name": "FB-004-A/B no hammer or Sugar Rush button, bar, copy, state field or action on any level",
@@ -289,29 +289,34 @@
       "detail": ""
     },
     {
-      "name": "MC-016 failed attempts award nothing",
+      "name": "MC-020 Home: no Stickers entry, badge or collection words",
       "ok": true,
-      "detail": "{\"lost\":\"lost\",\"afterLoss\":[],\"win1\":[\"sweet-start\"],\"win2\":[\"sweet-start\"],\"l8Stickers\":[]}"
+      "detail": "{\"book\":false,\"words\":false,\"badge\":false}"
     },
     {
-      "name": "MC-016 L1 win commits Sweet Start only (FB-004-D: Perfect Batch retired); a repeat win adds no duplicates",
+      "name": "MC-020 Pause: no sticker book",
       "ok": true,
-      "detail": "{\"lost\":\"lost\",\"afterLoss\":[],\"win1\":[\"sweet-start\"],\"win2\":[\"sweet-start\"],\"l8Stickers\":[]}"
+      "detail": ""
     },
     {
-      "name": "FB-004-D retired stickers are never awarded (L8 win)",
+      "name": "MC-020 a win never awards or announces a sticker",
+      "ok": true,
+      "detail": "{\"stickers\":0,\"toast\":false,\"sr\":\"Level complete. 3 of 3 stars. Score 400.\"}"
+    },
+    {
+      "name": "MC-020 a 7-candy chain with a combo never awards or announces a sticker",
+      "ok": true,
+      "detail": "{\"made\":1,\"stickers\":0,\"sr\":\"Cleared. 675 points, blast 150, special mix, made a wrapped candy. 1 of 4 chains.\"}"
+    },
+    {
+      "name": "MC-020 no sticker award code or data in the runtime",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-020 no sticker image requests",
       "ok": true,
       "detail": "[]"
-    },
-    {
-      "name": "MC-016/FB-004-D book: 4 active stickers, retired ones hidden when not earned; locked stickers show their condition; earned one becomes the badge; Back restores Home",
-      "ok": true,
-      "detail": "{\"open\":\"book\",\"locked\":3,\"total\":4,\"count\":\"1 of 4 discovered\",\"cond\":\"Lucky Seven\\nMake a seven-candy chain and finish the level\\nNot earned yet\",\"badge\":\"sweet-start\",\"back\":\"home\",\"modal\":null,\"homeBadge\":true}"
-    },
-    {
-      "name": "MC-016 book mid-game: selection cancelled, Back returns to Pause",
-      "ok": true,
-      "detail": "{\"chain\":0,\"modal\":\"pause\"}"
     },
     {
       "name": "MC-017/FB-004-C win card: Next and Play again only; no speed challenge, clock, time rows or Assisted",
@@ -329,14 +334,14 @@
       "detail": "{\"stars\":3,\"best\":400,\"wins\":1}"
     },
     {
-      "name": "MC-017 final level: Next becomes Candy trail",
+      "name": "MC-017 final level: Next becomes Level map",
       "ok": true,
-      "detail": "Candy trail"
+      "detail": "Level map"
     },
     {
       "name": "MC-017 failure: 'One more try?', Retry immediate, Undo offered",
       "ok": true,
-      "detail": "{\"txt\":\"One more try?\\n\\nYou made 0 of 3 chains.\\n\\n1\\n3\\n6\\nRetry\\nUndo last move\\nLevels\",\"undo\":true,\"retry\":\"playing\",\"moves\":5}"
+      "detail": "{\"txt\":\"One more try?\\n\\nOut of moves. You made 0 of 3 chains.\\n\\nRetry\\nUndo last move\\nLevels\",\"undo\":true,\"retry\":\"playing\",\"moves\":5}"
     },
     {
       "name": "MC-019 active core-v1 snapshot saved after a committed action (legacy slot untouched)",
@@ -351,7 +356,7 @@
     {
       "name": "MC-019 corrupt active v3 → restore error, records kept",
       "ok": true,
-      "detail": "{\"modal\":\"restore-error\",\"unlocked\":5,\"stickers\":1}"
+      "detail": "{\"modal\":\"restore-error\",\"unlocked\":5,\"stickers\":0}"
     },
     {
       "name": "MC-019 old candy-v2 attempt archived verbatim and offered as 'Start this level' on new rules",
@@ -371,7 +376,7 @@
     {
       "name": "FB-004-E migration: stars/wins kept; L1–7 best kept; L8–12 best moved to rushBest; sweet-v1 records untouched",
       "ok": true,
-      "detail": "{\"rules\":\"core-v1\",\"old\":true,\"r1\":{\"stars\":3,\"best\":400,\"wins\":2},\"r6\":{\"stars\":3,\"best\":1450,\"wins\":1},\"r8\":{\"stars\":3,\"best\":0,\"wins\":1,\"rushBest\":1572},\"stickers\":\"first-spark,perfect-batch,sugar-rush,sweet-start\",\"badge\":\"sugar-rush\",\"homeBadge\":true,\"unlocked\":10,\"offer\":false,\"cont\":true,\"archived\":0,\"damaged\":false,\"resumed\":{\"screen\":\"playing\",\"level\":2,\"made\":1,\"score\":187,\"version\":\"core-v1\",\"keys\":[]},\"undo\":0,\"trail\":[\"Level 1, 3 of 3 stars\",\"Level 2, not completed yet\",\"Level 3, not completed yet\",\"Level 4, not completed yet\",\"Level 5, not completed yet\",\"Level 6, 3 of 3 stars\",\"Level 7, not completed yet\",\"Level 8, 3 of 3 stars\"],\"book\":\"Your sweet collection\\n\\nLittle wins. Tap a sticker you've earned to make it your badge.\\n\\nSweet Start\\nFirst Spark\\nMix Master\\nLucky Seven\\n2 of 4 discovered\\nRetired · earned under the old rules\\nPerfect Batch\\nSugar Rush\\nBadge\\nBack\",\"result\":\"New best score\\n500\\nBest with Sugar Rush (old rules) 1572\"}"
+      "detail": "{\"rules\":\"core-v1\",\"old\":true,\"r1\":{\"stars\":3,\"best\":400,\"wins\":2},\"r6\":{\"stars\":3,\"best\":1450,\"wins\":1},\"r8\":{\"stars\":3,\"best\":0,\"wins\":1,\"rushBest\":1572},\"stickers\":\"first-spark,perfect-batch,sugar-rush,sweet-start\",\"badge\":\"sugar-rush\",\"homeBadge\":false,\"unlocked\":10,\"offer\":false,\"cont\":true,\"archived\":0,\"damaged\":false,\"resumed\":{\"screen\":\"playing\",\"level\":2,\"made\":1,\"score\":187,\"version\":\"core-v1\",\"keys\":[]},\"undo\":0,\"trail\":[\"Level 1, Make 10, 3 of 3 stars, best 400\",\"Level 2, Make 10, next level\",\"Level 3, Make 10, not completed yet\",\"Level 4, Make 10, not completed yet\",\"Level 5, Make 12, not completed yet\",\"Level 6, Make 12, 3 of 3 stars, best 1450\",\"Level 7, Make 12, not completed yet\",\"Level 8, Make 12, 3 of 3 stars, best 0\"],\"result\":\"New best score\\n500\\nBest with Sugar Rush (old rules) 1572\"}"
     },
     {
       "name": "FB-004-E L1–7 active attempt continues under core-v1 (hammer/Rush/clock fields dropped), Undo works, no damaged-save message",
@@ -379,14 +384,14 @@
       "detail": "{\"screen\":\"playing\",\"level\":2,\"made\":1,\"score\":187,\"version\":\"core-v1\",\"keys\":[]}"
     },
     {
-      "name": "FB-004-D retired stickers kept as history and as badge; book shows them under Retired",
+      "name": "MC-020 legacy stickers and badge kept verbatim in storage (inert), never shown",
       "ok": true,
-      "detail": "Your sweet collection Little wins. Tap a sticker you've earned to make it your badge. Sweet Start First Spark Mix Master Lucky Seven 2 of 4 discovered Retired · earned under the old rules Perfect Batch Sugar Rush Badge Back"
+      "detail": "{\"stickers\":\"first-spark,perfect-batch,sugar-rush,sweet-start\",\"badge\":\"sugar-rush\",\"shown\":false}"
     },
     {
-      "name": "FB-004-E trail keeps earned stars",
+      "name": "FB-004-E map keeps earned stars",
       "ok": true,
-      "detail": "[\"Level 1, 3 of 3 stars\",\"Level 2, not completed yet\",\"Level 3, not completed yet\",\"Level 4, not completed yet\",\"Level 5, not completed yet\",\"Level 6, 3 of 3 stars\",\"Level 7, not completed yet\",\"Level 8, 3 of 3 stars\"]"
+      "detail": "[\"Level 1, Make 10, 3 of 3 stars, best 400\",\"Level 2, Make 10, next level\",\"Level 3, Make 10, not completed yet\",\"Level 4, Make 10, not completed yet\",\"Level 5, Make 12, not completed yet\",\"Level 6, Make 12, 3 of 3 stars, best 1450\",\"Level 7, Make 12, not completed yet\",\"Level 8, Make 12, 3 of 3 stars, best 0\"]"
     },
     {
       "name": "FB-004-E L8 result shows the old Rush best separately",

@@ -132,9 +132,9 @@ t("MC-013 preview (selected + dashed blast) equals the committed removal", JSON.
 const mixUndo = await ev(() => {
   __qa.reset(6); const g = ui.game; const v = Array(25).fill(1); v[12] = 4; v[13] = 8;
   g.cells = v.map((x, i) => ({ id: i, v: x, sp: i === 12 ? "wrapped" : i === 13 ? "wrapped" : null }));
-  __qa.act({ chain: [12, 13] }); const a = __qa.state().staged; __qa.act("undo"); return { a, b: __qa.state().staged };
+  const before = JSON.stringify(__qa.state().specials); __qa.act({ chain: [12, 13] }); const a = __qa.state().specials.filter(Boolean).length; __qa.act("undo"); return { a, restored: JSON.stringify(__qa.state().specials) === before };
 });
-t("MC-016 staged events (spark, mix) roll back with Undo", mixUndo.a.mix && mixUndo.a.spark && !mixUndo.b.mix && !mixUndo.b.spark, JSON.stringify(mixUndo));
+t("MC-013 Undo after a combo restores both consumed specials exactly", mixUndo.restored, JSON.stringify(mixUndo));
 
 // ---------- FB-004-A/B removal: hammer and Sugar Rush ----------
 const rm = await ev(() => {
@@ -156,31 +156,28 @@ t("FB-004-A/B no hammer or Sugar Rush button, bar, copy, state field or action o
 t("FB-004-B L8+ chains score plain chain points (never doubled)", rm.l8.length >= 2 && rm.l8.every((x) => x.pts === x.exp), JSON.stringify(rm.l8));
 t("FB-004-A/B/C help copy mentions no hammer, Sugar Rush or timing", !/hammer|Sugar Rush|speed|\btime/i.test(rm.help), (rm.help.match(/.{0,60}(hammer|Sugar Rush|speed|\btime).{0,60}/i) || [""])[0]);
 
-// ---------- MC-016 stickers ----------
+// ---------- MC-020 sticker system removed (H-003-v1) ----------
 await fresh();
 const st = await ev(() => {
   const out = {};
-  __qa.reset(3); let s = __qa.state(); while (s.screen === "playing") { __qa.act({ chain: [0, 5] }); s = __qa.state(); } // L4: 1+3 wrong, charged
-  out.lost = s.screen; out.afterLoss = Object.keys(__qa.saved().matchV3.stickers);
-  __qa.reset(0); for (const a of __qa.solve()) __qa.act(a); out.win1 = Object.keys(__qa.saved().matchV3.stickers).sort();
-  __qa.reset(0); for (const a of __qa.solve()) __qa.act(a); out.win2 = Object.keys(__qa.saved().matchV3.stickers).sort();
-  __qa.reset(7); for (const a of __qa.solve()) __qa.act(a); out.l8Stickers = M.stickersFor(ui.game);
+  __qa.open("home"); out.home = { book: !!document.querySelector('[data-k="book"]'), words: /sticker|badge|collection/i.test(document.body.innerText), badge: !!document.querySelector(".badgeimg") };
+  __qa.reset(0); __qa.button("pause"); out.pause = /sticker|badge|collection/i.test(document.querySelector(".mcm").innerText) || !!document.querySelector('.mcm [data-k="book"]'); __qa.button("resume");
+  for (const a of __qa.solve()) __qa.act(a); // L1 win (used to award Sweet Start)
+  out.win = { stickers: Object.keys(__qa.saved().matchV3.stickers).length, toast: !!document.querySelector(".stoast"), sr: document.getElementById("sr").textContent };
+  // a 7-candy chain + a combo on L7 (used to award Lucky Seven / Mix Master / First Spark)
+  __qa.reset(6); const g = ui.game; const v = Array(25).fill(9); [0, 1, 2, 3, 4, 9, 8].forEach((i) => { v[i] = 1; }); v[8] = 4; g.target = 10;
+  g.cells = v.map((x, i) => ({ id: i, v: x, sp: i === 1 ? "wrapped" : i === 3 ? "wrapped" : null }));
+  __qa.act({ chain: [0, 1, 2, 3, 4, 9, 8] }); out.seven = { made: __qa.state().made, stickers: Object.keys(__qa.saved().matchV3.stickers).length, sr: document.getElementById("sr").textContent };
+  out.qa = ["modal"].length && typeof M.stickersFor === "undefined" && typeof ACHIEVEMENTS === "undefined";
+  out.assets = performance.getEntriesByType("resource").map((e) => e.name).filter((n) => /sticker|book\.svg/.test(n));
   return out;
 });
-t("MC-016 failed attempts award nothing", st.afterLoss.length === 0 && st.lost === "lost", JSON.stringify(st));
-t("MC-016 L1 win commits Sweet Start only (FB-004-D: Perfect Batch retired); a repeat win adds no duplicates", JSON.stringify(st.win1) === '["sweet-start"]' && JSON.stringify(st.win2) === JSON.stringify(st.win1), JSON.stringify(st));
-t("FB-004-D retired stickers are never awarded (L8 win)", !st.l8Stickers.includes("perfect-batch") && !st.l8Stickers.includes("sugar-rush"), JSON.stringify(st.l8Stickers));
-const book = await ev(() => {
-  __qa.open("home"); document.querySelector('[data-k="book"]').click(); const open = __qa.state().modal;
-  const locked = document.querySelectorAll(".stk.locked").length, total = document.querySelectorAll(".stk").length, count = document.querySelector(".mcm").innerText.match(/\d+ of \d+ discovered/)[0];
-  document.querySelector('[data-k="stk-lucky-seven"]').click(); const cond = document.querySelector(".binfo").innerText;
-  document.querySelector('[data-k="stk-sweet-start"]').click(); document.querySelector('[data-k="set-badge"]').click();
-  const badge = __qa.saved().matchV3.badge; document.querySelector('[data-k="book-back"]').click();
-  return { open, locked, total, count, cond, badge, back: __qa.state().screen, modal: __qa.state().modal, homeBadge: !!document.querySelector(".badgeimg") };
-});
-t("MC-016/FB-004-D book: 4 active stickers, retired ones hidden when not earned; locked stickers show their condition; earned one becomes the badge; Back restores Home", book.open === "book" && book.locked === 3 && book.total === 4 && book.count === "1 of 4 discovered" && /seven-candy chain/.test(book.cond) && book.badge === "sweet-start" && book.back === "home" && !book.modal && book.homeBadge, JSON.stringify(book));
-const midBook = await ev(() => { __qa.reset(1); __qa.act({ chain: [0, 1, 2] }); ui.chain = [5, 6]; __qa.button("pause"); __qa.button("book"); const a = { chain: ui.chain.length }; __qa.button("book-back"); return { ...a, modal: __qa.state().modal }; });
-t("MC-016 book mid-game: selection cancelled, Back returns to Pause", midBook.chain === 0 && midBook.modal === "pause", JSON.stringify(midBook));
+t("MC-020 Home: no Stickers entry, badge or collection words", !st.home.book && !st.home.words && !st.home.badge, JSON.stringify(st.home));
+t("MC-020 Pause: no sticker book", !st.pause);
+t("MC-020 a win never awards or announces a sticker", st.win.stickers === 0 && !st.win.toast && !/sticker/i.test(st.win.sr), JSON.stringify(st.win));
+t("MC-020 a 7-candy chain with a combo never awards or announces a sticker", st.seven.made === 1 && st.seven.stickers === 0 && !/sticker/i.test(st.seven.sr), JSON.stringify(st.seven));
+t("MC-020 no sticker award code or data in the runtime", st.qa);
+t("MC-020 no sticker image requests", st.assets.length === 0, JSON.stringify(st.assets));
 
 // ---------- MC-017 results (FB-004-C: no speed challenge) ----------
 await fresh();
@@ -197,7 +194,7 @@ t("MC-017/FB-004-C win card: Next and Play again only; no speed challenge, clock
 t("MC-017 Next opens the next board directly", sp.next.screen === "playing" && sp.next.level === 1);
 t("FB-004-C core-v1 record has stars/best/wins and no time fields", sp.rec && sp.rec.stars === 3 && sp.rec.best === 400 && !("bestTimeMs" in sp.rec), JSON.stringify(sp.rec));
 const l12 = await ev(() => { __qa.reset(11); for (const a of __qa.solve()) __qa.act(a); const b = document.querySelector('.mcm .pbtn'); return b && b.innerText; });
-t("MC-017 final level: Next becomes Candy trail", l12 === "Candy trail", l12);
+t("MC-017 final level: Next becomes Level map", l12 === "Level map", l12);
 const loss = await ev(() => { __qa.reset(3); let s = __qa.state(); while (s.screen === "playing") { __qa.act({ chain: [0, 5] }); s = __qa.state(); } const txt = document.querySelector(".mcm").innerText; const undo = !!document.querySelector('.mcm [data-k="undo2"]'); document.querySelector('.mcm [data-k="retry"]').click(); const r = __qa.state(); return { txt, undo, retry: r.screen, moves: r.movesLeft }; });
 t("MC-017 failure: 'One more try?', Retry immediate, Undo offered", /One more try\?/.test(loss.txt) && loss.undo && loss.retry === "playing" && loss.moves === 5, JSON.stringify(loss));
 
@@ -210,7 +207,7 @@ t("MC-019 reload → Continue resumes the committed state", rr.screen === "playi
 await ev(() => { ui.screen = "home"; render(); const raw = JSON.parse(localStorage.getItem("mathcrush.v1")); raw.matchV3.active.game.cells = "garbage"; raw.match.unlocked = 5; localStorage.setItem("mathcrush.v1", JSON.stringify(raw)); });
 await page.reload(); await page.waitForTimeout(300);
 const cr = await ev(() => { __qa.open("home"); document.querySelector('[data-k="continue"]').click(); const s = __qa.state(); return { modal: s.modal, unlocked: __qa.saved().match.unlocked, stickers: Object.keys(__qa.saved().matchV3.stickers).length }; });
-t("MC-019 corrupt active v3 → restore error, records kept", cr.modal === "restore-error" && cr.unlocked === 5 && cr.stickers > 0, JSON.stringify(cr));
+t("MC-019 corrupt active v3 → restore error, records kept", cr.modal === "restore-error" && cr.unlocked === 5, JSON.stringify(cr));
 // legacy save from the H-001-v1 build (candy-v2 active attempt, v1/v2 records, removed modes, speed setting)
 const legacy = { schemaVersion: 1, settings: { sound: false, haptics: true, speed: true, tap: false }, coach: {}, coach2: { mult: true },
   match: { unlocked: 7, stars: [3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], best: [650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
@@ -247,20 +244,20 @@ for (const li of [2, 8]) {
     __qa.open("home"); const sv = __qa.saved(), v3 = sv.matchV3, home = document.body.innerText, out = {};
     out.rules = v3.rules; out.old = v3.records["sweet-v1:1"] && v3.records["sweet-v1:1"].bestTimeMs === 21000 && v3.records["sweet-v1:8"].best === 1572;
     out.r1 = v3.records["core-v1:1"]; out.r6 = v3.records["core-v1:6"]; out.r8 = v3.records["core-v1:8"];
-    out.stickers = Object.keys(v3.stickers).sort().join(); out.badge = v3.badge; out.homeBadge = !!document.querySelector(".badgeimg"); out.unlocked = sv.match.unlocked;
+    out.stickers = Object.keys(v3.stickers).sort().join(); out.badge = v3.badge; out.homeBadge = !!document.querySelector(".badgeimg") || /badge|sticker/i.test(home); out.unlocked = sv.match.unlocked;
     out.offer = /Start this level/.test(home); out.cont = !!document.querySelector('[data-k="continue"]'); out.archived = v3.archivedActive.length; out.damaged = false;
     if (out.cont) { document.querySelector('[data-k="continue"]').click(); const s = __qa.state(); out.resumed = { screen: s.screen, level: s.level, made: s.made, score: s.chainPts, version: s.version, keys: ["hammer", "rush", "timed", "toolsUsed"].filter((k) => k in ui.game) }; out.damaged = s.modal === "restore-error";
       __qa.act("undo"); out.undo = __qa.state().made; }
-    __qa.open("levels"); out.trail = [...document.querySelectorAll(".node3")].slice(0, 8).map((n) => n.getAttribute("aria-label"));
-    __qa.open("home"); document.querySelector('[data-k="book"]').click(); out.book = document.querySelector(".mcm").innerText; mButton("book-back");
+    __qa.open("levels", "classic"); out.trail = [...document.querySelectorAll(".mnode")].slice(0, 8).map((n) => n.getAttribute("aria-label"));
+    __qa.open("home");
     __qa.reset(7); for (const a of __qa.solve()) __qa.act(a); out.result = document.querySelector(".scorebox").innerText;
     return out;
   });
   if (li === 2) {
     t("FB-004-E migration: stars/wins kept; L1–7 best kept; L8–12 best moved to rushBest; sweet-v1 records untouched", m.rules === "core-v1" && m.old && m.r1.stars === 3 && m.r1.best === 400 && m.r1.wins === 2 && m.r6.best === 1450 && m.r8.stars === 3 && m.r8.best === 0 && m.r8.rushBest === 1572 && m.unlocked === 10, JSON.stringify(m));
     t("FB-004-E L1–7 active attempt continues under core-v1 (hammer/Rush/clock fields dropped), Undo works, no damaged-save message", m.cont && !m.damaged && m.resumed.screen === "playing" && m.resumed.level === 2 && m.resumed.made === 1 && m.resumed.version === "core-v1" && !m.resumed.keys.length && m.undo === 0, JSON.stringify(m.resumed));
-    t("FB-004-D retired stickers kept as history and as badge; book shows them under Retired", m.stickers === "first-spark,perfect-batch,sugar-rush,sweet-start" && m.badge === "sugar-rush" && m.homeBadge && /2 of 4 discovered/.test(m.book) && /Retired/.test(m.book) && /Sugar Rush/.test(m.book), m.book.replace(/\s+/g, " "));
-    t("FB-004-E trail keeps earned stars", /Level 1, 3 of 3 stars/.test(m.trail[0]) && /Level 6, 3 of 3 stars/.test(m.trail[5]), JSON.stringify(m.trail));
+    t("MC-020 legacy stickers and badge kept verbatim in storage (inert), never shown", m.stickers === "first-spark,perfect-batch,sugar-rush,sweet-start" && m.badge === "sugar-rush" && !m.homeBadge, JSON.stringify({ stickers: m.stickers, badge: m.badge, shown: m.homeBadge }));
+    t("FB-004-E map keeps earned stars", /^Level 1,.*3 of 3 stars/.test(m.trail[0]) && /^Level 6,.*3 of 3 stars/.test(m.trail[5]), JSON.stringify(m.trail));
     t("FB-004-E L8 result shows the old Rush best separately", /Best with Sugar Rush \(old rules\) 1572/.test(m.result), m.result);
   } else {
     t("FB-004-E L8–12 active attempt (Rush state) archived and offered as 'Start this level', not 'damaged'", !m.cont && m.offer && m.archived === 1 && !m.damaged, JSON.stringify({ offer: m.offer, cont: m.cont, archived: m.archived }));
@@ -283,13 +280,13 @@ const center = async (i) => { const b = await p3.$(`[data-cell="${i}"]`); const 
 let [x, y] = await center(0); await p3.mouse.move(x, y); await p3.mouse.down();
 for (const i of [1, 2, 1]) { [x, y] = await center(i); await p3.mouse.move(x, y, { steps: 6 }); }
 const mid = await p3.evaluate(() => __qa.state().chain);
-await p3.mouse.move(x, 830, { steps: 6 }); await p3.mouse.up(); await p3.waitForTimeout(300);
+await p3.mouse.move(x, 830, { steps: 6 }); await p3.mouse.up(); await p3.waitForTimeout(700); // H-003-v1 MC-025: input waits for the clear to settle
 const s3 = await p3.evaluate(() => __qa.state());
 t("input: mouse drag 4→6→5 with backtrack, released below the board, clears", JSON.stringify(mid) === "[0,1]" && s3.made === 1 && s3.chainPts === 100, JSON.stringify({ mid, made: s3.made }));
 await p3.evaluate(() => __qa.setSetting("tap", true));
 const ch = await p3.evaluate(() => __qa.solve()[0].chain);
 for (const i of ch) { const [cx, cy] = await center(i); await p3.mouse.click(cx, cy); await p3.waitForTimeout(80); }
-await p3.click('[data-k="submit"]'); await p3.waitForTimeout(300);
+await p3.click('[data-k="submit"]'); await p3.waitForTimeout(700);
 t("input: tap mode, tap candies then Submit clears", (await p3.evaluate(() => __qa.state().made)) === 2);
 await p3.evaluate(() => __qa.setSetting("tap", false));
 const kc = await p3.evaluate(() => __qa.solve()[0].chain);

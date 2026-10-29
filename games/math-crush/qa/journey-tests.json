@@ -1,0 +1,417 @@
+{
+  "date": "2026-10-29T22:05:36.906Z",
+  "passed": 82,
+  "total": 82,
+  "results": [
+    {
+      "name": "MC-021 schema-3 journey data validates (field contract, masks, witnesses, repair pairs, phases)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-021 inlined journey data equals the frozen packet's data/levels.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-021 targets 10,8,12,9,11,14,10,10→12→8,15,12→9→15→10,×12,×18→12→24",
+      "ok": true,
+      "detail": "10 8 12 9 11 14 10 10/12/8 15 12/9/15/10 12 18/12/24"
+    },
+    {
+      "name": "MC-021 Classic data unchanged (12 levels, 10/12/15, sweet-v1)",
+      "ok": true,
+      "detail": "{\"lv\":12,\"t\":\"10,10,10,10,12,12,12,12,15,15,15,15\",\"cv\":\"sweet-v1\"}"
+    },
+    {
+      "name": "MC-028 witness L1: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1112 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L2: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1025 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L3: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1250 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L4: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1075 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L5: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1050 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L6: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1962 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L7: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1437 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L8: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1325 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L9: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 2237 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L10: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1524 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L11: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 1225 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-028 witness L12: real engine replays the full route, snapshot = oracle (board, specials, jelly, RNG, moves, made, score, status), 825 pts, 3★",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-022 gravityRing: segmented gravity equals model.py (values, RNG, refreshed)",
+      "ok": true,
+      "detail": "{\"board\":[6,6,1,3,1,1,5,2,6,5,8,1,null,2,3,2,9,7,8,6,4,3,9,6,6],\"rng\":1170790152,\"refreshed\":false,\"specials\":1,\"fresh\":3,\"survivorsKept\":true,\"target\":9}"
+    },
+    {
+      "name": "MC-022 gravityHourglass: segmented gravity equals model.py (values, RNG, refreshed)",
+      "ok": true,
+      "detail": "{\"board\":[4,6,4,7,3,6,9,1,1,2,null,1,7,2,null,7,5,2,8,9,5,7,7,3,1],\"rng\":216709465,\"refreshed\":false,\"specials\":0,\"fresh\":4,\"survivorsKept\":true,\"target\":12}"
+    },
+    {
+      "name": "MC-022 repairAdd: repair redraw + injected pair equals model.py (values, RNG, refreshed)",
+      "ok": true,
+      "detail": "{\"board\":[5,9,9,6,6,2,6,1,8,6,null,7,5,9,null,2,7,9,4,3,5,9,4,3,6],\"rng\":2487810515,\"refreshed\":true,\"specials\":0,\"fresh\":23,\"survivorsKept\":true,\"target\":14}"
+    },
+    {
+      "name": "MC-022 repairMul: repair redraw + injected pair equals model.py (values, RNG, refreshed)",
+      "ok": true,
+      "detail": "{\"board\":[2,9,8,4,1,1,3,4,9,3,5,8,1,5,1,2,2,3,4,9,8,3,9,1,3],\"rng\":2106111206,\"refreshed\":true,\"specials\":0,\"fresh\":25,\"survivorsKept\":true,\"target\":18}"
+    },
+    {
+      "name": "MC-022 repairSeq: repair redraw + injected pair equals model.py (values, RNG, refreshed)",
+      "ok": true,
+      "detail": "{\"board\":[3,9,2,1,5,2,2,9,5,2,2,1,9,5,3,1,2,8,1,6,8,3,8,9,2],\"rng\":3774027502,\"refreshed\":true,\"specials\":0,\"fresh\":25,\"survivorsKept\":true,\"target\":12}"
+    },
+    {
+      "name": "MC-022 touching a void does nothing; a chain can start beside it",
+      "ok": true,
+      "detail": "{\"touchVoid\":[],\"startNext\":[11],\"across\":[5],\"jump\":[5],\"validAcross\":false,\"diag\":[0],\"dup\":false,\"ninth\":8,\"voidReleaseFree\":true}"
+    },
+    {
+      "name": "MC-022 no selection through or across a void; diagonal/duplicate/ninth tile rejected",
+      "ok": true,
+      "detail": "{\"touchVoid\":[],\"startNext\":[11],\"across\":[5],\"jump\":[5],\"validAcross\":false,\"diag\":[0],\"dup\":false,\"ninth\":8,\"voidReleaseFree\":true}"
+    },
+    {
+      "name": "MC-022 a release containing a void is ignored by the gesture layer (no move, no commit)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-022 a stripe crosses the void and hits cells on both sides; the void is never removed or scored",
+      "ok": true,
+      "detail": "{\"removal\":[10,11,13,14],\"area\":[7,8,9,13,14,17,18,19]}"
+    },
+    {
+      "name": "MC-022 a wrapped area is clipped to active cells",
+      "ok": true,
+      "detail": "[7,8,9,13,14,17,18,19]"
+    },
+    {
+      "name": "MC-022 L5 shows 5 jelly; the opening stripe chain (row 2) clears patch 12 once",
+      "ok": true,
+      "detail": "{\"start\":\"6,8,12,16,18\",\"hud\":true,\"afterStripe\":\"6,8,16,18\",\"made\":1,\"noRespawn\":true,\"overlap\":[6,8],\"invalidKeeps\":true,\"lastMove\":{\"status\":\"won\",\"moves\":0,\"jelly\":0,\"finish\":0,\"sameBoard\":true},\"chargedLast\":{\"screen\":\"lost\",\"undo\":1},\"undone\":\"playing\",\"reward\":{\"type\":\"stripe\",\"jelly8\":false,\"cleared\":\"6,8\"}}"
+    },
+    {
+      "name": "MC-022 jelly never respawns; overlapping stripe + wrapped blasts hit each patch once",
+      "ok": true,
+      "detail": "[6,8]"
+    },
+    {
+      "name": "MC-022 an invalid release never cracks jelly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-022 clearing the last jelly on the last move wins (no refill, moves bonus 0)",
+      "ok": true,
+      "detail": "{\"status\":\"won\",\"moves\":0,\"jelly\":0,\"finish\":0,\"sameBoard\":true}"
+    },
+    {
+      "name": "QA.md charged invalid on the final move loses and can be undone",
+      "ok": true,
+      "detail": "{\"screen\":\"lost\",\"undo\":1}"
+    },
+    {
+      "name": "MC-022 a reward created on a cleared jelly cell does not bring the jelly back",
+      "ok": true,
+      "detail": "{\"type\":\"stripe\",\"jelly8\":false,\"cleared\":\"6,8\"}"
+    },
+    {
+      "name": "MC-022 Hint on a jelly level prefers a legal chain that hits jelly",
+      "ok": true,
+      "detail": "{\"hit\":2,\"legal\":true}"
+    },
+    {
+      "name": "MC-023 HUD shows current target and Next on a sequence level",
+      "ok": true,
+      "detail": "Moves 5 Make 10 Next 12"
+    },
+    {
+      "name": "MC-023 cancelled, invalid (then undone) and hint never advance the target",
+      "ok": true,
+      "detail": "{\"hud0\":\"Moves 5 Make 10 Next 12\",\"cancelSame\":true,\"wrong\":{\"ti\":0,\"moves\":4},\"hintSame\":true,\"after1\":{\"ti\":1,\"target\":12,\"solvable\":true},\"hud1\":\"Moves 4 Make 10 Next 12\",\"oldTarget\":{\"counted\":false,\"wrong\":true},\"undo\":{\"ti\":0,\"target\":10,\"board\":true,\"rng\":true},\"final\":{\"ti\":2,\"target\":8,\"hud\":\"Moves 3 Final target 8 Score 200\"},\"win\":{\"screen\":\"won\",\"ti\":2,\"target\":8,\"noRefill\":true}}"
+    },
+    {
+      "name": "MC-023 a valid clear advances exactly once and the refilled board has a legal chain for the NEW target",
+      "ok": true,
+      "detail": "{\"ti\":1,\"target\":12,\"solvable\":true}"
+    },
+    {
+      "name": "MC-023 a chain for the old target after the transition is wrong",
+      "ok": true,
+      "detail": "{\"counted\":false,\"wrong\":true}"
+    },
+    {
+      "name": "MC-023 Undo restores target index, board and RNG together",
+      "ok": true,
+      "detail": "{\"ti\":0,\"target\":10,\"board\":true,\"rng\":true}"
+    },
+    {
+      "name": "MC-023 final step says Final target, no Next; last clear wins with no phantom target or refill",
+      "ok": true,
+      "detail": "{\"ti\":2,\"target\":8,\"hud\":\"Moves 3 Final target 8 Score 200\"}{\"screen\":\"won\",\"ti\":2,\"target\":8,\"noRefill\":true}"
+    },
+    {
+      "name": "MC-023 the HUD holds the old target while the clear resolves; the model already has the new one",
+      "ok": true,
+      "detail": "{\"during\":{\"shown\":10,\"model\":12,\"busy\":true,\"lock\":657},\"blocked\":true,\"after\":{\"shown\":12,\"busy\":false,\"status\":\"Now make 12\"}}"
+    },
+    {
+      "name": "MC-023 no input during the transition; then 'Now make 12' once",
+      "ok": true,
+      "detail": "{\"shown\":12,\"busy\":false,\"status\":\"Now make 12\"}"
+    },
+    {
+      "name": "MC-025 the whole resolving lock stays within 900 ms",
+      "ok": true,
+      "detail": "657"
+    },
+    {
+      "name": "MC-023/MC-027 reload mid-transition: committed new target shown, old chain not counted twice",
+      "ok": true,
+      "detail": "{\"screen\":\"playing\",\"ti\":1,\"shown\":12,\"made\":1,\"score\":100}"
+    },
+    {
+      "name": "MC-026 L11 HUD: persistent × and 'Multiply to make 12'; first cue 3 × 4 = 12",
+      "ok": true,
+      "detail": "{\"hud\":\"Moves 5 Multiply 12 Score 0\",\"sum\":\"Multiply to make 12\",\"cue\":\"Multiply: 3 × 4 = 12\",\"v34\":12,\"v341\":12,\"v134\":12,\"v23\":6,\"trailing\":true,\"noEval\":true,\"expr\":\"3 × 4 = 12\",\"free\":true,\"status\":\"5 doesn't make 12 · Try again\",\"chip\":\"Score ×1.5\",\"noSpecials\":true,\"noMixed\":true,\"repair\":[2,6]}"
+    },
+    {
+      "name": "MC-026 products: 3×4=12, 2×3=6, 1×3×4=12 and a trailing 1 is legal; no eval",
+      "ok": true,
+      "detail": "{\"hud\":\"Moves 5 Multiply 12 Score 0\",\"sum\":\"Multiply to make 12\",\"cue\":\"Multiply: 3 × 4 = 12\",\"v34\":12,\"v341\":12,\"v134\":12,\"v23\":6,\"trailing\":true,\"noEval\":true,\"expr\":\"3 × 4 = 12\",\"free\":true,\"status\":\"5 doesn't make 12 · Try again\",\"chip\":\"Score ×1.5\",\"noSpecials\":true,\"noMixed\":true,\"repair\":[2,6]}"
+    },
+    {
+      "name": "MC-026 expression uses × between every tile; the bonus reads 'Score ×1.5'",
+      "ok": true,
+      "detail": "3 × 4 = 12 | Score ×1.5"
+    },
+    {
+      "name": "MC-026 L11 wrong product is free (no move, no history, no RNG)",
+      "ok": true,
+      "detail": "5 doesn't make 12 · Try again"
+    },
+    {
+      "name": "MC-026 specials disabled in the pilots; no mixed operators",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-026 repair injects the smallest factor pair (2×6 for 12), not an additive pair",
+      "ok": true,
+      "detail": "[2,6]"
+    },
+    {
+      "name": "MC-026 L12 sequence 18 → 12 → 24, multiply, wrong answers cost a move",
+      "ok": true,
+      "detail": "{\"t\":\"18,12,24\",\"op\":\"multiply\",\"free\":false}"
+    },
+    {
+      "name": "MC-027 Classic and Journey attempts live in separate namespaces (matchV3 / matchJourney)",
+      "ok": true,
+      "detail": "{\"separate\":true,\"resumeClassic\":true,\"resumeJourney\":true}"
+    },
+    {
+      "name": "MC-027 quit the preview, then Continue resumes Classic exactly; the Journey attempt resumes from its map",
+      "ok": true,
+      "detail": "{\"separate\":true,\"resumeClassic\":true,\"resumeJourney\":true}"
+    },
+    {
+      "name": "MC-027 Journey records keyed journey-v1:<id>; Classic records/unlocks untouched",
+      "ok": true,
+      "detail": "{\"j\":{\"stars\":3,\"best\":1112,\"wins\":1},\"classic\":0,\"unlocked\":2,\"classicUnlocked\":1}"
+    },
+    {
+      "name": "MC-027 a night-4 save loads with matchV3 verbatim (incl. inert stickers/badge) and a fresh journey namespace",
+      "ok": true,
+      "detail": "{\"v3same\":true,\"journeyFresh\":true,\"resume\":true,\"noBadge\":true}"
+    },
+    {
+      "name": "MC-027 the old core-v1 attempt resumes exactly; no sticker render path",
+      "ok": true,
+      "detail": "{\"v3same\":true,\"journeyFresh\":true,\"resume\":true,\"noBadge\":true}"
+    },
+    {
+      "name": "MC-027 unknown journey schema preserved verbatim, play falls back to a fresh preview; Classic unaffected",
+      "ok": true,
+      "detail": "{\"kept\":true,\"fresh\":true,\"classic\":1}"
+    },
+    {
+      "name": "MC-027 an older-version journey attempt is archived verbatim and offered 'Restart level 5', not called damaged",
+      "ok": true,
+      "detail": "{\"modal\":\"restore-error\",\"text\":\"This round was saved by an older version\\n\\nIt's kept safely, but it can't continue. Your unlocked levels and stars are safe.\\n\\nRestart level 5\\nLevels\",\"archived\":1,\"active\":null,\"after\":\"playing\"}"
+    },
+    {
+      "name": "MC-024 12 numbered nodes, all ≥ 44 px (64 px buttons)",
+      "ok": true,
+      "detail": "[64,64,64,64,64,64,64,64,64,64,64,64]"
+    },
+    {
+      "name": "MC-024 frontier is raspberry with one you-are-here pin; locked nodes muted, aria-disabled",
+      "ok": true,
+      "detail": "[\"done\",\"done\",\"done\",\"done\",\"done\",\"current\",\"locked\",\"locked\",\"locked\",\"locked\",\"locked\",\"locked\"]"
+    },
+    {
+      "name": "MC-024 accessible labels carry level, name, objective and state",
+      "ok": true,
+      "detail": "[\"Level 5, Jelly garden, Clear 5 jelly · make 11, 3 of 3 stars, best 900\",\"Level 6, Chocolate crossing, Make 14, next level\",\"Level 7, Wrapped around, Make 10, locked, finish level 6 to unlock\",\"Level 8, Three flavours, 10 → 12 → 8, locked, finish level 7 to unlock\",\"Level 9, Frosted ring, Clear 8 jelly · make 15, locked, finish level 8 to unlock\",\"Level 10, Changing course, 12 → 9 → 15 → 10, locked, finish level 9 to unlock\",\"Level 11, Sweet products, × 12 · Multiplication preview, locked, finish level 10 to unlock\"]"
+    },
+    {
+      "name": "MC-024 thumbnails show the real mask (hourglass 2 gaps, ring 1, full 0) and jelly marks",
+      "ok": true,
+      "detail": "[2,1,0]"
+    },
+    {
+      "name": "MC-024 on entry the current node is fully visible between header and Continue shelf",
+      "ok": true,
+      "detail": "Play · Level 6 Chocolate crossing · Make 14"
+    },
+    {
+      "name": "MC-024 Continue shelf names the exact level and campaign",
+      "ok": true,
+      "detail": "Play · Level 6 Chocolate crossing · Make 14"
+    },
+    {
+      "name": "MC-024 chapter header follows scroll; manual scroll survives a re-render",
+      "ok": true,
+      "detail": "Chapter 2 · Chocolate Hills / Chapter 1 · Candy Garden"
+    },
+    {
+      "name": "MC-024 chapter 2 reveal recorded once; stars shown from journey records only; no horizontal scroll",
+      "ok": true,
+      "detail": "{\"count\":12,\"sizes\":[64,64,64,64,64,64,64,64,64,64,64,64],\"labels\":[\"Level 1, First sweets, Make 10, 3 of 3 stars, best 900\",\"Level 2, Small wonders, Make 8, 3 of 3 stars, best 900\",\"Level 3, Candy narrows, Make 12, 2 of 3 stars, best 900\",\"Level 4, Around the fountain, Make 9, 3 of 3 stars, best 900\",\"Level 5, Jelly garden, Clear 5 jelly · make 11, 3 of 3 stars, best 900\",\"Level 6, Chocolate crossing, Make 14, next level\",\"Level 7, Wrapped around, Make 10, locked, finish level 6 to unlock\",\"Level 8, Three flavours, 10 → 12 → 8, locked, finish level 7 to unlock\",\"Level 9, Frosted ring, Clear 8 jelly · make 15, locked, finish level 8 to unlock\",\"Level 10, Changing course, 12 → 9 → 15 → 10, locked, finish level 9 to unlock\",\"Level 11, Sweet products, × 12 · Multiplication preview, locked, finish level 10 to unlock\",\"Level 12, Double dozen, × 18 → 12 → 24 · Multiplication preview, locked, finish level 11 to unlock\"],\"states\":[\"done\",\"done\",\"done\",\"done\",\"done\",\"current\",\"locked\",\"locked\",\"locked\",\"locked\",\"locked\",\"locked\"],\"locked\":6,\"thumbs\":[2,1,0],\"jellyThumb\":5,\"pins\":1,\"visible\":true,\"shelf\":\"Play · Level 6 Chocolate crossing · Make 14\",\"chapter\":\"Chapter 2 · Chocolate Hills\",\"kept\":true,\"chapter0\":\"Chapter 1 · Candy Garden\",\"reveal\":true,\"hScroll\":true,\"stars\":5,\"lockedTap\":\"levels\",\"tap\":{\"screen\":\"playing\",\"mode\":\"match\",\"campaign\":\"journey\",\"level\":3,\"qaLevel\":15,\"modal\":null,\"version\":\"journey-v1\",\"operation\":\"add\",\"targets\":[9],\"targetIndex\":0,\"target\":9,\"shownTarget\":9,\"objective\":\"chains\",\"jelly\":[],\"active\":[0,1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24],\"movesLeft\":5,\"made\":0,\"quota\":3,\"score\":0,\"coreScore\":0,\"chainPts\":0,\"blastPts\":0,\"finish\":0,\"stars\":0,\"thresholds\":[625,900],\"hints\":0,\"undoCount\":0,\"undoAvailable\":0,\"busy\":false,\"cue\":{\"id\":\"j4\",\"text\":\"Use the striped candy\",\"cells\":[11,10]},\"last\":null,\"board\":[6,6,6,3,1,1,5,3,6,5,8,1,null,2,3,2,9,9,8,6,4,3,2,6,6],\"specials\":[null,null,null,null,null,null,null,null,null,null,null,\"stripe\",null,null,null,null,null,null,null,null,null,null,null,null,null],\"ids\":[0,1,2,3,4,5,6,7,8,9,10,11,null,13,14,15,16,17,18,19,20,21,22,23,24],\"rng\":1004,\"nextId\":25,\"chain\":[],\"seq\":0}}"
+    },
+    {
+      "name": "MC-024 locked tap starts nothing; an unlocked node starts the level directly (no confirmation)",
+      "ok": true,
+      "detail": "{\"screen\":\"playing\",\"mode\":\"match\",\"campaign\":\"journey\",\"level\":3,\"qaLevel\":15,\"modal\":null,\"version\":\"journey-v1\",\"operation\":\"add\",\"targets\":[9],\"targetIndex\":0,\"target\":9,\"shownTarget\":9,\"objective\":\"chains\",\"jelly\":[],\"active\":[0,1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24],\"movesLeft\":5,\"made\":0,\"quota\":3,\"score\":0,\"coreScore\":0,\"chainPts\":0,\"blastPts\":0,\"finish\":0,\"stars\":0,\"thresholds\":[625,900],\"hints\":0,\"undoCount\":0,\"undoAvailable\":0,\"busy\":false,\"cue\":{\"id\":\"j4\",\"text\":\"Use the striped candy\",\"cells\":[11,10]},\"last\":null,\"board\":[6,6,6,3,1,1,5,3,6,5,8,1,null,2,3,2,9,9,8,6,4,3,2,6,6],\"specials\":[null,null,null,null,null,null,null,null,null,null,null,\"stripe\",null,null,null,null,null,null,null,null,null,null,null,null,null],\"ids\":[0,1,2,3,4,5,6,7,8,9,10,11,null,13,14,15,16,17,18,19,20,21,22,23,24],\"rng\":1004,\"nextId\":25,\"chain\":[],\"seq\":0}"
+    },
+    {
+      "name": "MC-024 Classic map uses its own data: full boards, no jelly or × advertised, no journey stars",
+      "ok": true,
+      "detail": "{\"thumbs\":0,\"mul\":0,\"words\":false,\"stars\":0,\"title\":\"Classic levels\\nChapter 1 · Candy Garden\"}"
+    },
+    {
+      "name": "MC-024/MC-026 after preview 10: Next says 'Multiplication preview'; node 11 opens without replay",
+      "ok": true,
+      "detail": "{\"btn\":\"Next: Multiplication preview\",\"unlocked\":11,\"n11\":\"mnode current\",\"shelf\":\"Play · Level 11 Sweet products · × 12\"}"
+    },
+    {
+      "name": "MC-024 all complete: Continue becomes 'Replay level 12'",
+      "ok": true,
+      "detail": "Replay level 12 Journey preview complete"
+    },
+    {
+      "name": "MC-024 Home: Classic Play/Continue first, Journey preview secondary, no Stickers",
+      "ok": true,
+      "detail": "★ 0 / 36 Math Crush, Candy Match Math Crush A little maths. A lot of sweet. 2 + 3 + 5 Play · Level 1 NEW · PREVIEW Journey All 12 played · ★ 36 Classic levels Finish level 6 to unlock level 7 Level co"
+    },
+    {
+      "name": "MC-025 idle effects never consume gameplay RNG or change the model",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MC-025 a stripe clear shows the row sweep, popping candies and falling refills",
+      "ok": true,
+      "detail": "{\"sweep\":1,\"ghosts\":4,\"drops\":12,\"lock\":475}"
+    },
+    {
+      "name": "MC-025 resolving lock ≤ 900 ms (ordinary and combination)",
+      "ok": true,
+      "detail": "[475,557]"
+    },
+    {
+      "name": "MC-025 Pause resolves presentation to the committed state at once",
+      "ok": true,
+      "detail": "{\"held\":null,\"busy\":false}"
+    },
+    {
+      "name": "MC-025/MC-027 reduced motion (setting): no travel, no sweep, ≤ 80 ms lock, no cloud loop",
+      "ok": true,
+      "detail": "{\"cls\":true,\"lock\":78,\"drops\":0,\"sweepShown\":0}none"
+    },
+    {
+      "name": "MC-025 calm map loop runs normally and pauses in dialogs",
+      "ok": true,
+      "detail": "mc-cloud paused"
+    },
+    {
+      "name": "input: dragging over a gap does not extend the chain (360×640)",
+      "ok": true,
+      "detail": "[5]"
+    },
+    {
+      "name": "input: drag the opening witness 3+9 clears on the hourglass",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "input: keyboard cursor skips the gap (column 0: 5 → 15)",
+      "ok": true,
+      "detail": "15"
+    },
+    {
+      "name": "MC-027 360×640: essentials fit (HUD, objective, board, expression, buttons above 640) and no target under 44 px",
+      "ok": true,
+      "detail": "[{\"s\":\"#mboard\",\"top\":182,\"bottom\":462},{\"s\":\".hud\",\"top\":68,\"bottom\":122},{\"s\":\".qbar\",\"top\":130,\"bottom\":174},{\"s\":\".sumrow\",\"top\":470,\"bottom\":514},{\"s\":\".hintbar\",\"top\":564,\"bottom\":608}][]"
+    },
+    {
+      "name": "no page errors (360×640 input)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no page errors",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
