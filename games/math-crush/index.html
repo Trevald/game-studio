@@ -111,13 +111,11 @@
   @keyframes nextpulse { from { box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 0 0 rgba(255,213,74,.9); } to { box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 0 9px rgba(255,213,74,.0); } }
   .nodelbl { width: 100px; font-size: 13px; font-weight: 900; text-align: center; }
 
-  @media (prefers-reduced-motion: reduce) {
-    .drop, .confetti, .shard { animation: none !important; display: none; }
-    .drop { display: flex; }
-    .ghost { animation: fadeout 80ms linear forwards; }
-    .node.next, .tile.hint::after { animation: none; }
-    .press:active:not(:disabled) { transform: none; }
-  }
+  body.rm .drop, body.rm .confetti, body.rm .shard { animation: none !important; display: none; }
+  body.rm .drop { display: flex; }
+  body.rm .ghost { animation: fadeout 80ms linear forwards; }
+  body.rm .node.next, body.rm .tile.hint::after { animation: none; }
+  body.rm .press:active:not(:disabled) { transform: none; }
   @keyframes fadeout { to { opacity: 0; } }
 
   /* ================= Candy Match (H-001-v1) — flowing phone-width layout ================= */
@@ -262,13 +260,11 @@
   .scorerows .row { justify-content: space-between; min-height: 26px; }
   .scorerows .tot { border-top: 1px solid var(--edge); padding-top: 6px; font-size: 1.25rem; font-weight: 900; }
   .loading { position: fixed; inset: 0; z-index: 85; display: flex; align-items: center; justify-content: center; background: rgba(74,23,54,.35); }
-  @media (prefers-reduced-motion: reduce) {
-    .tile2.drop2, .tile2.fresh-reward, .tile2.hint::after { animation: none; }
-    .ghosts .tile2, .ghosts .tile2.bl { animation: fadeout 80ms linear forwards; }
-    .popup { animation: fadeout 900ms steps(1, end) forwards; }
-    .pbtn, .sbtn, .ibtn { transition: none; }
-    .pbtn:active:not(:disabled), .sbtn:active:not(:disabled), .ibtn:active:not(:disabled) { transform: none; }
-  }
+  body.rm .tile2.drop2, body.rm .tile2.fresh-reward, body.rm .tile2.hint::after { animation: none; }
+  body.rm .ghosts .tile2, body.rm .ghosts .tile2.bl { animation: fadeout 80ms linear forwards; }
+  body.rm .popup { animation: fadeout 900ms steps(1, end) forwards; }
+  body.rm .pbtn, body.rm .sbtn, body.rm .ibtn { transition: none; }
+  body.rm .pbtn:active:not(:disabled), body.rm .sbtn:active:not(:disabled), body.rm .ibtn:active:not(:disabled) { transform: none; }
 
   /* ===== H-001-v1 look pass (references/menus.jpg + gameplay-states.jpg) ===== */
   #flow { --sand: #F6E3C4; --inset: #F3E2C6; --blue: #2C7BE5; --blue2: #1557B0; }
@@ -386,7 +382,7 @@
   .trio { display: flex; justify-content: center; align-items: center; gap: 4px; padding: 10px 0 4px; }
   .trio .tile2 { width: 66px; height: 66px; font-size: 2.25rem; border-radius: 16px; box-shadow: 0 6px 10px rgba(74,23,54,.3); }
   .trio .tile2:nth-child(1) { transform: rotate(-8deg) translateY(4px); } .trio .tile2:nth-child(3) { transform: rotate(8deg) translateY(4px); }
-  @media (prefers-reduced-motion: reduce) { .popup2 { animation: fadeout 900ms steps(1, end) forwards; } }
+  body.rm .popup2 { animation: fadeout 900ms steps(1, end) forwards; }
   @media (max-height: 700px) { .trail2 { height: 600px; } .logo2 .w { font-size: 3.5rem; } .eqrow .tile2 { width: 70px; height: 70px; font-size: 2.25rem; } }
 
   /* ===== H-002-v1 sweet play (MC-010..MC-019) ===== */
@@ -419,28 +415,134 @@
   .scorebox small { display: block; font-weight: 800; color: var(--muted); }
   .rows2 .row b small { font-weight: 800; color: var(--muted); }
   .rows2 .row span { display: inline-flex; align-items: center; gap: 6px; }
-  .badgeimg { width: 40px; height: 40px; }
-  .sgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .stk { min-height: 112px; border-radius: 18px; background: #fff; border: 2px solid var(--edge); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-    padding: 8px 4px; font-weight: 900; font-size: .8125rem; color: var(--plum) !important; position: relative; }
-  .stk img { width: 64px; height: 64px; }
-  .stk.locked { border-style: dashed; border-color: #B79C8D; background: #FBF4EA; color: var(--muted) !important; }
-  .stk.locked img { filter: grayscale(1) opacity(.4); }
-  .stk[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--rasp); }
-  .stk .chip { position: absolute; top: 4px; right: 4px; padding: 0 6px; font-size: .6875rem; }
-  .binfo { display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--inset); border-radius: 16px; padding: 10px 12px; font-weight: 800; }
-  .binfo b { font-size: 1.125rem; }
-  .stoast { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 92; display: flex; align-items: center; gap: 10px;
-    background: var(--cream); color: var(--plum); border: 2px solid var(--edge); border-radius: 20px; padding: 6px 6px 6px 10px; box-shadow: 0 6px 16px rgba(74,23,54,.3);
-    max-width: calc(100% - 32px); animation: fade 150ms ease-out; }
-  .stoast img { width: 44px; height: 44px; flex: none; }
-  .stoast span { display: flex; flex-direction: column; font-weight: 900; line-height: 1.2; white-space: nowrap; }
   .mcm .xbtn.left { right: auto; left: 10px; }
   .mcm .h1.padx { padding: 0 40px; }
-  .stoast small { font-size: .8125rem; color: var(--muted); }
-  @media (prefers-reduced-motion: reduce) {
-    .cuehand, .tile2.cue::after { animation: none; }
-    .stoast { animation: none; }
+  body.rm .cuehand, body.rm .tile2.cue::after { animation: none; }
+
+  /* ===== H-003-v1 a sweeter journey (MC-020..MC-028) ===== */
+  /* Home: Journey preview entry (secondary to Classic) */
+  .jbtn { position: relative; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto auto; text-align: left; min-height: 72px; padding: 10px 16px; border-radius: 22px;
+    background: linear-gradient(120deg, #FFF3DD 0%, #FFE6F0 100%); color: var(--plum) !important; border: 2px solid var(--edge); }
+  .jbtn .jtag { grid-column: 1; font-size: .75rem; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: var(--rasp); }
+  .jbtn .jt { grid-column: 1; font-size: 1.375rem; font-weight: 900; line-height: 1.1; }
+  .jbtn .js { grid-column: 1; font-size: .9375rem; font-weight: 800; color: var(--muted); }
+  .jbtn svg { grid-column: 2; grid-row: 1 / 4; align-self: center; width: 30px; height: 30px; }
+  /* MC-024 map */
+  .mapv { position: fixed; inset: 0; display: flex; flex-direction: column; max-width: 480px; margin: 0 auto; color: var(--plum); }
+  .maphead { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: max(10px, env(safe-area-inset-top)) 12px 8px; background: rgba(255,243,221,.94);
+    border-bottom: 2px solid var(--edge); z-index: 3; box-shadow: 0 3px 10px rgba(74,23,54,.15); }
+  .mapttl { min-width: 0; text-align: center; }
+  .mapttl .h1 { font-size: 1.375rem; }
+  .mapch { font-size: .875rem; font-weight: 900; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mapst { padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .mapscroll { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; position: relative; touch-action: pan-y; }
+  .mapcanvas { position: relative; width: 100%; aspect-ratio: 390 / 2040; overflow: hidden; }
+  .region { position: absolute; left: 0; width: 100%; height: calc(100% / 3); background: #F6E3C4 center / cover no-repeat; overflow: hidden; }
+  .region.r0 { top: 0; } .region.r1 { top: calc(100% / 3); } .region.r2 { top: calc(200% / 3); }
+  .region + .region::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 28px; background: linear-gradient(transparent, #FFF3DD 45%, #FFF3DD 55%, transparent); z-index: 1; }
+  .rname { position: absolute; left: 5.1%; top: 3.5%; z-index: 2; padding: 4px 12px; border-radius: 999px; background: rgba(255,243,221,.92); border: 2px solid var(--edge); font-weight: 900; font-size: .9375rem; }
+  .cloud { position: absolute; width: 30%; opacity: .85; pointer-events: none; animation: mc-cloud 15s ease-in-out infinite alternate; }
+  .cloud.c1 { left: 52%; top: 6%; } .cloud.c2 { left: -6%; top: 20%; width: 24%; animation-duration: 13s; animation-delay: -5s; }
+  @keyframes mc-cloud { to { transform: translateX(14px); } }
+  .mpath { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+  .mnode { position: absolute; z-index: 2; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; font-weight: 900; color: var(--plum) !important;
+    background: radial-gradient(circle at 35% 30%, #FFFFFF, #FFF3DD 60%, #E9BE8B); border: 3px solid #fff; box-shadow: 0 4px 0 #B0784A, 0 8px 14px rgba(74,23,54,.3); display: flex; align-items: center; justify-content: center; padding: 0; }
+  .mnode .num { font-size: 1.625rem; line-height: 1; }
+  .mnode.current { background: radial-gradient(circle at 35% 30%, #FF8DB8, var(--rasp) 55%, #96103F); color: #fff !important; box-shadow: 0 5px 0 #7A0C33, 0 0 0 5px rgba(255,224,154,.9), 0 10px 18px rgba(74,23,54,.35); }
+  .mnode.current .num { text-shadow: 0 2px 0 rgba(110,10,45,.5); }
+  .mnode.locked, .mnode.later { background: radial-gradient(circle at 35% 30%, #F2ECE6, #CFC3B8 60%, #A8998C); color: #6E5D52 !important; box-shadow: 0 4px 0 #85766A; border-color: #EFE7DF; cursor: default; }
+  .mnode.later { opacity: .8; }
+  .mnode .lk { position: absolute; right: -6px; bottom: -6px; width: 26px; height: 26px; border-radius: 50%; background: #FFF3DD; padding: 3px; border: 2px solid #EFE7DF; }
+  .thumb { position: absolute; right: -10px; bottom: -8px; width: 26px; height: 26px; padding: 2px; border-radius: 7px; background: #FFF3DD; border: 1.5px solid var(--plum);
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; }
+  .thumb i { border-radius: 1px; background: var(--rasp); } .thumb i.v { background: transparent; } .thumb i.j { background: #B45AC6; box-shadow: 0 0 0 1px #F5B5FF inset; }
+  .thumb.mulx b { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%; background: var(--plum); color: #FFF3DD; font-size: .75rem; line-height: 18px; text-align: center; }
+  .pin { position: absolute; z-index: 3; width: 34px; height: 34px; margin: -70px 0 0 -17px; pointer-events: none; transform-origin: 50% 100%; animation: mc-pin 2.8s ease-in-out infinite; }
+  @keyframes mc-pin { 50% { transform: scale(1.04); } }
+  .mstars { position: absolute; z-index: 2; width: 72px; margin: 30px 0 0 -36px; display: flex; justify-content: center; pointer-events: none; }
+  .mstars svg { width: 20px; height: 20px; } .mstars svg:nth-child(2) { margin-top: 4px; }
+  .mcap { position: absolute; z-index: 2; display: none; width: 136px; margin: 52px 0 0 -68px; text-align: center; background: rgba(255,243,221,.95); border: 1.5px solid var(--edge);
+    border-radius: 12px; padding: 3px 6px; font-size: .8125rem; line-height: 1.25; pointer-events: none; }
+  .mcap b { display: block; font-weight: 900; } .mcap span { display: block; font-weight: 800; color: var(--muted); }
+  .mstars + .mcap { margin-top: 56px; }
+  .mcap.show, .mnode:hover ~ .mcap.h, .mnode:focus-visible + .mcap, .mnode:focus-visible + .pin + .mcap, .mnode:focus-visible + .mstars + .mcap, .mnode:hover + .mcap, .mnode:hover + .mstars + .mcap { display: block; }
+  .shelf { padding: 10px 16px max(12px, env(safe-area-inset-bottom)); min-height: 88px; background: rgba(255,243,221,.95); border-top: 2px solid var(--edge); z-index: 3; box-shadow: 0 -3px 10px rgba(74,23,54,.15); }
+  .ribbonsweep { position: absolute; left: 0; right: 0; top: 40%; z-index: 4; height: 54px; display: flex; align-items: center; justify-content: center; pointer-events: none;
+    background: linear-gradient(90deg, transparent, #C81758 12%, #C81758 88%, transparent); color: #fff; font-weight: 900; font-size: 1.25rem; animation: mc-ribbon 600ms ease-out both; }
+  @keyframes mc-ribbon { 0% { clip-path: inset(0 100% 0 0); opacity: 1; } 60% { clip-path: inset(0 0 0 0); opacity: 1; } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+  .conf { position: absolute; top: 34%; width: 22px; z-index: 4; pointer-events: none; animation: mc-conf 600ms ease-in both; animation-delay: var(--cd); }
+  @keyframes mc-conf { from { transform: translate(0, -20px) rotate(0); opacity: 1; } to { transform: translate(var(--cx), 90px) rotate(200deg); opacity: 0; } }
+  .sparkle { position: absolute; z-index: 2; width: 18px; height: 18px; pointer-events: none; animation: mc-sparkle 900ms ease-in-out both; }
+  @keyframes mc-sparkle { 0%, 100% { opacity: 0; transform: scale(.6); } 50% { opacity: .55; transform: none; } }
+  /* gameplay: HUD for operations, sequences and jelly */
+  .lvlname { flex-direction: column; gap: 0; line-height: 1.1; }
+  .lvlname small { font-size: .8125rem; letter-spacing: .3px; text-transform: none; font-weight: 900; }
+  .hcard .opi { width: 16px; height: 16px; margin-right: 2px; vertical-align: -2px; }
+  .hud.mul .hcard.tgt span { font-size: .8125rem; }
+  .hcard.tgt b { min-height: 1.1em; }
+  .hcard.nxt span { display: inline-flex; align-items: center; gap: 2px; }
+  .hcard.nxt b { color: var(--muted); }
+  .tval.arrive { animation: mc-target 180ms ease-out both; }
+  @keyframes mc-target { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .qbar:has(.qsc) { flex-wrap: nowrap; } .qbar:has(.qsc) .meter { min-width: 60px; flex-basis: 60px; margin-right: 4px; }
+  .qsc { font-weight: 900; font-size: 1.125rem; min-width: 48px; text-align: right; font-variant-numeric: tabular-nums; }
+  .qbar .l .ico { width: 22px; height: 22px; }
+  .hbox { text-align: left; background: var(--inset); border-radius: 16px; padding: 8px 12px; font-weight: 800; }
+  .hbox p { margin: 6px 0 0; font-size: .9375rem; line-height: 1.35; }
+  /* board: voids, jelly under candies, motion */
+  #mboard > .tile2 { z-index: 1; }
+  .tile2.void { background: url(assets/journey-v1/gap.svg) center / 100% 100% no-repeat !important; box-shadow: none !important; border: 0 !important; }
+  .under { position: absolute; inset: 6px; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 6px; pointer-events: none; z-index: 0; }
+  .under .jl { width: calc(100% + 12px); height: calc(100% + 12px); margin: -6px; filter: saturate(1.6) drop-shadow(0 0 3px rgba(245,181,255,.9)); }
+  .under .jl.hit { filter: drop-shadow(0 0 4px #fff) brightness(1.15); }
+  .tile2.onjelly { box-shadow: 0 0 0 3px #E59AF0, 0 0 12px 4px rgba(201,105,215,.8); }
+  .tile2.selnew { animation: mc-sel 120ms ease-out; }
+  @keyframes mc-sel { 0% { transform: scale(.96); } 60% { transform: scale(1.04); } 100% { transform: none; } }
+  .tile2.drop2 { animation: drop2 var(--fd, 180ms) cubic-bezier(.4,0,.8,.6) var(--fdl, 0ms) both, mc-land 90ms ease-out calc(var(--fdl, 0ms) + var(--fd, 180ms)); }
+  @keyframes mc-land { 50% { transform: translateY(3px) scaleY(.96); } to { transform: none; } }
+  .tile2.spawn { animation: mc-spawn 200ms ease-out var(--fdl, 0ms) both; }
+  @keyframes mc-spawn { from { transform: scale(.4); opacity: 0; filter: brightness(1.6); } to { transform: none; opacity: 1; } }
+  .tile2.spc { animation: mc-wob 5s ease-in-out infinite; }
+  @keyframes mc-wob { 0%, 82%, 100% { transform: rotate(0); } 87% { transform: rotate(-2deg); } 95% { transform: rotate(2deg); } }
+  #mboard.selecting .tile2.spc, body.modal-open .tile2.spc, body.hid .tile2.spc { animation: none; }
+  .tile2 .glint { position: absolute; inset: 0; z-index: 2; border-radius: inherit; overflow: hidden; pointer-events: none; background: url(assets/journey-v1/glint.svg) center / 100% 100% no-repeat; animation: mc-glint 900ms linear both; }
+  @keyframes mc-glint { from { transform: translateX(-110%); opacity: 0; } 15% { opacity: .5; } 85% { opacity: .5; } to { transform: translateX(110%); opacity: 0; } }
+  .ghosts { inset: 9px; gap: 6px; }
+  .ghosts .tile2.gc { animation: mc-clear 240ms ease-in both; }
+  @keyframes mc-clear { 0% { transform: scale(1); opacity: 1; } 33% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(.2); opacity: 0; } }
+  .ghosts .tile2.bl { animation: blastpop 260ms ease-out both; }
+  .ghosts .fx { width: 100%; height: 100%; pointer-events: none; }
+  .ghosts .sweep { object-fit: fill; align-self: center; height: 70%; transform-origin: var(--o) 50%; animation: mc-sweep 140ms ease-out both; }
+  .ghosts .sweep.col { height: 100%; width: 70%; justify-self: center; transform: rotate(0); writing-mode: vertical-lr; }
+  @keyframes mc-sweep { 0% { transform: scaleX(.05); opacity: 1; } 70% { opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+  .ghosts .sweep.col { animation-name: mc-sweepv; transform-origin: 50% var(--o); }
+  @keyframes mc-sweepv { 0% { transform: scaleY(.05); opacity: 1; } 70% { opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+  .ghosts .burst { place-self: center; width: 100%; height: 100%; object-fit: contain; animation: mc-burst 180ms ease-out both; }
+  @keyframes mc-burst { 0% { transform: scale(.2); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+  .ghosts .jgone { animation: mc-jelly 160ms ease-in both; }
+  @keyframes mc-jelly { 0% { opacity: 1; transform: none; } 100% { opacity: 0; transform: scale(1.15); } }
+  .ghosts .shard2 { width: 40%; height: 40%; place-self: center; animation: mc-shard 300ms ease-out both; }
+  @keyframes mc-shard { from { transform: none; opacity: 1; } to { transform: translate(var(--sx), var(--sy)) rotate(var(--sr)); opacity: 0; } }
+  .mchip { font-size: 1rem; white-space: nowrap; }
+  .popup2 { animation-duration: 900ms; }
+  /* calm loops stop in dialogs and while the page is hidden; reduced motion: no loops, travel, scale or confetti */
+  body.modal-open .cloud, body.hid .cloud, body.modal-open .pin, body.hid .pin { animation-play-state: paused; }
+  body.rm .cloud, body.rm .pin, body.rm .tile2.spc, body.rm .tile2.selnew, body.rm .tile2.spawn, body.rm .tval.arrive, body.rm .ribbonsweep, body.rm .sparkle,
+  body.rm .tile2 .glint, body.rm .mcap { animation: none !important; }
+  body.rm .conf, body.rm .ghosts .fx.shard2, body.rm .ghosts .burst, body.rm .ghosts .sweep { display: none; }
+  body.rm .ghosts .tile2.gc, body.rm .ghosts .jgone { animation: fadeout 80ms linear forwards; }
+  body.rm .ribbonsweep { opacity: 0; }
+  /* MC-027 compact phones (360x640): board 280, compact HUD; 150 % text scrolls with the page */
+  @media (max-height: 700px) {
+    .mc { gap: 8px; }
+    .hcard { min-height: 52px; } .hcard b { font-size: 1.5rem; } .hcard.tgt b { font-size: 1.75rem; } .hcard span { font-size: .8125rem; }
+    .boardwrap { width: min(100%, 280px); }
+    #mboard { gap: 6px; padding: 6px; } .ghosts, .under { gap: 6px; }
+    .sumrow .sumcard { min-height: 44px; } .sumcard .ex { font-size: 1.25rem; }
+    .status { min-height: 34px; padding: 2px 12px; }
+    .pill { min-height: 44px; }
+    .qbar { min-height: 32px; }
+    .mapttl .h1 { font-size: 1.125rem; }
   }
 </style>
 </head>
@@ -461,6 +563,15 @@ const ATLAS_SIZE = 1254;
 const CONTENT = "sweet-v1"; // level data version (H-002-v1 packet)
 const RULES = "core-v1"; // FB-004 rules: no hammer, no Sugar Rush, no speed challenge. Records and attempts are keyed by this.
 const A2 = "assets/sweet-v1/"; // H-002-v1 runtime SVGs (ASSETS.json destinations)
+const A3 = "assets/journey-v1/"; // H-003-v1 runtime art (ASSETS.json destinations)
+// H-003-v1 data/levels.json (schema 3), inlined verbatim: the separately versioned Journey preview (MC-021)
+const JV = "journey-v1";
+const JOURNEY = {"schemaVersion":3,"levels":[{"id":1,"name":"First sweets","world":"garden","contentVersion":"journey-v1","operation":"add","targets":[10],"active":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"full","objective":"chains","jelly":[],"quota":3,"moves":5,"rewardMode":"none","specials":{},"seed":1001,"freeInvalid":true,"releasePhase":"B","rows":5,"cols":5,"values":[1,9,7,5,2,6,3,6,6,7,1,4,7,8,1,1,1,3,9,2,6,4,5,7,3],"openingWitness":[0,1],"starThresholds":[300,400]},{"id":2,"name":"Small wonders","world":"garden","contentVersion":"journey-v1","operation":"add","targets":[8],"active":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"full","objective":"chains","jelly":[],"quota":3,"moves":5,"rewardMode":"none","specials":{},"seed":1002,"freeInvalid":true,"releasePhase":"B","rows":5,"cols":5,"values":[1,7,6,4,4,1,2,8,1,2,4,4,9,8,6,1,1,7,5,2,6,1,8,2,2],"openingWitness":[0,1],"starThresholds":[400,600]},{"id":3,"name":"Candy narrows","world":"garden","contentVersion":"journey-v1","operation":"add","targets":[12],"active":[0,1,2,3,4,5,6,7,8,9,11,12,13,15,16,17,18,19,20,21,22,23,24],"shape":"hourglass","objective":"chains","jelly":[],"quota":3,"moves":5,"rewardMode":"none","specials":{},"seed":1003,"freeInvalid":true,"releasePhase":"B","rows":5,"cols":5,"values":[2,6,4,7,3,3,9,1,1,2,null,1,7,2,null,8,5,2,8,9,4,7,7,3,1],"openingWitness":[5,6],"starThresholds":[500,750]},{"id":4,"name":"Around the fountain","world":"garden","contentVersion":"journey-v1","operation":"add","targets":[9],"active":[0,1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"ring","objective":"chains","jelly":[],"quota":3,"moves":5,"rewardMode":"stripe","specials":{"11":"stripe"},"seed":1004,"freeInvalid":false,"releasePhase":"B","rows":5,"cols":5,"values":[6,6,6,3,1,1,5,3,6,5,8,1,null,2,3,2,9,9,8,6,4,3,2,6,6],"openingWitness":[11,10],"starThresholds":[625,900]},{"id":5,"name":"Jelly garden","world":"chocolate","contentVersion":"journey-v1","operation":"add","targets":[11],"active":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"full","objective":"jelly","jelly":[6,8,12,16,18],"quota":0,"moves":7,"rewardMode":"stripe","specials":{"12":"stripe"},"seed":1005,"freeInvalid":false,"releasePhase":"B","rows":5,"cols":5,"values":[9,6,5,4,3,1,4,4,1,8,9,5,2,9,9,6,4,1,9,9,9,7,3,6,3],"openingWitness":[12,13],"starThresholds":[625,875]},{"id":6,"name":"Chocolate crossing","world":"chocolate","contentVersion":"journey-v1","operation":"add","targets":[14],"active":[0,1,2,3,4,5,6,7,8,9,11,12,13,15,16,17,18,19,20,21,22,23,24],"shape":"hourglass","objective":"chains","jelly":[],"quota":4,"moves":6,"rewardMode":"stripe","specials":{},"seed":1006,"freeInvalid":false,"releasePhase":"B","rows":5,"cols":5,"values":[5,9,4,9,2,3,2,1,3,8,null,2,7,8,null,9,2,5,4,7,4,5,3,5,4],"openingWitness":[0,1],"starThresholds":[1175,1650]},{"id":7,"name":"Wrapped around","world":"chocolate","contentVersion":"journey-v1","operation":"add","targets":[10],"active":[0,1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"ring","objective":"chains","jelly":[],"quota":4,"moves":6,"rewardMode":"both","specials":{"11":"wrapped"},"seed":1007,"freeInvalid":false,"releasePhase":"B","rows":5,"cols":5,"values":[6,2,1,1,6,2,7,7,7,6,9,1,null,7,3,1,7,3,5,5,6,5,8,2,4],"openingWitness":[11,10],"starThresholds":[850,1200]},{"id":8,"name":"Three flavours","world":"chocolate","contentVersion":"journey-v1","operation":"add","targets":[10,12,8],"active":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"full","objective":"chains","jelly":[],"quota":3,"moves":5,"rewardMode":"both","specials":{},"seed":1008,"freeInvalid":false,"releasePhase":"B","rows":5,"cols":5,"values":[1,9,9,5,5,3,1,7,4,7,1,3,8,5,2,9,8,4,8,2,1,4,8,1,1],"openingWitness":[0,1],"starThresholds":[775,1125]},{"id":9,"name":"Frosted ring","world":"frosting","contentVersion":"journey-v1","operation":"add","targets":[15],"active":[0,1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"ring","objective":"jelly","jelly":[1,3,5,9,15,19,21,23],"quota":0,"moves":8,"rewardMode":"both","specials":{"11":"wrapped"},"seed":1009,"freeInvalid":false,"releasePhase":"B","rows":5,"cols":5,"values":[9,9,7,1,2,9,4,5,8,4,9,6,null,5,6,6,9,6,1,3,5,8,7,9,6],"openingWitness":[11,10],"starThresholds":[1325,1900]},{"id":10,"name":"Changing course","world":"frosting","contentVersion":"journey-v1","operation":"add","targets":[12,9,15,10],"active":[0,1,2,3,4,5,6,7,8,9,11,12,13,15,16,17,18,19,20,21,22,23,24],"shape":"hourglass","objective":"chains","jelly":[],"quota":4,"moves":6,"rewardMode":"both","specials":{},"seed":1010,"freeInvalid":false,"releasePhase":"B","rows":5,"cols":5,"values":[3,9,8,1,4,4,2,6,6,4,null,3,4,7,null,4,6,7,8,9,1,4,8,5,7],"openingWitness":[0,1],"starThresholds":[900,1275]},{"id":11,"name":"Sweet products","world":"frosting","contentVersion":"journey-v1","operation":"multiply","targets":[12],"active":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"full","objective":"chains","jelly":[],"quota":3,"moves":5,"rewardMode":"none","specials":{},"seed":1011,"freeInvalid":true,"releasePhase":"D","rows":5,"cols":5,"values":[3,4,4,1,5,6,4,9,3,7,3,9,5,7,1,4,9,7,6,9,1,6,1,2,6],"openingWitness":[0,1],"starThresholds":[725,1025]},{"id":12,"name":"Double dozen","world":"frosting","contentVersion":"journey-v1","operation":"multiply","targets":[18,12,24],"active":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],"shape":"full","objective":"chains","jelly":[],"quota":3,"moves":5,"rewardMode":"none","specials":{},"seed":1012,"freeInvalid":false,"releasePhase":"D","rows":5,"cols":5,"values":[3,6,1,2,6,5,5,4,7,4,7,7,3,6,8,3,7,3,4,2,8,2,4,6,9],"openingWitness":[0,1],"starThresholds":[475,700]}]};
+const JOURNEY_ROUTES = {"1":[[4,9,14],[0,5,10,15,16],[5,10,11,16]],"2":[[6,11,16,21],[1,0,5,10,15],[3,4]],"3":[[9,8,7,12,11],[3,8],[9,8,13,12,17]],"4":[[2,7],[5,6,7,2],[2,7,6,11]],"5":[[6,7,12,17],[8,13,12,17]],"6":[[5,6,11,16,17],[8,7,2,1,0],[0,1,6,7],[7,12,17]],"7":[[4,3,2,1],[5,6,11],[23,18,17,16],[10,11,16,17]],"8":[[13,14,19,24],[7,6,5,0],[1,0,5,10,11]],"9":[[7,6,11],[5,6,1,2,3],[9,14,19,18,17],[8,13,18,17]],"10":[[11,6,5,0],[3,4,9],[5,0,1,2,3],[2,7,8]],"11":[[20,21,22,23],[7,8,13,14],[0,1,2,3,8]],"12":[[12,13],[3,8],[3,2,7,12,17]]}; // packet witnesses.json routes (independent-model 3-star routes), used by solve() from a fresh start
+// Phase D (MC-026 multiplication pilots 11-12). When false, nodes 11-12 show "Coming later".
+const JOURNEY_PHASE_D = true;
+const journeyCount = () => (JOURNEY_PHASE_D ? 12 : 10);
+const WORLDS = [{ id: "garden", name: "Candy Garden" }, { id: "chocolate", name: "Chocolate Hills" }, { id: "frosting", name: "Frosting Lake" }];
 
 // ======================================================================
 // CORE — pure functions, no DOM.
@@ -472,35 +583,72 @@ function mulberry32(s) { // returns [value in [0,1), next state]
   return [((t ^ (t >>> 14)) >>> 0) / 4294967296, s];
 }
 
-// ---------- Candy Match — core-v1 (H-002-v1 MC-010..MC-019 minus MC-014/MC-015/MC-017 speed, per FB-004) ----------
+// ---------- Candy Match engine — Classic (core-v1, unchanged rules) and Journey preview (H-003-v1 journey-v1) ----------
 // Pure model. Every committed action returns a new state; the previous committed state is kept in g.hist
-// (full snapshot: board, IDs, specials, RNG, counters, score, staged sticker events) so Undo is exact.
-// Monotonic counters (hints, undos) never rewind.
+// (full snapshot: board, IDs, specials, jelly, target index, RNG, counters, score) so Undo is exact.
+// Monotonic counters (hints, undos) never rewind. A Classic attempt has no `camp` field (saves stay byte-compatible);
+// a Journey attempt has camp:"journey", content:"journey-v1", op, ti (target index), jelly[] and null cells for voids.
 const MATCH_VERSION = RULES;
+function xorshift32(x) { x = (x ^ (x << 13)) >>> 0; x = (x ^ (x >>> 17)) >>> 0; x = (x ^ (x << 5)) >>> 0; return x; }
+const ALL25 = Array.from({ length: 25 }, (_, i) => i);
+const CLASSIC_REWARD = (lv) => (lv <= 3 ? "none" : lv <= 6 ? "stripe" : "both");
+const _defs = {};
+// Normalised level definition for either campaign (the engine reads only this)
+function levelDef(camp, li) {
+  const key = camp + ":" + li;
+  if (_defs[key]) return _defs[key];
+  let d;
+  if (camp === "journey") {
+    const J = JOURNEY.levels[li];
+    if (!J) return null;
+    d = { camp, li, id: J.id, name: J.name, world: J.world, op: J.operation, targets: J.targets.slice(), objective: J.objective, jelly: J.jelly.slice(),
+      quota: J.objective === "chains" ? J.quota : 0, moves: J.moves, rewardMode: J.rewardMode, specials: J.specials, seed: J.seed, freeInvalid: J.freeInvalid,
+      active: J.active.slice(), shape: J.shape, values: J.values, witness: J.openingWitness, thresholds: J.starThresholds.slice(), phase: J.releasePhase, rows: 5, cols: 5 };
+  } else {
+    const L = LEVELS.match[li];
+    if (!L) return null;
+    const sp = {}; for (const s of L.initialSpecials || []) sp[s.cell] = s.type;
+    d = { camp: "classic", li, id: L.id, name: "Level " + L.id, world: WORLDS[Math.floor(li / 4)].id, op: "add", targets: [L.target], objective: "chains", jelly: [],
+      quota: L.quota, moves: L.moves, rewardMode: CLASSIC_REWARD(L.id), specials: sp, seed: L.seed, freeInvalid: L.freeInvalid, active: ALL25, shape: "full",
+      values: L.values, witness: L.witness, thresholds: L.starThresholds.slice(), phase: "classic", rows: L.rows, cols: L.cols };
+  }
+  return (_defs[key] = d);
+}
+const campOf = (g) => (g && g.camp === "journey" ? "journey" : "classic");
+const LD = (g) => levelDef(campOf(g), g.li);
 const M = {
-  start(li) {
+  start(li, camp = "classic") {
+    if (camp === "journey") {
+      const D = levelDef("journey", li);
+      const cells = D.values.map((v, i) => (v === null ? null : { id: i, v, sp: null }));
+      for (const [k, t] of Object.entries(D.specials)) cells[+k].sp = t;
+      return { mode: "match", camp: "journey", content: JV, version: JV, li, rows: 5, cols: 5, op: D.op, ti: 0, target: D.targets[0], quota: D.quota, moves: D.moves,
+        movesLeft: D.moves, made: 0, chainPts: 0, blastPts: 0, finish: 0, jelly: D.jelly.slice(),
+        cells, nextId: 25, rng: D.seed, refills: 0, hints: 0, undos: 0, status: "playing", last: null, seq: 0, hist: [] };
+    }
     const L = LEVELS.match[li];
     const cells = L.values.map((v, i) => ({ id: i, v, sp: null }));
     for (const s of L.initialSpecials || []) cells[s.cell].sp = s.type;
     return { mode: "match", version: MATCH_VERSION, li, rows: L.rows, cols: L.cols, target: L.target, quota: L.quota, moves: L.moves,
       movesLeft: L.moves, made: 0, chainPts: 0, blastPts: 0, finish: 0,
       cells, nextId: L.values.length, rng: L.seed, refills: 0,
-      ev: { spark: false, mix: false, seven: false }, // staged sticker eligibility (undoable)
       hints: 0, undos: 0, status: "playing", last: null, seq: 0, hist: [] };
   },
-  level(g) { return LEVELS.match[g.li]; },
+  level(g) { return LD(g); },
+  isJelly(g) { return LD(g).objective === "jelly"; },
+  mul(g) { return g.op === "multiply"; },
   adjacent(g, a, b) {
     const ra = Math.floor(a / g.cols), ca = a % g.cols, rb = Math.floor(b / g.cols), cb = b % g.cols;
     return Math.abs(ra - rb) + Math.abs(ca - cb) === 1;
   },
-  neighbors(g, i) { // ascending index order => lexicographic DFS
+  neighbors(g, i) { // ascending index order => lexicographic DFS; voids are never neighbours
     const r = Math.floor(i / g.cols), c = i % g.cols, out = [];
     if (r > 0) out.push(i - g.cols); if (c > 0) out.push(i - 1); if (c < g.cols - 1) out.push(i + 1); if (r < g.rows - 1) out.push(i + g.cols);
-    return out;
+    return out.filter((j) => g.cells[j]);
   },
-  // drag / tap rule: immediate-tail backtrack, ignore repeats, non-adjacent and a 9th tile
+  // drag / tap rule: immediate-tail backtrack, ignore voids, repeats, non-adjacent and a 9th tile
   extend(g, chain, i) {
-    if (i < 0 || i >= g.cells.length) return chain;
+    if (i < 0 || i >= g.cells.length || !g.cells[i]) return chain;
     if (!chain.length) return [i];
     if (chain.length >= 2 && i === chain[chain.length - 2]) return chain.slice(0, -1);
     if (chain.includes(i) || chain.length >= 8 || !M.adjacent(g, chain[chain.length - 1], i)) return chain;
@@ -508,25 +656,36 @@ const M = {
   },
   validChain(g, chain) {
     if (!Array.isArray(chain) || chain.length < 2 || chain.length > 8 || new Set(chain).size !== chain.length) return false;
-    if (!chain.every((i) => Number.isInteger(i) && i >= 0 && i < g.cells.length)) return false;
+    if (!chain.every((i) => Number.isInteger(i) && i >= 0 && i < g.cells.length && g.cells[i])) return false;
     for (let k = 1; k < chain.length; k++) if (!M.adjacent(g, chain[k - 1], chain[k])) return false;
     return true;
   },
   sum(g, chain) { return chain.reduce((s, i) => s + g.cells[i].v, 0); },
+  // the chain's arithmetic value: sum, or product on multiplication levels (never eval of a string)
+  val(g, chain) { return M.mul(g) ? chain.reduce((p, i) => p * g.cells[i].v, 1) : M.sum(g, chain); },
+  // DFS pruning: additive sums only grow; products must stay a divisor of the target (a trailing 1 stays legal)
+  prune(g, v) { return M.mul(g) ? v > g.target || g.target % v !== 0 : v > g.target; },
+  step(g, v, i) { return M.mul(g) ? v * g.cells[i].v : v + g.cells[i].v; },
   mult(n) { return n <= 2 ? 1 : n === 3 ? 1.5 : n === 4 ? 2 : 3; },
   base(n) { return 100 + 25 * (n - 2); },
   chainPoints(n) { return Math.floor(M.base(n) * M.mult(n)); },
-  // MC-012: L1-3 none; L4-6 n>=4 stripe; L7-12 n==4 stripe, n>=5 wrapped
+  // MC-012 (Classic): L1-3 none; L4-6 n>=4 stripe; L7-12 n==4 stripe, n>=5 wrapped
   rewardFor(li, n) {
     const lv = li + 1;
     if (lv <= 3 || n < 4) return null;
     if (lv <= 6) return "stripe";
     return n === 4 ? "stripe" : "wrapped";
   },
+  // either campaign: rewardMode none | stripe | both (same semantics as Classic)
+  rewardType(g, n) {
+    const m = LD(g).rewardMode;
+    if (m === "none" || n < 4) return null;
+    return m === "both" && n >= 5 ? "wrapped" : "stripe";
+  },
   rc(g, i) { return [Math.floor(i / g.cols), i % g.cols]; },
-  rect(g, r0, r1, c0, c1) {
+  rect(g, r0, r1, c0, c1) { // clipped to the board and to active cells (a stripe reaches across a void)
     const out = [];
-    for (let r = Math.max(0, r0); r <= Math.min(g.rows - 1, r1); r++) for (let c = Math.max(0, c0); c <= Math.min(g.cols - 1, c1); c++) out.push(r * g.cols + c);
+    for (let r = Math.max(0, r0); r <= Math.min(g.rows - 1, r1); r++) for (let c = Math.max(0, c0); c <= Math.min(g.cols - 1, c1); c++) if (g.cells[r * g.cols + c]) out.push(r * g.cols + c);
     return out;
   },
   // single special blast area on the pre-gravity board
@@ -574,29 +733,31 @@ const M = {
   },
   // what an exact chain would do (the live preview and release both use this)
   resolve(g, chain) {
-    const n = chain.length, cl = M.closure(g, chain), type = M.rewardFor(g.li, n);
+    const n = chain.length, cl = M.closure(g, chain), type = M.rewardType(g, n);
+    const jellyHit = g.jelly ? cl.removal.filter((i) => g.jelly.includes(i)) : [];
     return { n, base: M.base(n), mult: M.mult(n), chainPts: M.chainPoints(n), blastPts: 25 * cl.blastOnly.length,
-      removal: cl.removal, blastOnly: cl.blastOnly, activated: cl.activated, combo: cl.combo,
+      removal: cl.removal, blastOnly: cl.blastOnly, activated: cl.activated, combo: cl.combo, jellyHit,
       reward: type ? { cell: chain[n - 1], value: g.cells[chain[n - 1]].v, type } : null };
   },
-  shortest(g) { // shortest legal chain, row-major lexicographic tie-break
+  shortest(g) { // shortest legal chain for the current operation/target, row-major lexicographic tie-break
     const n = g.cells.length;
     for (let L = 2; L <= 8; L++) {
       for (let s = 0; s < n; s++) {
+        if (!g.cells[s] || M.prune(g, g.cells[s].v)) continue;
         const path = [s], used = new Set([s]);
-        const dfs = (sum) => {
-          if (path.length === L) return sum === g.target;
+        const dfs = (v) => {
+          if (path.length === L) return v === g.target;
           for (const nb of M.neighbors(g, path[path.length - 1])) {
             if (used.has(nb)) continue;
-            const ns = sum + g.cells[nb].v;
-            if (ns > g.target) continue;
+            const nv = M.step(g, v, nb);
+            if (M.prune(g, nv)) continue;
             path.push(nb); used.add(nb);
-            if (dfs(ns)) return true;
+            if (dfs(nv)) return true;
             path.pop(); used.delete(nb);
           }
           return false;
         };
-        if (g.cells[s].v <= g.target && dfs(g.cells[s].v)) return path.slice();
+        if (dfs(g.cells[s].v)) return path.slice();
       }
     }
     return null;
@@ -604,29 +765,35 @@ const M = {
   allChains(g, cap = 30) {
     const out = [], n = g.cells.length;
     for (let s = 0; s < n && out.length < cap; s++) {
+      if (!g.cells[s] || M.prune(g, g.cells[s].v)) continue;
       const path = [s], used = new Set([s]);
-      const dfs = (sum) => {
+      const dfs = (v) => {
         if (out.length >= cap) return;
-        if (path.length >= 2 && sum === g.target) out.push(path.slice());
+        if (path.length >= 2 && v === g.target) out.push(path.slice());
         if (path.length >= 8) return;
         for (const nb of M.neighbors(g, path[path.length - 1])) {
           if (used.has(nb)) continue;
-          const ns = sum + g.cells[nb].v; if (ns > g.target) continue;
-          path.push(nb); used.add(nb); dfs(ns); path.pop(); used.delete(nb);
+          const nv = M.step(g, v, nb); if (M.prune(g, nv)) continue;
+          path.push(nb); used.add(nb); dfs(nv); path.pop(); used.delete(nb);
         }
       };
       dfs(g.cells[s].v);
     }
     return out;
   },
-  draw(g) { const [r, s] = mulberry32(g.rng); g.rng = s; return 1 + Math.floor(r * 9); },
+  draw(g) {
+    if (g.camp === "journey") { g.rng = xorshift32(g.rng); return 1 + (g.rng % 9); } // RULES.md: value 1 + (x mod 9)
+    const [r, s] = mulberry32(g.rng); g.rng = s; return 1 + Math.floor(r * 9);
+  },
   snap(g) { const { hist, ...rest } = g; return JSON.parse(JSON.stringify(rest)); },
   commitBase(g0) { const g = M.snap(g0); g.hist = g0.hist.concat([M.snap(g0)]); g.seq++; return g; },
   core(g) { return g.chainPts + g.blastPts + g.finish; },
   score(g) { return g.chainPts + g.blastPts + g.finish; },
   thresholds(li) { return LEVELS.match[li].starThresholds.slice(); },
+  thr(g) { return LD(g).thresholds.slice(); },
   // seeded gravity + refill (+ deterministic solvability repair). cur: cells with nulls for removed tiles.
   settle(g, cur) {
+    if (g.camp === "journey") return M.settleJ(g, cur);
     const next = new Array(cur.length);
     for (let c = 0; c < g.cols; c++) {
       const col = [];
@@ -646,35 +813,70 @@ const M = {
     }
     return false;
   },
+  // RULES.md segmented gravity: columns left->right, segments (runs of active cells) top->bottom; survivors keep order
+  // and IDs, fresh candies go ahead of them; nothing falls through a void. Then repair for the NEW target if needed.
+  settleJ(g, cur) {
+    const D = LD(g), act = new Set(D.active), next = cur.slice();
+    for (let c = 0; c < 5; c++) {
+      let r = 0;
+      while (r < 5) {
+        if (!act.has(r * 5 + c)) { r++; continue; }
+        const seg = [];
+        while (r < 5 && act.has(r * 5 + c)) { seg.push(r * 5 + c); r++; }
+        const surv = seg.map((i) => cur[i]).filter(Boolean);
+        const fresh = [];
+        for (let k = surv.length; k < seg.length; k++) fresh.push({ id: g.nextId++, v: M.draw(g), sp: null });
+        const full = fresh.concat(surv);
+        seg.forEach((i, k) => { next[i] = full[k]; });
+      }
+    }
+    g.cells = next.map((t) => (t ? { id: t.id, v: t.v, sp: t.sp || null } : null));
+    g.refills++;
+    if (M.shortest(g)) return false;
+    // repair: redraw every active cell (ascending), drop specials, keep jelly/target/moves/score; inject a legal pair
+    const asc = D.active.slice().sort((a, b) => a - b);
+    for (const i of asc) g.cells[i] = { id: g.nextId++, v: M.draw(g), sp: null };
+    let pa = null;
+    for (const a of asc) { for (const b of asc) if (a < b && M.adjacent(g, a, b)) { pa = [a, b]; break; } if (pa) break; }
+    const t = g.target;
+    let x, y;
+    if (M.mul(g)) { outer: for (let a = 2; a <= 9; a++) for (let b = a; b <= 9; b++) if (a * b === t) { x = a; y = b; break outer; } }
+    else { x = Math.max(1, t - 9); y = t - x; }
+    if (!pa || !(x >= 1 && x <= 9 && y >= 1 && y <= 9)) throw new Error("repair: no legal pair for target " + t); // rejected at load by validateData
+    g.cells[pa[0]].v = x; g.cells[pa[1]].v = y;
+    return true;
+  },
   // Release a chain. Returns {g, ev}. Atomic: g is the next stable committed state.
   release(g0, chain) {
     if (g0.status !== "playing") return { g: g0, ev: null };
     if (!Array.isArray(chain) || chain.length < 2) return { g: g0, ev: { type: "cancel" } }; // single tile: free
     if (!M.validChain(g0, chain)) return { g: g0, ev: { type: "cancel" } };
-    const sum = M.sum(g0, chain), L = M.level(g0);
-    if (sum !== g0.target) {
-      if (L.freeInvalid) { // MC-010: L1-3 wrong sums cost nothing (not an Undo step: nothing changed)
-        const g = { ...g0, seq: g0.seq + 1, last: { type: "wrong", sum, chain: chain.slice(), free: true } };
-        return { g, ev: { type: "wrong", sum, chain, free: true } };
+    const value = M.val(g0, chain), D = LD(g0);
+    if (value !== g0.target) {
+      if (D.freeInvalid) { // MC-010: introductory levels: wrong answers cost nothing (not an Undo step: nothing changed)
+        const g = { ...g0, seq: g0.seq + 1, last: { type: "wrong", sum: value, chain: chain.slice(), free: true } };
+        return { g, ev: { type: "wrong", sum: value, chain, free: true } };
       }
       const g = M.commitBase(g0);
-      g.movesLeft--; g.last = { type: "wrong", sum, chain: chain.slice() };
+      g.movesLeft--; g.last = { type: "wrong", sum: value, chain: chain.slice() };
       if (g.movesLeft <= 0) g.status = "lost";
-      return { g, ev: { type: "wrong", sum, chain } };
+      return { g, ev: { type: "wrong", sum: value, chain } };
     }
     const g = M.commitBase(g0);
     const R = M.resolve(g, chain), n = chain.length;
     const removed = R.removal.map((i) => ({ i, v: g.cells[i].v, sp: g.cells[i].sp, chain: chain.includes(i) }));
-    // points, then quota, then success, then zero-moves failure
+    // points, jelly, then objective, then success, then zero-moves failure
     g.chainPts += R.chainPts; g.blastPts += R.blastPts; g.movesLeft--; g.made++;
-    if (R.activated.length) g.ev.spark = true;
-    if (R.combo) g.ev.mix = true;
-    if (n === 7) g.ev.seven = true;
+    const targetBefore = g.target;
+    if (g.jelly) g.jelly = g.jelly.filter((i) => !R.removal.includes(i)); // one layer per affected cell, never respawns
     g.last = { type: "clear", chain: chain.slice(), chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, combo: R.combo ? R.combo.type : null, reward: R.reward ? R.reward.type : null };
     const ev = { type: "clear", chain: chain.slice(), removed, blastOnly: R.blastOnly, chainPts: R.chainPts, blastPts: R.blastPts, mult: R.mult, base: R.base,
-      combo: R.combo, activated: R.activated, reward: R.reward };
-    if (g.made >= g.quota) { g.status = "won"; g.finish = 50 * g.movesLeft; ev.won = true; return { g, ev }; }
+      combo: R.combo, activated: R.activated, reward: R.reward, jellyCleared: R.jellyHit.slice(), targetBefore };
+    const won = D.objective === "jelly" ? g.jelly.length === 0 : g.made >= g.quota;
+    if (won) { g.status = "won"; g.finish = 50 * g.movesLeft; ev.won = true; return { g, ev }; } // no phantom next target, no refill
     if (g.movesLeft <= 0) { g.status = "lost"; return { g, ev }; }
+    if (g.camp === "journey") { g.ti = Math.min(g.made, D.targets.length - 1); g.target = D.targets[g.ti]; } // MC-023: advance once, before the refill
+    ev.targetAfter = g.target;
     const cur = g.cells.slice();
     for (const i of R.removal) cur[i] = null;
     if (R.reward) cur[R.reward.cell] = { id: g.nextId++, v: R.reward.value, sp: R.reward.type };
@@ -696,46 +898,53 @@ const M = {
     const g = { ...g0, hints: g0.hints + 1 };
     return { g, chain: M.hintChain(g) };
   },
-  // Hint: prefer a chain through a special candy, then the shortest chain of 3+ (scores more), then any
+  // Hint: on jelly levels a legal chain/blast that hits the most jelly; then a chain through a special candy,
+  // then the shortest chain of 3+ (scores more), then any. Only promises a legal move, not a winning route.
   hintChain(g) {
     const all = M.allChains(g, 600);
     if (!all.length) return M.shortest(g);
+    if (g.jelly && g.jelly.length) {
+      let best = null, bh = 0;
+      for (const c of all) { const h = M.resolve(g, c).jellyHit.length; if (h > bh || (h === bh && h > 0 && c.length < best.length)) { best = c; bh = h; } }
+      if (best) return best;
+    }
     const sp = all.filter((c) => c.some((i) => g.cells[i].sp)).sort((a, b) => a.length - b.length);
     if (sp.length) return sp[0];
     const three = all.filter((c) => c.length >= 3).sort((a, b) => a.length - b.length);
     return three.length ? three[0] : all.sort((a, b) => a.length - b.length)[0];
   },
-  assisted(g) { return g.hints > 0 || g.undos > 0; },
   // MC-011: completion 1, explicit per-level two/three-star thresholds on the final core score
-  starsFor(li, core) { const [t2, t3] = M.thresholds(li); return core >= t3 ? 3 : core >= t2 ? 2 : 1; },
-  stars(g) { return g.status === "won" ? M.starsFor(g.li, M.core(g)) : 0; },
-  // MC-016: sticker IDs a committed win unlocks (eligibility staged in g.ev). FB-004-D: Perfect Batch and Sugar Rush are retired.
-  stickersFor(g) {
-    if (g.status !== "won") return [];
-    const out = [];
-    if (g.li === 0) out.push("sweet-start");
-    if (g.ev.spark) out.push("first-spark");
-    if (g.ev.mix) out.push("mix-master");
-    if (g.ev.seven) out.push("lucky-seven");
-    return out;
-  },
+  starsFor(li, core, camp = "classic") { const [t2, t3] = levelDef(camp, li).thresholds; return core >= t3 ? 3 : core >= t2 ? 2 : 1; },
+  stars(g) { return g.status === "won" ? M.starsFor(g.li, M.core(g), campOf(g)) : 0; },
   hasProgress(g) { return g.hist.length > 0 || g.hints > 0; },
-  // structural check for a restored core-v1 attempt
+  // structural check for a restored attempt (Classic core-v1 or Journey journey-v1)
   validSave(g) {
     try {
-      if (!g || g.mode !== "match" || g.version !== MATCH_VERSION) return false;
-      const L = LEVELS.match[g.li]; if (!L) return false;
-      if (!Array.isArray(g.cells) || g.cells.length !== L.rows * L.cols) return false;
-      if (!g.cells.every((c) => c && Number.isInteger(c.v) && c.v >= 1 && c.v <= 9 && Number.isInteger(c.id) && (c.sp === null || c.sp === "stripe" || c.sp === "wrapped"))) return false;
+      if (!g || g.mode !== "match") return false;
+      const camp = campOf(g);
+      if (camp === "journey" ? g.version !== JV || g.content !== JV : g.version !== MATCH_VERSION) return false;
+      const D = levelDef(camp, g.li); if (!D) return false;
+      if (!Array.isArray(g.cells) || g.cells.length !== D.rows * D.cols) return false;
+      const act = new Set(D.active);
+      for (let i = 0; i < g.cells.length; i++) {
+        const c = g.cells[i];
+        if (!act.has(i)) { if (c !== null) return false; continue; }
+        if (!(c && Number.isInteger(c.v) && c.v >= 1 && c.v <= 9 && Number.isInteger(c.id) && (c.sp === null || c.sp === "stripe" || c.sp === "wrapped"))) return false;
+      }
       for (const k of ["movesLeft", "made", "chainPts", "blastPts", "rng", "nextId", "seq", "hints", "undos"]) if (!Number.isFinite(g[k])) return false;
-      if (!g.ev || typeof g.ev !== "object") return false;
       if (!["playing", "lost"].includes(g.status) || !Array.isArray(g.hist)) return false;
-      return g.movesLeft >= 0 && g.movesLeft <= L.moves && g.made < L.quota;
+      if (camp === "journey") {
+        if (!Array.isArray(g.jelly) || !g.jelly.every((i) => D.jelly.includes(i))) return false;
+        if (g.op !== D.op || !Number.isInteger(g.ti) || g.target !== D.targets[g.ti] || g.ti !== Math.min(g.made, D.targets.length - 1)) return false;
+        if (D.objective === "jelly" ? g.jelly.length === 0 : g.made >= D.quota) return false;
+        return g.movesLeft >= 0 && g.movesLeft <= D.moves;
+      }
+      return g.movesLeft >= 0 && g.movesLeft <= D.moves && g.made < D.quota;
     } catch (e) { return false; }
   },
 };
 
-// Data validation (schema 2): witnesses, initial specials, thresholds, solvability (exposed as __qa.validate)
+// Data validation: Classic schema 2 and Journey schema 3 (RULES.md field contract); impossible data is rejected, not repaired
 function validateData() {
   const errs = [];
   if (LEVELS.schemaVersion !== 2 || LEVELS.match.length !== 12) errs.push("schema");
@@ -747,6 +956,31 @@ function validateData() {
     if (!(L.starThresholds.length === 2 && L.starThresholds[0] < L.starThresholds[1])) errs.push("thresholds " + L.id);
     if (new Set((L.initialSpecials || []).map((s) => s.cell)).size !== (L.initialSpecials || []).length) errs.push("specials " + L.id);
     if (!M.shortest(g)) errs.push("no chain " + L.id);
+  });
+  if (JOURNEY.schemaVersion !== 3 || JOURNEY.levels.length !== 12) errs.push("journey schema");
+  JOURNEY.levels.forEach((J, k) => {
+    const id = "J" + J.id, bad = (m) => errs.push(m + " " + id);
+    if (J.id !== k + 1 || J.contentVersion !== JV) bad("id/content");
+    if (!(J.seed > 0 && J.seed <= 0xffffffff)) bad("seed");
+    if (!["add", "multiply"].includes(J.operation) || !["chains", "jelly"].includes(J.objective) || !["full", "hourglass", "ring"].includes(J.shape)) bad("enum");
+    if (!["garden", "chocolate", "frosting"].includes(J.world) || !["none", "stripe", "both"].includes(J.rewardMode)) bad("enum2");
+    if (J.rows !== 5 || J.cols !== 5 || J.values.length !== 25) bad("size");
+    if (JSON.stringify(J.active) !== JSON.stringify([...new Set(J.active)].sort((a, b) => a - b))) bad("active order");
+    if (!J.values.every((v, i) => (v === null ? !J.active.includes(i) : Number.isInteger(v) && v >= 1 && v <= 9 && J.active.includes(i)))) bad("values/mask");
+    if (!J.jelly.every((i) => J.active.includes(i)) || new Set(J.jelly).size !== J.jelly.length) bad("jelly");
+    if (!Object.entries(J.specials).every(([i, t]) => J.active.includes(+i) && ["stripe", "wrapped"].includes(t))) bad("specials");
+    if (!(J.starThresholds.length === 2 && 0 < J.starThresholds[0] && J.starThresholds[0] < J.starThresholds[1])) bad("thresholds");
+    if (!((J.objective === "jelly" && J.quota === 0 && J.jelly.length) || (J.objective === "chains" && J.quota > 0 && !J.jelly.length))) bad("objective");
+    if (!(J.targets.length >= 1 && (J.targets.length === 1 || J.targets.length === J.quota) && J.targets.every((t) => Number.isInteger(t) && t > 0))) bad("targets");
+    for (const t of J.targets) { // the repair pair must exist for every target
+      let ok = false;
+      for (let a = J.operation === "add" ? 1 : 2; a <= 9; a++) for (let b = a; b <= 9; b++) if (J.operation === "add" ? a + b === t : a * b === t) ok = true;
+      if (!ok) bad("target " + t);
+    }
+    if (!["B", "D"].includes(J.releasePhase) || (J.releasePhase === "D") !== (J.operation === "multiply")) bad("phase");
+    const g = M.start(k, "journey");
+    if (!M.validChain(g, J.openingWitness) || M.val(g, J.openingWitness) !== J.targets[0]) bad("opening witness");
+    if (!M.shortest(g)) bad("no chain");
   });
   return { ok: errs.length === 0, errors: errs };
 }
@@ -763,8 +997,13 @@ function blankProgress() {
   for (const m of MODES) p[m] = { unlocked: 1, stars: Array(12).fill(0), best: Array(12).fill(0) };
   p.matchV2 = { version: "candy-v2", stars: Array(12).fill(0), best: Array(12).fill(0), bestTimed: Array(12).fill(0), assisted: Array(12).fill(false) };
   p.matchV3 = { contentVersion: CONTENT, rules: RULES, records: {}, lessons: {}, stickers: {}, badge: null, active: null, archivedActive: [], offerStart: null };
+  p.matchJourney = blankJourney();
+  p.mapUi = { classic: { revealed: {} }, journey: { revealed: {} } };
   return p;
 }
+// H-003-v1 (RULES.md "Progress, saves"): the Journey preview keeps its own namespace; Classic `matchV3` is never touched by it
+// (its sticker/badge fields stay as inert legacy data, MC-020). Records keyed by contentVersion + level ID.
+function blankJourney() { return { contentVersion: JV, records: {}, unlocked: 1, active: null, archivedActive: [], lessons: {} }; }
 let progress = blankProgress(), storageOk = true, saveFailed = false;
 try {
   const raw = localStorage.getItem(SAVE_KEY);
@@ -782,6 +1021,19 @@ try {
       if (!Array.isArray(v3.archivedActive)) v3.archivedActive = [];
       progress.matchV3 = v3;
       for (const m of MODES) if (!progress[m] || !Array.isArray(progress[m].stars)) progress[m] = blankProgress()[m];
+      const pj = p.matchJourney; // unknown or newer journey schema: preserved verbatim, play falls back to a fresh preview
+      if (pj && typeof pj === "object" && pj.contentVersion === JV) {
+        const j = Object.assign(blankJourney(), pj);
+        for (const k of ["records", "lessons"]) if (!j[k] || typeof j[k] !== "object" || Array.isArray(j[k])) j[k] = {};
+        if (!Array.isArray(j.archivedActive)) j.archivedActive = [];
+        if (!Number.isInteger(j.unlocked) || j.unlocked < 1 || j.unlocked > 12) j.unlocked = 1;
+        progress.matchJourney = j;
+      } else {
+        if (pj) progress.matchJourneyUnknown = pj;
+        progress.matchJourney = blankJourney();
+      }
+      const mu = p.mapUi && typeof p.mapUi === "object" ? p.mapUi : {};
+      progress.mapUi = { classic: { revealed: {}, ...(mu.classic || {}) }, journey: { revealed: {}, ...(mu.journey || {}) } };
       // an attempt saved under the old rules (candy-v2) is archived verbatim, never deserialized as v3
       if (p.active) {
         const li = p.active.game && Number.isInteger(p.active.game.li) && p.active.game.li >= 0 && p.active.game.li < 12 ? p.active.game.li : 0;
@@ -829,9 +1081,15 @@ function save() {
   catch (e) { if (!saveFailed) { saveFailed = true; if (typeof onSaveError === "function") onSaveError(); } return false; }
 }
 const V3 = () => progress.matchV3;
+const JN = () => progress.matchJourney;
 function recKey(li) { return `${RULES}:${LEVELS.match[li].id}`; }
 function rec(li) { return V3().records[recKey(li)] || { stars: 0, best: 0, wins: 0 }; }
 function setRec(li, r) { V3().records[recKey(li)] = r; }
+// campaign-aware records: stars are only ever shown from the campaign's own records
+function recC(camp, li) { return camp === "journey" ? JN().records[`${JV}:${JOURNEY.levels[li].id}`] || { stars: 0, best: 0, wins: 0 } : rec(li); }
+function setRecC(camp, li, r) { if (camp === "journey") JN().records[`${JV}:${JOURNEY.levels[li].id}`] = r; else setRec(li, r); }
+function unlockedC(camp) { return camp === "journey" ? Math.min(JN().unlocked, journeyCount()) : Math.min(progress.match.unlocked, 12); }
+function countC(camp) { return camp === "journey" ? journeyCount() : 12; }
 
 // ======================================================================
 // SOUND (WebAudio, starts after a gesture) + haptics — optional, never the only feedback
@@ -850,7 +1108,15 @@ function tone(freq, dur = 0.09, type = "sine", vol = 0.08, delay = 0) {
 }
 const sfx = {
   pick: (n) => tone(440 * Math.pow(2, (n - 1) / 6), 0.07, "triangle", 0.07),
-  good: () => { tone(660, 0.1, "triangle", 0.08); tone(880, 0.12, "triangle", 0.08, 0.08); },
+  // MC-025: short pop; stripe ascending sweep; wrapped low soft thump; combo two-note accent (at most 4 voices per commit)
+  good: (ev) => {
+    tone(660, 0.1, "triangle", 0.08); tone(880, 0.12, "triangle", 0.08, 0.08);
+    if (!ev || !ev.activated || !ev.activated.length) return;
+    if (ev.combo) { tone(784, 0.1, "sine", 0.06, 0.1); tone(1175, 0.12, "sine", 0.06, 0.19); return; }
+    const sp = new Map(ev.removed.map((t) => [t.i, t.sp])), kinds = new Set(ev.activated.map((i) => sp.get(i)));
+    if (kinds.has("stripe")) { tone(520, 0.07, "sine", 0.05, 0.08); tone(1040, 0.09, "sine", 0.05, 0.14); }
+    else if (kinds.has("wrapped")) tone(110, 0.18, "sine", 0.09, 0.1);
+  },
   bad: () => tone(196, 0.16, "sine", 0.07),
   win: () => [523, 659, 784, 1047].forEach((f, k) => tone(f, 0.16, "triangle", 0.08, k * 0.09)),
   tap: () => tone(520, 0.05, "sine", 0.05),
@@ -861,13 +1127,19 @@ function buzz(ms) { if (progress.settings.haptics && navigator.vibrate) try { na
 // RENDERING
 // ======================================================================
 const bgEl = document.getElementById("bg"), srEl = document.getElementById("sr");
-const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const ui = { screen: "home", mode: "match", modal: null, game: null, chain: [], hintChain: null, busyUntil: 0, cursor: 0, kbd: false,
-  idleMs: 0, stickerQueue: [], stickerNow: null };
+// MC-027: reduced motion follows the OS unless the player set it in Settings (progress.settings.motion: "reduce" | "full")
+const osReduced = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+function rm() { const s = progress.settings.motion; return s === "reduce" ? true : s === "full" ? false : !!(osReduced && osReduced.matches); }
+const ui = { screen: "home", camp: "classic", mode: "match", modal: null, game: null, chain: [], hintChain: null, busyUntil: 0, cursor: 0, kbd: false,
+  idleMs: 0, mapScroll: {}, held: null, fxTimers: [] };
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 function announce(t) { srEl.textContent = t; }
-function render() { bgEl.style.backgroundImage = "url(assets/match-bg.webp)"; renderFlow(); }
+function render() {
+  bgEl.style.backgroundImage = "url(assets/match-bg.webp)";
+  document.body.classList.toggle("rm", rm());
+  renderFlow();
+}
 
 const flowEl = document.getElementById("flow");
 const TILE_FALLBACK = ["#E8414E", "#FF42AC", "#2777EE", "#FF961C", "#7147DB", "#65C748"];
@@ -888,11 +1160,11 @@ function tileBg(v) { return artState !== "ok" ? `background:${TILE_FALLBACK[v % 
 const STAR_PATH = "M12 2.2l2.9 6.4 7 .7-5.3 4.7 1.6 6.9L12 17.3l-6.2 3.6 1.6-6.9L2.1 9.3l7-.7z";
 function starSvg(on, cls = "") { return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${STAR_PATH}" fill="${on ? "#FFC83A" : "rgba(255,255,255,.6)"}" stroke="#4A1736" stroke-width="1.6" stroke-linejoin="round"/></svg>`; }
 const img = (name, cls = "ico") => `<img class="${cls}" src="${A2}${name}" alt="" aria-hidden="true">`;
+const img3 = (name, cls = "ico") => `<img class="${cls}" src="${A3}${name}" alt="" aria-hidden="true">`;
 const ICON = {
   pause: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
   back: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   gear: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
-  lock: `<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" fill="#FFF3DD"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF3DD" stroke-width="2.6"/></svg>`,
   map: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2z M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
 };
 const SPNAME = { stripe: "striped", wrapped: "wrapped" };
@@ -902,6 +1174,7 @@ const I2 = {
   sound: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
   vib: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M3 8v8M21 8v8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>`,
   tap: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 7v9l-2-2M10 16l2 3h6l1-6-5-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  motion: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4M5 7h6M5 17h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="16" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>`,
   help: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/></svg>`,
   chev: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   x: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>`,
@@ -921,19 +1194,20 @@ function eqTiles(vals, target, ops = "+") {
   if (target !== undefined) h += `<span class="opchip eq">= ${target}</span>`;
   return `<div class="eqrow">${h}</div>`;
 }
-const ACH = Object.fromEntries(ACHIEVEMENTS.achievements.map((a) => [a.id, a]));
-const stickerSrc = (id) => `${A2}stickers/${id}.svg`;
+const OPS = (g) => (g && g.op === "multiply" ? "×" : "+");
 
-// ---------- active attempt (core-v1) ----------
-function activeAttempt() { // {ok, g} | {ok:false, li} | null
-  const a = V3().active;
+// ---------- active attempts: one per campaign, each in its own namespace ----------
+function nsActive(camp) { return camp === "journey" ? JN() : V3(); }
+function activeAttempt(camp = "classic") { // {ok, g} | {ok:false, li} | null
+  const a = nsActive(camp).active;
   if (!a) return null;
-  if (a.version === MATCH_VERSION && M.validSave(a.game)) return { ok: true, g: a.game };
-  return { ok: false, li: a && a.game && Number.isInteger(a.game.li) && a.game.li >= 0 && a.game.li < 12 ? a.game.li : 0 };
+  if (a.version === (camp === "journey" ? JV : MATCH_VERSION) && a.game && campOf(a.game) === camp && M.validSave(a.game)) return { ok: true, g: a.game };
+  return { ok: false, li: a && a.game && Number.isInteger(a.game.li) && a.game.li >= 0 && a.game.li < countC(camp) ? a.game.li : 0 };
 }
 function persistActive() {
-  const g = ui.game;
-  V3().active = g && (g.status === "playing" || g.status === "lost") ? { version: MATCH_VERSION, game: g } : null;
+  const g = ui.game; if (!g) return;
+  const camp = campOf(g);
+  nsActive(camp).active = g.status === "playing" || g.status === "lost" ? { version: camp === "journey" ? JV : MATCH_VERSION, game: g } : null;
   save();
 }
 function onSaveError() { mToast("Progress could not be saved. You can keep playing."); }
@@ -943,53 +1217,57 @@ function mToast(t, ms = 2200) {
   const el = document.getElementById("mtoast"); if (el) { el.textContent = t; el.style.opacity = 1; }
   toastTimer = setTimeout(() => { ui.mtoast = null; const e2 = document.getElementById("mtoast"); if (e2) e2.style.opacity = 0; }, ms);
 }
-// MC-016 sticker toasts: after the committed result, one at a time, 3 s each, dismissible, never blocking
-let stickerTimer = 0;
-function nextSticker() {
-  clearTimeout(stickerTimer);
-  ui.stickerNow = ui.stickerQueue.shift() || null;
-  if (ui.stickerNow) stickerTimer = setTimeout(nextSticker, 3000);
-  const host = document.getElementById("stoasthost"); if (host) host.innerHTML = stickerToastHtml();
-}
-function stickerToastHtml() {
-  const id = ui.stickerNow; if (!id) return "";
-  const a = ACH[id];
-  return `<div class="stoast" role="status"><img src="${stickerSrc(id)}" alt=""><span><small>New sticker</small><b>${esc(a.name)}</b></span><button class="ibtn" data-k="stoast-x" aria-label="Dismiss">${I2.x}</button></div>`;
-}
 
-// ---------- MC-010 on-board lessons ----------
-// One cue at a time; persisted separately from scoring (V3().lessons); completed lessons never replay.
+// ---------- MC-010 on-board lessons (Classic) and Journey cues (MC-021: one new idea per level, never a gate) ----------
+// One cue at a time; persisted separately from scoring; completed lessons never replay. A cue only shows while the
+// opening board is untouched, so it is an optional hint at the witness, never a forced move.
 const LESSONS = {
   0: { id: "l1-pair", text: "Connect these two", kind: "witness" },
   1: { id: "l2-longer", text: "Try a longer chain", kind: "witness" },
   3: { id: "l4-stripe", text: "Light up a whole row", kind: "witness" },
   6: { id: "l7-wrapped", text: "Pop the candies around it", kind: "witness" },
 };
-function lessonDone(id) { return !!V3().lessons[id]; }
-function completeLesson(id) { if (!lessonDone(id)) { V3().lessons[id] = true; save(); } }
+const JLESSONS = ["Connect these two", "Make 8 this time", "Gaps break a chain, so go around", "Use the striped candy", "Clear every jelly patch",
+  "The board pinches in the middle", "Pop the wrapped candy", "The target changes after each chain", "Jelly sits around the ring", "Watch the next target",
+  "Multiply: 3 × 4 = 12", "Each chain changes the product"];
+function lessonNs(camp) { return camp === "journey" ? JN().lessons : V3().lessons; }
+function lessonDone(id, camp = "classic") { return !!lessonNs(camp)[id]; }
+function completeLesson(id, camp = "classic") { if (!lessonDone(id, camp)) { lessonNs(camp)[id] = true; save(); } }
+function lessonFor(g) {
+  if (campOf(g) === "journey") return { id: "j" + LD(g).id, text: JLESSONS[g.li], kind: "witness" };
+  return LESSONS[g.li] || null;
+}
 function currentCue(g) {
   if (!g || g.status !== "playing" || ui.modal || ui.chain.length || ui.hintChain) return null;
-  const ls = LESSONS[g.li]; if (!ls) return null;
-  if (ls.kind === "witness") {
-    if (lessonDone(ls.id)) return null;
-    const w = LEVELS.match[g.li].witness;
-    if (!w.every((i) => g.cells[i].id === i)) return null; // opening board changed: another route was taken
-    return { ...ls, cells: w };
-  }
-  return null;
+  const ls = lessonFor(g); if (!ls) return null;
+  if (lessonDone(ls.id, campOf(g))) return null;
+  const w = LD(g).witness;
+  if (!w.every((i) => g.cells[i] && g.cells[i].id === i)) return null; // opening board changed: another route was taken
+  return { ...ls, cells: w };
 }
 
-// ---------- views ----------
-function badgeHtml() { const b = V3().badge; return b && V3().stickers[b] ? `<img class="badgeimg" src="${stickerSrc(b)}" alt="Your badge: ${esc(ACH[b].name)}">` : ""; }
-function totalStars() { let s = 0; for (let k = 0; k < 12; k++) s += rec(k).stars; return s; }
+// ---------- objective text ----------
+function objText(camp, li, short) {
+  const D = levelDef(camp, li), t = D.targets, mul = D.op === "multiply";
+  const seq = t.length > 1 ? t.join(" → ") : String(t[0]);
+  if (D.objective === "jelly") return short ? `Jelly · ${seq}` : `Clear ${D.jelly.length} jelly · make ${seq}`;
+  if (mul) return `× ${seq}`;
+  return t.length > 1 ? seq : `Make ${seq}`;
+}
+function totalStarsC(camp) { let s = 0; for (let k = 0; k < countC(camp); k++) s += recC(camp, k).stars; return s; }
+function totalStars() { return totalStarsC("classic"); }
 function playLevel() { return Math.min(progress.match.unlocked, 12) - 1; }
+// next level to play in a campaign: first unlocked level without stars, else null (all complete)
+function frontierC(camp) { const U = unlockedC(camp); for (let k = 0; k < U; k++) if (!recC(camp, k).stars) return k; return null; }
+
+// ---------- Home (MC-020: no Stickers entry or badge; Journey preview is a separate, secondary entry) ----------
 function mHome() {
-  const act = activeAttempt(), v3 = V3();
-  let h = `<div class="mc-top"><span class="row" style="gap:8px">${badgeHtml()}</span><span class="panel small" style="padding:4px 12px;border-radius:999px">★ ${totalStars()} / 36</span></div>`;
+  const act = activeAttempt("classic"), v3 = V3(), jact = activeAttempt("journey");
+  let h = `<div class="mc-top"><span></span><span class="panel small" style="padding:4px 12px;border-radius:999px">★ ${totalStars()} / 36</span></div>`;
   h += `<div class="logo2"><h1 class="sr">Math Crush, Candy Match</h1><span class="w" aria-hidden="true"><span>Math</span></span><span class="w b" aria-hidden="true"><span>Crush</span></span>
     <div class="ribbon">A little maths. A lot of sweet.</div></div>`;
   h += `<div aria-label="Example: 2 plus 3 plus 5 makes 10" role="img" style="margin-top:22px">${eqTiles([2, 3, 5])}</div>`;
-  h += `<div style="height:20px"></div>`;
+  h += `<div style="height:14px"></div>`;
   if (act) {
     const g = act.g;
     h += `<button class="pbtn" data-k="continue">Continue · Level ${(act.ok ? g.li : act.li) + 1}<br><span style="font-size:.9375rem;font-weight:800">${act.ok ? `${g.made} of ${g.quota} chains · ${g.movesLeft} move${g.movesLeft === 1 ? "" : "s"} left` : "Saved attempt"}</span></button>`;
@@ -999,54 +1277,129 @@ function mHome() {
   } else {
     h += `<button class="pbtn" data-k="play" style="min-height:64px;font-size:1.75rem">Play · Level ${playLevel() + 1}</button>`;
   }
-  h += `<div class="row"><button class="sbtn grow" data-k="choose">${ICON.map}Levels</button><button class="sbtn grow" data-k="book">${img("icons/book.svg")}Stickers</button><button class="ibtn round" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
+  const jf = frontierC("journey"), jsub = jact && jact.ok ? `Continue level ${jact.g.li + 1}` : jf === null ? `All ${journeyCount()} played · ★ ${totalStarsC("journey")}` : jf === 0 && !totalStarsC("journey") ? "Shaped boards, jelly and changing targets" : `Next: level ${jf + 1} · ★ ${totalStarsC("journey")}`;
+  h += `<button class="jbtn panel" data-k="journey"><span class="jtag">New · preview</span><span class="jt">Journey</span><span class="js">${esc(jsub)}</span>${ICON.map}</button>`;
+  h += `<div class="row"><button class="sbtn grow" data-k="choose">${ICON.map}Classic levels</button><button class="ibtn round" data-k="settings" aria-label="Settings">${ICON.gear}</button></div>`;
   return h;
+}
+
+// ---------- MC-024 the map: three painted chapters, one vertical scroll, Continue shelf outside the scroll ----------
+const NODE_POS = [[78, 130], [280, 240], [98, 370], [280, 500]]; // SCREENS.md node centres per 390x680 region
+function nodeXY(k) { const [x, y] = NODE_POS[k % 4]; return [x, y + 680 * Math.floor(k / 4)]; }
+function smoothPath(pts) { // Catmull-Rom through the node centres
+  if (pts.length < 2) return "";
+  let d = `M${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    d += ` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0]} ${p2[1]}`;
+  }
+  return d;
+}
+function maskThumb(camp, li) { // truthful mini board: actual active mask, jelly marks, × for products
+  const D = levelDef(camp, li), act = new Set(D.active), jel = new Set(D.jelly);
+  let c = "";
+  for (let i = 0; i < 25; i++) c += `<i class="${act.has(i) ? (jel.has(i) ? "j" : "a") : "v"}"></i>`;
+  return `<span class="thumb${D.op === "multiply" ? " mulx" : ""}" aria-hidden="true">${c}${D.op === "multiply" ? "<b>×</b>" : ""}</span>`;
+}
+function nodeState(camp, k) {
+  if (camp === "journey" && k >= journeyCount()) return "later";
+  if (k + 1 > unlockedC(camp)) return "locked";
+  if (k === frontierC(camp)) return "current";
+  return recC(camp, k).stars ? "done" : "open";
 }
 function mLevels() {
-  const U = progress.match.unlocked;
-  const pos = [[18, 6], [44, 12], [70, 19], [84, 31], [60, 38], [34, 43], [14, 53], [36, 62], [62, 67], [84, 77], [60, 86], [32, 93]];
-  let h = `<div class="playtop"><button class="ibtn round" data-k="home" aria-label="Back to home">${ICON.back}</button><h1 class="h1 lvl panel" style="font-size:1.625rem;padding:4px 22px;border-radius:999px">Candy trail</h1><span></span></div>`;
-  const d = pos.map((p, k) => (k ? "L" : "M") + p[0] + " " + p[1] * 6.8).join(" ");
-  h += `<div class="trail2"><svg class="road" viewBox="0 0 100 680" preserveAspectRatio="none" aria-hidden="true">
-    <path d="${d}" fill="none" stroke="#B9875A" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity=".55"/>
-    <path d="${d}" fill="none" stroke="#F6E3C4" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-    <path d="${d}" fill="none" stroke="#E2B98A" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
-  for (let k = 0; k < 12; k++) {
-    const [x, yp] = pos[k], y = yp * 6.8, locked = k + 1 > U, st = rec(k).stars, next = !locked && k + 1 === Math.min(U, 12) && !st;
-    const cls = locked ? " locked" : next ? " next" : st ? "" : " open";
-    const label = `Level ${k + 1}${locked ? ", locked. Complete level " + k + " to unlock" : st ? ", " + st + " of 3 stars" : next ? ", next level" : ", not completed yet"}`;
-    h += `<button class="node3${cls}" data-k="lvl-${k}" style="left:${x}%;top:${y}px" aria-label="${label}"${locked ? ' aria-disabled="true"' : ""}>${k + 1}${locked ? `<span class="lock">${ICON.lock}</span>` : ""}</button>`;
-    if (st) h += `<div class="nstars" style="left:${x}%;top:${y}px" aria-hidden="true">${[0, 1, 2].map((s) => starSvg(s < st)).join("")}</div>`;
+  const camp = ui.camp, n = 12, cur = frontierC(camp);
+  const mu = progress.mapUi[camp], U = unlockedC(camp);
+  let reveal = -1; // MC-024: chapter completion reveal, once per chapter
+  for (const r of [1, 2]) if (U > 4 * r && !mu.revealed[r]) { reveal = r; mu.revealed[r] = true; save(); }
+  let h = `<div class="mapv"><div class="maphead"><button class="ibtn round" data-k="home" aria-label="Back to home">${ICON.back}</button>
+    <div class="mapttl"><h1 class="h1">${camp === "journey" ? "Journey preview" : "Classic levels"}</h1><div class="mapch" id="mapch" aria-live="off">Chapter 1 · Candy Garden</div></div>
+    <span class="panel small mapst">★ ${totalStarsC(camp)}</span></div>`;
+  h += `<div class="mapscroll" id="mapscroll"><div class="mapcanvas">`;
+  WORLDS.forEach((w, r) => {
+    h += `<div class="region r${r}" style="background-image:url(${A3}world-${w.id}.webp)" data-region="${r}" aria-hidden="true">
+      <img class="cloud c1" src="${A3}cloud.svg" alt=""><img class="cloud c2" src="${A3}cloud.svg" alt="">
+      <span class="rname">Chapter ${r + 1} · ${w.name}</span>${r === reveal ? `<span class="ribbonsweep"><b>${w.name} unlocked</b></span>${Array.from({ length: 10 }, (_, k) => `<img class="conf" src="${A3}confetti.svg" alt="" style="--cx:${(k % 5) * 22 - 44}px;--cd:${k * 30}ms;left:${18 + k * 7}%">`).join("")}` : ""}</div>`;
+  });
+  const pts = Array.from({ length: n }, (_, k) => nodeXY(k));
+  const lastOpen = Math.min(U, countC(camp)) - 1;
+  h += `<svg class="mpath" viewBox="0 0 390 2040" preserveAspectRatio="none" aria-hidden="true">
+    <path d="${smoothPath(pts)}" fill="none" stroke="#B9875A" stroke-width="26" stroke-linecap="round" opacity=".45"/>
+    <path d="${smoothPath(pts)}" fill="none" stroke="#FFF3DD" stroke-width="18" stroke-linecap="round" stroke-dasharray="2 14" opacity=".9"/>
+    ${lastOpen > 0 ? `<path d="${smoothPath(pts.slice(0, lastOpen + 1))}" fill="none" stroke="#FFF3DD" stroke-width="20" stroke-linecap="round"/><path d="${smoothPath(pts.slice(0, lastOpen + 1))}" fill="none" stroke="#E2B98A" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/>` : ""}</svg>`;
+  for (let k = 0; k < n; k++) {
+    const [x, y] = nodeXY(k), st = nodeState(camp, k), D = levelDef(camp, k), R = recC(camp, k);
+    const pos = `left:${(x / 390 * 100).toFixed(3)}%;top:${(y / 2040 * 100).toFixed(3)}%`;
+    const name = camp === "journey" ? D.name : `Level ${k + 1}`, obj = objText(camp, k);
+    const mulTag = camp === "journey" && D.op === "multiply" ? " · Multiplication preview" : "";
+    if (st === "later") { h += `<div class="mnode later" style="${pos}" role="img" aria-label="Level ${k + 1}, ${esc(D.name)}, coming later"><span class="num">${k + 1}</span></div><div class="mcap show" style="${pos}">Coming later</div>`; continue; }
+    const stateTxt = st === "locked" ? `locked, finish level ${k} to unlock` : st === "current" ? "next level" : st === "done" ? `${R.stars} of 3 stars, best ${R.best}` : "not completed yet";
+    h += `<button class="mnode ${st}" data-k="lvl-${k}" style="${pos}" aria-label="Level ${k + 1}, ${esc(name)}, ${esc(obj)}${mulTag}, ${stateTxt}"${st === "locked" ? ' aria-disabled="true"' : ""}>
+      <span class="num">${k + 1}</span>${st === "locked" ? `<img class="lk" src="${A3}lock.svg" alt="">` : maskThumb(camp, k)}</button>`;
+    if (st === "current") h += `<img class="pin" src="${A3}you-are-here.svg" alt="" style="${pos}">`;
+    if (R.stars) h += `<div class="mstars" style="${pos}" aria-hidden="true">${[0, 1, 2].map((s) => starSvg(s < R.stars)).join("")}</div>`;
+    h += `<div class="mcap${st === "current" ? " show" : ""}" style="${pos}" aria-hidden="true"><b>${esc(camp === "journey" ? D.name : obj)}</b>${camp === "journey" ? `<span>${esc(obj)}${mulTag ? " · new" : ""}</span>` : ""}</div>`;
   }
-  h += `</div>`;
+  h += `</div></div>`;
+  // Continue shelf: saved attempt, else next unlocked level, else replay the last level
+  const act = activeAttempt(camp), last = countC(camp) - 1;
+  let lab, sub;
+  if (act && act.ok) { lab = `Continue · Level ${act.g.li + 1}`; sub = `${camp === "journey" ? "Journey · " : ""}${levelDef(camp, act.g.li).objective === "jelly" ? `${act.g.jelly.length} jelly left` : `${act.g.made} of ${act.g.quota} chains`} · ${act.g.movesLeft} moves left`; }
+  else if (cur !== null) { lab = `Play · Level ${cur + 1}`; sub = `${camp === "journey" ? levelDef(camp, cur).name + " · " : "Classic · "}${objText(camp, cur)}`; }
+  else { lab = `Replay level ${last + 1}`; sub = camp === "journey" ? (JOURNEY_PHASE_D ? "Journey preview complete" : "Levels 11–12 are coming later") : "All Classic levels complete"; }
+  h += `<div class="shelf"><button class="pbtn" data-k="map-continue">${lab}<br><span style="font-size:.9375rem;font-weight:800">${esc(sub)}</span></button></div></div>`;
   return h;
 }
+function mapAfterRender(fresh) {
+  const sc = document.getElementById("mapscroll"); if (!sc) return;
+  const camp = ui.camp, ch = document.getElementById("mapch");
+  const H = sc.querySelector(".mapcanvas").offsetHeight, regionH = H / 3;
+  const upd = () => { const r = Math.min(2, Math.max(0, Math.floor((sc.scrollTop + 40) / regionH))); if (ch) ch.textContent = `Chapter ${r + 1} · ${WORLDS[r].name}`; };
+  if (fresh || ui.mapScroll[camp] === undefined) { // on entry: the current node fully visible above the shelf
+    const k = frontierC(camp) === null ? countC(camp) - 1 : frontierC(camp), [, y] = nodeXY(k);
+    sc.scrollTop = Math.max(0, y / 2040 * H - sc.clientHeight * 0.55);
+    ui.mapScroll[camp] = sc.scrollTop;
+  } else sc.scrollTop = ui.mapScroll[camp];
+  upd();
+  sc.addEventListener("scroll", () => { ui.mapScroll[camp] = sc.scrollTop; upd(); }, { passive: true });
+}
+
+// ---------- gameplay ----------
+// MC-023: while a clear resolves, the HUD holds the old target; the committed model already has the new one
+function shownTarget(g) { return ui.held && ui.held.seq === g.seq ? ui.held : { target: g.target, ti: g.ti || 0 }; }
 function mSumCard(g) {
-  const ch = ui.chain, tap = progress.settings.tap || ui.kbd;
+  const ch = ui.chain, tap = progress.settings.tap || ui.kbd, mul = M.mul(g), op = OPS(g), T = shownTarget(g).target;
   if (ch.length) {
-    const s = M.sum(g, ch), ex = ch.map((i) => g.cells[i].v).join(" + ") + " = " + s;
-    let status;
-    if (s === g.target && ch.length >= 2) status = tap ? "Submit to clear" : "Release to clear";
-    else if (s === g.target) status = "Add one more candy";
-    else if (s > g.target) status = tap ? "Too high · Tap the last candy to adjust" : "Too high · slide back";
-    else status = `${g.target - s} more to make ${g.target}`;
-    return { ex, status, over: s > g.target, exact: s === g.target && ch.length >= 2 };
+    const s = M.val(g, ch), ex = ch.map((i) => g.cells[i].v).join(` ${op} `) + " = " + s;
+    let status, over = false;
+    if (s === T && ch.length >= 2) status = tap ? "Submit to clear" : "Release to clear";
+    else if (s === T) status = mul ? "Multiply by one more candy" : "Add one more candy";
+    else if (mul) {
+      if (s > T) { status = tap ? "Too high · Tap the last candy to adjust" : "Too high · slide back"; over = true; }
+      else if (T % s !== 0) { status = `${s} doesn't go into ${T} · slide back`; over = true; }
+      else status = `× ${T / s} more to make ${T}`;
+    } else if (s > T) { status = tap ? "Too high · Tap the last candy to adjust" : "Too high · slide back"; over = true; }
+    else status = `${T - s} more to make ${T}`;
+    return { ex, status, over, exact: s === T && ch.length >= 2 };
   }
-  return { ex: `Make ${g.target}`, status: tap ? "Tap neighbouring candies, then Submit" : "Connect neighbouring candies", over: false, exact: false };
+  return { ex: mul ? `Multiply to make ${T}` : `Make ${T}`, status: tap ? "Tap neighbouring candies, then Submit" : "Connect neighbouring candies", over: false, exact: false };
 }
 function mStatus(g, sc, cue) {
   const ch = ui.chain;
   if (ch.length >= 2 && sc.exact) {
     const R = M.resolve(g, ch);
-    const pts = `${R.chainPts} points${R.blastPts ? ` · +${R.blastPts} blast` : ""}`;
+    const pts = `${R.chainPts} points${R.blastPts ? ` · +${R.blastPts} blast` : ""}${R.jellyHit.length ? ` · clears ${R.jellyHit.length} jelly` : ""}`;
     const what = R.combo ? "Special mix!" : R.reward ? `${R.reward.type === "stripe" ? "Striped" : "Wrapped"} candy earned` : esc(sc.status);
     return `<span>${what}</span><small>${pts}</small>`;
   }
   if (ch.length) return `<span${sc.over ? ' style="color:#9B1B1B"' : ""}>${esc(sc.status)}</span>`;
-  if (ui.hintChain) return `<span>Hint: ${ui.hintChain.map((i) => g.cells[i].v).join(" + ")}</span>`;
+  if (ui.hintChain) return `<span>Hint: ${ui.hintChain.map((i) => g.cells[i].v).join(` ${OPS(g)} `)}</span>`;
   const L = g.last;
-  if (L && L.type === "wrong") return `<span style="color:#9B1B1B">${L.free ? "Try again" : "Try again · 1 move used"}</span>`;
+  if (L && L.type === "wrong") return campOf(g) === "journey" ? `<span style="color:#9B1B1B">${L.sum} doesn't make ${g.target} · ${L.free ? "Try again" : "1 move used"}</span>`
+    : `<span style="color:#9B1B1B">${L.free ? "Try again" : "Try again · 1 move used"}</span>`;
   if (cue) return `<span class="cuecap">${img("icons/hand.svg", "ico")}${esc(cue.text)}</span>`;
+  if (ui.targetNote && ui.targetNote.seq === g.seq && !ui.held) return `<span>Now make ${g.target}${g.ti === LD(g).targets.length - 1 ? " · final target" : ""}</span>`;
   if (L && L.type === "clear") return `<span>+${L.chainPts}${L.blastPts ? ` · +${L.blastPts} blast` : ""}</span>`;
   if (L && L.type === "undo") return `<span>Move undone</span>`;
   if (ui.refreshedNote) return `<span>Board refreshed</span>`;
@@ -1054,41 +1407,99 @@ function mStatus(g, sc, cue) {
 }
 // MC-011 score meter: real per-level ticks; the completion star stays hollow until success
 function meterHtml(g) {
-  const [t2, t3] = M.thresholds(g.li), core = M.core(g), max = Math.round(t3 * 1.15);
+  const [t2, t3] = M.thr(g), core = M.core(g), max = Math.round(t3 * 1.15);
   const pct = (v) => Math.min(100, (100 * v) / max);
   return `<div class="meter" role="img" aria-label="Score ${core}. Two stars at ${t2}, three stars at ${t3}. The first star comes with finishing the level.">
     <span class="tk done" style="left:0">${starSvg(g.status === "won")}</span><i style="width:${pct(core)}%"></i>
     <span class="tk" style="left:${pct(t2)}%">${starSvg(core >= t2)}</span><span class="tk" style="left:${pct(t3)}%">${starSvg(core >= t3)}</span></div>`;
 }
+function segTop(D, i) { const act = new Set(D.active); let r = Math.floor(i / 5); const c = i % 5; while (r > 0 && act.has((r - 1) * 5 + c)) r--; return r; }
+function hudHtml(g) {
+  const D = LD(g), seq = D.targets.length > 1, T = shownTarget(g), mul = M.mul(g), last = T.ti >= D.targets.length - 1;
+  const arrive = ui.targetArrive ? " arrive" : ""; ui.targetArrive = false;
+  const tlab = mul ? `${img3("multiply.svg", "ico sm opi")}Multiply` : seq && last ? "Final target" : "Make";
+  let h = `<div class="hud${mul ? " mul" : ""}"><div class="hcard panel"><span>Moves</span><b>${g.movesLeft}</b></div><div class="hcard panel tgt" aria-label="${mul ? "Multiply to make" : "Make"} ${T.target}${seq && last ? ", final target" : ""}"><span>${tlab}</span><b class="tval${arrive}">${T.target}</b></div>`;
+  if (seq && !last) h += `<div class="hcard panel nxt" aria-label="Next target ${D.targets[T.ti + 1]}"><span>Next ${img3("target-next.svg", "ico sm")}</span><b>${D.targets[T.ti + 1]}</b></div>`;
+  else h += `<div class="hcard panel"><span>Score</span><b id="hscore">${M.score(g)}</b></div>`;
+  h += `</div>`;
+  const objective = D.objective === "jelly"
+    ? `<span class="l" aria-label="${g.jelly.length} jelly left">${img3("jelly.svg", "ico")}Jelly ${g.jelly.length} left</span>`
+    : `<span class="l" aria-label="${g.made} of ${g.quota} chains made">${img("icons/chain.svg", "ico")}${g.made} / ${g.quota} chains</span>`;
+  h += `<div class="qbar panel">${objective}${meterHtml(g)}${seq && !last ? `<span class="qsc" aria-label="Score ${M.score(g)}"><b id="hscore">${M.score(g)}</b></span>` : ""}</div>`;
+  return h;
+}
+function fxLayer(g, fx) { // MC-025 presentation only: built from the committed event, never touches the model
+  const at = (i, extra = "") => `grid-row:${Math.floor(i / 5) + 1};grid-column:${(i % 5) + 1};${extra}`;
+  let h = "";
+  const order = new Map(fx.chain.map((i, k) => [i, k]));
+  for (const t of fx.removed) {
+    const k = order.has(t.i) ? order.get(t.i) : -1, delay = k >= 0 ? Math.min(80, k * 20) : 80 + (fx.combo ? 100 : 0);
+    h += tileHtml(t.v, t.sp, k >= 0 ? " gc" : " bl").replace('style="', `style="${at(t.i, `animation-delay:${delay}ms;`)}`);
+  }
+  const sp = new Map(fx.removed.map((t) => [t.i, t.sp]));
+  const sweepRow = (i, d) => { const r = Math.floor(i / 5), c = i % 5; return `<img class="fx sweep" src="${A3}row-blast.svg" alt="" style="grid-row:${r + 1};grid-column:1 / -1;--o:${c * 20 + 10}%;animation-delay:${d}ms">`; };
+  const sweepCol = (i, d) => { const c = i % 5, r = Math.floor(i / 5); return `<img class="fx sweep col" src="${A3}row-blast.svg" alt="" style="grid-column:${c + 1};grid-row:1 / -1;--o:${r * 20 + 10}%;animation-delay:${d}ms">`; };
+  const burst = (i, rad, d) => { const r = Math.floor(i / 5), c = i % 5; return `<img class="fx burst" src="${A3}burst.svg" alt="" style="grid-row:${Math.max(1, r - rad + 1)} / ${Math.min(6, r + rad + 2)};grid-column:${Math.max(1, c - rad + 1)} / ${Math.min(6, c + rad + 2)};animation-delay:${d}ms">`; };
+  let n = 0;
+  if (fx.combo) {
+    const [p, q] = fx.combo.cells;
+    if (fx.combo.type === "stripe+stripe") h += sweepRow(p, 100) + sweepCol(p, 100) + sweepRow(q, 100) + sweepCol(q, 100);
+    else if (fx.combo.type === "stripe+wrapped") { const w = sp.get(p) === "wrapped" ? p : q, r = Math.floor(w / 5); for (const rr of [r - 1, r, r + 1]) if (rr >= 0 && rr < 5) h += sweepRow(rr * 5 + (w % 5), 100); }
+    else h += burst(q, 2, 100);
+  }
+  for (const i of fx.activated) {
+    if (fx.combo && fx.combo.cells.includes(i)) continue;
+    if (n++ >= 4) break;
+    const d = 80 + Math.min(120, n * 40);
+    h += sp.get(i) === "stripe" ? sweepRow(i, d) : burst(i, 1, d);
+  }
+  let shards = 0;
+  for (const i of fx.jelly) {
+    h += `<img class="fx jgone" src="${A3}jelly.svg" alt="" style="${at(i, "animation-delay:120ms")}">`;
+    for (let k = 0; k < 3 && shards < 20; k++, shards++) h += `<img class="fx shard2" src="${A3}jelly-shard.svg" alt="" style="${at(i, `--sx:${[-18, 16, 4][k]}px;--sy:${[-14, -10, 18][k]}px;--sr:${[-60, 50, 120][k]}deg;animation-delay:120ms`)}">`;
+  }
+  return `<div class="ghosts" aria-hidden="true">${h}</div>`;
+}
 function mPlay() {
-  const g = ui.game, sc = mSumCard(g), ch = ui.chain, tap = progress.settings.tap || ui.kbd, cue = currentCue(g);
+  const g = ui.game, D = LD(g), sc = mSumCard(g), ch = ui.chain, tap = progress.settings.tap || ui.kbd, cue = currentCue(g), J = campOf(g) === "journey";
   let h = `<div class="playtop"><button class="pz" data-k="pause" aria-label="Pause">${ICON.pause}</button>
-    <div class="lvlname glow" role="heading" aria-level="1">Level ${g.li + 1}</div><span></span></div>`;
-  h += `<div class="hud"><div class="hcard panel"><span>Moves</span><b>${g.movesLeft}</b></div><div class="hcard panel tgt"><span>Make</span><b>${g.target}</b></div><div class="hcard panel"><span>Score</span><b>${M.score(g)}</b></div></div>`;
-  h += `<div class="qbar panel"><span class="l" aria-label="${g.made} of ${g.quota} chains made">${img("icons/chain.svg", "ico")}${g.made} / ${g.quota} chains</span>${meterHtml(g)}</div>`;
-  const exact = sc.exact, prev = exact ? M.resolve(g, ch) : null, blastSet = new Set(prev ? prev.blastOnly : []);
+    <div class="lvlname glow" role="heading" aria-level="1">Level ${g.li + 1}${J ? `<small>Journey · ${esc(D.name)}</small>` : ""}</div><button class="pz" data-k="help" aria-label="How to play this level">${I2.help}</button></div>`;
+  h += hudHtml(g);
+  const exact = sc.exact, prev = exact ? M.resolve(g, ch) : null, blastSet = new Set(prev ? prev.blastOnly : []), jhit = new Set(prev ? prev.jellyHit : []);
   const cueSet = new Set(cue && cue.cells ? cue.cells : []);
-  const from = ui.dropFrom, freshCol = {};
-  if (from) g.cells.forEach((c, i) => { if (!(c.id in from)) freshCol[i % g.cols] = (freshCol[i % g.cols] || 0) + 1; });
-  let cells = "";
+  const from = ui.dropFrom, freshSeg = {}, fallDelay = rm() ? 0 : 200;
+  if (from) g.cells.forEach((c, i) => { if (c && !(c.id in from)) { const k = (i % 5) + ":" + segTop(D, i); freshSeg[k] = (freshSeg[k] || 0) + 1; } });
+  const jellySet = new Set(g.jelly || []);
+  let cells = "", under = "";
   g.cells.forEach((c, i) => {
-    const r = Math.floor(i / g.cols), col = i % g.cols, k = ch.indexOf(i), hk = ui.hintChain && k < 0 ? ui.hintChain.indexOf(i) : -1;
-    let dr = 0;
-    if (from && !reduced) dr = c.id in from ? r - Math.floor(from[c.id] / g.cols) : freshCol[col] + 0.3;
+    const r = Math.floor(i / g.cols), col = i % g.cols;
+    if (!c) { cells += `<div class="tile2 void" role="gridcell" aria-label="Row ${r + 1}, column ${col + 1}, gap" data-cell="${i}"></div>`; return; }
+    if (jellySet.has(i)) under += `<img class="jl${jhit.has(i) ? " hit" : ""}" src="${A3}jelly.svg" alt="" style="grid-row:${r + 1};grid-column:${col + 1}">`;
+    const k = ch.indexOf(i), hk = ui.hintChain && k < 0 ? ui.hintChain.indexOf(i) : -1;
+    let dr = 0, spawn = false;
+    if (from && !rm()) {
+      if (c.id in from) dr = r - Math.floor(from[c.id] / g.cols);
+      else { const st = segTop(D, i); if (st > 0) spawn = true; else dr = freshSeg[col + ":" + st] + 0.3; }
+    }
     let cls = "";
-    if (k >= 0) cls += " sel" + (sc.over ? " over" : "");
+    if (k >= 0) cls += " sel" + (sc.over ? " over" : "") + (i === ui.selPulse && k === ch.length - 1 ? " selnew" : "");
     if (blastSet.has(i)) cls += " blast";
     if (hk >= 0) cls += " hint";
     if (cueSet.has(i)) cls += " cue";
     if (dr > 0) cls += " drop2";
+    if (spawn) cls += " spawn";
+    if (c.sp && !ch.length) cls += " spc";
+    if (jellySet.has(i)) cls += " onjelly";
     if (ui.kbd && ui.cursor === i) cls += " kcur";
-    if (ui.rewardId === c.id && !reduced) cls += " fresh-reward";
+    if (ui.rewardId === c.id && !rm()) cls += " fresh-reward";
     let inner = k >= 0 ? `<span class="badge2">${k + 1}</span>` : "";
     if (prev && prev.reward && i === prev.reward.cell) inner += `<span class="rewardmark ${prev.reward.type}" title="${SPNAME[prev.reward.type]} candy"></span>`;
-    const lab = `Row ${r + 1}, column ${col + 1}, ${c.v}${c.sp ? ", " + SPNAME[c.sp] + " candy" : ""}${k >= 0 ? ", selected " + (k + 1) : ""}${blastSet.has(i) ? ", will be blasted" : ""}`;
-    cells += tileHtml(c.v, c.sp, cls, inner).replace('<div class="tile2', `<div role="gridcell" aria-label="${lab}" data-cell="${i}" class="tile2`).replace('style="', `style="${dr > 0 ? `--dr:${dr};` : ""}`);
+    const lab = `Row ${r + 1}, column ${col + 1}, ${c.v}${c.sp ? ", " + SPNAME[c.sp] + " candy" : ""}${jellySet.has(i) ? ", on jelly" : ""}${k >= 0 ? ", selected " + (k + 1) : ""}${blastSet.has(i) ? ", will be blasted" : ""}`;
+    const dur = Math.min(240, 120 + Math.max(0, dr - 1) * 40);
+    cells += tileHtml(c.v, c.sp, cls, inner).replace('<div class="tile2', `<div role="gridcell" aria-label="${lab}" data-cell="${i}" class="tile2`)
+      .replace('style="', `style="${dr > 0 || spawn ? `--dr:${dr};--fd:${dur}ms;--fdl:${fallDelay}ms;` : ""}`);
   });
-  ui.dropFrom = null; ui.rewardId = null;
+  ui.dropFrom = null; ui.rewardId = null; ui.selPulse = null;
   let trace = "";
   if (ch.length > 1) {
     const cxy = (i) => [(i % g.cols) * 70 + 31, Math.floor(i / g.cols) * 70 + 31];
@@ -1103,19 +1514,17 @@ function mPlay() {
     hand = `<span class="cuehand" style="left:${x}%;top:${y}%" aria-hidden="true"></span>`;
   }
   let ghosts = "";
-  if (ui.ghosts) {
-    ghosts = `<div class="ghosts" aria-hidden="true">${ui.ghosts.map((t) => tileHtml(t.v, t.sp, t.chain ? "" : " bl").replace('style="', `style="grid-row:${Math.floor(t.i / 5) + 1};grid-column:${(t.i % 5) + 1};`)).join("")}</div>`;
-    ui.ghosts = null;
-  }
+  if (ui.ghosts) { ghosts = fxLayer(g, ui.ghosts); ui.ghosts = null; }
   let popup = "";
   if (ui.popup) {
     const p = ui.popup, py = Math.max(2, Math.min(70, p.row * 20 - 4));
-    popup = `<div class="popup2" style="--py:${py}%" aria-hidden="true"><b>${p.chainPts + p.blastPts}</b>${p.combo ? `<span>Special mix!</span>` : p.blastPts ? `<span>+${p.blastPts} blast bonus</span>` : ""}</div>`;
+    popup = `<div class="popup2" style="--py:${py}%" aria-hidden="true"><b>${p.chainPts + p.blastPts}</b>${p.combo ? `<span>Special mix!</span>` : p.blastPts ? `<span>+${p.blastPts} blast bonus</span>` : p.jelly ? `<span>${p.jelly} jelly cleared</span>` : ""}</div>`;
     ui.popup = null;
   }
-  h += `<div class="boardwrap"><div id="mboard" tabindex="0" role="grid" aria-label="Candy board, 5 by 5. Make ${g.target}.">${cells}${trace}</div>${hand}${ghosts}${popup}</div>`;
+  const opName = M.mul(g) ? "Multiply to make" : "Make";
+  h += `<div class="boardwrap"><div id="mboard" class="${ch.length ? "selecting" : ""}" tabindex="0" role="grid" aria-label="Candy board, 5 by 5${D.shape !== "full" ? ", " + D.shape + " shape with gaps" : ""}. ${opName} ${shownTarget(g).target}.">${under ? `<div class="under" aria-hidden="true">${under}</div>` : ""}${cells}${trace}</div>${hand}${ghosts}${popup}</div>`;
   const multNow = ch.length >= 2 ? M.mult(ch.length) : 1;
-  h += `<div class="sumrow" aria-hidden="true"><div class="sumcard panel${sc.over && ch.length ? " over" : ""}"><div class="ex">${esc(sc.ex)}</div></div>${multNow > 1 ? `<span class="mchip">×${multNow}</span>` : ""}</div>`;
+  h += `<div class="sumrow" aria-hidden="true"><div class="sumcard panel${sc.over && ch.length ? " over" : ""}"><div class="ex">${esc(sc.ex)}</div></div>${multNow > 1 ? `<span class="mchip">Score ×${multNow}</span>` : ""}</div>`;
   h += `<div class="status glow">${mStatus(g, sc, cue)}</div>`;
   if (tap && ch.length) { // tap/keyboard selection: Clear + Submit replace the toolbar so Submit never wraps off-screen
     h += `<div class="hintbar"><button class="pill" data-k="clearsel">Clear</button><button class="pill go" data-k="submit"${ch.length >= 2 ? "" : " disabled"}>Submit</button></div>`;
@@ -1128,26 +1537,27 @@ function mPlay() {
 function switchBtn(k, label, on, note, icon) {
   return `<button class="switch" role="switch" data-k="${k}" aria-checked="${on}"><span class="lab">${icon || ""}<span>${label}${note ? `<small>${note}</small>` : ""}</span></span><span class="kn" aria-hidden="true"></span></button>`;
 }
-function settingsRows() { // MC-017: the experimental speed-bonus switch is gone (old setting kept in storage as legacy data)
-  const S = progress.settings;
+function settingsRows() {
+  const S = progress.settings, mset = S.motion === "reduce" || S.motion === "full";
   return `<div class="setlist">` + switchBtn("snd", "Sound", !!S.sound, "", I2.sound) + switchBtn("hap", "Haptics", !!S.haptics, "", I2.vib) +
-    switchBtn("tap", "Tap to select", !!S.tap, "Tap candies, then Submit", I2.tap) + `</div>`;
+    switchBtn("tap", "Tap to select", !!S.tap, "Tap candies, then Submit", I2.tap) +
+    switchBtn("motion", "Reduce motion", rm(), mset ? "Your choice" : "Follows your device", I2.motion) + `</div>`;
 }
-function bookHtml() {
-  const v3 = V3(), sel = ui.bookSel, active = ACHIEVEMENTS.achievements.filter((a) => !a.retired), n = active.filter((a) => v3.stickers[a.id]).length;
-  const retired = ACHIEVEMENTS.achievements.filter((a) => a.retired && v3.stickers[a.id]); // FB-004-D: earned history stays visible
-  const stk = (a) => { const got = !!v3.stickers[a.id]; return `<button class="stk${got ? "" : " locked"}" data-k="stk-${a.id}" aria-pressed="${sel === a.id}" aria-label="${esc(a.name)}, ${got ? "earned" + (a.retired ? ", retired" : "") + (v3.badge === a.id ? ", your badge" : "") : "locked"}"><img src="${stickerSrc(a.id)}" alt=""><span>${esc(a.name)}</span>${v3.badge === a.id ? '<span class="chip gold">Badge</span>' : ""}</button>`; };
-  let h = `<button class="xbtn left" data-k="book-back" aria-label="Back">${ICON.back}</button><h2 class="h1 mfocus padx" tabindex="-1" id="mhead" style="font-size:1.625rem">Your sweet collection</h2>
-    <p class="small" style="margin:0">Little wins. Tap a sticker you've earned to make it your badge.</p><div class="sgrid">`;
-  h += active.map(stk).join("");
-  h += `</div><div class="small">${n} of ${active.length} discovered</div>`;
-  if (retired.length) h += `<div class="small" style="font-weight:900;margin-top:4px">Retired · earned under the old rules</div><div class="sgrid">${retired.map(stk).join("")}</div>`;
-  if (sel) {
-    const a = ACH[sel], got = !!v3.stickers[sel];
-    h += `<div class="binfo" role="status"><b>${esc(a.name)}</b><span>${esc(a.condition)}${a.retired ? " (retired)" : ""}</span>${got ? (v3.badge === sel ? `<span class="chip">Your badge</span>` : `<button class="sbtn" data-k="set-badge">Use as my badge</button>`) : `<small>Not earned yet</small>`}</div>`;
+function helpHtml() {
+  const g = ui.screen === "play" ? ui.game : null, D = g ? LD(g) : null;
+  let extra = "";
+  if (D && campOf(g) === "journey") {
+    const t = D.targets;
+    extra += `<div class="hbox"><b>This level · ${esc(D.name)}</b>`;
+    if (D.op === "multiply") extra += `<p>Multiply instead of adding: 3 × 4 = 12. A 1 keeps the product the same. The “Score ×” badge is a points bonus, not part of the sum.</p>`;
+    if (t.length > 1) extra += `<p>Targets in order: ${t.join(" → ")}. The next one appears after each chain.</p>`;
+    if (D.objective === "jelly") extra += `<p>Clear every jelly patch: any chain or blast over a patch removes it. Jelly never comes back.</p>`;
+    if (D.shape !== "full") extra += `<p>Gaps break a chain and candies don't fall through them. Striped candies still blast across a gap.</p>`;
+    extra += `</div>`;
   }
-  h += `<button class="pbtn" data-k="book-back">Back</button>`;
-  return h;
+  return `<div role="img" aria-label="2 plus 3 plus 5 makes 10">${eqTiles([2, 3, 5], 10)}</div>${extra}<p class="lede" style="text-align:left">Drag through neighbouring candies (no diagonals) so the numbers make the target, then let go. Slide back onto the previous candy to step back.</p>
+    <p class="small" style="margin:0;text-align:left">Longer chains score more. Chains of 4+ can leave special candies: striped clears its row, wrapped its 3×3 square. Put two specials in one chain to mix them. Hint and Undo are always free.</p>
+    <p class="small" style="margin:0;text-align:left">Keys: arrows move, Space adds (or steps back), Enter submits, Backspace removes the last, U undo, H hint, Esc pause.</p>`;
 }
 function mModal() {
   const g = ui.game, mod = ui.modal;
@@ -1155,25 +1565,29 @@ function mModal() {
   let body = null;
   if (mod === "pause") body = `<button class="xbtn" data-k="resume" aria-label="Close and resume">${I2.x}</button>` + head("Take a moment", "padx") + `<button class="pbtn" data-k="resume">Resume</button>
     <div class="duo"><button class="sbtn" data-k="restart">${I2.restart}Restart</button><button class="sbtn" data-k="levels">${I2.list}Levels</button></div>${settingsRows()}
-    <button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button><button class="rowlink" data-k="book"><span class="lab">${img("icons/book.svg")}Sticker book</span>${I2.chev}</button>`;
+    <button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button>`;
   else if (mod === "settings") body = `<button class="xbtn" data-k="closeset" aria-label="Close settings">${I2.x}</button>` + head("Settings", "padx") + settingsRows() + `<button class="rowlink" data-k="help"><span class="lab">${I2.help}How to play</span>${I2.chev}</button><button class="pbtn" data-k="closeset">Done</button>`;
-  else if (mod === "book") body = bookHtml();
   else if (mod === "confirm-restart" || mod === "confirm-levels") body = head(mod === "confirm-restart" ? "Restart this level?" : "Leave this level?") +
     `<p class="lede">This attempt's chains and moves will be lost.</p><button class="pbtn" data-k="confirm">${mod === "confirm-restart" ? "Restart level" : "Leave level"}</button><button class="sbtn" data-k="cancel">Cancel</button>`;
-  else if (mod === "help") body = head("How to play") + `<div role="img" aria-label="2 plus 3 plus 5 makes 10">${eqTiles([2, 3, 5], 10)}</div><p class="lede" style="text-align:left">Drag through neighbouring candies (no diagonals) so the numbers add up to the target, then let go. Slide back onto the previous candy to step back.</p>
-    <p class="small" style="margin:0;text-align:left">Longer chains score more. Chains of 4+ leave special candies: striped clears its row, wrapped its 3×3 square. Put two specials in one chain to mix them. Hint and Undo are always free.</p>
-    <p class="small" style="margin:0;text-align:left">Keys: arrows move, Space adds (or steps back), Enter submits, Backspace removes the last, U undo, H hint, Esc pause.</p><button class="pbtn" data-k="closehelp">Back</button>`;
-  else if (mod === "restore-error") body = head("Could not restore this attempt") + `<p class="lede">The saved game was damaged. Your unlocked levels, stars and stickers are safe.</p><button class="pbtn" data-k="restore-start">Start level ${(ui.restoreLi || 0) + 1}</button><button class="sbtn" data-k="restore-levels">Levels</button>`;
+  else if (mod === "help") body = head("How to play") + helpHtml() + `<button class="pbtn" data-k="closehelp">Back</button>`;
+  else if (mod === "restore-error") body = head(ui.restoreOld ? "This round was saved by an older version" : "Could not restore this attempt") +
+    `<p class="lede">${ui.restoreOld ? "It's kept safely, but it can't continue. Your unlocked levels and stars are safe." : "The saved game was damaged. Your unlocked levels and stars are safe."}</p><button class="pbtn" data-k="restore-start">Restart level ${(ui.restoreLi || 0) + 1}</button><button class="sbtn" data-k="restore-levels">Levels</button>`;
   else if (ui.screen === "play" && g && g.status === "won") {
-    const st = M.stars(g), core = M.core(g), R = rec(g.li);
-    body = head("Sweet success!", "sweet") + `<div class="bigstars2" aria-hidden="true">${[0, 1, 2].map((k) => bigStar(k < st, k === 1)).join("")}</div>
-      <div style="font-weight:900;font-size:1.25rem">${g.li === 11 ? "All 12 levels complete" : `Level ${g.li + 1} complete`}</div><p class="sr">${st} of 3 stars</p>
+    const st = M.stars(g), core = M.core(g), camp = campOf(g), R = recC(camp, g.li), D = LD(g), J = camp === "journey", lastIdx = countC(camp) - 1;
+    const allDone = g.li >= lastIdx;
+    let nextBtn;
+    if (!J) nextBtn = `<button class="pbtn" data-k="${allDone ? "levels2" : "next"}">${allDone ? "Level map" : "Next level"}</button>`;
+    else if (allDone) nextBtn = `<button class="pbtn" data-k="levels2">${g.li === 9 && !JOURNEY_PHASE_D ? "Back to journey" : "Journey map"}</button>`;
+    else nextBtn = `<button class="pbtn" data-k="next">${levelDef("journey", g.li + 1).op === "multiply" && D.op !== "multiply" ? "Next: Multiplication preview" : "Next level"}</button>`;
+    body = head(D.objective === "jelly" ? "Jelly cleared!" : "Sweet success!", "sweet") + `<div class="bigstars2" aria-hidden="true">${[0, 1, 2].map((k) => bigStar(k < st, k === 1)).join("")}</div>
+      <div style="font-weight:900;font-size:1.25rem">${allDone ? (J ? (JOURNEY_PHASE_D ? "Journey preview complete" : `All ${lastIdx + 1} preview levels complete`) : "All 12 levels complete") : `Level ${g.li + 1} complete`}</div><p class="sr">${st} of 3 stars</p>
       <div class="scorebox"><span>${ui.newBest ? "New best score" : "Score"}</span><b>${core}</b>${!ui.newBest && R.best ? `<small>Best ${R.best}</small>` : ""}${R.rushBest ? `<small>Best with Sugar Rush (old rules) ${R.rushBest}</small>` : ""}</div>
       <div class="rows2"><div class="row"><span>Chain points</span><span>${g.chainPts}</span></div>${g.blastPts ? `<div class="row"><span>Blast points</span><span>${g.blastPts}</span></div>` : ""}<div class="row"><span>Moves bonus</span><span>${g.finish}</span></div></div>` +
-      `<button class="pbtn" data-k="${g.li === 11 ? "levels2" : "next"}">${g.li === 11 ? "Candy trail" : "Next level"}</button><button class="sbtn" data-k="retry">${I2.restart}Play again</button>`;
+      nextBtn + `<button class="sbtn" data-k="retry">${I2.restart}Play again</button>`;
   } else if (ui.screen === "play" && g && g.status === "lost") {
-    const trio = (g.last && g.last.chain ? g.last.chain.map((i) => g.cells[i].v) : []).concat([6, 3, 5]).slice(0, 3);
-    body = head("One more try?") + `<p class="lede">You made ${g.made} of ${g.quota} chains.</p><div class="trio" aria-hidden="true">${trio.map((v) => tileHtml(v, null)).join("")}</div>
+    const D = LD(g);
+    const left = D.objective === "jelly" ? `${g.jelly.length} jelly patch${g.jelly.length === 1 ? "" : "es"} left.` : `You made ${g.made} of ${g.quota} chains.`;
+    body = head("One more try?") + `<p class="lede">Out of moves. ${left}</p>
       <button class="pbtn" data-k="retry">Retry</button>
       ${g.hist.length ? `<button class="sbtn" data-k="undo2">${I2.undo}Undo last move</button>` : ""}<button class="sbtn" data-k="levels2">Levels</button>`;
   }
@@ -1183,20 +1597,21 @@ function mModal() {
 
 function renderFlow() {
   const focusKey = document.activeElement && flowEl.contains(document.activeElement) && document.activeElement.dataset ? document.activeElement.dataset.k : null;
-  let h = `<div class="mc">`;
-  if (ui.screen === "home") h += mHome();
-  else if (ui.screen === "levels") h += mLevels();
-  else if (ui.screen === "play" && ui.game) h += mPlay();
-  h += `</div>`;
+  const mapFresh = ui.mapFresh; ui.mapFresh = false;
+  let h = "";
+  if (ui.screen === "levels") h += mLevels();
+  else { h += `<div class="mc">`; if (ui.screen === "home") h += mHome(); else if (ui.screen === "play" && ui.game) h += mPlay(); h += `</div>`; }
   const modal = mModal();
   h += modal;
   if (artState === "loading") h += `<div class="loading" role="status"><div class="panel mcard" style="width:auto"><b>Loading candies…</b></div></div>`;
   else if (artState === "failed") h += `<div class="banner panel" role="alert" style="position:fixed;left:16px;right:16px;top:max(64px,env(safe-area-inset-top));z-index:70;max-width:448px;margin:0 auto"><span class="grow">Art could not load. The game still works.</span><button class="sbtn" style="width:auto" data-k="retryart">Retry art</button></div>`;
   h += `<div id="mtoast" class="toast2" role="status" style="opacity:${ui.mtoast ? 1 : 0}">${esc(ui.mtoast || "")}</div>`;
-  h += `<div id="stoasthost">${stickerToastHtml()}</div>`;
   const scrollTop = flowEl.scrollTop;
   flowEl.innerHTML = h;
   flowEl.scrollTop = scrollTop;
+  document.body.classList.toggle("modal-open", !!modal);
+  if (ui.screen === "levels") mapAfterRender(mapFresh);
+  if (ui.scoreFrom !== undefined && ui.scoreFrom !== null) { countUp(ui.scoreFrom); ui.scoreFrom = null; }
   const modalOpen = !!modal, mkey = ui.modal || "result";
   if (modalOpen && ui.modalShown !== mkey) { // a new dialog: focus its heading
     ui.modalShown = mkey;
@@ -1208,46 +1623,63 @@ function renderFlow() {
   if (!focusKey && document.activeElement && document.activeElement.id === "mboard") { const b = document.getElementById("mboard"); if (b) b.focus({ preventScroll: true }); return; }
   if (focusKey) { const el = flowEl.querySelector(`${modalOpen ? ".mcm " : ""}[data-k="${focusKey}"]`); if (el && !el.disabled) el.focus({ preventScroll: true }); }
 }
+// MC-025: 250 ms score count-up in the HUD (live text, presentation only)
+function countUp(from) {
+  const el = document.getElementById("hscore"), g = ui.game; if (!el || !g) return;
+  const to = M.score(g); if (rm() || from === to) { el.textContent = to; return; }
+  const t0 = performance.now();
+  const stepFn = (now) => { const e = document.getElementById("hscore"); if (!e || ui.game !== g) return; const k = Math.min(1, (now - t0) / 250); e.textContent = Math.round(from + (to - from) * k); if (k < 1) requestAnimationFrame(stepFn); };
+  el.textContent = from; requestAnimationFrame(stepFn);
+}
 
 // ---------- controller ----------
-function mStart(li) { // MC-010: always straight onto the board
-  ui.game = M.start(li);
-  ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.dropFrom = null; ui.ghosts = null; ui.popup = null;
-  clearTimeout(stickerTimer); ui.stickerQueue = []; ui.stickerNow = null; // last result's sticker toast doesn't follow into a new attempt
-  ui.refreshedNote = false; ui.resultSeq = -1; ui.cursor = 0; ui.idleMs = 0; ui.newBest = false; drag = null;
+function flushFx() { // pause / hidden / QA: resolve presentation to the committed state at once
+  for (const t of ui.fxTimers) clearTimeout(t);
+  ui.fxTimers = []; ui.held = null; ui.busyUntil = 0; ui.ghosts = null; ui.popup = null; ui.dropFrom = null;
+}
+function mStart(li, camp = "classic") { // MC-010: always straight onto the board
+  flushFx();
+  ui.camp = camp;
+  ui.game = M.start(li, camp);
+  ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null;
+  ui.refreshedNote = false; ui.targetNote = null; ui.resultSeq = -1; ui.cursor = firstActive(ui.game); ui.idleMs = 0; ui.newBest = false; drag = null;
   ui.focusNext = "#mboard"; announce("");
   persistActive();
 }
+function firstActive(g) { return g.cells.findIndex((c) => c); }
 function mFx(kind) {
-  if (kind === "confetti" && !reduced) {
+  if (kind === "confetti" && !rm()) {
     const cols = ["#FF42AC", "#2777EE", "#FF961C", "#7147DB", "#65C748", "#FFE09A"];
     for (let k = 0; k < 36; k++) {
       const d = document.createElement("div");
-      d.className = "confetti"; d.style.cssText = `position:fixed;left:${Math.random() * 100}vw;background:${cols[k % 6]};--cx:${(Math.random() - .5) * 120}px;--cr:${Math.random() * 720}deg;animation-delay:${Math.random() * 250}ms;border-radius:${k % 3 ? 2 : 50}%;z-index:95`;
+      d.className = "confetti"; d.style.cssText = `position:fixed;left:${(k * 37) % 100}vw;background:${cols[k % 6]};--cx:${((k * 53) % 120) - 60}px;--cr:${(k * 97) % 720}deg;animation-delay:${(k * 41) % 250}ms;border-radius:${k % 3 ? 2 : 50}%;z-index:95`;
       document.body.appendChild(d); setTimeout(() => d.remove(), 1600);
     }
   }
 }
-// Commit a result once (idempotent per attempt seq). Wins: records, unlocks and stickers in one save.
+// Commit a result once (idempotent per attempt seq). Wins: records and unlocks in one save. No sticker awards (MC-020).
 function mResult(g) {
   if (ui.resultSeq === g.seq) return;
   ui.resultSeq = g.seq;
+  const camp = campOf(g);
   if (g.status === "won") {
-    const st = M.stars(g), core = M.core(g), R0 = rec(g.li), R = { ...R0 };
+    const st = M.stars(g), core = M.core(g), R0 = recC(camp, g.li), R = { ...R0 };
     ui.newBest = core > R0.best;
     R.stars = Math.max(R0.stars, st); R.best = Math.max(R0.best, core); R.wins = (R0.wins || 0) + 1;
-    setRec(g.li, R);
-    progress.match.unlocked = Math.max(progress.match.unlocked, Math.min(12, g.li + 2));
-    const fresh = M.stickersFor(g).filter((id) => !V3().stickers[id]);
-    for (const id of fresh) V3().stickers[id] = new Date().toISOString().slice(0, 10);
-    if (g.li === 0) completeLesson("l1-pair");
-    V3().active = null; save();
-    sfx.win(); buzz([20, 40, 20]); mFx("confetti");
-    announce(`Level complete. ${st} of 3 stars. Score ${core}.${fresh.length ? " New sticker: " + fresh.map((id) => ACH[id].name).join(", ") + "." : ""}`);
-    if (fresh.length) { ui.stickerQueue.push(...fresh); if (!ui.stickerNow) setTimeout(nextSticker, reduced ? 0 : 600); }
-  } else if (g.status === "lost") { persistActive(); sfx.bad(); buzz(60); announce(`Out of moves. ${g.made} of ${g.quota} chains. Retry or undo the last move.`); }
+    setRecC(camp, g.li, R);
+    if (camp === "journey") JN().unlocked = Math.max(JN().unlocked, Math.min(12, g.li + 2)); // stored even before phase D, so 11 opens without replay
+    else progress.match.unlocked = Math.max(progress.match.unlocked, Math.min(12, g.li + 2));
+    const ls = lessonFor(g); if (ls) completeLesson(ls.id, camp);
+    nsActive(camp).active = null; save();
+    sfx.win(); buzz(25); mFx("confetti");
+    announce(`${LD(g).objective === "jelly" ? "Jelly cleared" : "Level complete"}. ${st} of 3 stars. Score ${core}.`);
+  } else if (g.status === "lost") {
+    persistActive(); sfx.bad(); buzz(60);
+    announce(`Out of moves. ${LD(g).objective === "jelly" ? g.jelly.length + " jelly left" : g.made + " of " + g.quota + " chains"}. Retry or undo the last move.`);
+  }
 }
 function lessonsAfterClear(g, ev) {
+  if (campOf(g) === "journey") { completeLesson("j" + LD(g).id, "journey"); return; }
   if (g.li === 0) completeLesson("l1-pair");
   if (g.li === 1) completeLesson("l2-longer");
   if (g.li === 3 && ev.activated.length) completeLesson("l4-stripe");
@@ -1255,6 +1687,7 @@ function lessonsAfterClear(g, ev) {
 }
 function mCommit(chain) {
   const before = ui.game;
+  if (performance.now() < ui.busyUntil) return; // no input while a clear resolves
   const { g, ev } = M.release(before, chain);
   ui.chain = []; ui.hintChain = null;
   if (!ev) return;
@@ -1264,78 +1697,99 @@ function mCommit(chain) {
   if (ev.type === "wrong") { sfx.bad(); buzz(30); announce(ev.free ? `That makes ${ev.sum}. Try again.` : `That makes ${ev.sum}. Try again. One move used, ${g.movesLeft} left.`); }
   else {
     lessonsAfterClear(g, ev);
-    sfx.good();
+    sfx.good(ev);
     buzz(15);
-    if (ev.blastPts) setTimeout(() => tone(330, 0.18, "square", 0.05), 60);
-    ui.ghosts = ev.removed;
-    ui.popup = { chainPts: ev.chainPts, blastPts: ev.blastPts, combo: !!ev.combo, row: Math.min(...ev.removed.map((t) => Math.floor(t.i / 5))) };
+    const R = rm(), seqChange = g.status === "playing" && ev.targetAfter !== undefined && ev.targetAfter !== ev.targetBefore;
+    ui.ghosts = { removed: ev.removed, chain: ev.chain, activated: ev.activated, combo: ev.combo, jelly: ev.jellyCleared || [] };
+    ui.popup = { chainPts: ev.chainPts, blastPts: ev.blastPts, combo: !!ev.combo, jelly: (ev.jellyCleared || []).length, row: Math.min(...ev.removed.map((t) => Math.floor(t.i / 5))) };
+    ui.scoreFrom = M.score(before);
     if (g.status === "playing") {
-      ui.dropFrom = {}; before.cells.forEach((c, i) => { ui.dropFrom[c.id] = i; });
-      if (ev.reward) { const f = g.cells.find((c) => c.sp === ev.reward.type && c.id >= before.nextId); ui.rewardId = f ? f.id : null; }
-      ui.busyUntil = performance.now() + (reduced ? 80 : ev.combo ? 350 : 200);
+      ui.dropFrom = {}; before.cells.forEach((c, i) => { if (c) ui.dropFrom[c.id] = i; });
+      if (ev.reward) { const f = g.cells.find((c) => c && c.sp === ev.reward.type && c.id >= before.nextId); ui.rewardId = f ? f.id : null; }
+      // MC-025 order: anticipation -> clear -> specials -> fall/settle -> target update; whole lock <= 900 ms
+      const settleMs = R ? 80 : ev.combo ? 560 : 480;
+      if (seqChange) {
+        ui.held = { seq: g.seq, target: ev.targetBefore, ti: before.ti || 0 };
+        ui.busyUntil = performance.now() + settleMs + (R ? 0 : 180);
+        ui.fxTimers.push(setTimeout(() => {
+          ui.held = null; ui.targetArrive = !R; ui.targetNote = { seq: g.seq };
+          announce(`Now make ${g.target}.`);
+          if (ui.screen === "play" && ui.game === g) render();
+        }, settleMs));
+      } else ui.busyUntil = performance.now() + settleMs;
     }
     if (ev.refreshed) { ui.refreshedNote = true; mToast("Board refreshed"); }
-    announce(`Cleared. ${ev.chainPts} points${ev.blastPts ? ", blast " + ev.blastPts : ""}${ev.combo ? ", special mix" : ""}${ev.reward && !ev.won ? ", made a " + SPNAME[ev.reward.type] + " candy" : ""}. ${g.made} of ${g.quota} chains.`);
+    const jl = (ev.jellyCleared || []).length;
+    announce(`Cleared. ${ev.chainPts} points${ev.blastPts ? ", blast " + ev.blastPts : ""}${ev.combo ? ", special mix" : ""}${jl ? ", " + jl + " jelly cleared" : ""}${ev.reward && !ev.won ? ", made a " + SPNAME[ev.reward.type] + " candy" : ""}. ${LD(g).objective === "jelly" ? g.jelly.length + " jelly left" : g.made + " of " + g.quota + " chains"}.`);
   }
   mResult(g);
   render();
 }
 function mUndo() {
   const r = M.undo(ui.game); if (!r.ev) return;
-  ui.game = r.g; ui.chain = []; ui.hintChain = null; ui.modal = null; ui.resultSeq = -1; ui.idleMs = 0;
-  persistActive(); sfx.tap(); announce(`Move undone. ${r.g.movesLeft} moves left. ${r.g.made} of ${r.g.quota} chains.`);
+  flushFx();
+  ui.game = r.g; ui.chain = []; ui.hintChain = null; ui.modal = null; ui.resultSeq = -1; ui.idleMs = 0; ui.targetNote = null;
+  persistActive(); sfx.tap(); announce(`Move undone. ${r.g.movesLeft} moves left. ${LD(r.g).objective === "jelly" ? r.g.jelly.length + " jelly left" : r.g.made + " of " + r.g.quota + " chains"}.`);
   render();
 }
 function mHint() {
   const r = M.hint(ui.game); if (!r.chain && r.g === ui.game) return;
   ui.game = r.g; ui.hintChain = r.chain; ui.chain = []; ui.idleMs = 0; persistActive(); sfx.tap();
-  if (r.chain) announce("Hint: " + r.chain.map((i) => ui.game.cells[i].v).join(" plus "));
+  if (r.chain) announce("Hint: " + r.chain.map((i) => ui.game.cells[i].v).join(M.mul(ui.game) ? " times " : " plus "));
   render();
 }
 function mCancelGesture() { drag = null; ui.chain = []; }
-function mOpenModal(name, trigger) { mCancelGesture(); if (!ui.modal && trigger) ui.modalReturn = trigger; ui.modal = name; }
+function mOpenModal(name, trigger) { mCancelGesture(); flushFx(); if (!ui.modal && trigger) ui.modalReturn = trigger; ui.modal = name; }
 function chainAnnounce() { const g = ui.game; if (!ui.chain.length) return; const sc = mSumCard(g); announce(`${sc.ex}. ${sc.status}.`); }
-function leaveToLevels() { V3().active = null; save(); ui.modal = null; ui.screen = "levels"; }
+function leaveToLevels() { const camp = campOf(ui.game); nsActive(camp).active = null; save(); ui.modal = null; ui.camp = camp; ui.screen = "levels"; }
+function openMap(camp, fresh) { ui.camp = camp; ui.modal = null; ui.screen = "levels"; if (fresh) ui.mapFresh = true; }
+function resumeAttempt(camp) {
+  const a = activeAttempt(camp);
+  if (a && a.ok) { flushFx(); ui.camp = camp; ui.game = JSON.parse(JSON.stringify(a.g)); ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.idleMs = 0; ui.targetNote = null; ui.resultSeq = ui.game.status === "lost" ? ui.game.seq : -1; ui.cursor = firstActive(ui.game); ui.focusNext = "#mboard"; return; }
+  // incompatible or damaged: archive verbatim, offer Restart this level (never call a valid historical save corrupt)
+  const ns = nsActive(camp), raw = ns.active;
+  ui.restoreOld = !!(raw && raw.version && raw.version !== (camp === "journey" ? JV : MATCH_VERSION));
+  if (camp === "journey" && raw) { ns.archivedActive.push({ archivedOn: new Date().toISOString(), from: raw.version || "unknown", data: raw }); ns.active = null; save(); }
+  ui.restoreLi = a ? a.li : 0; ui.restoreCamp = camp; ui.modal = "restore-error";
+}
 function mButton(k) {
   sfx.tap();
   const g = ui.game;
   ui.idleMs = 0;
   if (k === "settings") mOpenModal("settings", "settings");
   else if (k === "closeset") ui.modal = null;
-  else if (k === "choose" || k === "levels2") { ui.modal = null; ui.screen = "levels"; }
+  else if (k === "choose") openMap("classic", true);
+  else if (k === "journey") openMap("journey", true);
+  else if (k === "levels2") { ui.modal = null; openMap(campOf(g), false); }
   else if (k === "play") mStart(playLevel());
   else if (k === "offer-start") { const li = V3().offerStart; V3().offerStart = null; save(); mStart(li); }
   else if (k === "home") ui.screen = "home";
-  else if (k === "continue") {
-    const a = activeAttempt();
-    if (a && a.ok) { ui.game = JSON.parse(JSON.stringify(a.g)); ui.screen = "play"; ui.modal = null; ui.chain = []; ui.hintChain = null; ui.idleMs = 0; ui.resultSeq = ui.game.status === "lost" ? ui.game.seq : -1; ui.focusNext = "#mboard"; }
-    else { ui.restoreLi = a ? a.li : 0; ui.modal = "restore-error"; }
+  else if (k === "continue") resumeAttempt("classic");
+  else if (k === "map-continue") {
+    const camp = ui.camp, a = activeAttempt(camp), cur = frontierC(camp);
+    if (a) resumeAttempt(camp); else mStart(cur === null ? countC(camp) - 1 : cur, camp);
   }
-  else if (k === "restore-start") { mStart(ui.restoreLi || 0); }
-  else if (k === "restore-levels") { V3().active = null; save(); ui.modal = null; ui.screen = "levels"; }
+  else if (k === "restore-start") mStart(ui.restoreLi || 0, ui.restoreCamp || "classic");
+  else if (k === "restore-levels") { nsActive(ui.restoreCamp || "classic").active = null; save(); openMap(ui.restoreCamp || "classic", false); }
   else if (k.startsWith("lvl-")) {
-    const li = +k.slice(4);
-    if (li + 1 > progress.match.unlocked) { mToast(`Complete level ${li} to unlock level ${li + 1}`); return; }
-    mStart(li);
+    const li = +k.slice(4), camp = ui.camp;
+    if (li + 1 > unlockedC(camp)) { mToast(`Finish level ${li} to unlock level ${li + 1}`); return; }
+    mStart(li, camp);
   }
   else if (k === "pause") mOpenModal("pause", "pause");
   else if (k === "resume") ui.modal = null;
   else if (k === "cancel") ui.modal = "pause";
-  else if (k === "restart") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-restart"; else mStart(g.li); }
+  else if (k === "restart") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-restart"; else mStart(g.li, campOf(g)); }
   else if (k === "levels") { if (M.hasProgress(g) && g.status === "playing") ui.modal = "confirm-levels"; else leaveToLevels(); }
-  else if (k === "confirm") { if (ui.modal === "confirm-restart") mStart(g.li); else leaveToLevels(); }
+  else if (k === "confirm") { if (ui.modal === "confirm-restart") mStart(g.li, campOf(g)); else leaveToLevels(); }
   else if (k === "snd") { progress.settings.sound = !progress.settings.sound; save(); }
   else if (k === "hap") { progress.settings.haptics = !progress.settings.haptics; save(); if (progress.settings.haptics) buzz(20); }
   else if (k === "tap") { progress.settings.tap = !progress.settings.tap; save(); }
-  else if (k === "help") { ui.helpFrom = ui.modal; ui.modal = "help"; }
-  else if (k === "closehelp") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; }
-  else if (k === "book") { ui.bookFrom = ui.modal; ui.bookSel = null; if (!ui.modal) ui.modalReturn = "book"; mCancelGesture(); ui.modal = "book"; }
-  else if (k === "book-back") { ui.modal = ui.bookFrom || null; ui.bookFrom = null; ui.bookSel = null; if (ui.modal) ui.modalShown = null; }
-  else if (k.startsWith("stk-")) { ui.bookSel = k.slice(4); ui.focusNext = `[data-k="${k}"]`; }
-  else if (k === "set-badge") { if (V3().stickers[ui.bookSel]) { V3().badge = ui.bookSel; save(); announce(`${ACH[ui.bookSel].name} is your badge.`); } ui.focusNext = `[data-k="stk-${ui.bookSel}"]`; }
-  else if (k === "stoast-x") { nextSticker(); return; }
-  else if (k === "next") mStart(g.li + 1);
-  else if (k === "retry") mStart(g.li);
+  else if (k === "motion") { progress.settings.motion = rm() ? "full" : "reduce"; save(); }
+  else if (k === "help") { mCancelGesture(); flushFx(); ui.helpFrom = ui.modal; if (!ui.modal) ui.modalReturn = "help"; ui.modal = "help"; }
+  else if (k === "closehelp") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; if (ui.modal) ui.modalShown = null; }
+  else if (k === "next") mStart(g.li + 1, campOf(g));
+  else if (k === "retry") mStart(g.li, campOf(g));
   else if (k === "undo" || k === "undo2") { mUndo(); return; }
   else if (k === "hint") { mHint(); return; }
   else if (k === "submit") { mCommit(ui.chain.slice()); return; }
@@ -1364,7 +1818,8 @@ function mCellAt(e) {
   if (c < 0 || r < 0 || c >= g.cols || r >= g.rows) return -1;
   const fx = (x - c * (t + gap)) / t, fy = (y - r * (t + gap)) / t; // central 80 % of the tile
   if (fx < 0.1 || fx > 0.9 || fy < 0.1 || fy > 0.9) return -1;
-  return r * g.cols + c;
+  const i = r * g.cols + c;
+  return g.cells[i] ? i : -1; // touching a void does nothing
 }
 function mPlayable() { return ui.screen === "play" && !ui.modal && ui.game && ui.game.status === "playing"; }
 flowEl.addEventListener("pointerdown", (e) => {
@@ -1377,11 +1832,12 @@ flowEl.addEventListener("pointerdown", (e) => {
     const ch = ui.chain, last = ch[ch.length - 1];
     ui.chain = i === last ? ch.slice(0, -1) : M.extend(ui.game, ch, i);
     if (ui.chain === ch && !ch.includes(i) && ch.length) mToast(ch.length >= 8 ? "Chains are at most 8 candies" : "Pick a candy next to the last one", 1400);
+    if (ui.chain.length > ch.length) ui.selPulse = i;
     sfx.pick(ui.chain.length); render(); chainAnnounce(); return;
   }
   drag = { pid: e.pointerId };
   try { flowEl.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-  ui.chain = [i]; sfx.pick(1); render();
+  ui.chain = [i]; ui.selPulse = i; sfx.pick(1); render();
 });
 flowEl.addEventListener("pointermove", (e) => {
   if (!drag || e.pointerId !== drag.pid) return;
@@ -1389,7 +1845,7 @@ flowEl.addEventListener("pointermove", (e) => {
   const i = mCellAt(e); if (i < 0) return;
   const before = ui.chain, next = M.extend(ui.game, before, i);
   if (next === before) return;
-  ui.chain = next; sfx.pick(next.length); if (next.length > before.length) buzz(5);
+  ui.chain = next; if (next.length > before.length) ui.selPulse = i; sfx.pick(next.length);
   render();
 });
 function mEndDrag(e, cancel) {
@@ -1404,6 +1860,15 @@ flowEl.addEventListener("pointerup", (e) => mEndDrag(e, false));
 flowEl.addEventListener("pointercancel", (e) => mEndDrag(e, true));
 
 // ---------- keyboard ----------
+// MC-027: the cursor moves by direction over active cells, skipping voids; selections still need adjacency
+function cursorMove(g, from, dr, dc) {
+  let r = Math.floor(from / g.cols), c = from % g.cols;
+  for (;;) {
+    r += dr; c += dc;
+    if (r < 0 || c < 0 || r >= g.rows || c >= g.cols) return from;
+    if (g.cells[r * g.cols + c]) return r * g.cols + c;
+  }
+}
 function mKey(e) {
   const k = e.key;
   ui.idleMs = 0;
@@ -1411,7 +1876,6 @@ function mKey(e) {
     if (k === "Escape") {
       e.preventDefault();
       if (ui.modal === "help") { ui.modal = ui.helpFrom || null; ui.helpFrom = null; }
-      else if (ui.modal === "book") { mButton("book-back"); return; }
       else if (ui.modal === "pause" || ui.modal === "settings") ui.modal = null;
       else if (ui.modal && ui.modal.startsWith("confirm")) ui.modal = "pause";
       else if (!ui.modal) return;
@@ -1432,32 +1896,34 @@ function mKey(e) {
   }
   if (ui.screen !== "play" || !mPlayable()) return;
   const g = ui.game, onBtn = document.activeElement && document.activeElement.tagName === "BUTTON";
-  if (k === "h" || k === "H") { mHint(); return; }
-  if (k === "u" || k === "U" || (k === "z" && (e.ctrlKey || e.metaKey))) { e.preventDefault(); mUndo(); return; }
-  const mv = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -g.cols, ArrowDown: g.cols }[k];
+  const busy = performance.now() < ui.busyUntil;
+  if (k === "h" || k === "H") { if (!busy) mHint(); return; }
+  if (k === "u" || k === "U" || (k === "z" && (e.ctrlKey || e.metaKey))) { e.preventDefault(); if (!busy) mUndo(); return; }
+  const mv = { ArrowLeft: [0, -1], ArrowRight: [0, 1], ArrowUp: [-1, 0], ArrowDown: [1, 0] }[k];
   if (mv !== undefined) {
     e.preventDefault();
-    if (!ui.kbd) { ui.kbd = true; if (ui.chain.length) ui.cursor = ui.chain[ui.chain.length - 1]; }
-    else { const c = ui.cursor % g.cols; if (!((k === "ArrowLeft" && c === 0) || (k === "ArrowRight" && c === g.cols - 1))) ui.cursor = Math.max(0, Math.min(g.cells.length - 1, ui.cursor + mv)); }
+    if (!ui.kbd) { ui.kbd = true; if (ui.chain.length) ui.cursor = ui.chain[ui.chain.length - 1]; else if (!g.cells[ui.cursor]) ui.cursor = firstActive(g); }
+    else ui.cursor = cursorMove(g, ui.cursor, mv[0], mv[1]);
     render(); const cur = flowEl.querySelector(`[data-cell="${ui.cursor}"]`); if (cur) cur.scrollIntoView({ block: "nearest" });
     announce(cur ? cur.getAttribute("aria-label") : ""); return;
   }
   if ((k === " " || k === "Spacebar") && !onBtn) {
-    e.preventDefault(); ui.kbd = true; ui.hintChain = null;
+    e.preventDefault(); if (busy) return; ui.kbd = true; ui.hintChain = null;
     const ch = ui.chain, i = ui.cursor;
     if (ch.length && i === ch[ch.length - 1]) ui.chain = ch.slice(0, -1);
-    else { ui.chain = M.extend(g, ch, i); if (ui.chain === ch) mToast(ch.includes(i) ? "Already in the chain" : ch.length >= 8 ? "Chains are at most 8 candies" : "Pick a candy next to the last one", 1400); }
+    else { ui.chain = M.extend(g, ch, i); if (ui.chain === ch) mToast(ch.includes(i) ? "Already in the chain" : ch.length >= 8 ? "Chains are at most 8 candies" : "Pick a candy next to the last one", 1400); else ui.selPulse = i; }
     sfx.pick(ui.chain.length); render(); chainAnnounce(); return;
   }
   if (k === "Backspace" && ui.chain.length) { e.preventDefault(); ui.chain = ui.chain.slice(0, -1); render(); chainAnnounce(); return; }
   if (k === "Enter" && !onBtn) {
     e.preventDefault();
-    mCommit(ui.chain.slice());
+    if (!busy) mCommit(ui.chain.slice());
   }
 }
 
-// ---------- lesson inactivity (MC-010): 250 ms ticks ----------
-let lastTick = null;
+// ---------- lesson inactivity (MC-010) + calm idle motion (MC-025): 250 ms ticks ----------
+// Idle effects are cosmetic only: deterministic rotation, separate from gameplay RNG, never saved, never re-rendering.
+let lastTick = null, idleClock = 0, nextGlint = 5000, glintIdx = 0, nextSparkle = 6000;
 function quietPlay() { return mPlayable() && !document.hidden && performance.now() >= ui.busyUntil; }
 function idleTick(ms) {
   if (!quietPlay() || drag) return;
@@ -1466,25 +1932,48 @@ function idleTick(ms) {
   const after = currentCue(ui.game);
   if ((before && before.id) !== (after && after.id)) render();
 }
+function idleFx(dt) {
+  if (rm() || document.hidden || ui.modal || ui.chain.length || drag || performance.now() < ui.busyUntil) return;
+  idleClock += dt;
+  if (ui.screen === "play" && ui.game && ui.game.status === "playing" && idleClock >= nextGlint) {
+    const g = ui.game; let i = glintIdx;
+    for (let t = 0; t < 25; t++) { i = (i * 7 + 3) % 25; if (g.cells[i]) break; }
+    glintIdx = i; nextGlint = idleClock + 5000 + (i % 4) * 1000; // one glint every 5-8 s
+    const el = flowEl.querySelector(`#mboard [data-cell="${i}"]`);
+    if (el && !el.classList.contains("void")) { const gl = document.createElement("i"); gl.className = "glint"; el.appendChild(gl); setTimeout(() => gl.remove(), 950); }
+  }
+  if (ui.screen === "levels" && idleClock >= nextSparkle) { // one scenery sparkle at a time, every 6-10 s
+    nextSparkle = idleClock + 6000 + (glintIdx % 5) * 1000; glintIdx = (glintIdx * 7 + 3) % 25;
+    const sc = document.getElementById("mapscroll"), cv = sc && sc.querySelector(".mapcanvas");
+    if (cv) {
+      const s = document.createElement("img"); s.src = A3 + "sparkle.svg"; s.alt = ""; s.className = "sparkle";
+      const y = sc.scrollTop + sc.clientHeight * (0.15 + (glintIdx % 5) * 0.12), x = [12, 84, 20, 76, 50][glintIdx % 5];
+      s.style.cssText = `left:${x}%;top:${y}px`; cv.appendChild(s); setTimeout(() => s.remove(), 950);
+    }
+  }
+}
 setInterval(() => {
   const now = performance.now(), dt = lastTick === null ? 0 : Math.min(1000, now - lastTick);
   lastTick = now;
-  idleTick(dt);
+  idleTick(dt); idleFx(dt);
 }, 250);
 
 // ======================================================================
 // INPUT — OS interruption
 // ======================================================================
-document.addEventListener("visibilitychange", () => { // OS interruption: cancel gesture, pause
+document.addEventListener("visibilitychange", () => { // OS interruption: cancel gesture, resolve effects, pause; loops stop while hidden
+  document.body.classList.toggle("hid", document.hidden);
+  if (document.hidden) { mCancelGesture(); flushFx(); }
   if (document.hidden && ui.screen === "play" && ui.game && ui.game.status === "playing") { if (!ui.modal) mOpenModal("pause", "pause"); else mCancelGesture(); persistActive(); render(); }
 });
 document.addEventListener("keydown", mKey);
+if (osReduced && osReduced.addEventListener) osReduced.addEventListener("change", () => render());
 
 loadArt();
 render();
 
 // ======================================================================
-// QA HOOK — levels() = 12 Candy Match levels (core-v1 rules)
+// QA HOOK — levels(): 0-11 Classic (core-v1 rules), 12+ Journey preview (journey-v1; 22-23 are the phase-D multiplication pilots)
 // ======================================================================
 function qaScreen() {
   if (ui.screen !== "play") return ui.screen; // home | levels
@@ -1522,12 +2011,12 @@ function runFixtures() {
     const pre = M.resolve(g, c.chain), r = M.release(g, c.chain);
     const got = { removal: pre.removal, chainPts: pre.chainPts, blastPts: pre.blastPts, quota: r.g.made - g.made, moves: g.movesLeft - r.g.movesLeft, committed: r.g.chainPts + r.g.blastPts, combo: pre.combo && pre.combo.type };
     const ok = JSON.stringify(got.removal) === JSON.stringify(c.expectedRemoval) && got.chainPts === c.expectedChainPoints && got.blastPts === c.expectedBlastPoints &&
-      got.quota === c.quotaDelta && got.moves === c.movesUsed && got.committed === c.expectedChainPoints + c.expectedBlastPoints && r.g.ev.mix && r.g.ev.spark;
+      got.quota === c.quotaDelta && got.moves === c.movesUsed && got.committed === c.expectedChainPoints + c.expectedBlastPoints && r.ev.combo && r.ev.activated.length >= 2;
     out.push({ id: "combo-" + c.id, ok, got });
     // invalid sum: both selected values -> 4+7: no removal, no points, no quota; ordinary L7 cost (1 move)
     const bad = c.values.slice(); bad[c.chain[0]] = 4; bad[c.chain[1]] = 7;
     const gb = fixtureGame(6, c.target, bad, c.specials), rb = M.release(gb, c.chain);
-    out.push({ id: "combo-" + c.id + "-invalid", ok: rb.ev.type === "wrong" && rb.g.made === 0 && rb.g.chainPts + rb.g.blastPts === 0 && gb.movesLeft - rb.g.movesLeft === 1 && JSON.stringify(rb.g.cells.map((x) => x.v)) === JSON.stringify(bad) && !rb.g.ev.mix, got: { type: rb.ev.type } });
+    out.push({ id: "combo-" + c.id + "-invalid", ok: rb.ev.type === "wrong" && rb.g.made === 0 && rb.g.chainPts + rb.g.blastPts === 0 && gb.movesLeft - rb.g.movesLeft === 1 && JSON.stringify(rb.g.cells.map((x) => x.v)) === JSON.stringify(bad) && !rb.ev.combo, got: { type: rb.ev.type } });
   }
   { // wrapped+wrapped at the bottom-right edge: 5x5 clipped
     const v = Array(25).fill(1); v[23] = 4; v[24] = 6;
@@ -1546,32 +2035,50 @@ function runFixtures() {
   return { ok: out.every((x) => x.ok), cases: out };
 }
 // MC-011 evidence (FB-004-E): beam search for a three-star route under core-v1 rules (no Rush, no hammer) with the real engine (no hints/undo)
-function threeStar(li, width = 60) {
-  const [, t3] = M.thresholds(li), L = LEVELS.match[li];
-  let beam = [{ g: M.start(li), path: [] }], best = null;
-  for (let step = 0; step < L.quota; step++) {
+function threeStar(li, width = 60, camp = "classic") {
+  const D = levelDef(camp, li), t3 = D.thresholds[1];
+  let beam = [{ g: M.start(li, camp), path: [] }], best = null;
+  for (let step = 0; step < D.moves; step++) {
     const next = [];
     for (const b of beam) for (const ch of M.allChains(b.g, 4000)) {
       const r = M.release(b.g, ch); if (!r.ev || r.ev.type !== "clear") continue;
       const n = { g: r.g, path: b.path.concat([ch]) };
       if (r.g.status === "won") { if (!best || M.core(r.g) > M.core(best.g)) best = n; } else if (r.g.status === "playing") next.push(n);
     }
-    next.sort((a, b) => (b.g.chainPts + b.g.blastPts) - (a.g.chainPts + a.g.blastPts));
+    if (!next.length) break;
+    next.sort((a, b) => (b.g.chainPts + b.g.blastPts - (b.g.jelly ? 0 : 0)) - (a.g.chainPts + a.g.blastPts) || ((a.g.jelly || []).length - (b.g.jelly || []).length));
     const seen = new Set(); beam = [];
-    for (const n of next) { const key = n.g.cells.map((c) => c.v + (c.sp ? c.sp[0] : "")).join(""); if (seen.has(key)) continue; seen.add(key); beam.push(n); if (beam.length >= width) break; }
+    for (const n of next) { const key = n.g.cells.map((c) => (c ? c.v + (c.sp ? c.sp[0] : "") : "_")).join("") + (n.g.jelly || []).join(",") + ":" + n.g.ti; if (seen.has(key)) continue; seen.add(key); beam.push(n); if (beam.length >= width) break; }
   }
-  return best ? { level: li + 1, core: M.core(best.g), threeStar: t3, stars: M.stars(best.g), reached: M.core(best.g) >= t3, route: best.path } : { level: li + 1, reached: false };
+  return best ? { level: li + 1, camp, core: M.core(best.g), threeStar: t3, stars: M.stars(best.g), reached: M.core(best.g) >= t3, route: best.path } : { level: li + 1, camp, reached: false };
 }
+// Replay one packet witness route through the real engine (MC-028). Returns per-step snapshots in the oracle's shape.
+function witnessReplay(id, route) {
+  let g = M.start(id - 1, "journey"); const steps = [];
+  for (const ch of route) {
+    const r = M.release(g, ch);
+    if (!r.ev || r.ev.type !== "clear") { steps.push({ error: "not a clear", chain: ch, ev: r.ev }); break; }
+    g = r.g;
+    const sp = {}; g.cells.forEach((c, i) => { if (c && c.sp) sp[String(i)] = c.sp; });
+    steps.push({ targetBefore: r.ev.targetBefore, removed: r.ev.removed.map((t) => t.i), points: r.ev.chainPts + r.ev.blastPts, reward: r.ev.reward ? r.ev.reward.type : null,
+      combo: r.ev.combo ? r.ev.combo.type : null, jellyCleared: r.ev.jellyCleared.length, refreshed: !!r.ev.refreshed,
+      after: { board: g.cells.map((c) => (c ? c.v : null)), sp, jelly: g.jelly.slice().sort((a, b) => a - b), rng: g.rng, moves: g.movesLeft, made: g.made, score: M.score(g), status: g.status },
+      ids: g.cells.map((c) => (c ? c.id : null)), ti: g.ti, target: g.target });
+  }
+  return { steps, stars: M.stars(g), status: g.status, score: M.score(g) };
+}
+function qaCamp(n) { return n >= 12 ? { camp: "journey", li: n - 12 } : { camp: "classic", li: n }; }
 window.__qa = {
   state: () => {
-    const g = ui.game, base = { screen: qaScreen(), mode: "match", level: g ? g.li : null, qaLevel: g ? g.li : null, modal: ui.modal || null };
+    const g = ui.game, base = { screen: qaScreen(), mode: "match", campaign: g ? campOf(g) : ui.camp, level: g ? g.li : null, qaLevel: g ? g.li + (campOf(g) === "journey" ? 12 : 0) : null, modal: ui.modal || null };
     if (!g || ui.screen !== "play") return base;
-    const cue = currentCue(g);
-    return { ...base, version: g.version, target: g.target, movesLeft: g.movesLeft, made: g.made, quota: g.quota, score: M.score(g), coreScore: M.core(g),
-      chainPts: g.chainPts, blastPts: g.blastPts, finish: g.finish, stars: M.stars(g), thresholds: M.thresholds(g.li), hints: g.hints, undoCount: g.undos,
-      undoAvailable: g.hist.length, staged: { ...g.ev },
+    const cue = currentCue(g), D = LD(g);
+    return { ...base, version: g.version, operation: g.op || "add", targets: D.targets.slice(), targetIndex: g.ti || 0, target: g.target, shownTarget: shownTarget(g).target,
+      objective: D.objective, jelly: g.jelly ? g.jelly.slice() : [], active: D.active.slice(), movesLeft: g.movesLeft, made: g.made, quota: g.quota, score: M.score(g), coreScore: M.core(g),
+      chainPts: g.chainPts, blastPts: g.blastPts, finish: g.finish, stars: M.stars(g), thresholds: M.thr(g), hints: g.hints, undoCount: g.undos,
+      undoAvailable: g.hist.length, busy: performance.now() < ui.busyUntil,
       cue: cue ? { id: cue.id, text: cue.text, cells: cue.cells || null } : null, last: g.last,
-      board: g.cells.map((c) => c.v), specials: g.cells.map((c) => c.sp), ids: g.cells.map((c) => c.id), rng: g.rng, chain: ui.chain.slice(),
+      board: g.cells.map((c) => (c ? c.v : null)), specials: g.cells.map((c) => (c ? c.sp : null)), ids: g.cells.map((c) => (c ? c.id : null)), rng: g.rng, nextId: g.nextId, chain: ui.chain.slice(),
       seq: g.seq };
   },
   actions: () => {
@@ -1584,28 +2091,35 @@ window.__qa = {
   act: (a) => {
     const g = ui.game; if (!g || ui.screen !== "play") return;
     if (ui.modal) ui.modal = null;
-    ui.busyUntil = 0;
+    flushFx();
     if (a === "hint") mHint(); else if (a === "undo") mUndo();
     else if (a && a.chain) mCommit(a.chain);
   },
-  reset: (n) => { mStart(n === undefined || n === null ? (ui.game ? ui.game.li : 0) : n); render(); },
-  levels: () => LEVELS.match.length,
-  solve: () => { // simulate seeded refills on a copy
+  reset: (n) => {
+    if (n === undefined || n === null) { const g = ui.game; mStart(g ? g.li : 0, g ? campOf(g) : "classic"); }
+    else { const q = qaCamp(n); mStart(q.li, q.camp); }
+    render();
+  },
+  levels: () => 12 + journeyCount(),
+  solve: () => { // fresh Journey start: the packet's witness route; otherwise simulate seeded refills on a copy
     const g0 = ui.game; if (!g0) return [];
+    if (campOf(g0) === "journey" && g0.seq === 0 && JOURNEY_ROUTES[LD(g0).id]) return JOURNEY_ROUTES[LD(g0).id].map((c) => ({ chain: c }));
     const seq = []; let g = g0;
-    while (g.status === "playing" && seq.length < 50) { const ch = M.shortest(g); if (!ch) break; seq.push({ chain: ch }); g = M.release(g, ch).g; }
+    while (g.status === "playing" && seq.length < 50) { const ch = g.jelly && g.jelly.length ? M.hintChain(g) : M.shortest(g); if (!ch) break; seq.push({ chain: ch }); g = M.release(g, ch).g; }
     return seq;
   },
   validate: validateData,
   fixtures: runFixtures,
   threeStar,
+  witness: witnessReplay,
   idle: (ms) => { ui.idleMs += ms; render(); return currentCue(ui.game); },
   setSetting: (k, v) => { progress.settings[k] = v; save(); render(); },
-  open: (screen) => { ui.modal = null; ui.screen = screen; render(); },
-  modal: (name) => { if (name === "book") { mButton("book"); return; } ui.modal = name; render(); },
+  open: (screen, camp) => { ui.modal = null; if (camp) ui.camp = camp; if (screen === "levels") ui.mapFresh = true; ui.screen = screen; render(); },
+  modal: (name) => { ui.modal = name; render(); },
   button: (k) => mButton(k),
   dragChain: (cells) => { let ch = []; for (const i of cells) ch = M.extend(ui.game, ch, i); return ch; },
   saved: () => JSON.parse(JSON.stringify(progress)),
+  flush: () => { flushFx(); render(); },
 };
 </script>
 </body>
